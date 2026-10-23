@@ -1,0 +1,1391 @@
+{
+  "version": 2,
+  "date": "2026-10-23",
+  "generated_at": "2026-10-23T17:13:48+09:00",
+  "window": {
+    "hours": 30,
+    "from": "2026-10-22T02:13:48.960Z",
+    "to": "2026-10-23T08:13:48.960Z"
+  },
+  "engine": "rules",
+  "overview": "새 취약점: 실제 악용 6건(Media Server, SiteGuard Server Edition 등) · CVSS 9.0 이상 68건. 먼저 볼 항목: Arista VeloCloud Orchestrator, HPE 공지 hpesbnw05162, LiteLLM 등. 주요 뉴스: 국내 '[단독] PHP 패치 공개 36시간, 국내 기업 적용…'(9개 매체), 해외 'LiteLLM Suspects GitHub Token Lea…'(3개 매체). KISA 공지 6건.",
+  "cvss_min": 9,
+  "critical_total": 68,
+  "failed": {
+    "kev": false,
+    "nvd": false,
+    "kisa": false,
+    "news": false
+  },
+  "exploited": [
+    {
+      "id": "CVE-2026-96656",
+      "section": "exploited",
+      "vendor": "Plex",
+      "product": "Media Server",
+      "name": "Plex Media Server External Control of File Name or Path Vulnerability",
+      "dateAdded": "2026-10-20",
+      "due": "2026-10-23",
+      "ransomware": false,
+      "description": "Plex Media Server contains an external control of file name or path vulnerability which can allow an admin user to write arbitrary files that may be executed on load. This vulnerability can be chained with CVE-2026-96652, CVE-2026-96654, and CVE-2026-96655.",
+      "cwes": [
+        "CWE-73"
+      ],
+      "cvss": {
+        "score": 8.6,
+        "version": "4.0",
+        "vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:H/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "no",
+        "technicalImpact": "total"
+      },
+      "epss": 0.00816,
+      "epssPct": 0.56645,
+      "published": "2026-09-23T17:17:23.840",
+      "links": [
+        "https://forums.plex.tv/t/important-security-update-for-plex-media-server-v1-43-2-and-earlier/942319",
+        "https://forums.plex.tv/t/plex-media-server/30447/711",
+        "https://raw.githubusercontent.com/cisagov/CSAF/develop/csaf_files/IT/white/2026/va-26-266-01.json"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-96656",
+      "ko": {
+        "title": "Plex Media Server 파일 이름·경로 외부 제어 취약점",
+        "target": "Plex Media Server",
+        "impact": "실제 공격에 악용됨 · 원격에서 관리자 권한으로 사용자 개입 없이 공격 가능 — 시스템 장악 우려",
+        "action": "벤더 권고에 따라 즉시 패치·완화 조치 (CISA 조치 기한 2026-10-23)"
+      }
+    },
+    {
+      "id": "CVE-2026-106931",
+      "section": "exploited",
+      "vendor": "EG Secure Solutions",
+      "product": "SiteGuard Server Edition",
+      "name": "EG Secure Solutions SiteGuard Server Edition OS Command Injection Vulnerability",
+      "dateAdded": "2026-10-20",
+      "due": "2026-10-23",
+      "ransomware": false,
+      "description": "EG Secure Solutions SiteGuard Server Edition contains an OS command injection vulnerability which may allow an attacker to execute arbitrary OS commands with root or SYSTEM privileges on the system running the affected product.",
+      "cwes": [
+        "CWE-78"
+      ],
+      "cvss": {
+        "score": 8.5,
+        "version": "4.0",
+        "vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:L/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X"
+      },
+      "ssvc": {
+        "exploitation": "active",
+        "automatable": "no",
+        "technicalImpact": "total"
+      },
+      "epss": 0.0117,
+      "epssPct": 0.67149,
+      "published": "2026-10-14T05:16:42.633",
+      "links": [
+        "https://www.eg-secure.co.jp/siteguard/news/alert-202610-1",
+        "https://jvn.jp/en/jp/JVN88474777/",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-106931"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-106931",
+      "ko": {
+        "title": "EG Secure Solutions SiteGuard Server Edition OS 명령 삽입 취약점",
+        "target": "EG Secure Solutions SiteGuard Server Edition",
+        "impact": "실제 공격에 악용됨 · 로컬에서 낮은 권한으로 사용자 개입 없이 공격 가능 — 시스템 장악 우려",
+        "action": "벤더 권고에 따라 즉시 패치·완화 조치 (CISA 조치 기한 2026-10-23)"
+      }
+    },
+    {
+      "id": "CVE-2026-110936",
+      "section": "exploited",
+      "vendor": "Siemens",
+      "product": "Software Center",
+      "name": "Siemens Software Center Uncontrolled Search Path Element Vulnerability",
+      "dateAdded": "2026-10-20",
+      "due": "2026-11-03",
+      "ransomware": false,
+      "description": "Siemens Software Center contains an uncontrolled search path element vulnerability that could allow an authenticated local attacker to place a specially crafted DLL in a directory that the application searches, leading to arbitrary code execution with the privileges of the affected application.",
+      "cwes": [
+        "CWE-427"
+      ],
+      "cvss": {
+        "score": 8.4,
+        "version": "4.0",
+        "vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:H/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X"
+      },
+      "ssvc": {
+        "exploitation": "active",
+        "automatable": "no",
+        "technicalImpact": "total"
+      },
+      "epss": 0.00238,
+      "epssPct": 0.13997,
+      "published": "2026-10-15T15:17:30.383",
+      "links": [
+        "https://productcert.siemens.com/productcert/html/ssa-580366.html",
+        "https://cert-portal.siemens.com/productcert/html/ssa-580366.html",
+        "https://productcert.siemens.com/news/2026/10/19/active-exploitation-of-cve-2026-110936-in-siemens-software-center/"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-110936",
+      "ko": {
+        "title": "Siemens Software Center 검색 경로 조작 취약점",
+        "target": "Siemens Software Center",
+        "impact": "실제 공격에 악용됨 · 로컬에서 관리자 권한으로 사용자 개입 없이 공격 가능 — 시스템 장악 우려",
+        "action": "벤더 권고에 따라 즉시 패치·완화 조치 (CISA 조치 기한 2026-11-03)"
+      }
+    },
+    {
+      "id": "CVE-2026-96654",
+      "section": "exploited",
+      "vendor": "Plex",
+      "product": "Media Server",
+      "name": "Plex Media Server Improper Neutralization of Encoded URI Schemes in a Web Page Vulnerability",
+      "dateAdded": "2026-10-20",
+      "due": "2026-10-23",
+      "ransomware": false,
+      "description": "Plex Media Server contains an improper neutralization of encoded URI schemes in a web page vulnerability that could allow an attacker to call other plugins' functions and supply their own parameters. This vulnerability can be chained with CVE-2026-96652, CVE-2026-96655, and CVE-2026-96656.",
+      "cwes": [
+        "CWE-84"
+      ],
+      "cvss": {
+        "score": 6.9,
+        "version": "4.0",
+        "vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "yes",
+        "technicalImpact": "partial"
+      },
+      "epss": 0.00465,
+      "epssPct": 0.3929,
+      "published": "2026-09-23T17:17:23.517",
+      "links": [
+        "https://forums.plex.tv/t/important-security-update-for-plex-media-server-v1-43-2-and-earlier/942319",
+        "https://forums.plex.tv/t/plex-media-server/30447/711",
+        "https://raw.githubusercontent.com/cisagov/CSAF/develop/csaf_files/IT/white/2026/va-26-266-01.json"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-96654",
+      "ko": {
+        "title": "Plex Media Server URI 스킴 필터링 부적절(XSS) 취약점",
+        "target": "Plex Media Server",
+        "impact": "실제 공격에 악용됨 · 원격에서 인증 없이 사용자 개입 없이 공격 가능 (자동화 공격 가능)",
+        "action": "벤더 권고에 따라 즉시 패치·완화 조치 (CISA 조치 기한 2026-10-23)"
+      }
+    },
+    {
+      "id": "CVE-2026-96652",
+      "section": "exploited",
+      "vendor": "Plex",
+      "product": "Media Server",
+      "name": "Plex Media Server Server-Side Request Forgery (SSRF) Vulnerability",
+      "dateAdded": "2026-10-20",
+      "due": "2026-11-03",
+      "ransomware": false,
+      "description": "Plex Media Server contains a server-side request forgery (SSRF) vulnerability which could allow an attacker using any X-Plex-Token value to include a full URL in the 'protocol' parameter and force the Plex server to POST to the attacker's chosen destination. This vulnerability can be chained with CVE-2026-96654, CVE-2026-96655, and CVE-2026-96656. ",
+      "cwes": [
+        "CWE-918"
+      ],
+      "cvss": {
+        "score": 5.3,
+        "version": "4.0",
+        "vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "no",
+        "technicalImpact": "partial"
+      },
+      "epss": 0.00455,
+      "epssPct": 0.38528,
+      "published": "2026-09-23T17:17:23.363",
+      "links": [
+        "https://forums.plex.tv/t/important-security-update-for-plex-media-server-v1-43-2-and-earlier/942319",
+        "https://forums.plex.tv/t/plex-media-server/30447/711",
+        "https://raw.githubusercontent.com/cisagov/CSAF/develop/csaf_files/IT/white/2026/va-26-266-01.json"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-96652",
+      "ko": {
+        "title": "Plex Media Server 서버 측 요청 위조(SSRF) 취약점",
+        "target": "Plex Media Server",
+        "impact": "실제 공격에 악용됨 · 원격에서 낮은 권한으로 사용자 개입 없이 공격 가능",
+        "action": "벤더 권고에 따라 즉시 패치·완화 조치 (CISA 조치 기한 2026-11-03)"
+      }
+    },
+    {
+      "id": "CVE-2026-96655",
+      "section": "exploited",
+      "vendor": "Plex",
+      "product": "Media Server",
+      "name": "Plex Media Server Server-Side Request Forgery (SSRF) Vulnerability",
+      "dateAdded": "2026-10-20",
+      "due": "2026-11-03",
+      "ransomware": false,
+      "description": "Plex Media Server contains a server-side request forgery (SSRF) vulnerability that could allow an authenticated user to request arbitrary internal or external addresses via the '/video/:/transcode/universal' path parameter. This vulnerability can be chained with CVE-2026-96652, CVE-2026-96654, and CVE-2026-96656.",
+      "cwes": [
+        "CWE-918"
+      ],
+      "cvss": {
+        "score": 5.3,
+        "version": "4.0",
+        "vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "no",
+        "technicalImpact": "partial"
+      },
+      "epss": 0.00455,
+      "epssPct": 0.38527,
+      "published": "2026-09-23T17:17:23.677",
+      "links": [
+        "https://forums.plex.tv/t/important-security-update-for-plex-media-server-v1-43-2-and-earlier/942319",
+        "https://forums.plex.tv/t/plex-media-server/30447/711",
+        "https://raw.githubusercontent.com/cisagov/CSAF/develop/csaf_files/IT/white/2026/va-26-266-01.json"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-96655",
+      "ko": {
+        "title": "Plex Media Server 서버 측 요청 위조(SSRF) 취약점",
+        "target": "Plex Media Server",
+        "impact": "실제 공격에 악용됨 · 원격에서 낮은 권한으로 사용자 개입 없이 공격 가능",
+        "action": "벤더 권고에 따라 즉시 패치·완화 조치 (CISA 조치 기한 2026-11-03)"
+      }
+    }
+  ],
+  "exploited_more": [],
+  "critical": [
+    {
+      "id": "CVE-2026-114625",
+      "ids": [
+        "CVE-2026-114625"
+      ],
+      "section": "critical",
+      "label": "Arista VeloCloud Orchestrator",
+      "vendor": "Arista",
+      "cna": "psirt@arista.com",
+      "status": "Received",
+      "published": "2026-10-22T21:17:16.870",
+      "description": "VeloCloud Orchestrator (VCO) on-prem has a security issue where this issue may allow a remote attacker to access privileged internal functionality and impact the VCO host. Successful exploitation may compromise the confidentiality, integrity, and availability of the orchestrator and data managed by the orchestrator. On an affected system, any authenticated user can gain operator privileges and masquerade as a local \"superuser operator\" user. This includes access to functionality that is intended for internal use only and which is not intended to be remotely accessible. Hosted, including Dedicated, versions of VCO were impacted and have already been patched.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-114625",
+          "text": "VeloCloud Orchestrator (VCO) on-prem has a security issue where this issue may allow a remote attacker to access privileged internal functionality and impact the VCO host. Successful exploitation may compromise the confidentiality, integrity, and availability of the orchestrator and data managed by…"
+        }
+      ],
+      "cwes": [
+        "CWE-89"
+      ],
+      "cvss": {
+        "score": 9.9,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "no",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://www.arista.com/en/support/advisories-notices/security-advisory/24838-security-advisory-0199"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-114625",
+      "flags": {
+        "watch": "Arista",
+        "kisa": "",
+        "news": true,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": false
+      },
+      "score": 13.9,
+      "ko": {
+        "title": "Arista VeloCloud Orchestrator SQL 삽입",
+        "target": "Arista VeloCloud Orchestrator",
+        "impact": "원격에서 낮은 권한으로 사용자 개입 없이 공격 가능 — 시스템 장악 우려",
+        "action": "벤더 보안 공지를 확인해 패치 적용"
+      }
+    },
+    {
+      "id": "CVE-2026-79844",
+      "ids": [
+        "CVE-2026-79844",
+        "CVE-2026-79846",
+        "CVE-2026-79847",
+        "CVE-2026-79848",
+        "CVE-2026-79849",
+        "CVE-2026-79850",
+        "CVE-2026-79851",
+        "CVE-2026-79852",
+        "CVE-2026-79853",
+        "CVE-2026-79854",
+        "CVE-2026-79855",
+        "CVE-2026-79856",
+        "CVE-2026-79857",
+        "CVE-2026-79858",
+        "CVE-2026-79859",
+        "CVE-2026-79860",
+        "CVE-2026-79861",
+        "CVE-2026-79862",
+        "CVE-2026-79863",
+        "CVE-2026-79864",
+        "CVE-2026-79865",
+        "CVE-2026-79866",
+        "CVE-2026-79867",
+        "CVE-2026-79868",
+        "CVE-2026-79869",
+        "CVE-2026-79870",
+        "CVE-2026-79871",
+        "CVE-2026-79872",
+        "CVE-2026-79873",
+        "CVE-2026-79874",
+        "CVE-2026-79875",
+        "CVE-2026-79876"
+      ],
+      "section": "critical",
+      "label": "HPE 공지 hpesbnw05162",
+      "vendor": "HPE",
+      "cna": "security-alert@hpe.com",
+      "status": "Received",
+      "published": "2026-10-22T19:17:56.367",
+      "description": "No description provided",
+      "descriptions": [
+        {
+          "id": "CVE-2026-79844",
+          "text": "No description provided"
+        },
+        {
+          "id": "CVE-2026-79846",
+          "text": "No description provided"
+        },
+        {
+          "id": "CVE-2026-79847",
+          "text": "No description provided"
+        },
+        {
+          "id": "CVE-2026-79848",
+          "text": "No description provided"
+        },
+        {
+          "id": "CVE-2026-79849",
+          "text": "No description provided"
+        }
+      ],
+      "cwes": [
+        "CWE-288",
+        "CWE-119",
+        "CWE-89"
+      ],
+      "cvss": {
+        "score": 10,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:N"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://support.hpe.com/hpesc/public/docDisplay?docId=hpesbnw05162en_us&docLocale=en_US"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-79844",
+      "flags": {
+        "watch": "HPE",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 13.6,
+      "ko": {
+        "title": "HPE 공지 hpesbnw05162 대체 경로 인증 우회 등 32건",
+        "target": "HPE",
+        "impact": "원격에서 인증 없이 사용자 개입 없이 공격 가능 — 시스템 장악 우려 (자동화 공격 가능)",
+        "action": "벤더 보안 공지를 확인해 패치 적용"
+      }
+    },
+    {
+      "id": "CVE-2026-114612",
+      "ids": [
+        "CVE-2026-114612"
+      ],
+      "section": "critical",
+      "label": "LiteLLM",
+      "vendor": "",
+      "cna": "security-advisories@github.com",
+      "status": "Received",
+      "published": "2026-10-22T19:17:37.540",
+      "description": "LiteLLM is a proxy server (AI Gateway) to call LLM APIs in OpenAI (or native) format. From 1.87.0 until 1.100.4, 1.101.3, 1.102.2, 1.103.1, and 1.104.0-rc.2, the proxy reuses one cryptographic context for at-rest secrets and session tokens, allowing an authenticated internal user to have crafted metadata containing a forged administrator credential encrypted and returned by the API-key flow. Replaying that ciphertext as a bearer token causes the proxy to trust the forged proxy administrator identity, permitting administrative access and arbitrary commands through the MCP stdio endpoint. Versions 1.87.0 through 1.90.x require EXPERIMENTAL_UI_LOGIN to be enabled, while versions after 1.91.0 are exploitable in the default configuration. This issue was fixed in LiteLLM 1.100.4, 1.101.3, 1.102.2, 1.103.1, and 1.104.0-rc.2.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-114612",
+          "text": "LiteLLM is a proxy server (AI Gateway) to call LLM APIs in OpenAI (or native) format. From 1.87.0 until 1.100.4, 1.101.3, 1.102.2, 1.103.1, and 1.104.0-rc.2, the proxy reuses one cryptographic context for at-rest secrets and session tokens, allowing an authenticated internal user to have crafted me…"
+        }
+      ],
+      "cwes": [
+        "CWE-269",
+        "CWE-345",
+        "CWE-441"
+      ],
+      "cvss": {
+        "score": 9.9,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H"
+      },
+      "ssvc": null,
+      "epss": null,
+      "links": [
+        "https://github.com/BerriAI/litellm/commit/1d5fdc87fed66b49e1df8cf7d708ad93249eb7d0",
+        "https://github.com/BerriAI/litellm/commit/9161d7f9d6073603ba61ee4aa5e2c0ef5b37a81b",
+        "https://github.com/BerriAI/litellm/commit/9fa1a641119dd0d4fe43e93622eae5f482ceb63f"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-114612",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": true,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": false
+      },
+      "score": 11.9,
+      "ko": {
+        "title": "LiteLLM 권한 관리 부적절",
+        "target": "LiteLLM 1.90 이하",
+        "impact": "원격에서 낮은 권한으로 사용자 개입 없이 공격 가능 — 시스템 장악 우려",
+        "action": "벤더 보안 공지를 확인해 패치 적용"
+      }
+    },
+    {
+      "id": "CVE-2026-111497",
+      "ids": [
+        "CVE-2026-111497"
+      ],
+      "section": "critical",
+      "label": "Google Brotli",
+      "vendor": "Google",
+      "cna": "cve-coordination@google.com",
+      "status": "Awaiting Analysis",
+      "published": "2026-10-22T14:17:37.190",
+      "description": "A buffer overflow vulnerability in the Brotli decoder (c/dec/decode.c) in Google Brotli versions 1.0.3 through 1.2.0 on all platforms allows a remote unauthenticated attacker to corrupt adjacent decoder state memory, disclose sensitive memory contents, cause a denial of service, or potentially execute arbitrary code using a crafted Brotli-compressed stream. Users need to update any Brotli libraries or binaries between 1.0.3 through 1.2.0 to the latest available version: 1.0.10 or 1.1.1 or 1.2.1.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-111497",
+          "text": "A buffer overflow vulnerability in the Brotli decoder (c/dec/decode.c) in Google Brotli versions 1.0.3 through 1.2.0 on all platforms allows a remote unauthenticated attacker to corrupt adjacent decoder state memory, disclose sensitive memory contents, cause a denial of service, or potentially exec…"
+        }
+      ],
+      "cwes": [
+        "CWE-252",
+        "CWE-787"
+      ],
+      "cvss": {
+        "score": 9.2,
+        "version": "4.0",
+        "vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "no",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases#nodejs-brotli-decoder-out-of-bounds-write-permits-remote-code-execution-cve-2026-111497---high"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-111497",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": true,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 11.7,
+      "ko": {
+        "title": "Google Brotli 범위 밖 쓰기",
+        "target": "Google Brotli 1.2.0 이하",
+        "impact": "원격에서 인증 없이 사용자 개입 없이 공격 가능 — 시스템 장악 우려",
+        "action": "벤더 보안 공지를 확인해 패치 적용"
+      }
+    },
+    {
+      "id": "CVE-2026-110063",
+      "ids": [
+        "CVE-2026-110063"
+      ],
+      "section": "critical",
+      "label": "Microsoft VM Inspector for Azure Virtual Machines",
+      "vendor": "Microsoft",
+      "cna": "secure@microsoft.com",
+      "status": "Received",
+      "published": "2026-10-22T22:18:00.750",
+      "description": "Improper link resolution before file access ('link following') in VM Inspector for Azure Virtual Machines allows an unauthorized attacker to elevate privileges over a network.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-110063",
+          "text": "Improper link resolution before file access ('link following') in VM Inspector for Azure Virtual Machines allows an unauthorized attacker to elevate privileges over a network."
+        }
+      ],
+      "cwes": [
+        "CWE-59"
+      ],
+      "cvss": {
+        "score": 10,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-110063"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-110063",
+      "flags": {
+        "watch": "Microsoft",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": true,
+        "remoteNoAuth": true
+      },
+      "score": 11.5,
+      "ko": {
+        "title": "Microsoft VM Inspector for Azure Virtual Machines 링크 추적",
+        "target": "Microsoft VM Inspector for Azure Virtual Machines",
+        "impact": "원격에서 인증 없이 사용자 개입 없이 공격 가능 — 시스템 장악 우려 (자동화 공격 가능)",
+        "action": "클라우드 서비스 취약점 — 벤더가 조치했는지, 고객 조치가 필요한지 MSRC 공지에서 확인"
+      }
+    }
+  ],
+  "critical_more": [
+    {
+      "id": "CVE-2026-115547",
+      "ids": [
+        "CVE-2026-115547"
+      ],
+      "label": "Okta Access Gateway (OAG) Admin Console",
+      "cvss": 9.1,
+      "title": "Okta Access Gateway (OAG) Admin Console 입력값 검증 부적절"
+    },
+    {
+      "id": "CVE-2026-102785",
+      "ids": [
+        "CVE-2026-102785"
+      ],
+      "label": "Joomla",
+      "cvss": 10,
+      "title": "Joomla 위험한 형식 파일 업로드"
+    },
+    {
+      "id": "CVE-2026-83938",
+      "ids": [
+        "CVE-2026-83938"
+      ],
+      "label": "Microsoft Azure Kubernetes Configuration Service",
+      "cvss": 10,
+      "title": "Microsoft Azure Kubernetes Configuration Service 중요 기능 인증 누락"
+    },
+    {
+      "id": "CVE-2026-97785",
+      "ids": [
+        "CVE-2026-97785"
+      ],
+      "label": "Microsoft AAD App Proxy",
+      "cvss": 10,
+      "title": "Microsoft AAD App Proxy 인증 부적절"
+    },
+    {
+      "id": "CVE-2026-105014",
+      "ids": [
+        "CVE-2026-105014"
+      ],
+      "label": "Microsoft Azure Pipelines",
+      "cvss": 9.1,
+      "title": "Microsoft Azure Pipelines 명령 삽입"
+    },
+    {
+      "id": "CVE-2026-115375",
+      "ids": [
+        "CVE-2026-115375",
+        "CVE-2026-115377",
+        "CVE-2026-115372"
+      ],
+      "label": "Incus",
+      "cvss": 9.9,
+      "title": "Incus 경로 조작 등 3건"
+    },
+    {
+      "id": "CVE-2026-107861",
+      "ids": [
+        "CVE-2026-107861",
+        "CVE-2026-110243",
+        "CVE-2026-109122"
+      ],
+      "label": "Kiloview E3 NDI",
+      "cvss": 9.9,
+      "title": "Kiloview E3 NDI OS 명령 삽입 등 3건"
+    },
+    {
+      "id": "CVE-2026-96355",
+      "ids": [
+        "CVE-2026-96355"
+      ],
+      "label": "Drupal Webform",
+      "cvss": 9.1,
+      "title": "Drupal Webform 템플릿 삽입"
+    },
+    {
+      "id": "CVE-2026-114220",
+      "ids": [
+        "CVE-2026-114220",
+        "CVE-2026-114219"
+      ],
+      "label": "CVE-2026-114220",
+      "cvss": 9.3,
+      "title": "CVE-2026-114220 인증서 검증 부적절 등 2건"
+    },
+    {
+      "id": "CVE-2026-19677",
+      "ids": [
+        "CVE-2026-19677"
+      ],
+      "label": "CVE-2026-19677",
+      "cvss": 9.3,
+      "title": "CVE-2026-19677 중요 기능 인증 누락"
+    },
+    {
+      "id": "CVE-2026-115324",
+      "ids": [
+        "CVE-2026-115324"
+      ],
+      "label": "mem0",
+      "cvss": 9.2,
+      "title": "mem0 SQL 삽입"
+    },
+    {
+      "id": "CVE-2026-111594",
+      "ids": [
+        "CVE-2026-111594"
+      ],
+      "label": "InterSystems IRIS for Health",
+      "cvss": 9.2,
+      "title": "InterSystems IRIS for Health 중요 정보 평문 전송"
+    },
+    {
+      "id": "CVE-2026-54630",
+      "ids": [
+        "CVE-2026-54630"
+      ],
+      "label": "Part-DB",
+      "cvss": 9.6,
+      "title": "Part-DB 위험한 형식 파일 업로드"
+    },
+    {
+      "id": "CVE-2026-55981",
+      "ids": [
+        "CVE-2026-55981"
+      ],
+      "label": "Creative Sound Blaster Katana",
+      "cvss": 9.6,
+      "title": "Creative Sound Blaster Katana 취약점"
+    },
+    {
+      "id": "CVE-2026-114611",
+      "ids": [
+        "CVE-2026-114611"
+      ],
+      "label": "OCO-Server",
+      "cvss": 9.1,
+      "title": "OCO-Server 인증서 검증 부적절"
+    },
+    {
+      "id": "CVE-2026-97631",
+      "ids": [
+        "CVE-2026-97631"
+      ],
+      "label": "EDK2",
+      "cvss": 9.5,
+      "title": "EDK2 버퍼 오버플로"
+    },
+    {
+      "id": "CVE-2026-115384",
+      "ids": [
+        "CVE-2026-115384"
+      ],
+      "label": "Wasmtime",
+      "cvss": 9.9,
+      "title": "Wasmtime 입력값 검증 부적절"
+    },
+    {
+      "id": "CVE-2026-115353",
+      "ids": [
+        "CVE-2026-115353"
+      ],
+      "label": "Mistune",
+      "cvss": 9.2,
+      "title": "Mistune 경로 조작"
+    },
+    {
+      "id": "CVE-2026-114607",
+      "ids": [
+        "CVE-2026-114607"
+      ],
+      "label": "Better Auth",
+      "cvss": 9.1,
+      "title": "Better Auth 인증 부적절"
+    },
+    {
+      "id": "CVE-2026-112241",
+      "ids": [
+        "CVE-2026-112241"
+      ],
+      "label": "Brainstorm Force SureCart",
+      "cvss": 9.8,
+      "title": "Brainstorm Force SureCart 스푸핑 인증 우회"
+    },
+    {
+      "id": "CVE-2026-112832",
+      "ids": [
+        "CVE-2026-112832"
+      ],
+      "label": "CozyThemes Rootblox",
+      "cvss": 9.8,
+      "title": "CozyThemes Rootblox 원격 파일 포함"
+    },
+    {
+      "id": "CVE-2026-114661",
+      "ids": [
+        "CVE-2026-114661"
+      ],
+      "label": "GatewayServiceResource",
+      "cvss": 9,
+      "title": "GatewayServiceResource 권한 검사 누락"
+    },
+    {
+      "id": "CVE-2026-112327",
+      "ids": [
+        "CVE-2026-112327"
+      ],
+      "label": "TMS Amelia",
+      "cvss": 9.3,
+      "title": "TMS Amelia SQL 삽입"
+    },
+    {
+      "id": "CVE-2022-51026",
+      "ids": [
+        "CVE-2022-51026"
+      ],
+      "label": "Bytebase",
+      "cvss": 9.8,
+      "title": "Bytebase 스푸핑 인증 우회"
+    },
+    {
+      "id": "CVE-2021-48014",
+      "ids": [
+        "CVE-2021-48014",
+        "CVE-2021-48016",
+        "CVE-2022-51022"
+      ],
+      "label": "FineReport",
+      "cvss": 9.8,
+      "title": "FineReport 경로 조작 등 3건"
+    }
+  ],
+  "advisories": [
+    {
+      "id": "a-cf1aa3e0",
+      "source": "KISA 경보단계",
+      "title": "사이버위기 경보 단계 '관심' → '주의' 상향 조정",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000342&searchWrd=&menuNo=205024&pageIndex=1&categoryCode=&nttId=72233",
+      "date": "2026-10-22",
+      "alert": true
+    },
+    {
+      "id": "a-2de8ed3e",
+      "source": "KISA 보안공지",
+      "title": "Node.js 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72236",
+      "date": "2026-10-23"
+    },
+    {
+      "id": "a-1903854f",
+      "source": "KISA 보안공지",
+      "title": "Laravel 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72235",
+      "date": "2026-10-23"
+    },
+    {
+      "id": "a-75031e2b",
+      "source": "KISA 보안공지",
+      "title": "Oracle 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72234",
+      "date": "2026-10-23"
+    },
+    {
+      "id": "a-e42e48b7",
+      "source": "KISA 보안공지",
+      "title": "GitLab 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72232",
+      "date": "2026-10-22"
+    },
+    {
+      "id": "a-63be8593",
+      "source": "KISA 보안공지",
+      "title": "Fortinet 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72231",
+      "date": "2026-10-22"
+    },
+    {
+      "id": "a-758eb513",
+      "source": "KISA 보안공지",
+      "title": "PHP 보안취약점(PHP2Shell) 관련 기업 보안 대응 수칙",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72230",
+      "date": "2026-10-22"
+    }
+  ],
+  "news": {
+    "domestic": [
+      {
+        "id": "n-931ca419",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "[단독] PHP 패치 공개 36시간, 국내 기업 적용률 4%... “96% 아직 무방비” [PHP 파장]",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=146702",
+        "source": "보안뉴스",
+        "published": "2026-10-23T03:37:53.000Z",
+        "snippet": "전세계 웹사이트 70%가 사용하는 프로그래밍 언어 PHP의 취약점 패치 대상 국내 서버들 가운데 4%만이 패치 적용이 완료된 것으로 나타났다. 대응의 핵심으로 ‘속도’가 강조되고 있지만, 패치 공개 하루가 지나도 96%가 여전히 무방비 상태인 셈이다. 가 국내 보안 기업 에스케어와 함께 조사한 바에 따르면, PHP 공식 패치가 배포된 지 약 36시간이 지난 23일 오전 11시 현재 국내 기…",
+        "outlets": [
+          "보안뉴스",
+          "데일리시큐",
+          "연합뉴스TV",
+          "이데일리",
+          "Chosunbiz",
+          "뉴시스",
+          "조선일보",
+          "KBS 뉴스",
+          "연합뉴스"
+        ],
+        "related": [
+          {
+            "title": "엔키화이트햇, PHP2Shell 취약점 무료 진단 스캐너·분석 보고서 공개",
+            "url": "https://www.dailysecu.com/news/articleView.html?idxno=209014",
+            "source": "데일리시큐"
+          },
+          {
+            "title": "’PHP 결함’ 공개 전 공격 포착…“해킹 시도 수백만건“",
+            "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE1Fc0dRTEtEQjdXUk5TR2tzYkpMdnAtTkg1SUJnMWFpcWtjLXBRYmZOS0poVXB6SUs3QlUwdGdwWWRRVURNNHp6enEyYTZmQVNfcUZvUE04OFJ1Tnk0eHVhVVFoTUlfRGc?oc=5",
+            "source": "연합뉴스TV"
+          },
+          {
+            "title": "'PHP' 해킹 우려에…日, 'AI 대책팀' 창설로 수습 총력",
+            "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNZkpjZl9GdlBEWldXbXVmbHFNc25tNThFQk1NMm9XT0xxQUZpS1pKMVZrU2lJNXNLdXZsckFzSk8zTHlXeTQxNWU2eVI5X2VERlNRc0VpZE85WXFLWWRyd2RLRHZ1d2VxVXlFVnZMeTRvanVVU3NnY1RYQVVYZHFMbQ?oc=5",
+            "source": "이데일리"
+          },
+          {
+            "title": "“PHP 해킹 피해 아직 없어… 취약점 악용에 시간 걸릴 듯” - 조선비즈",
+            "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxPZlRZQjYzQUZnaHdZZDFral9BRWh5U3ptS29kZWI1ZGp3Y1NMLTFfUF9laHh3YnpuTmE5TmFIUHdrWHNLVHhkRXRLczlzVUNKUjVaWk1VS3NfbGo0cjQ5cmlPalpMNHV5cURUU01ORUwwcEJDSDgySGQ2YzdORjNxVWJB0gGWAUFVX3lxTE00bW9zVHh0NFdwcFhmUEcxT25CLUQ0cHZhVzhOVUp5MUoyV2tuVWo4eGY0YVBDbkJlTWpxWF9obldzVnlBdGFDYmxUdnVqNGEtbWttVUZyUGxiR2dlN1JMajlnUklZdTNPMGxSeklUMHhtekk3UWJrUGJIcG80YVNaMWt3Mm5OQWkxMUtyU0RwanhmV0FkQQ?oc=5",
+            "source": "Chosunbiz"
+          },
+          {
+            "title": "PHP 보안 구멍에 해킹 우려…국내 금융사들은 안전할까",
+            "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTE1mM3dyUU5VcmFWbHlLb3NEX0ZXbGduaWZ2dS1INEJ6T203VnFkQUZ4d2dVRnMtRmFYdDB3cmVBVGVwODNCVVZPaS1BY2ZOdWprYmtkS1QtOEpqTXF5bXJVdWp0d0IteTVyUjE5X1ZSR29sNVVBdlZ6X9IBeEFVX3lxTE1mM3dyUU5VcmFWbHlLb3NEX0ZXbGduaWZ2dS1INEJ6T203VnFkQUZ4d2dVRnMtRmFYdDB3cmVBVGVwODNCVVZPaS1BY2ZOdWprYmtkS1QtOEpqTXF5bXJVdWp0d0IteTVyUjE5X1ZSR29sNVVBdlZ6Xw?oc=5",
+            "source": "뉴시스"
+          }
+        ],
+        "cves": [
+          "CVE-2026-109618",
+          "CVE-2026-109619"
+        ],
+        "score": 21.1
+      },
+      {
+        "id": "n-ebe3a2aa",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "‘금융기관 해킹 사건’ 중수청 수사 불개시 결정...국수본, 계속 수사",
+        "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxPNENJaDZPS1BrWUNUUHhoSy1XbEhUUXdfWTdvNUsxZjdiTklUaHFDVUIwQ2s3cEVESUlBZ0QzX0kzWFliQW43b1Vkem04clllWGs4Qy1JNE5aTm9ET2dJY2NoVnFQTHU0Rjh5LUlDb0wwRHZtOGx0WEJZMTNSTlp4X3BpQ0JJRUFFbWVuakN1NWQ?oc=5",
+        "source": "조선일보",
+        "published": "2026-10-23T08:02:00.000Z",
+        "snippet": "",
+        "outlets": [
+          "조선일보",
+          "SBS 뉴스",
+          "아시아투데이",
+          "국제신문",
+          "이데일리",
+          "연합뉴스 한민족센터",
+          "한겨레",
+          "뉴스핌",
+          "KBC광주방송",
+          "MBC 뉴스",
+          "머니투데이",
+          "서울신문",
+          "동아일보",
+          "뉴스웍스",
+          "청년일보",
+          "파이낸셜뉴스",
+          "아시아경제",
+          "뉴시스",
+          "YTN",
+          "한국일보",
+          "한국경제",
+          "연합뉴스",
+          "데일리안"
+        ],
+        "related": [
+          {
+            "title": "중수청, '금융권 해킹 사건' 수사 불개시 통보…경찰이 계속 수사",
+            "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxONnZGSUtCRTFGMFE1SjUxdWVMSlBMelctRmFGd3FEX01yQXA3Tm5SeDFpUktYS1poOTlGc0dlMlU0REZJb2M4bHBCRHNQZXBISGIwNzNNakZSU1pVVHE2dWJYTXRRLUQtVlU5OHB1U2pYTzFINkhzUnl5NTdrMHlxWHRNNU1LOGFYX0liUDdSV20wTFh0VHc?oc=5",
+            "source": "SBS 뉴스"
+          },
+          {
+            "title": "서울중수청, ‘금융기관 AI 해킹’ 수사 불개시 통보…“경찰 수사 상당 진전”",
+            "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFB1YWhPa1hjMjQwTnFfYnNnRTlYdG9yU3NOem9LOUJBY2JhRFVueXRJOXg4LWZmU0V3MkJGcG1LVUZmd1lRbkJBOG1HaEh6UkdoTDMxS08wb2NlWGE0ZEJCTExweHlDNEZua1RKTTV3?oc=5",
+            "source": "아시아투데이"
+          },
+          {
+            "title": "금융권 해킹, 중수청 이첩 안받기로…경찰이 계속 수사",
+            "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxOcnd2MlpYbGhZTllZRFVwbl9TdWpvVDlTSmk0MzRrLThZMjZjbHdBVFk2TWFzeDBRTEdNMU9lbVhJNE5LdUFRYUc2NkJzQW5ya0dsY293cGRyajhjOXBsa2trdWtYRGF6Zm1QUGs1ZndyVmk0S1JMcXVvMWVveXhnbnRMS0Z5WW5MamVBTV9R?oc=5",
+            "source": "국제신문"
+          },
+          {
+            "title": "중수청, '금융기관 해킹' 수사 불개시 통보…경찰 \"끝까지 추적\"(종합)",
+            "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOZ3pKRGVHNmhJSk5sYUJSWUV2bldxVFYwaWFKT3VOeGxUdjBGVGtwY2FxbVYxZGR4OVA2bV90S1QxenJHVTNNczFVUl94RWhJWTZDY2cxNzlVMmFQTklvT0YwVGlPcWFfYmJWTGNVMzJZZXNHUUFnejNUQ0JweDZjUw?oc=5",
+            "source": "이데일리"
+          },
+          {
+            "title": "금융권 해킹, 경찰이 계속 수사…중수청, 이첩 안받기로(종합2보)",
+            "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE5xU1pKSllfVjdGU2R4dVkyNDVuVjhySEVwSTk3SHFFSmFaN0lpajVVVWFTMW9MZVNscW1kZnRJamdjb21pRnpJenZjY2JSUnNDcGJ5OW45TmQ5UFIyY3VHTXFkNTdnVHVaeXZBbUVLQVZjS05y?oc=5",
+            "source": "연합뉴스 한민족센터"
+          }
+        ],
+        "cves": [],
+        "score": 19
+      },
+      {
+        "id": "n-9d4ec725",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "\"북한 인터넷 마비, 디도스 공격 때문\"…美 IT 업체 분석 의견",
+        "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9Td2JQbHJZMmxFRGQ2UWhtMkh0YUhSVW56TG1JRVZySWdlYzFQUjEtbU1lVTM1cG44bDNyd0d1bk9UdmlJWkZlZjJEc2drOUh6ZFE?oc=5",
+        "source": "노컷뉴스",
+        "published": "2026-10-23T06:27:47.000Z",
+        "snippet": "",
+        "outlets": [
+          "노컷뉴스",
+          "아시아경제",
+          "BBS불교방송",
+          "SBS 뉴스",
+          "YTN",
+          "연합뉴스"
+        ],
+        "related": [
+          {
+            "title": "美 네트워크 기업 \"北 인터넷 장애, 디도스 공격이 원인\"",
+            "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9uRmVlcVdqeGpwRjZPeDVBb3JidTA2a2ZzMEI1Qk5ENkNZRTdYckxzOXl0X0toS3hYMUVqZVp2OUlNWFUySmYxOHhCNm9DNWl1U3JmcHlIV3g0YWNvYk9GVg?oc=5",
+            "source": "아시아경제"
+          },
+          {
+            "title": "美업체 “북한 인터넷 접속 장애, 디도스 공격 때문”",
+            "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTFBGcllDUzZIanRJSTVURllPM2gzUWw0R1YxbVJhSjdyUXZPSWdNdkhoREFyNVhiRXFWYnNiS0hUM1BVYzRKdG40ZFBYQjQ5WTJJaEF4TWpaRDB6ZDcxNUZvSWg3ZkxieHM0UDZR?oc=5",
+            "source": "BBS불교방송"
+          },
+          {
+            "title": "\"최근 북한 인터넷 장애 원인은 디도스 공격\"…미 업체 분석",
+            "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5XTF90M1kyNzRJWjBrb0MxcHp0aGQxeFJpVE5rQm10MWMzbnVlendwaUdMVmFhaDl3Y2cxOVVheWZQbTNHdkNWZHpYTmlua1hNdVgyVEYyOXF6V1IyQ3VpYWc2WHhueTk3U2c?oc=5",
+            "source": "SBS 뉴스"
+          },
+          {
+            "title": "\"북한 인터넷 먹통 원인은 디도스 공격\"...미 네트워크 업체 분석",
+            "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE4xUzFja2Jvd3BKenQzRWcyN0llOEhXczEyc1E1X2dlTVFHMnBIcEVsVi0xdDVEVVBicWtKUHdmb21hdzdLMURxSmZmcmtxRHZlN0FzTnhHX1JuV2hBWEE?oc=5",
+            "source": "YTN"
+          },
+          {
+            "title": "\"북한 인터넷 장애 원인은 디도스 공격\"…美업체 분석",
+            "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBRc0s0bXhtV0VuTGF0R1hqLXFuZmdfbkJQRzJ2Z3h1cUp4ZzNhSVhMb1B1YUJfdkVhWXp5VlluT2NmbFhJS0t3SVlhNl9IR2dUMVY4YzZwRm11TFZaWE42UdIBYEFVX3lxTFBRc0s0bXhtV0VuTGF0R1hqLXFuZmdfbkJQRzJ2Z3h1cUp4ZzNhSVhMb1B1YUJfdkVhWXp5VlluT2NmbFhJS0t3SVlhNl9IR2dUMVY4YzZwRm11TFZaWE42UQ?oc=5",
+            "source": "연합뉴스"
+          }
+        ],
+        "cves": [],
+        "score": 18.3
+      },
+      {
+        "id": "n-ae7d4761",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "LG유플러스 홍범식 \"해킹 은폐, 사실 확인되면 합당한 책임\"…위약금 면제 요구엔 확답 피해 [2026국감]",
+        "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE02b0VWNkh5Y080YWlpYk5SNzloTlppbkl0aVNIRW9PTDZPbGdqT21wMUJ6cFJKU2g5U2lYcm1RMHV0U09WWGpIbS1FS21Va2JBR2Zwd2loU1l6TjhXRGFuNFBCY1l6a0NVT1RmN3M2ZlhJcWlRdEE?oc=5",
+        "source": "인포스탁데일리",
+        "published": "2026-10-23T07:59:30.000Z",
+        "snippet": "",
+        "outlets": [
+          "인포스탁데일리",
+          "인더스트리뉴스",
+          "매일일보",
+          "아이뉴스24",
+          "디지털투데이",
+          "디지털데일리",
+          "전자신문",
+          "연합인포맥스",
+          "뉴스토마토",
+          "Chosunbiz"
+        ],
+        "related": [
+          {
+            "title": "[국감이슈] LGU+ 홍범식, 해킹 은폐 확인 땐 '위약금 면제' 가능성…“합당한 책임 다할 것”",
+            "url": "https://news.google.com/rss/articles/CBMickFVX3lxTFBLZWF2WXlWN185UGJ0WDBFQlJsQ2RKVzU3SjRKdTNBQ0d4VW9PZ2VPQzV1ZjM3N3liaUJBMDl2cEc5NkxxLVo2NzI0T1VHWF83dV9FUlBGSDRNX1AxNXpCOWZVd3M2dkZCWDFGdjFjUmhfQQ?oc=5",
+            "source": "인더스트리뉴스"
+          },
+          {
+            "title": "홍범식 LG유플러스 대표 \"해킹 은폐 확인되면 합당한 책임 다할 것\"",
+            "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE1fUlg4cHZ5bUhxNUlVZDhFS0FTajZNTXNLNVJBWXdTSlN6amtKbDV6Zmo2UVVWREVrY2F1U0xseElLdF9KM0M3ZmNGY2VRMnJRU0U1Um5FVmVoeU1hZXp4Y1k5MUc?oc=5",
+            "source": "매일일보"
+          },
+          {
+            "title": "[2026 국감] 여야, LGU+ 해킹 은폐 의혹 질타⋯홍범식 \"사실 확인 시 합당한 책임\"",
+            "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTFBkYmE1eGg0Wi04Ni1BNDM4UDJHUVBlR0gxbWNXeTZoZllfNFVKa3FNT3ZoSkVnZGxQTnlFSHYtT2xjQVp3a0tUQTZ4NA?oc=5",
+            "source": "아이뉴스24"
+          },
+          {
+            "title": "[국감2026] LGU+ 홍범식 \"해킹 은폐 확인되면 합당한 책임\"…위약금 면제엔 신중",
+            "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE1laEtFdDVJckVRSVBrVW9WQnlKSkZCZnRRS09mR19kS0NhM2JDYjhsOGszS3gzQ1JrMDFBWEZubHhsamRYQ0MySWJYb0xyMERMWjgwZFVlT0dCaFN1Vm5zV2trYlRtWjlSZ212WGx0bEFXSUE?oc=5",
+            "source": "디지털투데이"
+          },
+          {
+            "title": "LGU+ 홍범식 \"해킹 은폐 사실로 확인되면 합당한 책임\" [2026 국감]",
+            "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE92eXhJQWNTZFRNOFR4a3Y3cHlmLXNjQkNrMUYzQVlyM1hqWDU0QldHaHQ1QlVkc2NPNGx2YVI3cmk0bWZXMUwzMGN0TnpPRkJBWVBBd21jTmFZbzdNNFVRZjZZS3o?oc=5",
+            "source": "디지털데일리"
+          }
+        ],
+        "cves": [],
+        "score": 16.1
+      },
+      {
+        "id": "n-56e7ac78",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "한전, 정보 유출 3만5000명 넘어…퇴직자·협력사 직원도 피해",
+        "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE92X3VYVGw0eXRvT3MxX19YVDE0TmYyQ2dVREc5eWRLeHNLN19obkJZQy1lZy1pbW90QjRla1hFb1RjNkUzOHVvM2ZsQ3FESTJVU3g0bkZsQ2J0dFBaWXpJZGVlTDg?oc=5",
+        "source": "매일일보",
+        "published": "2026-10-23T01:27:12.000Z",
+        "snippet": "",
+        "outlets": [
+          "매일일보",
+          "YTN",
+          "moneystorm.kr",
+          "연합뉴스TV",
+          "연합뉴스"
+        ],
+        "related": [
+          {
+            "title": "한전 개인정보 유출 만천 명 추가...퇴직자·협력사 직원 포함",
+            "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE9uSmxYREtvUVZ4YXVpQ3Q1WFRmM1VDRm5JZFZjeGhUVkZWcTZpRVlBdHFnSkdJY01iU3ZnNXNuUVhXVmczOFlFY0w2YW5PU0JNelBpLWNhLUM0OVliR1M2dzlpanpUNHFzVlA1eV9JOA?oc=5",
+            "source": "YTN"
+          },
+          {
+            "title": "한전 개인정보 유출 3만5528명으로 확대…퇴직자·협력사까지 털렸다",
+            "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1kU3BXN1lKQXZLYmFHM3BXNEExQTlKaHotcDVKLVowOGxtWktpOENJZlFpM0ZiZmNvN1A0TEhWaFlPbGtRSk5sQ0psNVEzOGtxeGFKTHQydDQ4SF8weEpockNnTDY1R211blE?oc=5",
+            "source": "moneystorm.kr"
+          },
+          {
+            "title": "한전, 개인정보 유출 1만1천명 추가 확인…퇴직자·협력사 직원도",
+            "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE0tVFk0Ykd6YWtxM2w3eWw5OGw0bkNlcVJwWW9SS21xdTFUM1M3SGV6NDVRSXllUHdTZ21qMERUSzFERDFrVWctY0RQeVNPakw1UXc2Y182WnRiSzYwbllPV1N1NHpqRnM?oc=5",
+            "source": "연합뉴스TV"
+          },
+          {
+            "title": "한전, 개인정보 유출 1만1천명 추가…퇴직자·협력사 직원 포함",
+            "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBDZUdQX2FWa09oVkZoSW53aTR6aFNPdTMzVW9SWTNtY2kza3NsTzljWTltb1JSYnZWM3hrRVhPdnU5UVZaanBERFdQZWt0YjRLdkpXbkFzQUlOLWRxX1FYZNIBYEFVX3lxTFBDZUdQX2FWa09oVkZoSW53aTR6aFNPdTMzVW9SWTNtY2kza3NsTzljWTltb1JSYnZWM3hrRVhPdnU5UVZaanBERFdQZWt0YjRLdkpXbkFzQUlOLWRxX1FYZA?oc=5",
+            "source": "연합뉴스"
+          }
+        ],
+        "cves": [],
+        "score": 15.9
+      }
+    ],
+    "international": [
+      {
+        "id": "n-89c43e5d",
+        "region": "international",
+        "lang": "en",
+        "title": "LiteLLM Suspects GitHub Token Leak in AI Gateway Logs Behind Malicious Package Release",
+        "url": "https://thehackernews.com/2026/10/litellm-suspects-github-token-leak-in.html",
+        "source": "The Hacker News",
+        "published": "2026-10-22T08:28:48.000Z",
+        "snippet": "LiteLLM on Wednesday disclosed that threat actors compromised \"multiple independent security controls\" to push a malicious version of the Python package containing a credential stealer and a backdoor. On October 21, 202…",
+        "outlets": [
+          "The Hacker News",
+          "SecurityWeek",
+          "BleepingComputer"
+        ],
+        "related": [
+          {
+            "title": "LiteLLM Compromised in Fresh Supply Chain Attack",
+            "url": "https://www.securityweek.com/litellm-compromised-in-fresh-supply-chain-attack/",
+            "source": "SecurityWeek"
+          },
+          {
+            "title": "LiteLLM release pipeline hacked to distribute info-stealer malware",
+            "url": "https://www.bleepingcomputer.com/news/security/litellm-release-pipeline-hacked-to-distribute-info-stealer-malware/",
+            "source": "BleepingComputer"
+          }
+        ],
+        "cves": [],
+        "score": 15.1
+      },
+      {
+        "id": "n-6f676746",
+        "region": "international",
+        "lang": "en",
+        "title": "China-Linked Hackers Use ARTEX AI Agents in ConnectWise Supply Chain Attack",
+        "url": "https://thehackernews.com/2026/10/china-linked-hackers-use-artex-ai.html",
+        "source": "The Hacker News",
+        "published": "2026-10-22T04:21:26.000Z",
+        "snippet": "Microsoft on Wednesday disclosed that a China state-aligned actor dubbed Storm-0940 was behind the recent supply chain compromise of the ConnectWise Cloud Backup application. During the incident, Storm-0940 used ARTEX,…",
+        "outlets": [
+          "The Hacker News",
+          "The Record",
+          "Dark Reading"
+        ],
+        "related": [
+          {
+            "title": "Microsoft blames ConnectWise attacks on Chinese state hacker using ARTEX AI agents",
+            "url": "https://therecord.media/china-cyber-connectwise-ai",
+            "source": "The Record"
+          },
+          {
+            "title": "Microsoft Links Storm-0940 to ConnectWise Supply Chain Attack",
+            "url": "https://www.darkreading.com/cyberattacks-data-breaches/microsoft-storm-0940-connectwise-supply-chain-attack",
+            "source": "Dark Reading"
+          }
+        ],
+        "cves": [],
+        "score": 15.1
+      },
+      {
+        "id": "n-5a344609",
+        "region": "international",
+        "lang": "en",
+        "title": "Arista Warns of Critical VeloCloud SQL Injection Zero-Day Exploited in Attacks",
+        "url": "https://thehackernews.com/2026/10/arista-warns-of-critical-velocloud-sql.html",
+        "source": "The Hacker News",
+        "published": "2026-10-22T19:05:17.000Z",
+        "snippet": "Attackers are exploiting a zero-day SQL injection flaw in Arista's VeloCloud Orchestrator (VCO), the central management system for VeloCloud SD-WAN networks, the company said in an advisory on October 22. The flaw lets…",
+        "outlets": [
+          "The Hacker News",
+          "BleepingComputer"
+        ],
+        "related": [
+          {
+            "title": "Arista patches new VeloCloud Orchestrator zero-day exploited in attacks",
+            "url": "https://www.bleepingcomputer.com/news/security/arista-patches-new-velocloud-orchestrator-zero-day-exploited-in-attacks/",
+            "source": "BleepingComputer"
+          }
+        ],
+        "cves": [],
+        "score": 12.2
+      },
+      {
+        "id": "n-b5736c37",
+        "region": "international",
+        "lang": "en",
+        "title": "Railway Says Intruder May Have Accessed Customer Secrets, Urges Credential Rotation",
+        "url": "https://thehackernews.com/2026/10/railway-says-intruder-may-have-accessed.html",
+        "source": "The Hacker News",
+        "published": "2026-10-22T11:15:42.000Z",
+        "snippet": "Platform-as-a-Service (PaaS) provider Railway on Wednesday disclosed \"anomalous activity\" related to systems that store customer environment variables. Upon further investigation, the company found that an unauthorized…",
+        "outlets": [
+          "The Hacker News",
+          "BleepingComputer"
+        ],
+        "related": [
+          {
+            "title": "Railway warns devs to rotate secrets after potential breach",
+            "url": "https://www.bleepingcomputer.com/news/security/railway-warns-devs-to-rotate-secrets-after-potential-breach/",
+            "source": "BleepingComputer"
+          }
+        ],
+        "cves": [],
+        "score": 9.7
+      },
+      {
+        "id": "n-60f4824a",
+        "region": "international",
+        "lang": "en",
+        "title": "INTERPOL Arrests 1,462 Suspects, Disrupts 10,909 Cybercrime Networks in Global Crackdown",
+        "url": "https://thehackernews.com/2026/10/interpol-arrests-1462-suspects-disrupts.html",
+        "source": "The Hacker News",
+        "published": "2026-10-22T13:38:22.000Z",
+        "snippet": "INTERPOL on Thursday announced that a coordinated law enforcement action has disrupted 10,909 malicious networks and recovered more than $105 million in illicit funds. In tandem, the effort saw law enforcement agencies…",
+        "outlets": [
+          "The Hacker News",
+          "The Record"
+        ],
+        "related": [
+          {
+            "title": "Cybercrime crackdown across Africa leads to 1,462 arrests, $105 million seized",
+            "url": "https://therecord.media/africa-cybercrime-interpol-arrests",
+            "source": "The Record"
+          }
+        ],
+        "cves": [],
+        "score": 8.7
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "kev",
+      "name": "CISA KEV",
+      "ok": true,
+      "count": 6,
+      "ms": 216
+    },
+    {
+      "id": "bleepingcomputer",
+      "name": "BleepingComputer",
+      "ok": true,
+      "count": 15,
+      "ms": 346
+    },
+    {
+      "id": "zdnetkr",
+      "name": "지디넷코리아",
+      "ok": true,
+      "count": 30,
+      "ms": 395
+    },
+    {
+      "id": "securityweek",
+      "name": "SecurityWeek",
+      "ok": true,
+      "count": 10,
+      "ms": 393
+    },
+    {
+      "id": "therecord",
+      "name": "The Record",
+      "ok": true,
+      "count": 5,
+      "ms": 413
+    },
+    {
+      "id": "thehackernews",
+      "name": "The Hacker News",
+      "ok": true,
+      "count": 50,
+      "ms": 417
+    },
+    {
+      "id": "krebs",
+      "name": "Krebs on Security",
+      "ok": true,
+      "count": 10,
+      "ms": 519
+    },
+    {
+      "id": "darkreading",
+      "name": "Dark Reading",
+      "ok": true,
+      "count": 50,
+      "ms": 698
+    },
+    {
+      "id": "gnews-kr",
+      "name": "Google 뉴스",
+      "ok": true,
+      "count": 100,
+      "ms": 776
+    },
+    {
+      "id": "dailysecu",
+      "name": "데일리시큐",
+      "ok": true,
+      "count": 50,
+      "ms": 1381
+    },
+    {
+      "id": "nvd-kev",
+      "name": "NVD (KEV 상세)",
+      "ok": true,
+      "count": 6,
+      "ms": 1394
+    },
+    {
+      "id": "boannews",
+      "name": "보안뉴스",
+      "ok": true,
+      "count": 50,
+      "ms": 1453
+    },
+    {
+      "id": "datanet",
+      "name": "데이터넷",
+      "ok": true,
+      "count": 50,
+      "ms": 1455
+    },
+    {
+      "id": "kisa-notice",
+      "name": "KISA 보안공지",
+      "ok": true,
+      "count": 10,
+      "ms": 1757
+    },
+    {
+      "id": "kisa-alert",
+      "name": "KISA 경보단계",
+      "ok": true,
+      "count": 10,
+      "ms": 1970
+    },
+    {
+      "id": "kisa-vuln",
+      "name": "KISA 취약점 정보",
+      "ok": true,
+      "count": 10,
+      "ms": 2011
+    },
+    {
+      "id": "nvd",
+      "name": "NVD (신규 CVE)",
+      "ok": true,
+      "count": 527,
+      "ms": 36265
+    },
+    {
+      "id": "epss",
+      "name": "FIRST EPSS",
+      "ok": true,
+      "count": 12,
+      "ms": 88
+    }
+  ],
+  "summarizer": {
+    "engine": "rules"
+  },
+  "stats": {
+    "news": {
+      "items": 420,
+      "fresh": 238,
+      "clusters": 149,
+      "eligible": 85
+    },
+    "nvd_published": 527,
+    "kev_catalog": "2026.10.21",
+    "kev_recent": 6
+  }
+}

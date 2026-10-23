@@ -1,0 +1,233 @@
+# 일일 보안 브리핑 (sec-brief v2)
+
+매일 아침 **이슈가 된 보안 뉴스와 주요 취약점**을 모아 **카카오톡(나에게 보내기)** 으로 받고,
+지난 브리핑을 **웹 이력**(날짜별 페이지·취약점 색인·검색)으로 남깁니다.
+
+GitHub Actions 가 매일 06:35(KST)에 정해진 코드로 실행합니다. PC 를 켜 둘 필요가 없고,
+공개 저장소라면 비용이 들지 않습니다(Claude 요약을 켜면 API 사용료만 듭니다).
+
+```
+매일 06:35 KST ─ GitHub Actions
+  ├─ 수집: CISA KEV · NVD · FIRST EPSS · KISA 보호나라(보안공지·취약점·경보단계)
+  │        국내외 보안 매체 RSS · Google 뉴스(국내) · (선택) 네이버 뉴스 검색
+  ├─ 선별: 여러 매체가 함께 다룬 사건을 묶어 '이슈' 판단, 홍보·행사 기사 제외
+  │        취약점은 실제 악용(KEV) 우선, 고위험은 같은 공지끼리 묶고 관심 제품·KISA 권고·보도 여부로 순위
+  ├─ (선택) Claude: 기사 고르기·한국어 요약 — 사실(CVE·점수·링크)은 원본 그대로
+  ├─ 이력 저장: data/briefs/YYYY/YYYY-MM-DD.json·.md → 저장소에 커밋
+  ├─ 웹 이력 게시: GitHub Pages (https://<아이디>.github.io/<저장소>/)
+  └─ 카카오톡: 주요 3건 카드 + [오늘 브리핑 전체] [지난 브리핑] 버튼
+```
+
+## 무엇이 나아졌나 (이전 도구 대비)
+
+| | 이전 (루틴·아티팩트 / sec-brief-local) | 지금 |
+|---|---|---|
+| 실행 | 클라우드 에이전트가 매번 작성하거나, 내 PC 가 켜져 있어야 함 | GitHub Actions 가 같은 코드로 매일 실행, 실패하면 GitHub 가 메일로 알림 |
+| 카카오 토큰 | 액세스 토큰(수 시간 유효)을 직접 넣어 하루 뒤 401 | 리프레시 토큰으로 매일 갱신, 갱신된 토큰은 암호화해 보관 → 다시 로그인할 일 없음 |
+| 카카오 메시지 | 텍스트 템플릿에 긴 본문 (공식 한도 200자 초과) | 리스트형 카드 3건 + 버튼 2개 (또는 200자 이내 텍스트형) |
+| 웹 이력 | claude.ai 아티팩트(로그인 필요) 또는 내 PC 의 파일 | 휴대폰에서 바로 열리는 날짜별 주소, 지난 목록·취약점 색인·전체 검색·RSS |
+| 취약점 | NVD CVSS 9.5 이상만 → 실제 악용(KEV) 누락, 같은 공지의 CVE 가 상위를 독차지 | KEV 신규 등재를 먼저, 고위험은 공지 단위로 묶어 순위 |
+| 국내 공지 | 없음 | KISA 보안공지·취약점 정보·**사이버위기 경보단계**(바뀌면 맨 앞에 강조) |
+| 뉴스 | 검색어 결과(키 필요, 홍보 기사 섞임) | 보안 매체·Google 뉴스 RSS(키 불필요), 보도 매체 수로 이슈 판단 |
+| 실패 표시 | 조용히 비어 있음 | 출처별 수집 상태를 브리핑에 기록, '없음'과 '수집 실패'를 구분 |
+
+## 처음 설정 (약 20분)
+
+### 1. GitHub 저장소에 올리기
+
+1. GitHub 에서 새 저장소를 만듭니다 (예: `sec-brief`). **Public** 이면 Actions·Pages 가 무료입니다.
+   비공개 저장소에서 Pages 를 쓰려면 GitHub Pro 이상이 필요하고, 그 경우에도 웹 이력 주소 자체는 공개 주소입니다.
+2. 이 폴더를 올립니다.
+
+   ```powershell
+   cd C:\Users\user\sec-brief
+   git add -A
+   git commit -m "보안 브리핑 v2"
+   git remote add origin https://github.com/<아이디>/sec-brief.git
+   git push -u origin main
+   ```
+
+3. 저장소 **Settings → Pages → Build and deployment → Source** 를 **GitHub Actions** 로 바꿉니다.
+
+### 2. 카카오 개발자 앱 만들기
+
+[카카오 디벨로퍼스](https://developers.kakao.com)에 로그인해 앱을 하나 만든 뒤:
+
+1. **[카카오 로그인] > [사용 설정]** — 상태를 **ON**
+2. **[카카오 로그인] > [동의항목] > [접근권한]** — **카카오톡 메시지 전송** 을 설정 (선택 동의, 목적: 보안 브리핑 수신)
+3. **[앱] > [플랫폼 키] > [REST API 키]**
+   - **카카오 로그인 리다이렉트 URI** 에 `http://localhost:8765/oauth` 추가
+   - **REST API 키** 와 **클라이언트 시크릿**(기본으로 켜져 있음) 값을 복사해 둡니다
+4. **[앱] > [제품 링크 관리] > [웹 도메인]** — `https://<아이디>.github.io` 등록
+   (카카오 메시지의 버튼·카드가 이 주소로 열립니다. 등록하지 않으면 버튼이 나타나지 않습니다)
+
+### 3. 리프레시 토큰 받기 (이 PC 에서 한 번)
+
+```powershell
+cd C:\Users\user\sec-brief
+node src/cli.mjs kakao-login
+```
+
+REST API 키와 클라이언트 시크릿을 물으면 붙여 넣습니다. 브라우저에서 카카오 로그인과 동의를 마치면
+카카오톡 **나와의 채팅**에 확인 메시지가 오고, 터미널에 등록할 값이 나옵니다.
+리프레시 토큰은 비밀번호처럼 다루세요(채팅·메신저에 붙여 넣지 마세요).
+
+> 로그인 직후 사용자 정보 조회를 한 번 하도록 해 두었습니다. 카카오는 로그인 후 24시간 안에
+> 사용자 정보 API 를 부르지 않은 연결을 '가입 미완료'로 보고 끊습니다.
+
+### 4. GitHub Secrets 등록
+
+저장소 **Settings → Secrets and variables → Actions → New repository secret**
+
+| 이름 | 값 | 필수 |
+|---|---|---|
+| `KAKAO_REST_API_KEY` | REST API 키 | 카카오톡에 필요 |
+| `KAKAO_CLIENT_SECRET` | 클라이언트 시크릿 (사용 안 하면 생략) | 카카오톡에 필요 |
+| `KAKAO_REFRESH_TOKEN` | 3단계에서 받은 리프레시 토큰 | 카카오톡에 필요 |
+| `ANTHROPIC_API_KEY` | Claude API 키 | 선택: 한국어 요약·선별 |
+| `NVD_API_KEY` | [NVD API 키](https://nvd.nist.gov/developers/request-an-api-key) (무료) | 선택: NVD 요청 한도 완화 |
+| `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET` | 네이버 검색 API | 선택: 국내 기사 보강 |
+
+### 5. 첫 실행
+
+**Actions → daily-brief → Run workflow** (카카오톡: 보내기). 3~5분 뒤 카카오톡이 오고,
+`https://<아이디>.github.io/sec-brief/` 에서 웹 이력을 볼 수 있습니다. 이후에는 매일 자동입니다.
+연결만 확인하려면 카카오톡을 **연결 확인 메시지만** 으로 고르세요.
+
+## 매일 받는 것
+
+**카카오톡** (리스트형) — 머리글 `10.23(금) 보안 브리핑 | 악용 6·고위험 69·뉴스 10` 아래 세 장의 카드:
+경보 단계 변경(있을 때) → 실제 악용 취약점 → 국내 1위 이슈 → 해외 1위 이슈 순으로 앞의 세 개.
+카드를 누르면 웹 이력의 해당 항목으로, 버튼은 그날 브리핑 전체와 지난 브리핑 목록으로 갑니다.
+
+**웹 이력**
+- 날짜별 브리핑: 오늘의 요약, 악용 확인 취약점(CISA KEV 신규), 신규 고위험 취약점(대상·영향·조치),
+  KISA 공지, 국내·해외 뉴스(함께 보도한 매체 목록), 수집 상태
+- 지난 브리핑: 월별 목록 / 취약점 색인: 지금까지 실린 CVE 전체(처음 실린 날) / 검색 / RSS(`feed.xml`)
+- 휴대폰·PC, 밝은·어두운 화면 모두 대응. 검색 엔진에는 노출하지 않도록(noindex) 했습니다.
+
+**저장소 이력** — `data/briefs/YYYY/YYYY-MM-DD.json`(원자료)과 `.md`(사람이 읽는 전문). GitHub 화면에서도 읽힙니다.
+
+## 설정 바꾸기 (`config.json`)
+
+| 항목 | 뜻 | 기본값 |
+|---|---|---|
+| `site.title` | 웹·메시지 제목 (공개 저장소이니 기관명은 신중히) | 일일 보안 브리핑 |
+| `window_hours` | 기사 수집 범위 (실행 시각 기준) | 30 |
+| `vulns.cvss_min` | 고위험 기준 점수 | 9.0 |
+| `vulns.kev_days` | KEV 신규 등재를 며칠 전까지 볼지 (주말 대비) | 3 |
+| `vulns.critical_limit` | 본문에 싣는 고위험 묶음 수 (나머지는 목록) | 5 |
+| `vulns.watch` | 관심 제품·벤더 — **기관에서 쓰는 제품을 넣으면** 순위가 올라갑니다 | 주요 벤더 60여 개 |
+| `news.domestic_limit` / `international_limit` | 국내·해외 기사 수 | 5 / 5 |
+| `news.feeds` | 뉴스 출처. `enabled: false` 로 끄고, 같은 형식으로 추가 | 11곳 |
+| `summarizer.engine` | `auto`(키가 있으면 Claude) / `claude` / `rules` | auto |
+| `summarizer.model` | Claude 모델 | claude-opus-5-5 |
+| `kakao.template` | `list`(카드 3건) / `text`(200자 글) | list |
+
+**실행 시각**은 `.github/workflows/daily-brief.yml` 의 `cron`(UTC 기준)에서 바꿉니다.
+기본 `35 21 * * *` = 매일 06:35 KST. GitHub 사정으로 시작이 몇 분~수십 분 늦어질 수 있습니다.
+
+## Claude 요약 (선택)
+
+`ANTHROPIC_API_KEY` 가 있으면 하루 한 번 Claude 를 불러 후보 기사 40여 건과 취약점 목록에서
+담당자가 볼 기사를 고르고, 영어 기사 제목·취약점 설명을 한국어로 정리합니다.
+
+- CVE 번호·점수·링크·날짜는 코드가 원본에서 가져오고, Claude 는 문장만 씁니다.
+  응답에 입력에 없는 CVE 번호나 기사 ID 가 섞이면 그 항목은 버리고 규칙 기반 문안을 씁니다.
+- 실패(키 오류·한도·거절)해도 브리핑은 규칙 기반 문안으로 나가고, 하단 수집 상태에 이유가 남습니다.
+- 안전 분류기가 요청을 거절하면 다른 모델로 자동 재시도하도록(`fallbacks: "default"`) 켜 두었습니다.
+- 비용은 대략 하루 한 번 입력 1~2만 토큰·출력 수천 토큰입니다. 기본 모델(claude-opus-5-5) 기준
+  하루 0.1~0.2달러 수준이며, `summarizer.model` 을 `claude-haiku-5-5` 로 바꾸면 훨씬 쌉니다.
+  실제 사용 토큰은 브리핑 하단 '수집 상태'에 날마다 기록됩니다.
+- Claude 에 보내는 것은 공개 기사 제목·요약과 공개 CVE 정보뿐입니다.
+
+## 이전 브리핑 옮기기
+
+이전 계정의 저장소나 `sec-brief-local` 의 `out/` 폴더(`daily-brief-YYYYMMDD.md`)를 받아 두었다면:
+
+```powershell
+node src/cli.mjs import C:\경로\out      # 하위 폴더까지 날짜가 든 .md/.txt 파일을 찾습니다
+node src/cli.mjs build                   # 로컬에서 확인할 때
+git add data; git commit -m "이전 브리핑 옮김"; git push
+```
+
+원문 그대로 '지난 형식 브리핑'으로 보여 주고, 맨 아래 `지난 브리핑 모아보기`(아티팩트 링크)는 뗍니다.
+CVE 번호와 링크는 색인·검색에 들어갑니다. 같은 날짜에 새 형식 브리핑이 있으면 덮어쓰지 않습니다.
+
+## 로컬에서 실행·미리 보기
+
+```powershell
+npm install                      # 처음 한 번 (Claude 요약을 쓸 때만 필요한 SDK)
+node src/cli.mjs collect         # 오늘 브리핑 만들기 (--force 로 다시)
+node src/cli.mjs build           # _site/ 웹 페이지
+node src/cli.mjs serve           # http://localhost:8080
+node src/cli.mjs preview         # 카카오톡으로 보낼 메시지(JSON)만 출력
+npm test                         # 자동 시험
+```
+
+비밀값은 `.env` 파일(저장소에 올라가지 않음)에 `KAKAO_REST_API_KEY=...` 꼴로 넣습니다.
+**카카오 발송은 한 곳에서만** 하세요. GitHub 와 내 PC 가 같은 리프레시 토큰을 각자 갱신하면
+한쪽 토큰이 만료됩니다. 평소에는 GitHub 가 보내고, 로컬은 `preview` 로 확인만 하는 것을 권합니다.
+
+## 운영
+
+- **실패 알림**: 워크플로가 실패하면 GitHub 가 메일을 보냅니다(기본 알림 설정). Actions 화면에서 원인을 봅니다.
+- **카카오 토큰**: 리프레시 토큰은 약 60일 유효하고, 남은 기간이 1개월 미만이 되면 갱신 응답에 새 값이 옵니다.
+  새 값은 `data/kakao-state.json` 에 AES-256-GCM 으로 암호화해 커밋합니다(키는 `KAKAO_REFRESH_TOKEN` 에서 유도 —
+  저장소만으로는 풀 수 없음). 매일 실행되는 한 다시 로그인할 일이 없습니다.
+  다음 경우에는 `kakao-login` 을 다시 하고 `KAKAO_REFRESH_TOKEN` 을 바꾸세요: 한 달 넘게 실행이 멈췄을 때,
+  카카오계정 비밀번호를 바꿨을 때, 앱 연결을 끊었을 때 (오류 메시지에 `KOE322` 가 보입니다).
+- **같은 날 다시 보내기**: Run workflow 에서 '오늘 브리핑이 이미 있어도 다시 만들기' 를 체크합니다.
+  예약 실행은 같은 날짜를 두 번 보내지 않습니다.
+- **예약 실행 중지**: 공개 저장소에 60일 동안 활동이 없으면 GitHub 가 예약 실행을 멈춥니다.
+  이 도구는 매일 이력을 커밋하므로 해당되지 않지만, 멈췄다면 Actions 화면에서 다시 켭니다.
+- **수집 실패**: 브리핑 하단 '수집 상태'를 보세요. 일시적인 오류는 다음 날 자동으로 회복되고,
+  주소가 바뀐 RSS 는 `config.json` 의 `news.feeds` 에서 고칩니다. NVD 가 느리면 `NVD_API_KEY` 를 넣으세요.
+
+## 보안
+
+- 비밀값은 GitHub Secrets(로컬은 `.env`)에만 둡니다. 저장소에는 암호화된 카카오 상태 파일만 들어갑니다.
+- 공개 저장소이므로 기관 내부 정보·자산 목록을 `config.json` 에 넣지 마세요(`vulns.watch` 에 제품명 정도는 무방하나 판단은 기관 기준으로).
+- 워크플로의 액션은 커밋 해시로 고정했고, 작업별 권한을 최소로 줬으며, 입력값은 스크립트에 직접 넣지 않고 환경 변수로 넘깁니다.
+- 웹 페이지는 외부 스크립트·글꼴을 쓰지 않고, 모든 글을 이스케이프하며, http(s) 주소만 링크로 만듭니다.
+- RSS 는 DTD·외부 엔티티를 해석하지 않는 방식으로 읽고, 응답 크기·시간에 상한을 둡니다.
+- `kakao-login` 의 임시 서버는 127.0.0.1 에서만 열리고, 요청 확인값(state)이 다른 요청은 무시합니다.
+
+## 파일 구성
+
+```
+sec-brief/
+├── config.json                 설정 (비밀값 없음)
+├── .github/workflows/
+│   ├── daily-brief.yml         매일 수집·게시·발송
+│   └── test.yml                코드를 바꾸면 시험
+├── src/
+│   ├── cli.mjs                 명령 (run·collect·build·send·preview·kakao-login·import·serve)
+│   ├── collect.mjs             하루치 수집·선별·저장
+│   ├── sources/                CISA KEV · NVD · EPSS · RSS · 네이버
+│   ├── news.mjs                기사 묶기(같은 사건)·점수·선별
+│   ├── vulns.mjs               취약점 선별·묶기·한국어 문안
+│   ├── vocab.mjs               CWE·취약점 유형 번역, 핵심어 가중치
+│   ├── summarize.mjs           (선택) Claude 선별·요약과 응답 검증
+│   ├── brief.mjs               Markdown·카카오 메시지
+│   ├── kakao.mjs               토큰 갱신·암호화 보관·발송·로그인 도우미
+│   ├── site.mjs, site-assets.mjs  웹 이력
+│   ├── store.mjs               이력 저장·중복 방지(최근 브리핑에서 읽음)
+│   └── legacy.mjs              이전 브리핑 옮기기
+├── data/
+│   ├── briefs/YYYY/            날짜별 브리핑 (.json 원자료 + .md 전문)
+│   └── kakao-state.json        카카오 토큰 상태 (암호화)
+└── test/                       자동 시험 (node --test)
+```
+
+## 자주 겪는 문제
+
+| 증상 | 확인할 것 |
+|---|---|
+| 카카오 `KOE322` | 리프레시 토큰 만료·무효 → `kakao-login` 다시, `KAKAO_REFRESH_TOKEN` 교체 |
+| 카카오 `KOE010` / `KOE101` | 클라이언트 시크릿 / REST API 키 값 |
+| 카카오 `KOE006` (로그인 때) | 리다이렉트 URI 가 `http://localhost:8765/oauth` 와 글자까지 같은지 |
+| 카카오 `-402` | 동의항목에서 카카오톡 메시지 전송 설정 후 `kakao-login` 다시 |
+| 메시지는 오는데 버튼이 없음 | [제품 링크 관리] > [웹 도메인] 에 `https://<아이디>.github.io` 등록 |
+| 카드를 눌렀더니 404 | 웹 게시가 실패했거나 아직 반영 전 — Actions 의 '웹 이력 게시' 작업과 Pages 설정(Source: GitHub Actions) |
+| 브리핑에 '수집 실패' | 하단 수집 상태의 오류 문구. NVD 는 가끔 느리거나 점검 중입니다 |

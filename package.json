@@ -1,0 +1,21 @@
+{
+  "name": "sec-brief",
+  "version": "2.0.0",
+  "private": true,
+  "description": "매일 아침 보안 뉴스·주요 취약점 브리핑을 카카오톡으로 받고, 지난 브리핑을 웹 이력으로 남깁니다.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "brief": "node src/cli.mjs run",
+    "collect": "node src/cli.mjs collect",
+    "build": "node src/cli.mjs build",
+    "send": "node src/cli.mjs send",
+    "serve": "node src/cli.mjs serve",
+    "test": "node --test \"test/*.test.mjs\""
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.1.0"
+  }
+}

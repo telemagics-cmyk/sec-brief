@@ -1,0 +1,148 @@
+# 매일 아침 보안 브리핑: 수집 → 이력 커밋(data/) → 웹 이력 게시(GitHub Pages) → 카카오톡 발송
+#
+# 필요한 설정 (README 참고)
+#   Settings > Pages > Build and deployment > Source: GitHub Actions
+#   Settings > Secrets and variables > Actions
+#     KAKAO_REST_API_KEY, KAKAO_CLIENT_SECRET, KAKAO_REFRESH_TOKEN   카카오톡 발송
+#     ANTHROPIC_API_KEY   (선택) Claude 한국어 요약
+#     NVD_API_KEY         (선택) NVD 요청 한도 완화
+#     NAVER_CLIENT_ID, NAVER_CLIENT_SECRET   (선택) 네이버 뉴스 검색
+#
+# 액션은 공급망 위험을 줄이려고 커밋 해시로 고정했다(옆 주석이 버전).
+name: daily-brief
+
+on:
+  schedule:
+    # 매일 06:35 KST (= 전날 21:35 UTC). GitHub 사정으로 시작이 수 분~수십 분 늦을 수 있다.
+    - cron: '35 21 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: '오늘 브리핑이 이미 있어도 다시 만들기'
+        type: boolean
+        default: false
+      kakao:
+        description: '카카오톡'
+        type: choice
+        options: ['보내기', '연결 확인 메시지만', '보내지 않기']
+        default: '보내기'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sec-brief
+  cancel-in-progress: false
+
+jobs:
+  brief:
+    name: 수집·이력 저장·웹 페이지
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    outputs:
+      site_url: ${{ steps.url.outputs.site_url }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Pages 주소 확인
+        id: pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+        continue-on-error: true
+      - name: 사이트 주소 정하기
+        id: url
+        env:
+          PAGES_URL: ${{ steps.pages.outputs.base_url }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          url="${PAGES_URL:-https://${OWNER,,}.github.io/${REPO}}"
+          echo "site_url=${url%/}" >> "$GITHUB_OUTPUT"
+          echo "사이트 주소: ${url%/}"
+
+      - name: 수집·브리핑 작성
+        env:
+          SITE_URL: ${{ steps.url.outputs.site_url }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+          FORCE: ${{ inputs.force && '--force' || '' }}
+        run: node src/cli.mjs collect $FORCE
+
+      - name: 이력 커밋
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data
+          if git diff --cached --quiet; then echo '바뀐 이력 없음'; exit 0; fi
+          git commit -q -m "브리핑 $(TZ=Asia/Seoul date +%F)"
+          for i in 1 2 3; do git push -q && exit 0; git pull -q --rebase; done
+          exit 1
+
+      - name: 웹 페이지 만들기
+        env:
+          SITE_URL: ${{ steps.url.outputs.site_url }}
+        run: node src/cli.mjs build
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: _site
+
+  deploy:
+    name: 웹 이력 게시
+    needs: brief
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+  kakao:
+    name: 카카오톡 발송
+    # 게시가 실패해도 메시지는 보낸다(링크는 다음 게시 때 열림)
+    needs: [brief, deploy]
+    if: ${{ always() && needs.brief.result == 'success' && (github.event_name == 'schedule' || inputs.kakao != '보내지 않기') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.ref }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - name: 발송
+        env:
+          SITE_URL: ${{ needs.brief.outputs.site_url }}
+          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+          KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+          KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
+          MODE: ${{ inputs.kakao == '연결 확인 메시지만' && '--test' || '' }}
+          FORCE: ${{ inputs.force && '--force' || '' }}
+        run: node src/cli.mjs send $MODE $FORCE
+      - name: 토큰 상태 커밋
+        # 새 리프레시 토큰(암호화)을 잃지 않도록 발송이 실패해도 저장한다
+        if: always()
+        run: |
+          [ -f data/kakao-state.json ] || exit 0
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/kakao-state.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -q -m "카카오 발송 기록 $(TZ=Asia/Seoul date +%F)"
+          for i in 1 2 3; do git push -q && exit 0; git pull -q --rebase; done
+          exit 1

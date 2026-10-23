@@ -1,0 +1,203 @@
+{
+  "_설명": "값을 바꾸면 다음 실행부터 반영됩니다. 비밀값(API 키·토큰)은 이 파일이 아니라 GitHub Secrets(로컬은 .env)에 넣으세요.",
+  "site": {
+    "_설명": "url 을 비워 두면 GitHub Actions 가 Pages 주소를 자동으로 넣습니다.",
+    "title": "일일 보안 브리핑",
+    "url": "",
+    "recent_days": 45
+  },
+  "window_hours": 30,
+  "vulns": {
+    "_설명": "cvss_min 이상 신규 CVE 중 critical_limit 묶음을 본문에 싣습니다. watch 에 기관이 쓰는 제품을 넣으면 순위가 올라갑니다.",
+    "cvss_min": 9,
+    "kev_days": 3,
+    "exploited_limit": 10,
+    "critical_limit": 5,
+    "watch": [
+      "Microsoft",
+      "Windows",
+      "Exchange",
+      "SharePoint",
+      "Cisco",
+      "Fortinet",
+      "FortiOS",
+      "FortiGate",
+      "Ivanti",
+      "Citrix",
+      "NetScaler",
+      "VMware",
+      "Palo Alto",
+      "PAN-OS",
+      "Juniper",
+      "F5",
+      "BIG-IP",
+      "SonicWall",
+      "Check Point",
+      "Atlassian",
+      "Confluence",
+      "Jira",
+      "GitLab",
+      "Jenkins",
+      "Oracle",
+      "WebLogic",
+      "SAP",
+      "Apache",
+      "Tomcat",
+      "Struts",
+      "nginx",
+      "OpenSSL",
+      "OpenSSH",
+      "PHP",
+      "Node.js",
+      "Kubernetes",
+      "Docker",
+      "Chrome",
+      "Firefox",
+      "Apple",
+      "iOS",
+      "Android",
+      "Samsung",
+      "Adobe",
+      "Veeam",
+      "Zimbra",
+      "MOVEit",
+      "Arista",
+      "HPE",
+      "Aruba",
+      "Dell",
+      "Synology",
+      "QNAP",
+      "Zyxel",
+      "ipTIME",
+      "Hancom",
+      "한컴",
+      "AhnLab",
+      "안랩",
+      "이스트소프트",
+      "Okta",
+      "Splunk",
+      "Elastic"
+    ]
+  },
+  "news": {
+    "_설명": "kind: security(보안 전문 매체) / general(일반 IT 매체: 보안 기사만 고름) / aggregator(Google 뉴스처럼 여러 언론사를 모은 것). enabled: false 로 끌 수 있습니다.",
+    "domestic_limit": 5,
+    "international_limit": 5,
+    "feeds": [
+      {
+        "id": "boannews",
+        "name": "보안뉴스",
+        "url": "https://www.boannews.com/rss/allArticle.xml",
+        "lang": "ko",
+        "kind": "security"
+      },
+      {
+        "id": "dailysecu",
+        "name": "데일리시큐",
+        "url": "https://www.dailysecu.com/rss/allArticle.xml",
+        "lang": "ko",
+        "kind": "security"
+      },
+      {
+        "id": "datanet",
+        "name": "데이터넷",
+        "url": "https://www.datanet.co.kr/rss/allArticle.xml",
+        "lang": "ko",
+        "kind": "general"
+      },
+      {
+        "id": "zdnetkr",
+        "name": "지디넷코리아",
+        "url": "https://feeds.feedburner.com/zdkorea",
+        "lang": "ko",
+        "kind": "general"
+      },
+      {
+        "id": "gnews-kr",
+        "name": "Google 뉴스",
+        "url": "https://news.google.com/rss/search?q=%ED%95%B4%ED%82%B9%20OR%20%EB%9E%9C%EC%84%AC%EC%9B%A8%EC%96%B4%20OR%20%22%EA%B0%9C%EC%9D%B8%EC%A0%95%EB%B3%B4%20%EC%9C%A0%EC%B6%9C%22%20OR%20%EB%94%94%EB%8F%84%EC%8A%A4%20OR%20%EC%95%85%EC%84%B1%EC%BD%94%EB%93%9C%20OR%20%EC%82%AC%EC%9D%B4%EB%B2%84%EA%B3%B5%EA%B2%A9%20OR%20%EC%A0%95%EB%B3%B4%EC%9C%A0%EC%B6%9C%20when%3A1d&hl=ko&gl=KR&ceid=KR:ko",
+        "lang": "ko",
+        "kind": "aggregator"
+      },
+      {
+        "id": "bleepingcomputer",
+        "name": "BleepingComputer",
+        "url": "https://www.bleepingcomputer.com/feed/",
+        "lang": "en",
+        "kind": "general"
+      },
+      {
+        "id": "thehackernews",
+        "name": "The Hacker News",
+        "url": "https://feeds.feedburner.com/TheHackersNews",
+        "lang": "en",
+        "kind": "security"
+      },
+      {
+        "id": "securityweek",
+        "name": "SecurityWeek",
+        "url": "https://www.securityweek.com/feed/",
+        "lang": "en",
+        "kind": "security"
+      },
+      {
+        "id": "therecord",
+        "name": "The Record",
+        "url": "https://therecord.media/feed",
+        "lang": "en",
+        "kind": "security"
+      },
+      {
+        "id": "darkreading",
+        "name": "Dark Reading",
+        "url": "https://www.darkreading.com/rss.xml",
+        "lang": "en",
+        "kind": "security"
+      },
+      {
+        "id": "krebs",
+        "name": "Krebs on Security",
+        "url": "https://krebsonsecurity.com/feed/",
+        "lang": "en",
+        "kind": "security"
+      }
+    ],
+    "naver_queries": [
+      "해킹 랜섬웨어 침해사고",
+      "개인정보 유출 보안",
+      "공공기관 사이버공격"
+    ]
+  },
+  "advisories": {
+    "days": 2,
+    "limit": 10,
+    "feeds": [
+      {
+        "id": "kisa-notice",
+        "name": "KISA 보안공지",
+        "url": "https://www.boho.or.kr/kr/rss.do?bbsId=B0000133"
+      },
+      {
+        "id": "kisa-vuln",
+        "name": "KISA 취약점 정보",
+        "url": "https://www.boho.or.kr/kr/rss.do?bbsId=B0000302"
+      },
+      {
+        "id": "kisa-alert",
+        "name": "KISA 경보단계",
+        "url": "https://www.boho.or.kr/kr/rss.do?bbsId=B0000342"
+      }
+    ]
+  },
+  "summarizer": {
+    "_설명": "engine: auto(키가 있으면 Claude) / claude / rules. model 은 Claude 모델 ID.",
+    "engine": "auto",
+    "model": "claude-opus-5-5",
+    "effort": "medium",
+    "news_candidates": 40
+  },
+  "kakao": {
+    "_설명": "template: list(주요 3건 카드) / text(200자 요약 글)",
+    "template": "list"
+  }
+}

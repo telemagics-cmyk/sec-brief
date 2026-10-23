@@ -77,6 +77,9 @@ async function cmdCollect(cfg, args) {
     opts.date = args.date;
   }
   const { brief, skipped } = await collectBrief(cfg, opts);
+  if (skipped && inActions) {
+    notice(`${brief.date} 브리핑이 이미 있어 새로 만들지 않았습니다. 다시 만들려면 Run workflow 에서 '오늘 브리핑이 이미 있어도 다시 만들기'를 체크하세요.`);
+  }
   if (!skipped) {
     const bad = brief.sources.filter((s) => !s.ok);
     console.log(

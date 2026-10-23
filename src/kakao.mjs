@@ -318,11 +318,17 @@ export async function kakaoLogin(cfg, { port = 8765, env = process.env, log = co
     scope: 'talk_message',
     state,
   })}`;
+  const masked = clientId.length > 8 ? `${clientId.slice(0, 4)}…${clientId.slice(-4)} (${clientId.length}자)` : '(짧은 값 — 키를 다시 확인)';
   log('');
-  log('1) 카카오 개발자 콘솔에 아래 주소가 리다이렉트 URI 로 등록돼 있어야 합니다.');
-  log(`     [앱] > [플랫폼 키] > [REST API 키] > 카카오 로그인 리다이렉트 URI: ${redirectUri}`);
+  log(`사용할 REST API 키: ${masked}`);
+  log(`리다이렉트 URI   : ${redirectUri}`);
+  log('');
+  log('1) 카카오 개발자 콘솔에 위 주소가 그대로 등록돼 있어야 합니다.');
+  log('     [앱] > [플랫폼 키] > [REST API 키] (위 키와 앞뒤 4글자가 같은 키) > 카카오 로그인 리다이렉트 URI');
   log('2) 브라우저에서 카카오 로그인 후 "카카오톡 메시지 전송"에 동의하세요.');
   log(`   브라우저가 열리지 않으면 이 주소를 직접 여세요:\n   ${authUrl}`);
+  log('3) 브라우저에 KOE006 이 나오면: 위 키와 콘솔의 REST API 키가 같은지, 주소를 "비즈니스 인증" 칸이 아닌');
+  log('   "카카오 로그인 리다이렉트 URI" 칸에 넣고 저장했는지 확인하세요. (끝내려면 Ctrl+C)');
   log('');
   const waiting = waitForCode({ port, state });
   if (open) openBrowser(authUrl);

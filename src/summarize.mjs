@@ -53,6 +53,8 @@ export function systemPrompt({ domesticLimit, internationalLimit }) {
    - region: 한국 기관·기업·국민이 관련된 사건이면 domestic, 아니면 international.
    - outlets 가 많을수록 여러 매체가 다룬 이슈입니다.
 2. 고른 기사마다 title_ko(한국어 제목, 40자 이내)와 summary_ko(무슨 일이 있었고 왜 중요한지, 110자 이내)를 쓰세요.
+   - 영문 기사의 title_ko 는 원문 제목을 자연스러운 한국어로 옮긴 것입니다. 회사·제품·서비스·공격 그룹·악성코드 이름은
+     번역하지 말고 원래 영문 표기를 그대로 두세요(예: Railway 를 '철도'로, LiteLLM 을 다른 말로 바꾸지 않음).
 3. vulns 의 모든 항목에 대해 title_ko(제품과 취약점 유형, 40자 이내), target(영향받는 제품·버전, 60자 이내), impact(공격 조건과 결과, 70자 이내), action(해야 할 조치, 70자 이내)을 쓰세요.
 4. overview: 오늘 브리핑 전체를 3문장 이내, 200자 이내로 요약하세요. 가장 시급한 조치를 먼저 쓰세요.
 

@@ -122,7 +122,7 @@ REST API 키와 클라이언트 시크릿을 물으면 붙여 넣습니다. 브�
 | `news.domestic_limit` / `international_limit` | 국내·해외 기사 수 | 5 / 5 |
 | `news.feeds` | 뉴스 출처. `enabled: false` 로 끄고, 같은 형식으로 추가 | 11곳 |
 | `summarizer.engine` | `auto`(키가 있으면 Claude) / `claude` / `rules` | auto |
-| `summarizer.model` | Claude 모델 | claude-opus-5-5 |
+| `summarizer.model` | Claude 모델 (`claude-haiku-5-5` 월 약 0.1~0.2달러 / `claude-opus-5-5` 월 약 3~6달러) | claude-haiku-5-5 |
 | `kakao.template` | `list`(카드 3건) / `text`(200자 글) | list |
 
 **실행 시각**은 `.github/workflows/daily-brief.yml` 의 `cron`(UTC 기준)에서 바꿉니다.
@@ -131,15 +131,20 @@ REST API 키와 클라이언트 시크릿을 물으면 붙여 넣습니다. 브�
 ## Claude 요약 (선택)
 
 `ANTHROPIC_API_KEY` 가 있으면 하루 한 번 Claude 를 불러 후보 기사 40여 건과 취약점 목록에서
-담당자가 볼 기사를 고르고, 영어 기사 제목·취약점 설명을 한국어로 정리합니다.
+담당자가 볼 기사를 고르고, **해외 기사 제목·요약을 한국어로 옮기고**, 취약점 설명을 한국어로 정리합니다.
+카카오톡의 [해외] 카드와 웹 페이지에는 번역한 제목이, 웹 페이지에는 원제도 함께 나옵니다.
 
+**키 받기**: https://platform.claude.com/settings/keys 에서 API 키를 만들고(사용하려면 Billing 에서 크레딧을 충전),
+저장소 Secrets 에 `ANTHROPIC_API_KEY` 로 넣으면 다음 실행부터 적용됩니다.
+
+- 이 저장소는 `claude-haiku-5-5` 로 설정돼 있습니다. 하루 한 번 입력 1~2만 토큰·출력 수천 토큰이라
+  월 0.1~0.2달러 수준입니다. 품질을 더 올리려면 `config.json` 의 `summarizer.model` 을 `claude-opus-5-5`(월 약 3~6달러)로.
+  실제 사용 토큰은 브리핑 하단 '수집 상태'에 날마다 기록됩니다.
+- 회사·제품·공격 그룹 이름은 번역하지 않고 원문 표기를 그대로 둡니다(예: Railway 를 '철도'로 옮기지 않음).
 - CVE 번호·점수·링크·날짜는 코드가 원본에서 가져오고, Claude 는 문장만 씁니다.
   응답에 입력에 없는 CVE 번호나 기사 ID 가 섞이면 그 항목은 버리고 규칙 기반 문안을 씁니다.
-- 실패(키 오류·한도·거절)해도 브리핑은 규칙 기반 문안으로 나가고, 하단 수집 상태에 이유가 남습니다.
-- 안전 분류기가 요청을 거절하면 다른 모델로 자동 재시도하도록(`fallbacks: "default"`) 켜 두었습니다.
-- 비용은 대략 하루 한 번 입력 1~2만 토큰·출력 수천 토큰입니다. 기본 모델(claude-opus-5-5) 기준
-  하루 0.1~0.2달러 수준이며, `summarizer.model` 을 `claude-haiku-5-5` 로 바꾸면 훨씬 쌉니다.
-  실제 사용 토큰은 브리핑 하단 '수집 상태'에 날마다 기록됩니다.
+- 실패(키 오류·한도·거절)해도 브리핑은 규칙 기반 문안(영문 원제)으로 나가고, 하단 수집 상태에 이유가 남습니다.
+  Opus·Sonnet 은 안전 분류기가 거절하면 다른 모델로 자동 재시도(`fallbacks: "default"`)하고, Haiku 는 그 기능이 없어 규칙 기반 문안으로 대신합니다.
 - Claude 에 보내는 것은 공개 기사 제목·요약과 공개 CVE 정보뿐입니다.
 
 ## 이전 브리핑 옮기기

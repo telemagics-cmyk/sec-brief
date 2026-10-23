@@ -1,0 +1,1019 @@
+{
+  "version": 2,
+  "date": "2026-10-24",
+  "generated_at": "2026-10-24T08:57:33+09:00",
+  "window": {
+    "hours": 30,
+    "from": "2026-10-22T17:57:33.742Z",
+    "to": "2026-10-23T23:57:33.742Z"
+  },
+  "engine": "claude-haiku-5-5",
+  "overview": "CISA KEV 등재 취약점인 VeloCloud와 Collabora CODE 서버는 10월 26일까지 조치가 필요합니다. PHP2Shell 악용 시도와 Node.js 취약점 공개로 웹 서버 긴급 점검이 시급합니다. 국내에서는 대한항공·아시아나 고객정보 유출과 LG유플러스 해킹 은폐 논란이 이어지고 있습니다.",
+  "cvss_min": 9,
+  "critical_total": 86,
+  "failed": {
+    "kev": false,
+    "nvd": false,
+    "kisa": false,
+    "news": false
+  },
+  "exploited": [
+    {
+      "id": "CVE-2026-114625",
+      "section": "exploited",
+      "vendor": "Arista",
+      "product": "VeloCloud Orchestrator",
+      "name": "Arista VeloCloud Orchestrator SQL Injection Vulnerability",
+      "dateAdded": "2026-10-23",
+      "due": "2026-10-26",
+      "ransomware": false,
+      "description": "Arista VeloCloud Orchestrator on-prem contains a SQL injection vulnerability that may allow a remote attacker to access privileged internal functionality and impact the VCO host. Successful exploitation may compromise the confidentiality, integrity, and availability of the orchestrator and data managed by the orchestrator.",
+      "cwes": [
+        "CWE-89"
+      ],
+      "cvss": {
+        "score": 9.9,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "active",
+        "automatable": "no",
+        "technicalImpact": "total"
+      },
+      "epss": 0.00555,
+      "epssPct": 0.45586,
+      "published": "2026-10-22T21:17:16.870",
+      "links": [
+        "https://www.arista.com/en/support/advisories-notices/security-advisory/24838-security-advisory-0199",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-114625"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-114625",
+      "ko": {
+        "title": "Arista VeloCloud Orchestrator SQL 인젝션 (KEV 등재)",
+        "target": "Arista VeloCloud Orchestrator 온프레미스 버전 (영향 버전 벤더 확인 필요)",
+        "impact": "원격 공격자가 권한 있는 내부 기능에 접근, 기밀성·무결성·가용성 침해 가능 (CVSS 9.9)",
+        "action": "2026-10-26 KEV 기한 내 벤더 패치 적용, 관리 인터페이스 외부 노출 차단"
+      }
+    },
+    {
+      "id": "CVE-2026-110447",
+      "section": "exploited",
+      "vendor": "Collabora",
+      "product": "Collabora Online – Built-in CODE Server",
+      "name": "Collabora Online – Built-in CODE Server OS Command Injection Vulnerability",
+      "dateAdded": "2026-10-23",
+      "due": "2026-10-26",
+      "ransomware": false,
+      "description": "Collabora Collabora Online – Built-in CODE Server when used within the NextCloud platform contains an OS command injection vulnerability that allows for remote code execution when the CODE server isn't running.",
+      "cwes": [
+        "CWE-78"
+      ],
+      "cvss": {
+        "score": 9.2,
+        "version": "4.0",
+        "vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X"
+      },
+      "ssvc": {
+        "exploitation": "active",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": 0.01225,
+      "epssPct": 0.68615,
+      "published": "2026-10-14T03:17:20.683",
+      "links": [
+        "https://help.nextcloud.com/t/to-collabora-built-in-user-update-asap/250516",
+        "https://github.com/CollaboraOnline/online/security/advisories/GHSA-g3vx-3m76-fghh",
+        "https://github.com/CollaboraOnline/richdocumentscode/issues/354"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-110447",
+      "ko": {
+        "title": "Collabora Online 내장 CODE 서버 OS 명령 주입 (KEV 등재)",
+        "target": "Collabora Online 내장 CODE 서버 (NextCloud 연동 환경)",
+        "impact": "CODE 서버 미실행 조건에서 원격 코드 실행 가능 (CVSS 9.2)",
+        "action": "2026-10-26 KEV 기한 내 벤더 패치 적용, 미사용 시 CODE 서버 비활성화"
+      }
+    }
+  ],
+  "exploited_more": [],
+  "critical": [
+    {
+      "id": "CVE-2026-53942",
+      "ids": [
+        "CVE-2026-53942"
+      ],
+      "section": "critical",
+      "label": "Conda Organization Infrastructure",
+      "vendor": "",
+      "cna": "security-advisories@github.com",
+      "status": "Awaiting Analysis",
+      "published": "2026-10-23T15:17:32.157",
+      "description": "Conda Organization Infrastructure is a centralized location for infrastructure codes. Prior to commit 9c0f238, a GitHub Actions Pwn Request vulnerability appears to remain present in conda/conda. The affected workflow is .github/workflows/update.yml. It is triggered by issue_comment events containing @conda-bot render or @conda-bot recreate. For the render path, the workflow obtains the pull request head repository and branch from the PR API, checks out that PR-controlled repository/ref using secrets.SYNC_TOKEN, and then runs conda/actions/template-files@7f6830b1428a9bd47f0b068892c77eae95207037. The external template-files action reads its default configuration and templates from the checked-out working directory. In the confirmed finding, that action uses an unsandboxed Jinja2 environment to render attacker-controlled template content. This creates a Pwn Request chain in which an untrusted PR/comment path can reach template rendering in a privileged token context. This issue has been patched via commit 9c0f238.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-53942",
+          "text": "Conda Organization Infrastructure is a centralized location for infrastructure codes. Prior to commit 9c0f238, a GitHub Actions Pwn Request vulnerability appears to remain present in conda/conda. The affected workflow is .github/workflows/update.yml. It is triggered by issue_comment events containi…"
+        }
+      ],
+      "cwes": [
+        "CWE-94"
+      ],
+      "cvss": {
+        "score": 9.9,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:L"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "no",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://github.com/conda/infrastructure/commit/9c0f23857282ff5cf7a6b3ad6bf0dd6f9974be55",
+        "https://github.com/conda/infrastructure/security/advisories/GHSA-pf87-fcg3-wjfh"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-53942",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": true,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": false
+      },
+      "score": 11.9,
+      "ko": {
+        "title": "Conda 조직 인프라 GitHub Actions Pwn Request 취약점",
+        "target": "conda/conda 저장소 Conda Organization Infrastructure (9c0f238 커밋 이전)",
+        "impact": "issue_comment 트리거 워크플로로 악성 코드 실행 및 워크플로 권한 악용 우려 (CVSS 9.9)",
+        "action": "9c0f238 이후 커밋 적용 여부 확인, update.yml 워크플로 점검, 벤더 공지 확인"
+      }
+    },
+    {
+      "id": "CVE-2026-112846",
+      "ids": [
+        "CVE-2026-112846"
+      ],
+      "section": "critical",
+      "label": "ThemeREX Group Save Life",
+      "vendor": "",
+      "cna": "audit@patchstack.com",
+      "status": "Deferred",
+      "published": "2026-10-23T13:17:06.057",
+      "description": "Deserialization of Untrusted Data vulnerability in ThemeREX Group Save Life save-life allows Object Injection.This issue affects Save Life: from n/a through 1.2.14.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-112846",
+          "text": "Deserialization of Untrusted Data vulnerability in ThemeREX Group Save Life save-life allows Object Injection.This issue affects Save Life: from n/a through 1.2.14."
+        }
+      ],
+      "cwes": [
+        "CWE-502"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": null,
+      "epss": null,
+      "links": [
+        "https://patchstack.com/database/wordpress/theme/save-life/vulnerability/wordpress-save-life-theme-1-2-14-php-object-injection-vulnerability?_s_id=cve"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-112846",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": true,
+        "oldId": false,
+        "wordpress": true,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 10.3,
+      "ko": {
+        "title": "ThemeREX Save Life 역직렬화 객체 주입",
+        "target": "Save Life 1.2.14 이하 (버전 n/a 포함)",
+        "impact": "신뢰되지 않은 데이터 역직렬화로 원격 객체 주입 가능, 전반적 침해 우려 (CVSS 9.8)",
+        "action": "벤더 패치 버전 공지 확인 후 업데이트, 미사용 시 플러그인 제거"
+      }
+    },
+    {
+      "id": "CVE-2026-112851",
+      "ids": [
+        "CVE-2026-112851"
+      ],
+      "section": "critical",
+      "label": "ThemeREX Group HotLock",
+      "vendor": "",
+      "cna": "audit@patchstack.com",
+      "status": "Deferred",
+      "published": "2026-10-23T13:17:06.697",
+      "description": "Deserialization of Untrusted Data vulnerability in ThemeREX Group HotLock hotlock allows Object Injection.This issue affects HotLock: from n/a through 1.3.9.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-112851",
+          "text": "Deserialization of Untrusted Data vulnerability in ThemeREX Group HotLock hotlock allows Object Injection.This issue affects HotLock: from n/a through 1.3.9."
+        }
+      ],
+      "cwes": [
+        "CWE-502"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": null,
+      "epss": null,
+      "links": [
+        "https://patchstack.com/database/wordpress/theme/hotlock/vulnerability/wordpress-hotlock-theme-1-3-9-php-object-injection-vulnerability?_s_id=cve"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-112851",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": true,
+        "oldId": false,
+        "wordpress": true,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 10.3,
+      "ko": {
+        "title": "ThemeREX HotLock 역직렬화 객체 주입",
+        "target": "HotLock 1.3.9 이하 (버전 n/a 포함)",
+        "impact": "신뢰되지 않은 데이터 역직렬화로 원격 객체 주입 가능, 전반적 침해 우려 (CVSS 9.8)",
+        "action": "벤더 패치 버전 공지 확인 후 업데이트, 미사용 시 제거"
+      }
+    },
+    {
+      "id": "CVE-2026-115812",
+      "ids": [
+        "CVE-2026-115812"
+      ],
+      "section": "critical",
+      "label": "CVE-2026-115812",
+      "vendor": "",
+      "cna": "ff89ba41-3aa1-4d27-914a-91399e9639e5",
+      "status": "Awaiting Analysis",
+      "published": "2026-10-23T18:17:21.460",
+      "description": "Relative path traversal during model archive extraction in Amazon Web Services Multi Model Server 1.1.11 and earlier might allow remote actors to execute arbitrary code via a crafted model archive. Multi Model Server is end of life and no fixed version is available. Users should discontinue use of Multi Model Server and migrate to a supported model serving solution.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-115812",
+          "text": "Relative path traversal during model archive extraction in Amazon Web Services Multi Model Server 1.1.11 and earlier might allow remote actors to execute arbitrary code via a crafted model archive. Multi Model Server is end of life and no fixed version is available. Users should discontinue use of…"
+        }
+      ],
+      "cwes": [
+        "CWE-23"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": null,
+      "epss": null,
+      "links": [
+        "https://aws.amazon.com/security/security-bulletins/2026-148-aws/"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-115812",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 10.3,
+      "ko": {
+        "title": "AWS Multi Model Server 경로 순회 임의 코드 실행",
+        "target": "Multi Model Server 1.1.11 이하 (EOL, 수정 버전 없음)",
+        "impact": "악성 모델 아카이브로 임의 코드 실행 가능, 인증 없이 원격 공격 가능 (CVSS 9.8)",
+        "action": "서비스 사용 중단 및 대체 제품 전환, 모델 아카이브 출처 검증"
+      }
+    },
+    {
+      "id": "CVE-2026-46651",
+      "ids": [
+        "CVE-2026-46651",
+        "CVE-2026-46652",
+        "CVE-2026-55486"
+      ],
+      "section": "critical",
+      "label": "CVE-2026-46651",
+      "vendor": "",
+      "cna": "security-advisories@github.com",
+      "status": "Deferred",
+      "published": "2026-10-23T15:17:31.453",
+      "description": "The Goobi viewer is a web application that allows digitised material to be displayed in a web browser. From version 24.03 to before version 26.05, the DownloadTaskEndpoint WebSocket endpoint (/tasks/download/monitor.socket) in goobi-viewer-core accepts download requests from unauthenticated users. This issue has been patched in version 26.05.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-46651",
+          "text": "The Goobi viewer is a web application that allows digitised material to be displayed in a web browser. From version 24.03 to before version 26.05, the DownloadTaskEndpoint WebSocket endpoint (/tasks/download/monitor.socket) in goobi-viewer-core accepts download requests from unauthenticated users.…"
+        },
+        {
+          "id": "CVE-2026-46652",
+          "text": "The Goobi viewer is a web application that allows digitised material to be displayed in a web browser. From version 24.03 to before version 26.05, ExternalFilesDownloader.getFilename() extracts the destination filename from a server-supplied Content-Disposition response header and passes it directl…"
+        },
+        {
+          "id": "CVE-2026-55486",
+          "text": "The Goobi viewer is a web application that allows digitised material to be displayed in a web browser. From version 25.08 to before version 26.05, the IIIF Auth 2.0 endpoints auth/login and auth/token in AuthorizationFlowResource accept an origin query parameter without validation and then (1) embe…"
+        }
+      ],
+      "cwes": [
+        "CWE-306",
+        "CWE-552",
+        "CWE-918",
+        "CWE-22",
+        "CWE-73",
+        "CWE-79",
+        "CWE-113",
+        "CWE-1336"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": null,
+      "epss": null,
+      "links": [
+        "https://github.com/intranda/goobi-viewer-core/commit/5281245708447ae3419cb42492fbb8af731a2ce5",
+        "https://github.com/intranda/goobi-viewer-core/commit/b8943ee963e2aa1131da2212eaf85c5a2d90214f",
+        "https://github.com/intranda/goobi-viewer-core/releases/tag/v26.05"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-46651",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 10.2,
+      "ko": {
+        "title": "Goobi viewer 미인증 접근·경로 순회 등 다중 취약점",
+        "target": "Goobi viewer 24.03~26.05 미만 (IIIF Auth는 25.08~26.05 미만)",
+        "impact": "미인증 다운로드 요청 수락, 파일명 경로 순회, SSRF·XSS 공격 가능 (CVSS 9.8)",
+        "action": "26.05 이상 버전으로 업그레이드, WebSocket·IIIF 엔드포인트 접근 제한"
+      }
+    }
+  ],
+  "critical_more": [
+    {
+      "id": "CVE-2026-112856",
+      "ids": [
+        "CVE-2026-112856"
+      ],
+      "label": "ThemeREX Group Vagabonds",
+      "cvss": 9.8,
+      "title": "ThemeREX Group Vagabonds 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-112859",
+      "ids": [
+        "CVE-2026-112859"
+      ],
+      "label": "ThemeREX Group Little Birdies",
+      "cvss": 9.8,
+      "title": "ThemeREX Group Little Birdies 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-115931",
+      "ids": [
+        "CVE-2026-115931"
+      ],
+      "label": "CVE-2026-115931",
+      "cvss": 9.9,
+      "title": "CVE-2026-115931 안전하지 않은 리플렉션"
+    },
+    {
+      "id": "CVE-2026-63244",
+      "ids": [
+        "CVE-2026-63244"
+      ],
+      "label": "CVE-2026-63244",
+      "cvss": 9.8,
+      "title": "CVE-2026-63244 인증 우회"
+    },
+    {
+      "id": "CVE-2026-25784",
+      "ids": [
+        "CVE-2026-25784"
+      ],
+      "label": "CVE-2026-25784",
+      "cvss": 9.8,
+      "title": "CVE-2026-25784 권한 관리 부적절"
+    },
+    {
+      "id": "CVE-2026-57116",
+      "ids": [
+        "CVE-2026-57116"
+      ],
+      "label": "PraisonAI",
+      "cvss": 9.8,
+      "title": "PraisonAI 정보 노출"
+    },
+    {
+      "id": "CVE-2026-53921",
+      "ids": [
+        "CVE-2026-53921"
+      ],
+      "label": "CVE-2026-53921",
+      "cvss": 9.8,
+      "title": "CVE-2026-53921 스택 버퍼 오버플로"
+    },
+    {
+      "id": "CVE-2026-115889",
+      "ids": [
+        "CVE-2026-115889",
+        "CVE-2026-115893"
+      ],
+      "label": "Wasmtime",
+      "cvss": 9.9,
+      "title": "Wasmtime 타입 혼동 등 2건"
+    },
+    {
+      "id": "CVE-2025-30047",
+      "ids": [
+        "CVE-2025-30047",
+        "CVE-2025-30050",
+        "CVE-2025-30054",
+        "CVE-2025-30046"
+      ],
+      "label": "CVE-2025-30047",
+      "cvss": 9.4,
+      "title": "CVE-2025-30047 신뢰할 수 없는 데이터 역직렬화 등 4건"
+    },
+    {
+      "id": "CVE-2026-114357",
+      "ids": [
+        "CVE-2026-114357"
+      ],
+      "label": "CVE-2026-114357",
+      "cvss": 9.3,
+      "title": "CVE-2026-114357 중요 기능 인증 누락"
+    },
+    {
+      "id": "CVE-2026-115727",
+      "ids": [
+        "CVE-2026-115727"
+      ],
+      "label": "AgenticSeek",
+      "cvss": 9.2,
+      "title": "AgenticSeek 원격 코드 실행"
+    },
+    {
+      "id": "CVE-2026-107685",
+      "ids": [
+        "CVE-2026-107685"
+      ],
+      "label": "CVE-2026-107685",
+      "cvss": 9.1,
+      "title": "CVE-2026-107685 인증서 검증 부적절"
+    },
+    {
+      "id": "CVE-2026-112862",
+      "ids": [
+        "CVE-2026-112862"
+      ],
+      "label": "CVE-2026-112862",
+      "cvss": 9.8,
+      "title": "CVE-2026-112862 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-112853",
+      "ids": [
+        "CVE-2026-112853"
+      ],
+      "label": "CVE-2026-112853",
+      "cvss": 9.8,
+      "title": "CVE-2026-112853 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-112857",
+      "ids": [
+        "CVE-2026-112857"
+      ],
+      "label": "CVE-2026-112857",
+      "cvss": 9.8,
+      "title": "CVE-2026-112857 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-112860",
+      "ids": [
+        "CVE-2026-112860"
+      ],
+      "label": "CVE-2026-112860",
+      "cvss": 9.3,
+      "title": "CVE-2026-112860 SQL 삽입"
+    },
+    {
+      "id": "CVE-2026-112847",
+      "ids": [
+        "CVE-2026-112847"
+      ],
+      "label": "ThemeREX ZenSoul",
+      "cvss": 9.8,
+      "title": "ThemeREX ZenSoul 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-112848",
+      "ids": [
+        "CVE-2026-112848"
+      ],
+      "label": "CVE-2026-112848",
+      "cvss": 9.8,
+      "title": "CVE-2026-112848 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-112854",
+      "ids": [
+        "CVE-2026-112854"
+      ],
+      "label": "CVE-2026-112854",
+      "cvss": 9.8,
+      "title": "CVE-2026-112854 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-112855",
+      "ids": [
+        "CVE-2026-112855"
+      ],
+      "label": "CVE-2026-112855",
+      "cvss": 9.8,
+      "title": "CVE-2026-112855 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-112858",
+      "ids": [
+        "CVE-2026-112858"
+      ],
+      "label": "CVE-2026-112858",
+      "cvss": 9.8,
+      "title": "CVE-2026-112858 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-94267",
+      "ids": [
+        "CVE-2026-94267"
+      ],
+      "label": "CVE-2026-94267",
+      "cvss": 9,
+      "title": "CVE-2026-94267 코드 삽입"
+    }
+  ],
+  "advisories": [
+    {
+      "id": "a-b3ecbf24",
+      "source": "KISA 보안공지",
+      "title": "PHP 신규 취약점(CVE-2026-115560) 임시 조치 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72237",
+      "date": "2026-10-24"
+    }
+  ],
+  "news": {
+    "domestic": [
+      {
+        "id": "n-fbf1a409",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "대한항공·아시아나 고객정보 유출...\"해외 협력사가 뚫려\"",
+        "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE9raXRJNjM3LTdPejhub1RoSi1GVUxfSUZPQjdxRDVla09qTXFLMHhHQTlmTlhLRWdKWnhVYlBOY3BXVEFUcFRZQk91cld1cDMtNE1lOE1IZVVUZVR6Vmc?oc=5",
+        "source": "YTN",
+        "published": "2026-10-23T16:18:00.000Z",
+        "snippet": "",
+        "outlets": [
+          "YTN",
+          "한겨레",
+          "전자신문",
+          "조선일보",
+          "매일일보",
+          "디지털데일리",
+          "동아일보",
+          "한국일보",
+          "머니투데이",
+          "경향신문",
+          "서울신문",
+          "뉴시스",
+          "경기일보",
+          "한국경제"
+        ],
+        "related": [
+          {
+            "title": "대한항공·아시아나 예약번호 등 고객 정보 유출…“협력사 해킹 피해”",
+            "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE4xbjhiX2k3bFpIa196RkE1SzJOU25sRG0zWTJjdE1sVEpraU9JLThlU0YyRm9TNkEyZjhXYzNzSlpHbDJrM0hCR1JGbXJZSGwzenl3MU1xOWE5WUJlOWlzSDZIX2hhSnBfTEE?oc=5",
+            "source": "한겨레"
+          },
+          {
+            "title": "대한항공·아시아나 고객정보 유출…글로벌 IT 협력사 해킹 피해",
+            "url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE96ZmJNcFFWdEFwMWdwa1NFc2JNRGViX0pDUXJKVDNzb25Hai1nME1nNURZYllNSHM2U0tLMUFKTXVJNDBDc0N0dDNOalFTUQ?oc=5",
+            "source": "전자신문"
+          },
+          {
+            "title": "대한항공·아시아나항공 고객정보 유출… 해외 IT업체서 보안 사고",
+            "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxOSkNSNXBFUmk3RHF6NHlwc28yOUlzR3JxUFhBTmpCallsYXB4d1VvRlNXaTl1RlU0eDRuMkhJc2d5UXNaN184VnhUclZRRzRhTFlGUjRQU3dyNUtDc0M2ZXRSRWk4TkZ2S0FuejFxOXpQZi1HZWExWGpYUGtrT0MyNHQ3ZkNrRW9qXzZTZFZWbw?oc=5",
+            "source": "조선일보"
+          },
+          {
+            "title": "대한항공·아시아나, IT 외주사 해킹에 개인정보 유출",
+            "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE9IeXpZT3FRQ3czX3lJOG9KRXgzVGxkazZfWEVLekM3SlhPanNObmZWYkZvdnlhVXNJSnNCem5VOFFta280XzJoSnRydU1HUnBjWjNfQWNqZVMtOWJQM2NpREVVbVM?oc=5",
+            "source": "매일일보"
+          },
+          {
+            "title": "대한항공·아시아나 고객정보 유출…협력사 `아마데우스` 해킹 피해",
+            "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFAwNzdzZW5mMFc4UDdLNld5Y1Y4VlpJLXFNbkRZdEg5bVlhbXE3WlBXcVdJUmQxNXd3cUxSeDVNZGRHZU90TlpYdVViYUhlR1I1M1JVbzdvbDBkWFY5SEYyYS1aYmQ?oc=5",
+            "source": "디지털데일리"
+          }
+        ],
+        "cves": [],
+        "score": 22,
+        "title_ko": "대한항공·아시아나 고객정보 유출, 해외 협력사 해킹",
+        "summary_ko": "대한항공·아시아나 예약번호 등 고객정보가 글로벌 IT 협력사 해킹으로 유출됨. 여러 매체가 보도 중이며 항공사 제3자 보안 관리 점검이 필요함."
+      },
+      {
+        "id": "n-e80d1c40",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "홍범식 LGU+ \"해킹 은폐 확인되면 합당한 책임지겠다\"",
+        "url": "https://zdnet.co.kr/view/?no=20261023174347",
+        "source": "지디넷코리아",
+        "published": "2026-10-23T08:43:47.000Z",
+        "snippet": "[지디넷코리아]홍범식 LG유플러스 사장이 해킹 사실을 고의로 은폐하거나 정부 조사를 방해한 사실이 확인되면 합당한 책임을 지겠다고 밝혔다. 해킹 우려로 통신서비스를 해지하려는 이용자 위약금 면제에 나설 것이냐는 국회의 질의에 대한 답변이다. 홍 사장은 23일 국회 과학기술정보방송통신위원회 국정감사에서 “이유 여하를 막론하고 여러 가지 불편을 야기한 점 대단히 송구스럽게 생각한다”라며 “사법…",
+        "outlets": [
+          "지디넷코리아",
+          "뉴스핌",
+          "연합뉴스TV",
+          "연합뉴스",
+          "연합인포맥스",
+          "뉴스토마토"
+        ],
+        "related": [
+          {
+            "title": "'국감 출석' 홍범식 LGU+ 대표 \"해킹 은폐 확인되면 합당한 책임\"",
+            "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFAxVUFJdzBqLW1kQXdHMHlXdUZLQWhaNnMzY0xMQmNwOVVhYTVvRVE2enkwcnJ4T0luT1ZNakFCTWRHT3NfemkxbXBHWkl3R1ZDTmdCMXlLeGVzcURw?oc=5",
+            "source": "뉴스핌"
+          },
+          {
+            "title": "LGU+ 해킹 은폐 의혹에 \"사법 판단 따라 합당한 책임 다할 것\"",
+            "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTFBFbmVlNEE3TEZ1R00yYTBnUEd0RU9Bbk9PRzNJdkdWMUc5X1gtZG9KX2tONTczUk9mVEJWM01sLTFnb0hKdGhpclNGZG5VeXVYUWVhTEhRQmlDVkROYUxFYlh2UjdPaWs?oc=5",
+            "source": "연합뉴스TV"
+          },
+          {
+            "title": "LGU+ 홍범식, 해킹 은폐 의혹에 \"사법 판단 따라 책임 다할 것\"(종합)",
+            "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE53dHVXVV9NVGFqMjZlNC04R1ZRbkRKNkwzVEdnSDUyWEZXMHlQR2tpdmNHbzIwTWVmcnhFM3lLLWRrS1dUd19YWU1YSXVRcGVvYjlmM3VUTmwyT2vSAWBBVV95cUxQNk8yYXBFYWhCVmdkajhwRVNnU205WFZBdXd1Rmxvaloya3lLR2Fua24wX0EwTUwxcU9yaHdVa1dGLWhzWUZab1VNY25fUzZta1lkc2Qtbnh0X3FGa0ZoMzM?oc=5",
+            "source": "연합뉴스"
+          },
+          {
+            "title": "홍범식 LGU+ 사장, 해킹 은폐 의혹에 \"조사에 따라 합당한 책임 질 것\"",
+            "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTFBHbi1OVTJZaG12NlY2NjgyRi1jdDBuZFdvR3JnNUF4LTV4aXVMOEo4eFVNRDE1RUxJQ2xNV2NyeGFKOWd6MTJoN0kyZy1oaXBIZEdOZ0hXdThIVmloRXFneDM4cWFHUjRUUkk4S0hpWU3SAXRBVV95cUxNOGNTRmdaanJqcXdvQjRZdG05ZHF6cHdOYlc1NUVaVEh3YS1hWDdvc2pTX2t0Q24wV0lCSzFzZE9pU1RUN25MblpYZmFySUd1QkxzdU9ISHJjM1E0TzkxbXdPN2Jnd3VfOHdyVXhvaUIzdFlmZA?oc=5",
+            "source": "연합인포맥스"
+          },
+          {
+            "title": "해킹 고의 은폐 의혹 지적에…홍범식 LGU+ 대표 \"조사결과에 따라 합당한 책임 지겠다\"",
+            "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE0wNWx6S0NsSGZkeUQwdWVYbXYxVXdfcDhhU3N5OXNOMmJTbjZROVhEcXVpRWY2aDg2aFpsNWt0X2ZBYzE5WVVzaXg4dFFUbUhnOER1cW9nTk5LSzVENGFPTQ?oc=5",
+            "source": "뉴스토마토"
+          }
+        ],
+        "cves": [],
+        "score": 12.8,
+        "title_ko": "LGU+ 홍범식 대표 해킹 은폐 확인 시 책임 표명",
+        "summary_ko": "LG유플러스 해킹 사실 은폐나 정부 조사 방해가 확인되면 책임지겠다고 국감에서 밝힘. 위약금 면제 확답은 없었음. 사후 대응 신뢰성 우려."
+      },
+      {
+        "id": "n-4d26d022",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "[단독 후속] 네트워크·보안기업 태광네트웍정보, 해킹·정보유출 공식 인정…해킹조직 263GB 탈취 주장, 공공과 기업 공급망 보안 파장 확산 우려",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209013",
+        "source": "데일리시큐",
+        "published": "2026-10-23T00:51:02.000Z",
+        "snippet": "국내 네트워크·정보보안 전문기업 태광네트웍정보(대표 추병진)가 외부 해킹으로 개인정보가 유출된 사실을 공식 인정했다. 국제 랜섬웨어 조직 에베레스트(Everest)가 약 263GB의 내부 자료를 탈취했다고 주장한 가운데, 회사가 실제 정보유출 사고를 확인하면서 관련 기관과 기업의 공급망 보안에 미칠 파장도 주목된다. 데일리시큐는 지난 10월 17일 에베레스트가 태광네트웍정보를 공격 대상으로…",
+        "outlets": [
+          "데일리시큐"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 10,
+        "title_ko": "태광네트웍정보, 해킹·정보유출 공식 인정",
+        "summary_ko": "보안기업 태광네트웍정보가 외부 해킹에 따른 개인정보 유출을 인정함. 랜섬웨어 조직 Everest가 263GB 탈취를 주장함. 공공·기업 공급망 보안 파장 우려."
+      },
+      {
+        "id": "n-dadf41af",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "연세대, 연세포털서비스 해킹으로 개인정보 유출…학번·연락처·로그인 IP 등 포함",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209012",
+        "source": "데일리시큐",
+        "published": "2026-10-23T00:11:38.000Z",
+        "snippet": "연세대학교 연세포털서비스에 외부 비인가자가 접근해 일부 구성원의 개인정보가 유출되는 사고가 발생했다. 유출된 정보에는 학번과 사번, 휴대전화번호, 이메일 주소를 비롯해 최종 로그인 IP와 계정 관리 정보 등이 포함됐다. 다만 정확한 유출 인원과 구체적인 공격 수법은 아직 공개되지 않았다. 연세대학교는 10월 22일 공식 홈페이지에 '개인정보 유출 사실 안내 및 사과문'을 게시하고, 연세포털…",
+        "outlets": [
+          "데일리시큐"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 9,
+        "title_ko": "연세대 연세포털 해킹으로 개인정보 유출",
+        "summary_ko": "외부 비인가자가 연세포털서비스에 접근해 학번·사번, 연락처, 최종 로그인 IP 등이 유출됨. 유출 인원과 공격 수법은 미공개라 추가 확인 필요."
+      },
+      {
+        "id": "n-70f8d91c",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "한전 개인정보 유출 규모, 당초보다 만 명 이상 많아",
+        "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE4zQUhXdDJUUTJndkdMdG5WNVVlYUoybVh0NnFiRHVfMXVIbnVVUjRRR0d3VDAwQnpjY0ZKWXFNdnJLNWl2Rm9fa1FYbWY3NlpyWjVhUTE2X3ltQnhFOEFQOA?oc=5",
+        "source": "KBC광주방송",
+        "published": "2026-10-23T12:26:41.000Z",
+        "snippet": "",
+        "outlets": [
+          "KBC광주방송",
+          "세이프타임즈"
+        ],
+        "related": [
+          {
+            "title": "한전 3.5만명 개인정보 '유출' … 퇴직자·협력사 직원까지",
+            "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE04TnZ2anVQSC1VVEpEUWJubW5CQjNJSkc2NmdzS0tLNDQyR09QTlJBTG16VV9LT1l1a3dHakNocTF0ZHNmWVg0anlKYThqZWZObGNTWUpBNWw5bnhZNnVaYXg0YVJNYjV4MTlRMms4dGJBcDTSAXNBVV95cUxNOE52dmp1UEgtVVRKRFFibm1uQkIzSUpHNjZnc0tLSzQ0MkdPUE5SQUxtelVfS09ZdWt3R2pDaHExdGRzZllYNGp5SmE4amVmTmxjU1lKQTVsOW54WTZ1WmF4NGFSTWI1eDE5UTJrOHRiQXA0?oc=5",
+            "source": "세이프타임즈"
+          }
+        ],
+        "cves": [],
+        "score": 11.7,
+        "title_ko": "한전 개인정보 유출 규모, 당초보다 증가",
+        "summary_ko": "한국전력 개인정보 유출 규모가 당초보다 만 명 이상 많은 3.5만 명 규모로 보도됨. 퇴직자와 협력사 직원까지 포함돼 점검 필요."
+      }
+    ],
+    "international": [
+      {
+        "id": "n-09d08b81",
+        "region": "international",
+        "lang": "ko",
+        "title": "[긴급] PHP2Shell 이어 이번엔 ‘Node2Shell’…Node.js 치명적 취약점, 인증 없이 서버 장악 위험",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209034",
+        "source": "데일리시큐",
+        "published": "2026-10-23T23:32:33.000Z",
+        "snippet": "최근 PHP에서 치명적인 보안 취약점이 공개된 데 이어, 웹 서비스와 서버 개발에 널리 사용되는 Node.js에서도 원격 코드 실행이 가능한 고위험 취약점이 발견됐다. 공격자가 조작한 압축 데이터를 서버에 전달하면 인증 절차 없이 서버 프로그램을 비정상적으로 종료시키거나 특정 조건에서 악성코드를 실행할 수 있어 긴급 대응이 요구된다. 이번 취약점은 'Node2Shell(CVE-2026-11…",
+        "outlets": [
+          "데일리시큐",
+          "The Hacker News"
+        ],
+        "related": [
+          {
+            "title": "Researchers Demonstrate Node2Shell RCE Exploit on Node.js Build Using Crafted Brotli Data",
+            "url": "https://thehackernews.com/2026/10/researchers-demonstrate-node2shell-rce.html",
+            "source": "The Hacker News"
+          }
+        ],
+        "cves": [],
+        "score": 12.7,
+        "title_ko": "Node.js 원격 코드 실행 취약점 Node2Shell 공개",
+        "summary_ko": "조작된 Brotli 압축 데이터로 인증 없이 서버 프로그램을 종료시키거나 악성코드를 실행할 수 있음. PoC가 공개됨. Node.js 서버 긴급 점검 필요."
+      },
+      {
+        "id": "n-3afaf905",
+        "region": "international",
+        "lang": "en",
+        "title": "Mirai Botnet Operators Join PHP2Shell Attacks as ASLR Bypass Exploits Emerge",
+        "url": "https://www.securityweek.com/mirai-botnet-operators-join-php2shell-attacks-as-aslr-bypass-exploits-emerge/",
+        "source": "SecurityWeek",
+        "published": "2026-10-23T12:45:52.000Z",
+        "snippet": "Researchers tie PHP2Shell attempts to a Mirai botnet and show an ASLR bypass, but no successful compromise has been confirmed yet. The post Mirai Botnet Operators Join PHP2Shell Attacks as ASLR Bypass Exploits Emerge ap…",
+        "outlets": [
+          "SecurityWeek"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 8.5,
+        "title_ko": "Mirai 봇넷, PHP2Shell 공격에 가담",
+        "summary_ko": "PHP2Shell 공격 시도가 Mirai 봇넷과 연결됐고 ASLR 우회 익스플로잇도 등장함. 성공한 침해는 아직 미확인이나 PHP 서버 긴급 패치 필요."
+      },
+      {
+        "id": "n-8b9c94ac",
+        "region": "international",
+        "lang": "en",
+        "title": "China APT Uses AI Pentest Tool Artex in ConnectWise Attacks",
+        "url": "https://www.securityweek.com/china-apt-uses-ai-pentest-tool-artex-in-connectwise-attacks/",
+        "source": "SecurityWeek",
+        "published": "2026-10-23T10:31:16.000Z",
+        "snippet": "The state-sponsored hackers targeted hundreds of organizations and gained privileged access to some environments. The post China APT Uses AI Pentest Tool Artex in ConnectWise Attacks appeared first on SecurityWeek .",
+        "outlets": [
+          "SecurityWeek"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 9,
+        "title_ko": "중국 APT, AI 펜테스트 도구 Artex로 ConnectWise 공격",
+        "summary_ko": "중국 정부 연계 APT가 ConnectWise 대상 공격에 AI 펜테스트 도구 Artex를 활용함. 수백 개 조직을 노렸고 일부 환경에서 특권 접근을 얻음. 원격관리 계정 점검 필요."
+      },
+      {
+        "id": "n-64b0ac9d",
+        "region": "international",
+        "lang": "en",
+        "title": "Hackers Breach Enterprise Firewalls and VPNs, Exposing Over 70,000 Credentials",
+        "url": "https://thehackernews.com/2026/10/hackers-breach-enterprise-firewalls-and.html",
+        "source": "The Hacker News",
+        "published": "2026-10-23T13:50:56.000Z",
+        "snippet": "Cybersecurity researchers have disclosed details of a large-scale campaign that has targeted exposed network edge devices such as Fortinet FortiGate and Palo Alto Networks GlobalProtect firewalls. \"Artifacts from this i…",
+        "outlets": [
+          "The Hacker News"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 10,
+        "title_ko": "방화벽·VPN 침해로 7만여 건 자격증명 노출",
+        "summary_ko": "Fortinet FortiGate, Palo Alto GlobalProtect 등 노출된 엣지 장비를 노린 캠페인으로 자격증명 7만여 건이 탈취됨. 원격접속 계정 변경과 점검 필요."
+      },
+      {
+        "id": "n-a35d91ac",
+        "region": "international",
+        "lang": "en",
+        "title": "Quest Diagnostics Data Breach Exposed ‘Certain Patient Records’",
+        "url": "https://www.securityweek.com/quest-diagnostics-reports-cyber-breach-affecting-certain-patient-records/",
+        "source": "SecurityWeek",
+        "published": "2026-10-23T08:25:06.000Z",
+        "snippet": "In a regulatory filing, Quest Diagnostics reported unauthorized access to its Quanum Lab Services Manager, a platform where certain clients can place test orders. The post Quest Diagnostics Data Breach Exposed ‘Certain…",
+        "outlets": [
+          "SecurityWeek",
+          "The Record",
+          "BleepingComputer"
+        ],
+        "related": [
+          {
+            "title": "Quest Diagnostics warns of potential data theft after attack on lab service system",
+            "url": "https://therecord.media/quest-diagnostics-network-intrusion",
+            "source": "The Record"
+          },
+          {
+            "title": "Quest Diagnostics confirms data breach exposed patient records",
+            "url": "https://www.bleepingcomputer.com/news/security/quest-diagnostics-confirms-data-breach-exposed-patient-records/",
+            "source": "BleepingComputer"
+          }
+        ],
+        "cves": [],
+        "score": 12.6,
+        "title_ko": "Quest Diagnostics 침해로 일부 환자 기록 유출",
+        "summary_ko": "검사 서비스 플랫폼 Quanum Lab Services Manager에 비인가 접근이 발생해 특정 환자 기록이 노출됨. 검사기관 연계 서비스의 접근 통제 점검 필요."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "kev",
+      "name": "CISA KEV",
+      "ok": true,
+      "count": 2,
+      "ms": 392
+    },
+    {
+      "id": "bleepingcomputer",
+      "name": "BleepingComputer",
+      "ok": true,
+      "count": 15,
+      "ms": 551
+    },
+    {
+      "id": "securityweek",
+      "name": "SecurityWeek",
+      "ok": true,
+      "count": 10,
+      "ms": 613
+    },
+    {
+      "id": "zdnetkr",
+      "name": "지디넷코리아",
+      "ok": true,
+      "count": 30,
+      "ms": 651
+    },
+    {
+      "id": "thehackernews",
+      "name": "The Hacker News",
+      "ok": true,
+      "count": 50,
+      "ms": 668
+    },
+    {
+      "id": "therecord",
+      "name": "The Record",
+      "ok": true,
+      "count": 5,
+      "ms": 695
+    },
+    {
+      "id": "krebs",
+      "name": "Krebs on Security",
+      "ok": true,
+      "count": 10,
+      "ms": 818
+    },
+    {
+      "id": "darkreading",
+      "name": "Dark Reading",
+      "ok": true,
+      "count": 50,
+      "ms": 962
+    },
+    {
+      "id": "gnews-kr",
+      "name": "Google 뉴스",
+      "ok": true,
+      "count": 100,
+      "ms": 1027
+    },
+    {
+      "id": "dailysecu",
+      "name": "데일리시큐",
+      "ok": true,
+      "count": 50,
+      "ms": 1125
+    },
+    {
+      "id": "boannews",
+      "name": "보안뉴스",
+      "ok": true,
+      "count": 50,
+      "ms": 1163
+    },
+    {
+      "id": "nvd-kev",
+      "name": "NVD (KEV 상세)",
+      "ok": true,
+      "count": 2,
+      "ms": 1264
+    },
+    {
+      "id": "datanet",
+      "name": "데이터넷",
+      "ok": true,
+      "count": 50,
+      "ms": 1584
+    },
+    {
+      "id": "kisa-vuln",
+      "name": "KISA 취약점 정보",
+      "ok": true,
+      "count": 10,
+      "ms": 1600
+    },
+    {
+      "id": "kisa-alert",
+      "name": "KISA 경보단계",
+      "ok": true,
+      "count": 10,
+      "ms": 1788
+    },
+    {
+      "id": "kisa-notice",
+      "name": "KISA 보안공지",
+      "ok": true,
+      "count": 10,
+      "ms": 1808
+    },
+    {
+      "id": "nvd",
+      "name": "NVD (신규 CVE)",
+      "ok": true,
+      "count": 694,
+      "ms": 613
+    },
+    {
+      "id": "epss",
+      "name": "FIRST EPSS",
+      "ok": true,
+      "count": 63,
+      "ms": 336
+    }
+  ],
+  "summarizer": {
+    "engine": "claude-haiku-5-5",
+    "ok": true,
+    "ms": 37764,
+    "applied": {
+      "news": 10,
+      "vulns": 7,
+      "overview": true
+    },
+    "rejected": [],
+    "input_tokens": 13066,
+    "output_tokens": 9067
+  },
+  "stats": {
+    "news": {
+      "items": 420,
+      "fresh": 196,
+      "clusters": 120,
+      "eligible": 73
+    },
+    "nvd_published": 694,
+    "kev_catalog": "2026.10.23",
+    "kev_recent": 2
+  }
+}

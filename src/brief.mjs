@@ -178,6 +178,10 @@ function newsDesc(n) {
   return truncate(n.summary_ko || `${n.source}${n.outlets.length > 1 ? ` 외 ${n.outlets.length - 1}곳 보도` : ''}`, KAKAO_DESC);
 }
 
+/**
+ * 카드 순서: 경보 → 국내 1위 → 해외 1위 → 악용 취약점(없으면 고위험) → KISA 공지.
+ * 리스트형은 카드가 최대 3장이라 앞에서부터 3장을 쓴다(경보가 있는 날은 취약점 카드가 빠진다).
+ */
 function kakaoItems(b, dayUrl) {
   const items = [];
   const anchor = (id) => (dayUrl ? `${dayUrl}#${encodeURIComponent(id)}` : '');
@@ -187,6 +191,10 @@ function kakaoItems(b, dayUrl) {
   if (alert) {
     items.push({ title: fit('[경보] ', alert.title), description: truncate(`${alert.source} · ${alert.date}`, KAKAO_DESC), url: anchor('kisa') });
   }
+  const dn = b.news?.domestic?.[0];
+  if (dn) items.push({ title: fit('[국내] ', dn.title_ko || dn.title), description: newsDesc(dn), url: anchor(dn.id) });
+  const intl = b.news?.international?.[0];
+  if (intl) items.push({ title: fit('[해외] ', intl.title_ko || intl.title), description: newsDesc(intl), url: anchor(intl.id) });
   if (ex.length) {
     const v = ex[0];
     const more = ex.length + (b.exploited_more?.length || 0) - 1;
@@ -203,10 +211,6 @@ function kakaoItems(b, dayUrl) {
       url: anchor(g.id),
     });
   }
-  const dn = b.news?.domestic?.[0];
-  if (dn) items.push({ title: fit('[국내] ', dn.title_ko || dn.title), description: newsDesc(dn), url: anchor(dn.id) });
-  const intl = b.news?.international?.[0];
-  if (intl) items.push({ title: fit('[해외] ', intl.title_ko || intl.title), description: newsDesc(intl), url: anchor(intl.id) });
   const adv = (b.advisories || []).filter((a) => !a.alert);
   if (items.length < 3 && adv.length) {
     items.push({
@@ -231,16 +235,20 @@ export function kakaoHeader(b) {
 
 /** 200자 안의 텍스트형 메시지 본문 */
 export function kakaoText(b, limit = 200) {
+  // 카드와 같은 순서: 경보 → 국내 → 해외 → 취약점 → KISA
   const lines = [`[${shortDay(b.date)} 보안 브리핑]`];
   const alert = alertOf(b);
   if (alert) lines.push(`■ 경보: ${truncate(alert.title, 30)}`);
+  const dn = b.news?.domestic?.[0];
+  if (dn) lines.push(`■ 국내: ${truncate(dn.title_ko || dn.title, 30)}`);
+  const intl = b.news?.international?.[0];
+  if (intl) lines.push(`■ 해외: ${truncate(intl.title_ko || intl.title, 30)}`);
   const ex = b.exploited || [];
   const total = ex.length + (b.exploited_more?.length || 0);
   if (total) lines.push(`■ 악용 ${total}: ${truncate([...new Set(ex.map((v) => v.product || v.id))].join(', '), 30)}`);
   if (b.critical?.length) lines.push(`■ 고위험 ${b.critical_total}: ${truncate(b.critical.map((g) => g.label).join(', '), 30)}`);
   const adv = (b.advisories || []).filter((a) => !a.alert);
   if (adv.length) lines.push(`■ KISA ${adv.length}: ${truncate(adv.map((a) => advisoryShort(a.title)).join('·'), 30)}`);
-  for (const n of allNews(b).slice(0, 3)) lines.push(`- ${truncate(n.title_ko || n.title, 30)}`);
   let text = '';
   for (const line of lines) {
     const next = text ? `${text}\n${line}` : line;

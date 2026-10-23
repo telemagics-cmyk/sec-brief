@@ -17,10 +17,23 @@ test('카카오 리스트형: 2~3건, 제목·설명 40자 이하, 앞말·뒷�
     assert.ok(charLength(c.description) <= 40, c.description);
     assert.match(c.link.web_url, /^https:\/\/u\.github\.io\/sec-brief\/b\/2026-10-23\.html#/);
   }
-  assert.match(t.contents[0].title, /^\[경보\]/);
-  assert.match(t.contents[1].title, /^\[악용\] .* 외 2건$/);
+  // 경보가 있는 날: 경보 → 국내 → 해외 (카드는 3장까지라 취약점 카드는 빠짐)
+  assert.deepEqual(t.contents.map((c) => c.title.slice(0, 4)), ['[경보]', '[국내]', '[해외]']);
   assert.equal(t.buttons.length, 2);
   assert.equal(t.buttons[1].link.web_url, 'https://u.github.io/sec-brief/archive.html');
+});
+
+test('카카오 카드 순서: 경보가 없으면 국내 → 해외 → 악용, 해외는 한국어 제목이 있으면 그것을 쓴다', () => {
+  const b = sampleBrief();
+  b.advisories = b.advisories.filter((a) => !a.alert);
+  b.news.international[0].title_ko = 'Arista VeloCloud 제로데이 공격 악용';
+  const t = buildKakaoTemplate(b, { siteUrl: 'https://u.github.io/sec-brief', template: 'list' });
+  assert.deepEqual(t.contents.map((c) => c.title.slice(0, 4)), ['[국내]', '[해외]', '[악용]']);
+  assert.equal(t.contents[1].title, '[해외] Arista VeloCloud 제로데이 공격 악용');
+  assert.match(t.contents[2].title, /^\[악용\] .* 외 2건$/);
+  const text = kakaoText(b);
+  const order = ['■ 국내', '■ 해외', '■ 악용', '■ 고위험', '■ KISA'].map((k) => text.indexOf(k)).filter((i) => i >= 0);
+  assert.deepEqual(order, [...order].sort((x, y) => x - y), text);
 });
 
 test('카카오 텍스트형: 200자 이하, 주요 건이 2건 미만이면 텍스트형으로 바뀜', () => {

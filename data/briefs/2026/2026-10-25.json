@@ -1,0 +1,682 @@
+{
+  "version": 2,
+  "date": "2026-10-25",
+  "generated_at": "2026-10-25T07:16:18+09:00",
+  "window": {
+    "hours": 30,
+    "from": "2026-10-23T16:16:18.670Z",
+    "to": "2026-10-24T22:16:18.670Z"
+  },
+  "engine": "claude-haiku-5-5",
+  "overview": "PHP 치명적 취약점(PHP2Shell)은 북한 연계 조직의 무기화 정황이 있어 국내외 기관의 즉시 패치가 가장 시급함. 한진정보통신과 대한항공·아시아나 고객정보 유출은 협력사 계정과 접근권한 점검이 필요함. Oracle Java SE 등 고위험 취약점도 함께 점검해야 함.",
+  "cvss_min": 9,
+  "critical_total": 15,
+  "failed": {
+    "kev": false,
+    "nvd": false,
+    "kisa": false,
+    "news": false
+  },
+  "exploited": [],
+  "exploited_more": [],
+  "critical": [
+    {
+      "id": "CVE-2026-114820",
+      "ids": [
+        "CVE-2026-114820"
+      ],
+      "section": "critical",
+      "label": "Oracle",
+      "vendor": "Oracle",
+      "cna": "secalert_us@oracle.com",
+      "status": "Received",
+      "published": "2026-10-24T19:17:04.413",
+      "description": "Vulnerability in the Oracle Java SE, Oracle GraalVM for JDK, Oracle GraalVM Enterprise Edition product of Oracle Java SE (component: JSSE). Supported versions that are affected are Oracle Java SE: 8u511-b32, 8u511-perf-b32, 11.0.33.0.2, 17.0.21.0.2, 21.0.13.0.2, 25.0.5.0.2, 27.0.1.0.2; Oracle GraalVM for JDK: 17.0.21.0.2 and 21.0.13.0.2; Oracle GraalVM Enterprise Edition: 21.3.20.0.2. Easily exploitable vulnerability allows unauthenticated attacker with network access via multiple protocols to compromise Oracle Java SE, Oracle GraalVM for JDK, Oracle GraalVM Enterprise Edition. Successful attacks of this vulnerability can result in unauthorized creation, deletion or modification access to critical data or all Oracle Java SE, Oracle GraalVM for JDK, Oracle GraalVM Enterprise Edition accessible data as well as unauthorized access to critical data or complete access to all Oracle Java SE, Oracle GraalVM for JDK, Oracle GraalVM Enterprise Edition accessible data. Note: This vulnerability can be exploited by using APIs in the specified Component, e.g., through a web service which supplies data to the APIs. This vulnerability also applies to Java deployments, typically in clients running sandboxed Java Web Start applications or sandboxed Java applets, that load and run untrusted code (e.g., code that comes from the internet) and rely on the Java sandbox for security. CVSS 3.1 Base Score 9.1 (Confidentiality and Integrity impacts). CVSS Vector: (CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N).",
+      "descriptions": [
+        {
+          "id": "CVE-2026-114820",
+          "text": "Vulnerability in the Oracle Java SE, Oracle GraalVM for JDK, Oracle GraalVM Enterprise Edition product of Oracle Java SE (component: JSSE). Supported versions that are affected are Oracle Java SE: 8u511-b32, 8u511-perf-b32, 11.0.33.0.2, 17.0.21.0.2, 21.0.13.0.2, 25.0.5.0.2, 27.0.1.0.2; Oracle Graal…"
+        }
+      ],
+      "cwes": [
+        "CWE-327"
+      ],
+      "cvss": {
+        "score": 9.1,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://www.oracle.com/security-alerts/alert-cve-2026-114820.html"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-114820",
+      "flags": {
+        "watch": "Oracle",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 12.1,
+      "ko": {
+        "title": "Oracle Java SE JSSE 구성요소 취약점(CVSS 9.1)",
+        "target": "Oracle Java SE 8u511·11.0.33·17.0.21·21.0.13·25.0.5·27.0.1, GraalVM",
+        "impact": "인증 없이 네트워크에서 공격 가능, 기밀성·무결성 전면 침해 우려 (CWE-327)",
+        "action": "Oracle 보안 패치 적용, 해당 JDK·GraalVM 버전 전수 점검 및 교체"
+      }
+    },
+    {
+      "id": "CVE-2026-115557",
+      "ids": [
+        "CVE-2026-115557"
+      ],
+      "section": "critical",
+      "label": "Python",
+      "vendor": "",
+      "cna": "cna@python.org",
+      "status": "Received",
+      "published": "2026-10-24T15:17:33.600",
+      "description": "Python has added a denylist for known compromised certificates to the \"ssl\" module to ensure user safety even without certificate revocation configured. Known compromised certificates will automatically be rejected regardless of the SSLContext policy configuration.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-115557",
+          "text": "Python has added a denylist for known compromised certificates to the \"ssl\" module to ensure user safety even without certificate revocation configured. Known compromised certificates will automatically be rejected regardless of the SSLContext policy configuration."
+        }
+      ],
+      "cwes": [
+        "CWE-299"
+      ],
+      "cvss": {
+        "score": 9.4,
+        "version": "4.0",
+        "vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:P/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X"
+      },
+      "ssvc": null,
+      "epss": null,
+      "links": [
+        "http://www.openwall.com/lists/oss-security/2026/10/20/29",
+        "https://emudhra.we-have-a-problem.com/",
+        "https://github.com/python/cpython/issues/160040"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-115557",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": true,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 11.9,
+      "ko": {
+        "title": "Python ssl 모듈 손상 인증서 관련 결함(CVSS 9.4)",
+        "target": "Python ssl 모듈 (영향 버전 자료 없음, 벤더 공지 확인 필요)",
+        "impact": "침해된 인증서 검증 관련 결함으로 중간자 공격 등 우려 (CWE-299)",
+        "action": "Python 최신 버전 업데이트, ssl 인증서 검증 설정 점검, 벤더 공지 확인"
+      }
+    },
+    {
+      "id": "CVE-2026-115933",
+      "ids": [
+        "CVE-2026-115933",
+        "CVE-2026-115932"
+      ],
+      "section": "critical",
+      "label": "CVE-2026-115933",
+      "vendor": "",
+      "cna": "4cdc9741-f887-419a-a2fd-acbbd2729276",
+      "status": "Received",
+      "published": "2026-10-24T15:17:33.957",
+      "description": "Postiz signs its session, invitation and password reset tokens with one shared secret and without any marker of what a token is for. A route that refreshes the credentials of a browser-extension channel signed data taken from the request itself and stored the result where the requesting user can read it back. A user could therefore obtain a validly signed token containing any claims they choose, which the application accepts as a session, as an organization invitation with a chosen role, as a password reset or as an enterprise provisioning token. A second, narrower route that creates team invitations signs extra fields from the request body in the same way.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-115933",
+          "text": "Postiz signs its session, invitation and password reset tokens with one shared secret and without any marker of what a token is for. A route that refreshes the credentials of a browser-extension channel signed data taken from the request itself and stored the result where the requesting user can re…"
+        },
+        {
+          "id": "CVE-2026-115932",
+          "text": "When a post is published, Postiz treats a media path that is not a web address as a file on the server's disk, but it does not check that the file lies inside the upload directory. A registered user can store a crafted media path with a post, get it past the checks that normally restrict it, and ha…"
+        }
+      ],
+      "cwes": [
+        "CWE-290",
+        "CWE-345",
+        "CWE-915",
+        "CWE-22",
+        "CWE-74"
+      ],
+      "cvss": {
+        "score": 9.9,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H"
+      },
+      "ssvc": null,
+      "epss": null,
+      "links": [
+        "https://gadvisory.org/advisories/PSA-2026-YT2HMH",
+        "https://github.com/gitroomhq/postiz-app",
+        "https://github.com/gitroomhq/postiz-app/commit/a5affe62c74e39c1e7ac960d50d8418b807d532c"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-115933",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": false
+      },
+      "score": 10.1,
+      "ko": {
+        "title": "Postiz 토큰 서명 공유 및 미디어 경로 검증 누락(CVSS 9.9)",
+        "target": "Postiz (CVE-2026-115933, CVE-2026-115932), 버전 자료 없음",
+        "impact": "등록 사용자가 토큰 위조 및 서버 파일 접근 가능, 범위 변경 포함 (CWE-22 등)",
+        "action": "Postiz 벤더 최신 버전 업데이트, 외부 노출 및 등록 사용자 권한 점검"
+      }
+    },
+    {
+      "id": "CVE-2026-116014",
+      "ids": [
+        "CVE-2026-116014"
+      ],
+      "section": "critical",
+      "label": "open62541",
+      "vendor": "",
+      "cna": "disclosure@vulncheck.com",
+      "status": "Received",
+      "published": "2026-10-24T12:16:57.607",
+      "description": "open62541 1.5.0 before 1.5.7 contains an integer overflow in UA_DataType_fromStructureDescription() that wraps the 16-bit memSize field for large custom structure definitions. A malicious OPC UA server can supply DataType definitions via UA_Client_getRemoteDataTypes(), causing decodeBinaryStructure() to overflow the heap, crashing clients or enabling code execution.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-116014",
+          "text": "open62541 1.5.0 before 1.5.7 contains an integer overflow in UA_DataType_fromStructureDescription() that wraps the 16-bit memSize field for large custom structure definitions. A malicious OPC UA server can supply DataType definitions via UA_Client_getRemoteDataTypes(), causing decodeBinaryStructure…"
+        }
+      ],
+      "cwes": [
+        "CWE-190"
+      ],
+      "cvss": {
+        "score": 9.2,
+        "version": "4.0",
+        "vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X"
+      },
+      "ssvc": null,
+      "epss": null,
+      "links": [
+        "https://github.com/open62541/open62541/blob/v1.5.6/src/ua_types_definition.c#L274",
+        "https://github.com/open62541/open62541/commit/0cf4806768c493bc6ccffcd4419da24153b970ec",
+        "https://github.com/open62541/open62541/pull/8298"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-116014",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 9.7,
+      "ko": {
+        "title": "open62541 정수 오버플로로 인한 구조체 처리 취약점(CVSS 9.2)",
+        "target": "open62541 1.5.0 이상 1.5.7 미만",
+        "impact": "악성 OPC UA 서버가 DataType 정의로 메모리 손상 유발 가능, 클라이언트 측 위험 (CWE-190)",
+        "action": "open62541 1.5.7 이상으로 업데이트, 신뢰하지 않는 OPC UA 서버 연결 차단"
+      }
+    },
+    {
+      "id": "CVE-2026-114196",
+      "ids": [
+        "CVE-2026-114196"
+      ],
+      "section": "critical",
+      "label": "CVE-2026-114196",
+      "vendor": "",
+      "cna": "audit@patchstack.com",
+      "status": "Received",
+      "published": "2026-10-24T08:16:51.963",
+      "description": "Deserialization of Untrusted Data vulnerability in paytiumsupport Paytium paytium allows Object Injection.This issue affects Paytium: from n/a through 5.0.5.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-114196",
+          "text": "Deserialization of Untrusted Data vulnerability in paytiumsupport Paytium paytium allows Object Injection.This issue affects Paytium: from n/a through 5.0.5."
+        }
+      ],
+      "cwes": [
+        "CWE-502"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": 0.00564,
+      "links": [
+        "https://patchstack.com/database/wordpress/plugin/paytium/vulnerability/wordpress-paytium-plugin-5-0-5-php-object-injection-vulnerability?_s_id=cve"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-114196",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": true,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 9.33,
+      "ko": {
+        "title": "Paytium 안전하지 않은 역직렬화로 객체 주입(CVSS 9.8)",
+        "target": "Paytium 5.0.5 이하 (시작 버전 n/a)",
+        "impact": "인증 없이 객체 주입 가능, 기밀성·무결성·가용성 침해 우려 (CWE-502, EPSS 0.56%)",
+        "action": "벤더 공지 확인 후 수정 버전 업데이트, 해당 플러그인 사용 여부 점검"
+      }
+    }
+  ],
+  "critical_more": [
+    {
+      "id": "CVE-2026-94075",
+      "ids": [
+        "CVE-2026-94075"
+      ],
+      "label": "Tribulant Software Newsletters",
+      "cvss": 9.8,
+      "title": "Tribulant Software Newsletters 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-110956",
+      "ids": [
+        "CVE-2026-110956"
+      ],
+      "label": "CVE-2026-110956",
+      "cvss": 9.8,
+      "title": "CVE-2026-110956 인증 부적절"
+    },
+    {
+      "id": "CVE-2026-115806",
+      "ids": [
+        "CVE-2026-115806"
+      ],
+      "label": "CVE-2026-115806",
+      "cvss": 9.8,
+      "title": "CVE-2026-115806 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-111402",
+      "ids": [
+        "CVE-2026-111402"
+      ],
+      "label": "Tribulant Software Newsletters",
+      "cvss": 9.3,
+      "title": "Tribulant Software Newsletters SQL 삽입"
+    },
+    {
+      "id": "CVE-2026-112866",
+      "ids": [
+        "CVE-2026-112866"
+      ],
+      "label": "CVE-2026-112866",
+      "cvss": 9.3,
+      "title": "CVE-2026-112866 SQL 삽입"
+    }
+  ],
+  "advisories": [],
+  "news": {
+    "domestic": [
+      {
+        "id": "n-4ce0c2d6",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "[PHP 파장] 패치 하루 만에 움직인 北 해커?... AI로 ‘PHP2Shell’ 무기화해 韓 정부·금융 노린다",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=146724",
+        "source": "보안뉴스",
+        "published": "2026-10-24T06:10:15.000Z",
+        "snippet": "글로벌 웹사이트 10곳 중 7곳을 움직이는 핵심 프로그래밍 언어 ‘PHP’에서 치명적인 보안 취약점이 발견된 직후, 북한 연계 해커 조직이 패치 배포 하루 만에 인공지능(AI)을 동원해 공격 준비에 나섰다는 분석이 나왔다. 취약점 공개부터 실제 무기화까지 걸리는 시간이 극단적으로 짧아지면서 국내외 주요 기관의 신속한 패치가 요구된다.23일 글로벌 위협 인텔리전스 기업 사이퍼마(CYFIRMA…",
+        "outlets": [
+          "보안뉴스",
+          "데일리시큐"
+        ],
+        "related": [
+          {
+            "title": "북한 연계 의심 해킹조직, ‘PHP2Shell’ 공격 준비 정황 포착…한국 정부·금융기관도 표적 후보",
+            "url": "https://www.dailysecu.com/news/articleView.html?idxno=209035",
+            "source": "데일리시큐"
+          }
+        ],
+        "cves": [],
+        "score": 13.2,
+        "title_ko": "북한 연계 의심 조직, PHP2Shell 공격 준비 정황",
+        "summary_ko": "PHP 치명적 취약점 패치 하루 만에 북한 연계 해킹조직이 AI를 활용해 무기화를 준비한 정황이 포착됨. 한국 정부·금융기관도 표적 후보로 거론되어 신속한 패치 필요."
+      },
+      {
+        "id": "n-97cd6595",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "한진정보통신, ITSM 시스템 비인가 접근으로 980명 개인정보 유출",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=146722",
+        "source": "보안뉴스",
+        "published": "2026-10-24T01:17:18.000Z",
+        "snippet": "한진정보통신의 IT서비스관리(ITSM) 사이트가 외부 공격자의 비인가 접근에 노출돼 사용자 980명의 개인정보가 유출됐다. 사측은 침해 정황을 확인한 즉시 외부 접근 경로를 차단하고 관련 계정 비밀번호를 일괄 초기화하는 등 긴급 대응 조치에 들어갔다. 한진정보통신은 항공과 물류, 공항 등 국가 기간 인프라의 IT 시스템 구축 및 운영(SI/SM)을 전담해 온 종합 IT 솔루션 기업이다. 최…",
+        "outlets": [
+          "보안뉴스",
+          "데일리시큐"
+        ],
+        "related": [
+          {
+            "title": "[단독] 한진그룹 IT 서비스 전문기업 한진정보통신 해킹…항공·물류 공급망 보안 위협 우려",
+            "url": "https://www.dailysecu.com/news/articleView.html?idxno=209036",
+            "source": "데일리시큐"
+          }
+        ],
+        "cves": [],
+        "score": 12.2,
+        "title_ko": "한진정보통신 ITSM 비인가 접근, 개인정보 980명 유출",
+        "summary_ko": "항공·물류·공항 IT 시스템 구축을 맡은 한진정보통신 ITSM 사이트가 비인가 접근으로 노출되어 980명 정보 유출. 접근 경로 차단과 계정 비밀번호 일괄 초기화 실시."
+      },
+      {
+        "id": "n-45a1bc61",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "대한항공·아시아나 고객정보 유출…예약·발권 맡긴 아마데우스서 비인가 접근",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209037",
+        "source": "데일리시큐",
+        "published": "2026-10-24T01:29:10.000Z",
+        "snippet": "대한항공과 아시아나항공 고객의 예약 관련 개인정보가 외부 IT 수탁사인 아마데우스 시스템을 통해 유출된 정황이 드러났다. 항공사 내부 데이터베이스에 대한 직접 침해 정황은 파악되지 않았지만, 예약·발권 업무를 맡긴 외부 시스템에서 고객정보가 노출됐다는 점에서 수탁사 계정과 접근권한 관리가 주요 점검 과제로 떠올랐다. 양사는 지난 10월 20일 밤 글로벌 항공 IT 시스템 운영사 아마데우스…",
+        "outlets": [
+          "데일리시큐",
+          "지디넷코리아"
+        ],
+        "related": [
+          {
+            "title": "대한항공·아시아나, 개인정보 유출 확인…IT 협력사가 '구멍'",
+            "url": "https://zdnet.co.kr/view/?no=20261024111553",
+            "source": "지디넷코리아"
+          }
+        ],
+        "cves": [],
+        "score": 12.2,
+        "title_ko": "대한항공·아시아나 고객정보 유출, 수탁사 아마데우스 경유",
+        "summary_ko": "10월 20일 밤 예약·발권 위탁사 아마데우스 시스템에서 비인가 접근이 발생해 고객 예약 정보가 노출됨. 항공사 내부 DB 직접 침해는 확인되지 않음. 수탁사 계정 점검 필요."
+      },
+      {
+        "id": "n-18b87e51",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "백업만 믿다 150억 날린 제약사…에브리존 \"랜섬웨어, 단말에서 막아야\"",
+        "url": "https://zdnet.co.kr/view/?no=20261024011940",
+        "source": "지디넷코리아",
+        "published": "2026-10-23T16:26:56.000Z",
+        "snippet": "[지디넷코리아]김준영 에브리존 전략사업본부 총괄 팀장이 23일 \"지금은 랜섬웨어에 감염되면 개인정보와 기밀 정보까지 유출된다고 봐야 한다\"고 말했다. 랜섬웨어 피해를 방지하기 위해서는 방산 업체가 기술 유출과 업무 중단을 함께 막는 보안 체계를 갖춰야 한다고 제안했다. 김 팀장은 이날 방산기술보호·보안협의회가 주최한 '2026 AI기반 방산기술보호 컨퍼런스'에서 'AI 시대의 랜섬웨어: 탐…",
+        "outlets": [
+          "지디넷코리아"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 7.5,
+        "title_ko": "백업만 믿다 150억 손실, 랜섬웨어는 단말에서 차단 필요",
+        "summary_ko": "제약사가 백업에만 의존하다 150억원 피해를 입은 사례가 소개됨. 랜섬웨어 감염 시 기밀까지 유출될 수 있어 단말 단계 차단과 기술 유출 방지 체계 필요."
+      }
+    ],
+    "international": [
+      {
+        "id": "n-ad739646",
+        "region": "international",
+        "lang": "en",
+        "title": "CISA Flags Two Actively Exploited Critical Flaws in Collabora Online and Arista VeloCloud",
+        "url": "https://thehackernews.com/2026/10/cisa-flags-two-actively-exploited.html",
+        "source": "The Hacker News",
+        "published": "2026-10-24T06:25:57.000Z",
+        "snippet": "The U. S. Cybersecurity and Infrastructure Security Agency (CISA) on Friday added two vulnerabilities impacting Collabora Online Built-in CODE Server and Arista VeloCloud Orchestrator (VCO) to its Known Exploited Vulner…",
+        "outlets": [
+          "The Hacker News"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 8,
+        "title_ko": "CISA, 악용 확인된 Collabora Online·VeloCloud 취약점 2건…",
+        "summary_ko": "CISA가 Collabora Online Built-in CODE Server와 Arista VeloCloud Orchestrator의 치명적 취약점 2건을 KEV 목록에 추가함. 실제 악용이 확인되어 해당 제품 사용 기관은 즉시 점검 필요."
+      },
+      {
+        "id": "n-6fb95ece",
+        "region": "international",
+        "lang": "en",
+        "title": "Exposed Infrastructure Reveals How Ransomware Affiliates Used AI Agents to Execute Intrusions",
+        "url": "https://thehackernews.com/2026/10/exposed-infrastructure-reveals-how.html",
+        "source": "The Hacker News",
+        "published": "2026-10-23T17:50:47.000Z",
+        "snippet": "Cybersecurity researchers have discovered an artificial intelligence (AI)-driven intrusion ecosystem run by affiliates of the INC and The Gentlemen ransomware groups. Central to the operation is an \"Autonomous Red Team…",
+        "outlets": [
+          "The Hacker News"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 8,
+        "title_ko": "랜섬웨어 제휴조직의 AI 에이전트 활용 침투 생태계 발견",
+        "summary_ko": "INC와 The Gentlemen 랜섬웨어 그룹 제휴자들이 AI 에이전트로 침입을 자동화한 인프라가 노출되어 연구진에 의해 발견됨. 공격 속도와 규모 증가 우려, 탐지 체계 점검 필요."
+      },
+      {
+        "id": "n-1e829dc1",
+        "region": "international",
+        "lang": "ko",
+        "title": "사가와큐빈, 부정 액세스로 최대 5323만건 개인정보 유출 가능성",
+        "url": "https://zdnet.co.kr/view/?no=20261024110823",
+        "source": "지디넷코리아",
+        "published": "2026-10-24T03:52:45.000Z",
+        "snippet": "[지디넷코리아]일본 택배업체 사가와큐빈(佐川急便)이 지난 9월 30일 발견된 부정 액세스로 최대 약 5323만건의 개인정보가 유출됐을 가능성이 있다고 23일 발표했다. FNN, 아사히신문 등 여러 외신 보도에 따르면 유출 가능성이 있는 정보는 6월 21일부터 9월 30일까지 약 100일간 보관된 택배 송장에 적힌 발송인·수취인의 이름, 주소, 전화번호, 법인·개인 계약 고객 정보, 회원제…",
+        "outlets": [
+          "지디넷코리아"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 7.5,
+        "title_ko": "사가와큐빈, 최대 5323만건 개인정보 유출 가능성",
+        "summary_ko": "9월 30일 발견된 부정 액세스로 6월 21일부터 9월 30일까지 택배 송장의 발송인·수취인 이름, 주소, 전화번호 등이 유출됐을 가능성이 발표됨. 물류 분야 개인정보 보호 점검 필요."
+      },
+      {
+        "id": "n-c2f353f1",
+        "region": "international",
+        "lang": "en",
+        "title": "Leaked LiteLLM Master Key Let Attackers Steal GitHub Tokens and Hijack Release Pipeline",
+        "url": "https://thehackernews.com/2026/10/leaked-litellm-master-key-let-attackers.html",
+        "source": "The Hacker News",
+        "published": "2026-10-24T11:03:33.000Z",
+        "snippet": "LiteLLM on Friday revealed that an Agent Platform master key accidentally published to a public GitHub repository in late May 2026 ultimately allowed the threat actor to push a malicious version of the popular Python pa…",
+        "outlets": [
+          "The Hacker News"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 7,
+        "title_ko": "유출된 LiteLLM 마스터 키로 GitHub 토큰 탈취 및 배포 장악",
+        "summary_ko": "2026년 5월 말 공개 GitHub 저장소에 노출된 Agent Platform 마스터 키로 공격자가 악성 LiteLLM 버전을 배포함. 개발 파이프라인 키와 토큰 전면 교체 필요."
+      },
+      {
+        "id": "n-a64123d8",
+        "region": "international",
+        "lang": "en",
+        "title": "Brotli Decoder Flaw Behind Node.js RCE Also Affects Bun, Python and Other Widely Used Software",
+        "url": "https://thehackernews.com/2026/10/brotli-decoder-flaw-behind-nodejs-rce.html",
+        "source": "The Hacker News",
+        "published": "2026-10-24T11:09:29.000Z",
+        "snippet": "A memory-corruption flaw in Google's Brotli decoder sits in many programs that unpack Brotli-compressed data, among them Bun, the Python Brotli and brotlicffi packages, and Envoy proxies set up to decompress Brotli. Tra…",
+        "outlets": [
+          "The Hacker News"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 4,
+        "title_ko": "Node.js RCE 원인 Brotli 디코더 결함, Bun·Python 등도 영향",
+        "summary_ko": "Google Brotli 디코더의 메모리 손상 결함이 Node.js 원격 코드 실행의 원인이며 Bun, Python Brotli, Envoy 프록시 등 여러 소프트웨어에도 영향. 벤더 패치 적용 필요."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "kev",
+      "name": "CISA KEV",
+      "ok": true,
+      "count": 2,
+      "ms": 365
+    },
+    {
+      "id": "bleepingcomputer",
+      "name": "BleepingComputer",
+      "ok": true,
+      "count": 15,
+      "ms": 520
+    },
+    {
+      "id": "zdnetkr",
+      "name": "지디넷코리아",
+      "ok": true,
+      "count": 30,
+      "ms": 561
+    },
+    {
+      "id": "securityweek",
+      "name": "SecurityWeek",
+      "ok": true,
+      "count": 10,
+      "ms": 590
+    },
+    {
+      "id": "thehackernews",
+      "name": "The Hacker News",
+      "ok": true,
+      "count": 50,
+      "ms": 600
+    },
+    {
+      "id": "therecord",
+      "name": "The Record",
+      "ok": true,
+      "count": 5,
+      "ms": 674
+    },
+    {
+      "id": "krebs",
+      "name": "Krebs on Security",
+      "ok": true,
+      "count": 10,
+      "ms": 796
+    },
+    {
+      "id": "boannews",
+      "name": "보안뉴스",
+      "ok": true,
+      "count": 50,
+      "ms": 833
+    },
+    {
+      "id": "dailysecu",
+      "name": "데일리시큐",
+      "ok": true,
+      "count": 50,
+      "ms": 1006
+    },
+    {
+      "id": "darkreading",
+      "name": "Dark Reading",
+      "ok": true,
+      "count": 50,
+      "ms": 1007
+    },
+    {
+      "id": "datanet",
+      "name": "데이터넷",
+      "ok": true,
+      "count": 50,
+      "ms": 1372
+    },
+    {
+      "id": "kisa-alert",
+      "name": "KISA 경보단계",
+      "ok": true,
+      "count": 10,
+      "ms": 1542
+    },
+    {
+      "id": "kisa-vuln",
+      "name": "KISA 취약점 정보",
+      "ok": true,
+      "count": 10,
+      "ms": 1584
+    },
+    {
+      "id": "kisa-notice",
+      "name": "KISA 보안공지",
+      "ok": true,
+      "count": 10,
+      "ms": 1599
+    },
+    {
+      "id": "nvd-kev",
+      "name": "NVD (KEV 상세)",
+      "ok": true,
+      "count": 2,
+      "ms": 1781
+    },
+    {
+      "id": "nvd",
+      "name": "NVD (신규 CVE)",
+      "ok": true,
+      "count": 135,
+      "ms": 2643
+    },
+    {
+      "id": "gnews-kr",
+      "name": "Google 뉴스",
+      "ok": false,
+      "count": 0,
+      "ms": 31968,
+      "error": "HTTP 503"
+    },
+    {
+      "id": "epss",
+      "name": "FIRST EPSS",
+      "ok": true,
+      "count": 12,
+      "ms": 499
+    }
+  ],
+  "summarizer": {
+    "engine": "claude-haiku-5-5",
+    "ok": true,
+    "ms": 26868,
+    "applied": {
+      "news": 9,
+      "vulns": 5,
+      "overview": true
+    },
+    "rejected": [],
+    "input_tokens": 7334,
+    "output_tokens": 6936
+  },
+  "stats": {
+    "news": {
+      "items": 320,
+      "fresh": 26,
+      "clusters": 23,
+      "eligible": 15
+    },
+    "nvd_published": 135,
+    "kev_catalog": "2026.10.23",
+    "kev_recent": 2
+  }
+}

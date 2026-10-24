@@ -37,7 +37,7 @@ function newsTime(iso) {
 function counts(b) {
   if (b.legacy) return `CVE ${b.cves?.length || 0}건${b.links?.length ? ` · 링크 ${b.links.length}개` : ''}`;
   const ex = (b.exploited?.length || 0) + (b.exploited_more?.length || 0);
-  return [ex ? `악용 ${ex}` : '', `고위험 ${b.critical_total ?? '–'}`, `KISA ${b.advisories?.length || 0}`, `뉴스 ${allNews(b).length}`]
+  return [`국내 ${b.news?.domestic?.length || 0}`, `해외 ${b.news?.international?.length || 0}`, `KISA ${b.advisories?.length || 0}`, ex ? `악용 ${ex}` : '', `고위험 ${b.critical_total ?? '–'}`]
     .filter(Boolean)
     .join(' · ');
 }
@@ -152,54 +152,72 @@ function briefBody(b) {
   const adv = b.advisories || [];
   const alert = alertOf(b);
   const exTotal = ex.length + (b.exploited_more?.length || 0);
-  const parts = [];
-  parts.push(`<header class="brief-head">
+  const domestic = b.news?.domestic || [];
+  const international = b.news?.international || [];
+  const cvssMin = Number(b.cvss_min ?? 9).toFixed(1);
+
+  // 섹션 순서: 국내 뉴스 → 해외 뉴스 → KISA 공지 → 악용 확인 취약점 → 신규 고위험 취약점
+  // (머리의 건수 칸도 같은 순서, 누르면 그 섹션으로 이동)
+  const tiles = [
+    ['news-domestic', domestic.length, '국내 뉴스', ''],
+    ['news-international', international.length, '해외 뉴스', ''],
+    ['kisa', adv.length, 'KISA 공지', alert ? 'warn' : ''],
+    ['exploited', b.failed?.kev ? '–' : exTotal, '악용 확인', exTotal ? 'hot' : ''],
+    ['critical', b.critical_total ?? '–', `고위험 ${cvssMin}+`, ''],
+  ];
+  const head = `<header class="brief-head">
   <p class="kicker">일일 보안 브리핑</p>
   <h1>${longDate(b.date)}</h1>
   <p class="meta">${h(b.generated_at?.slice(11, 16) || '')} KST 생성 · ${h(engineLabel(b.engine))}</p>
   <ul class="counts">
-    <li class="${exTotal ? 'hot' : ''}"><b>${b.failed?.kev ? '–' : exTotal}</b><span>악용 확인</span></li>
-    <li><b>${b.critical_total ?? '–'}</b><span>고위험 CVSS ${Number(b.cvss_min ?? 9).toFixed(1)}+</span></li>
-    <li><b>${adv.length}</b><span>KISA 공지</span></li>
-    <li><b>${allNews(b).length}</b><span>주요 뉴스</span></li>
+    ${tiles.map(([id, n, label, cls]) => `<li${cls ? ` class="${cls}"` : ''}><a href="#${id}"><b>${h(n)}</b><span>${h(label)}</span></a></li>`).join('\n    ')}
   </ul>
-</header>`);
-  if (alert) parts.push(`<p class="alert" role="note"><b>경보</b> ${a(alert.url, h(alert.title))} <span class="by">${h(alert.source)} · ${h(alert.date)}</span></p>`);
-  parts.push(`<section class="overview" aria-label="오늘의 요약"><p>${h(b.overview || '')}</p></section>`);
+</header>`;
 
-  parts.push(`<section id="exploited" class="sec"><h2>악용 확인 취약점 <small>CISA KEV 신규 ${b.failed?.kev ? '— 수집 실패' : `${exTotal}건`}</small></h2>`);
-  parts.push(ex.length ? ex.map((v) => vulnCard(v, { cls: 'exploited' })).join('\n') : `<p class="empty">${h(emptyNote(b, 'exploited'))}</p>`);
-  if (b.exploited_more?.length) {
-    parts.push(`<details class="more"><summary>그 밖의 신규 등재 ${b.exploited_more.length}건</summary><ul>${b.exploited_more
-      .map((v) => `<li>${a(`https://nvd.nist.gov/vuln/detail/${v.id}`, h(v.id))} ${h(v.title)}</li>`)
-      .join('')}</ul></details>`);
-  }
-  parts.push('</section>');
+  const newsSection = (list, title, id) =>
+    `<section id="${id}" class="sec"><h2>${title}</h2>
+${list.length ? `<ol class="news">${list.map(newsItem).join('\n')}</ol>` : `<p class="empty">${h(emptyNote(b, 'news'))}</p>`}
+</section>`;
+
+  const kisaSection = `<section id="kisa" class="sec"><h2>KISA 공지 <small>보호나라·KrCERT</small></h2>
+${adv.length
+    ? `<ul class="adv">${adv.map((x) => `<li class="${x.alert ? 'is-alert' : ''}">${a(x.url, h(x.title))} <span class="by">${h(x.source)} · ${h(x.date)}</span></li>`).join('')}</ul>`
+    : `<p class="empty">${h(emptyNote(b, 'kisa'))}</p>`}
+</section>`;
+
+  const exploitedMore = b.exploited_more?.length
+    ? `<details class="more"><summary>그 밖의 신규 등재 ${b.exploited_more.length}건</summary><ul>${b.exploited_more
+        .map((v) => `<li>${a(`https://nvd.nist.gov/vuln/detail/${v.id}`, h(v.id))} ${h(v.title)}</li>`)
+        .join('')}</ul></details>`
+    : '';
+  const exploitedSection = `<section id="exploited" class="sec"><h2>악용 확인 취약점 <small>CISA KEV 신규 ${b.failed?.kev ? '— 수집 실패' : `${exTotal}건`}</small></h2>
+${ex.length ? ex.map((v) => vulnCard(v, { cls: 'exploited' })).join('\n') : `<p class="empty">${h(emptyNote(b, 'exploited'))}</p>`}
+${exploitedMore}
+</section>`;
 
   const crNote = b.critical_total === null || b.critical_total === undefined
     ? '— 수집 실패'
     : `${b.critical_total}건 중 주요 ${cr.length}묶음`;
-  parts.push(`<section id="critical" class="sec"><h2>신규 고위험 취약점 <small>CVSS ${Number(b.cvss_min ?? 9).toFixed(1)} 이상 ${crNote}</small></h2>`);
-  parts.push(cr.length ? cr.map((g) => vulnCard(g, { cls: 'critical' })).join('\n') : `<p class="empty">${h(emptyNote(b, 'critical'))}</p>`);
-  if (b.critical_more?.length) {
-    parts.push(`<details class="more"><summary>그 밖의 고위험 ${b.critical_more.length}묶음 (${b.critical_more.reduce((s, g) => s + (g.ids?.length || 1), 0)}건)</summary><ul>${b.critical_more
-      .map((g) => `<li id="${h(g.id)}">${a(`https://nvd.nist.gov/vuln/detail/${g.id}`, h(g.id))}${g.ids?.length > 1 ? ` <small>외 ${g.ids.length - 1}건</small>` : ''} <span class="num">${Number(g.cvss).toFixed(1)}</span> ${h(g.title || g.label)}</li>`)
-      .join('')}</ul></details>`);
-  }
-  parts.push('</section>');
+  const criticalMore = b.critical_more?.length
+    ? `<details class="more"><summary>그 밖의 고위험 ${b.critical_more.length}묶음 (${b.critical_more.reduce((s, g) => s + (g.ids?.length || 1), 0)}건)</summary><ul>${b.critical_more
+        .map((g) => `<li id="${h(g.id)}">${a(`https://nvd.nist.gov/vuln/detail/${g.id}`, h(g.id))}${g.ids?.length > 1 ? ` <small>외 ${g.ids.length - 1}건</small>` : ''} <span class="num">${Number(g.cvss).toFixed(1)}</span> ${h(g.title || g.label)}</li>`)
+        .join('')}</ul></details>`
+    : '';
+  const criticalSection = `<section id="critical" class="sec"><h2>신규 고위험 취약점 <small>CVSS ${cvssMin} 이상 ${crNote}</small></h2>
+${cr.length ? cr.map((g) => vulnCard(g, { cls: 'critical' })).join('\n') : `<p class="empty">${h(emptyNote(b, 'critical'))}</p>`}
+${criticalMore}
+</section>`;
 
-  parts.push(`<section id="kisa" class="sec"><h2>KISA 공지 <small>보호나라·KrCERT</small></h2>`);
-  parts.push(adv.length
-    ? `<ul class="adv">${adv.map((x) => `<li class="${x.alert ? 'is-alert' : ''}">${a(x.url, h(x.title))} <span class="by">${h(x.source)} · ${h(x.date)}</span></li>`).join('')}</ul>`
-    : `<p class="empty">${h(emptyNote(b, 'kisa'))}</p>`);
-  parts.push('</section>');
-
-  for (const [key, title, id] of [['domestic', '국내 보안 뉴스', 'news-domestic'], ['international', '해외 보안 뉴스', 'news-international']]) {
-    const list = b.news?.[key] || [];
-    parts.push(`<section id="${id}" class="sec"><h2>${title}</h2>`);
-    parts.push(list.length ? `<ol class="news">${list.map(newsItem).join('\n')}</ol>` : `<p class="empty">${h(emptyNote(b, 'news'))}</p>`);
-    parts.push('</section>');
-  }
+  const parts = [head];
+  if (alert) parts.push(`<p class="alert" role="note"><b>경보</b> ${a(alert.url, h(alert.title))} <span class="by">${h(alert.source)} · ${h(alert.date)}</span></p>`);
+  parts.push(`<section class="overview" aria-label="오늘의 요약"><p>${h(b.overview || '')}</p></section>`);
+  parts.push(
+    newsSection(domestic, '국내 보안 뉴스', 'news-domestic'),
+    newsSection(international, '해외 보안 뉴스', 'news-international'),
+    kisaSection,
+    exploitedSection,
+    criticalSection,
+  );
   parts.push(`<footer class="brief-foot">${sourcesBlock(b)}<p class="raw"><a href="${h(b.date)}.json">원본 데이터(JSON)</a></p></footer>`);
   return parts.join('\n');
 }

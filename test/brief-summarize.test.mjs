@@ -57,6 +57,9 @@ test('규칙 기반 요약과 Markdown', () => {
   assert.match(md, /\*\*경보\*\* \[사이버위기 경보 단계/);
   assert.match(md, /## 악용 확인 취약점 \(CISA KEV 신규 3건\)/);
   assert.match(md, /수집: 1\/2곳 정상 · 실패: NVD\(시간 초과\)/);
+  const heads = [...md.matchAll(/^## (\S+ ?\S*)/gm)].map((m) => m[1]);
+  assert.deepEqual(heads, ['국내 보안', '해외 보안', 'KISA 공지', '악용 확인', '신규 고위험'], 'Markdown 섹션 순서');
+  assert.ok(b.overview.indexOf('주요 뉴스') < b.overview.indexOf('새 취약점'), '요약도 뉴스부터');
 });
 
 function draftFrom(b) {

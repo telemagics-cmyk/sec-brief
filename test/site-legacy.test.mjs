@@ -80,6 +80,11 @@ test('웹 페이지: 날짜별 주소·목록·색인·검색·RSS, 이스케이
   assert.ok(day.includes('id="CVE-2026-110264"'), '카카오 버튼이 가리킬 앵커');
   assert.ok(day.includes('id="kisa"'));
   assert.ok(day.includes('class="alert"'), '경보 강조');
+  // 섹션·건수 칸 순서: 국내 뉴스 → 해외 뉴스 → KISA 공지 → 악용 확인 → 신규 고위험
+  const order = ['id="news-domestic"', 'id="news-international"', 'id="kisa"', 'id="exploited"', 'id="critical"'].map((s) => day.indexOf(s));
+  assert.ok(order.every((i) => i > 0) && order.every((i, k) => k === 0 || i > order[k - 1]), `섹션 순서 ${order}`);
+  const tiles = [...day.matchAll(/<li[^>]*><a href="#([\w-]+)"><b>/g)].map((m) => m[1]);
+  assert.deepEqual(tiles, ['news-domestic', 'news-international', 'kisa', 'exploited', 'critical']);
   const index = readFileSync(join(cfg.siteDir, 'index.html'), 'utf8');
   assert.ok(index.includes('href="assets/site.css"'));
   assert.ok(index.includes('2026년 10월 23일 (금)'), '첫 화면은 최신 브리핑');

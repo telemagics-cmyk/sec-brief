@@ -21,7 +21,16 @@ function names(list, n = 3) {
  * 경보 단계 변경은 페이지·메시지에서 따로 강조하므로 여기에는 넣지 않는다.
  */
 export function ruleOverview(b) {
+  // 순서: 주요 뉴스 → KISA 공지 → 취약점 (웹 페이지 섹션 순서와 같음)
   const parts = [];
+  const news = [];
+  const dn = b.news?.domestic?.[0];
+  if (dn) news.push(`국내 '${truncate(dn.title_ko || dn.title, 30)}'${dn.outlets?.length > 1 ? `(${dn.outlets.length}개 매체)` : ''}`);
+  const intl = b.news?.international?.[0];
+  if (intl) news.push(`해외 '${truncate(intl.title_ko || intl.title, 34)}'${intl.outlets?.length > 1 ? `(${intl.outlets.length}개 매체)` : ''}`);
+  if (news.length) parts.push(`주요 뉴스: ${news.join(', ')}.`);
+  const adv = (b.advisories || []).filter((a) => !a.alert);
+  if (adv.length) parts.push(`KISA 공지 ${adv.length}건.`);
   const ex = b.exploited || [];
   const exTotal = ex.length + (b.exploited_more?.length || 0);
   const cr = b.critical || [];
@@ -34,15 +43,7 @@ export function ruleOverview(b) {
   const lost = failedVulnSources(b);
   if (vulns.length) parts.push(`새 취약점: ${vulns.join(' · ')}${lost ? ` (${lost} 수집 실패)` : ''}.`);
   else parts.push(lost ? `취약점 출처를 가져오지 못했습니다(${lost}).` : '새로 확인된 고위험 취약점은 없습니다.');
-  if (cr.length) parts.push(`먼저 볼 항목: ${names(cr.map((g) => g.label), 3)}.`);
-  const news = [];
-  const dn = b.news?.domestic?.[0];
-  if (dn) news.push(`국내 '${truncate(dn.title_ko || dn.title, 30)}'${dn.outlets?.length > 1 ? `(${dn.outlets.length}개 매체)` : ''}`);
-  const intl = b.news?.international?.[0];
-  if (intl) news.push(`해외 '${truncate(intl.title_ko || intl.title, 34)}'${intl.outlets?.length > 1 ? `(${intl.outlets.length}개 매체)` : ''}`);
-  if (news.length) parts.push(`주요 뉴스: ${news.join(', ')}.`);
-  const adv = (b.advisories || []).filter((a) => !a.alert);
-  if (adv.length) parts.push(`KISA 공지 ${adv.length}건.`);
+  if (cr.length) parts.push(`먼저 볼 취약점: ${names(cr.map((g) => g.label), 3)}.`);
   return parts.join(' ');
 }
 
@@ -115,6 +116,26 @@ export function renderMarkdown(b, { siteUrl = '' } = {}) {
     L.push(`- 참고: ${refs.join(' · ')}`, '');
   };
 
+  // 순서: 국내 뉴스 → 해외 뉴스 → KISA 공지 → 악용 확인 취약점 → 신규 고위험 취약점 (웹 페이지와 같음)
+  for (const [key, title] of [['domestic', '국내 보안 뉴스'], ['international', '해외 보안 뉴스']]) {
+    const list = b.news?.[key] || [];
+    L.push(`## ${title} (${list.length}건)`, '');
+    if (!list.length) L.push(emptyNote(b, 'news'), '');
+    list.forEach((n, i) => {
+      const extra = n.outlets.length > 1 ? ` 외 ${n.outlets.length - 1}곳` : '';
+      L.push(`${i + 1}. ${mdLink(n.title_ko || n.title, n.url)} — ${mdEscape(n.source)}${extra}`);
+      if (n.title_ko && n.title_ko !== n.title) L.push(`   - 원제: ${mdEscape(n.title)}`);
+      if (n.summary_ko) L.push(`   - ${mdEscape(n.summary_ko)}`);
+      for (const r of n.related || []) L.push(`   - 함께 보도: ${mdLink(r.title, r.url)} (${mdEscape(r.source)})`);
+    });
+    L.push('');
+  }
+
+  L.push(`## KISA 공지 (${(b.advisories || []).length}건)`, '');
+  if (!(b.advisories || []).length) L.push(emptyNote(b, 'kisa'));
+  for (const a of b.advisories || []) L.push(`- ${mdLink(a.title, a.url)} (${a.source}, ${a.date})`);
+  L.push('');
+
   const ex = b.exploited || [];
   L.push(`## 악용 확인 취약점 (CISA KEV 신규 ${b.failed?.kev ? '수집 실패' : `${ex.length + (b.exploited_more?.length || 0)}건`})`, '');
   if (!ex.length) L.push(emptyNote(b, 'exploited'), '');
@@ -129,25 +150,6 @@ export function renderMarkdown(b, { siteUrl = '' } = {}) {
     L.push('<details><summary>그 밖의 고위험 취약점</summary>', '');
     for (const g of b.critical_more) L.push(`- ${g.ids.join(', ')} (CVSS ${g.cvss.toFixed(1)}) ${mdEscape(g.label)}`);
     L.push('', '</details>', '');
-  }
-
-  L.push(`## KISA 공지 (${(b.advisories || []).length}건)`, '');
-  if (!(b.advisories || []).length) L.push(emptyNote(b, 'kisa'));
-  for (const a of b.advisories || []) L.push(`- ${mdLink(a.title, a.url)} (${a.source}, ${a.date})`);
-  L.push('');
-
-  for (const [key, title] of [['domestic', '국내 보안 뉴스'], ['international', '해외 보안 뉴스']]) {
-    const list = b.news?.[key] || [];
-    L.push(`## ${title} (${list.length}건)`, '');
-    if (!list.length) L.push(emptyNote(b, 'news'), '');
-    list.forEach((n, i) => {
-      const extra = n.outlets.length > 1 ? ` 외 ${n.outlets.length - 1}곳` : '';
-      L.push(`${i + 1}. ${mdLink(n.title_ko || n.title, n.url)} — ${mdEscape(n.source)}${extra}`);
-      if (n.title_ko && n.title_ko !== n.title) L.push(`   - 원제: ${mdEscape(n.title)}`);
-      if (n.summary_ko) L.push(`   - ${mdEscape(n.summary_ko)}`);
-      for (const r of n.related || []) L.push(`   - 함께 보도: ${mdLink(r.title, r.url)} (${mdEscape(r.source)})`);
-    });
-    L.push('');
   }
 
   L.push('---', '');
@@ -228,7 +230,9 @@ function kakaoItems(b, dayUrl) {
 
 export function kakaoHeader(b) {
   const n = (b.exploited?.length || 0) + (b.exploited_more?.length || 0);
-  const counts = [n ? `악용 ${n}` : '', b.critical?.length && b.critical_total ? `고위험 ${b.critical_total}` : '', `뉴스 ${allNews(b).length}`].filter(Boolean).join('·');
+  // 웹 페이지와 같은 순서: 뉴스 → KISA → 악용 → 고위험
+  const kisa = (b.advisories || []).length;
+  const counts = [`뉴스 ${allNews(b).length}`, kisa ? `KISA ${kisa}` : '', n ? `악용 ${n}` : '', b.critical?.length && b.critical_total ? `고위험 ${b.critical_total}` : ''].filter(Boolean).join('·');
   const lost = failedVulnSources(b);
   return `${shortDay(b.date)} 보안 브리핑 | ${counts}${lost ? ` (${lost} 수집 실패)` : ''}`;
 }

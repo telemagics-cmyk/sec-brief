@@ -1,10 +1,11 @@
-# 매일 아침 보안 브리핑: 수집 → 이력 커밋(data/) → 웹 이력 게시(GitHub Pages) → 카카오톡 발송
+# 매일 아침 보안 브리핑: 수집 → 이력 커밋(data/) → 웹 이력 게시(GitHub Pages) → 카카오톡·메일 발송
 #
 # 필요한 설정 (README 참고)
 #   Settings > Pages > Build and deployment > Source: GitHub Actions
 #   Settings > Secrets and variables > Actions
 #     KAKAO_REST_API_KEY, KAKAO_CLIENT_SECRET, KAKAO_REFRESH_TOKEN   카카오톡 발송
-#     ANTHROPIC_API_KEY   (선택) Claude 한국어 요약
+#     SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, MAIL_TO, MAIL_FROM  (선택) 메일 발송
+#     ANTHROPIC_API_KEY   (선택) Claude 한국어 요약·번역
 #     NVD_API_KEY         (선택) NVD 요청 한도 완화
 #     NAVER_CLIENT_ID, NAVER_CLIENT_SECRET   (선택) 네이버 뉴스 검색
 #
@@ -13,7 +14,10 @@ name: daily-brief
 
 on:
   schedule:
-    # 매일 06:35 KST (= 전날 21:35 UTC). GitHub 사정으로 시작이 수 분~수십 분 늦을 수 있다.
+    # GitHub 예약 실행은 붐비면 몇 분~몇 시간 늦게 시작한다. 그래서 일찍 시작하고(05:05 KST = 20:05 UTC),
+    # 발송은 config.json 의 delivery.not_before(06:30) 까지 기다렸다 한다.
+    - cron: '5 20 * * *'
+    # 재시도(06:35 KST = 21:35 UTC): 앞 실행이 이미 만들고 보냈으면 수집·발송 모두 건너뛴다.
     - cron: '35 21 * * *'
   workflow_dispatch:
     inputs:
@@ -21,8 +25,8 @@ on:
         description: '오늘 브리핑이 이미 있어도 다시 만들기'
         type: boolean
         default: false
-      kakao:
-        description: '카카오톡'
+      send:
+        description: '카카오톡·메일 발송'
         type: choice
         options: ['보내기', '연결 확인 메시지만', '보내지 않기']
         default: '보내기'
@@ -44,7 +48,10 @@ jobs:
     outputs:
       site_url: ${{ steps.url.outputs.site_url }}
     steps:
+      # 예약 시각의 커밋이 아니라 지금의 최신 이력을 받는다(재시도가 앞 실행의 결과를 보도록)
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.ref }}
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
@@ -109,13 +116,14 @@ jobs:
       - id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
 
-  kakao:
-    name: 카카오톡 발송
+  deliver:
+    name: 발송 (카카오톡·메일)
     # 게시가 실패해도 메시지는 보낸다(링크는 다음 게시 때 열림)
     needs: [brief, deploy]
-    if: ${{ always() && needs.brief.result == 'success' && (github.event_name == 'schedule' || inputs.kakao != '보내지 않기') }}
+    if: ${{ always() && needs.brief.result == 'success' && (github.event_name == 'schedule' || inputs.send != '보내지 않기') }}
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # 예약 실행은 발송 시각(06:30)까지 기다릴 수 있다
+    timeout-minutes: 120
     permissions:
       contents: write
     steps:
@@ -125,24 +133,35 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
       - name: 발송
         env:
           SITE_URL: ${{ needs.brief.outputs.site_url }}
           KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
           KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
           KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
-          MODE: ${{ inputs.kakao == '연결 확인 메시지만' && '--test' || '' }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          MAIL_FROM: ${{ secrets.MAIL_FROM }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
+          MODE: ${{ inputs.send == '연결 확인 메시지만' && '--test' || '' }}
           FORCE: ${{ inputs.force && '--force' || '' }}
-        run: node src/cli.mjs send $MODE $FORCE
-      - name: 토큰 상태 커밋
-        # 새 리프레시 토큰(암호화)을 잃지 않도록 발송이 실패해도 저장한다
+          WAIT: ${{ github.event_name == 'schedule' && '--scheduled' || '' }}
+        run: node src/cli.mjs send $MODE $FORCE $WAIT
+      - name: 발송 기록 커밋
+        # 새 카카오 리프레시 토큰(암호화)·발송 기록을 잃지 않도록 발송이 실패해도 저장한다
         if: always()
         run: |
-          [ -f data/kakao-state.json ] || exit 0
+          files=""
+          for f in data/kakao-state.json data/mail-state.json; do [ -f "$f" ] && files="$files $f"; done
+          [ -n "$files" ] || exit 0
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/kakao-state.json
+          git add $files
           if git diff --cached --quiet; then exit 0; fi
-          git commit -q -m "카카오 발송 기록 $(TZ=Asia/Seoul date +%F)"
+          git commit -q -m "발송 기록 $(TZ=Asia/Seoul date +%F)"
           for i in 1 2 3; do git push -q && exit 0; git pull -q --rebase; done
           exit 1

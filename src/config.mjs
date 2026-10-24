@@ -74,6 +74,10 @@ export const DEFAULTS = {
     // list: 주요 3건 카드 + 버튼 2개 / text: 200자 요약 글
     template: 'list',
   },
+  delivery: {
+    // 예약 실행은 이른 시각에 시작하되(GitHub 지연 대비) 이 시각(KST) 전에는 카카오톡·메일을 보내지 않는다. 비우면 바로 발송.
+    not_before: '06:30',
+  },
 };
 
 function isPlainObject(v) {

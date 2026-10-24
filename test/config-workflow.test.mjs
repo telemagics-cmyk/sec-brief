@@ -40,15 +40,29 @@ test('설정 합치기와 .env', () => {
 });
 
 test('워크플로: 액션은 커밋 해시로 고정, run 안에 ${{ }} 직접 삽입 없음, 권한 최소화', () => {
-  const yml = readFileSync(join(ROOT, '.github', 'workflows', 'daily-brief.yml'), 'utf8');
-  const uses = [...yml.matchAll(/uses:\s*(\S+)/g)].map((m) => m[1]);
-  assert.ok(uses.length >= 5);
-  for (const u of uses) assert.match(u, /@[0-9a-f]{40}$/, `해시로 고정되지 않음: ${u}`);
-  // run: 블록 안에 ${{ 가 있으면 스크립트 주입 위험 → env 로만 넘긴다
-  const runBlocks = [...yml.matchAll(/run: \|\n((?: {10}.*\n)+)/g)].map((m) => m[1]);
-  const runLines = [...yml.matchAll(/run: ([^|\n].*)/g)].map((m) => m[1]);
-  for (const r of [...runBlocks, ...runLines]) assert.ok(!r.includes('${{'), r);
-  assert.match(yml, /^permissions:\n {2}contents: read/m);
-  assert.match(yml, /cron: '35 21 \* \* \*'/);
-  assert.match(yml, /concurrency:/);
+  for (const name of ['daily-brief.yml', 'site.yml', 'test.yml']) {
+    const yml = readFileSync(join(ROOT, '.github', 'workflows', name), 'utf8');
+    const uses = [...yml.matchAll(/uses:\s*(\S+)/g)].map((m) => m[1]);
+    assert.ok(uses.length >= 2, name);
+    for (const u of uses) assert.match(u, /@[0-9a-f]{40}$/, `${name}: 해시로 고정되지 않음: ${u}`);
+    // run: 블록 안에 ${{ 가 있으면 스크립트 주입 위험 → env 로만 넘긴다
+    const runBlocks = [...yml.matchAll(/run: \|\n((?: {10}.*\n)+)/g)].map((m) => m[1]);
+    const runLines = [...yml.matchAll(/run: ([^|\n].*)/g)].map((m) => m[1]);
+    for (const r of [...runBlocks, ...runLines]) assert.ok(!r.includes('${{'), `${name}: ${r}`);
+    assert.match(yml, /^permissions:\n {2}contents: read/m, name);
+  }
+  const daily = readFileSync(join(ROOT, '.github', 'workflows', 'daily-brief.yml'), 'utf8');
+  // 05:05 KST 에 시작, 06:35 KST 에 한 번 더(앞 실행이 끝냈으면 건너뜀)
+  assert.match(daily, /cron: '5 20 \* \* \*'/);
+  assert.match(daily, /cron: '35 21 \* \* \*'/);
+  assert.match(daily, /--scheduled/);
+  assert.match(daily, /concurrency:/);
+  assert.match(readFileSync(join(ROOT, '.github', 'workflows', 'site.yml'), 'utf8'), /group: sec-brief/);
+});
+
+test('설정: 예약 실행의 발송 시각은 05:05 시작과 06:35 재시도 사이', () => {
+  const cfg = JSON.parse(readFileSync(join(ROOT, 'config.json'), 'utf8'));
+  const [h, m] = cfg.delivery.not_before.split(':').map(Number);
+  const min = h * 60 + m;
+  assert.ok(min > 5 * 60 + 5 && min < 6 * 60 + 35, cfg.delivery.not_before);
 });

@@ -34,6 +34,15 @@ export function addDays(ymd, n) {
   return new Date(t).toISOString().slice(0, 10);
 }
 
+/** 오늘(한국 시간) HH:MM 까지 남은 밀리초. 이미 지났으면 0. */
+export function msUntilKst(hhmm, now = new Date()) {
+  const m = /^(\d{1,2}):(\d{2})$/.exec(String(hhmm ?? '').trim());
+  if (!m || Number(m[1]) > 23 || Number(m[2]) > 59) throw new Error(`시각 형식은 HH:MM 입니다: ${hhmm}`);
+  const kst = new Date(now.getTime() + KST_MS);
+  const target = Date.UTC(kst.getUTCFullYear(), kst.getUTCMonth(), kst.getUTCDate(), Number(m[1]), Number(m[2])) - KST_MS;
+  return Math.max(0, target - now.getTime());
+}
+
 /** '2026-10-23' → '10.23(금)' */
 export function shortDay(ymd) {
   return `${ymd.slice(5, 7)}.${ymd.slice(8, 10)}(${weekdayKo(ymd)})`;

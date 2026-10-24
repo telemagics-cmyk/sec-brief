@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 // 사이버 보안 일일 브리핑
 //
-//   node src/cli.mjs run            수집 → 이력 저장 → 웹 페이지 생성 → 카카오톡 발송
+//   node src/cli.mjs run            수집 → 이력 저장 → 웹 페이지 생성 → 카카오톡·메일 발송
 //   node src/cli.mjs collect        수집하고 data/briefs 에 저장만 (--force: 오늘 것을 다시 만들기)
 //   node src/cli.mjs build          data/briefs → _site/ 웹 페이지
-//   node src/cli.mjs send           오늘(또는 --date) 브리핑을 카카오톡으로 (--test: 연결 확인 메시지)
-//   node src/cli.mjs preview        카카오톡으로 보낼 메시지를 화면에만 출력
+//   node src/cli.mjs send           오늘(또는 --date) 브리핑을 카카오톡·메일로 (--test: 연결 확인, --only kakao|mail)
+//   node src/cli.mjs preview        카카오톡으로 보낼 메시지를 화면에만 출력 (--mail: 메일 HTML 을 파일로)
 //   node src/cli.mjs kakao-login    처음 한 번: 카카오 로그인으로 리프레시 토큰 받기
 //   node src/cli.mjs import <폴더>  이전 도구의 브리핑 파일(daily-brief-*.md)을 웹 이력으로 옮기기
 //   node src/cli.mjs serve          _site/ 를 http://localhost:8080 으로 열람
@@ -13,14 +13,16 @@ import { existsSync, readFileSync, statSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { extname, join, normalize, resolve, sep } from 'node:path';
 import { createInterface } from 'node:readline/promises';
+import { setTimeout as sleep } from 'node:timers/promises';
 import { buildKakaoTemplate } from './brief.mjs';
 import { collectBrief } from './collect.mjs';
 import { loadConfig } from './config.mjs';
 import { kakaoConfigured, kakaoLogin, sendBrief } from './kakao.mjs';
 import { importLegacy } from './legacy.mjs';
+import { mailConfigured, mailSubject, renderEmailHtml, sendBriefMail } from './mail.mjs';
 import { buildSite } from './site.mjs';
-import { listBriefDates, loadBrief } from './store.mjs';
-import { isYmd, kstDate } from './util.mjs';
+import { listBriefDates, loadBrief, writeAtomic } from './store.mjs';
+import { isYmd, kstDate, msUntilKst } from './util.mjs';
 
 const HELP = readFileSync(new URL(import.meta.url), 'utf8')
   .split(/\r?\n/)
@@ -36,7 +38,7 @@ function parseArgs(argv) {
     if (a.startsWith('--')) {
       const [k, v] = a.slice(2).split('=');
       if (v !== undefined) args[k] = v;
-      else if (argv[i + 1] && !argv[i + 1].startsWith('--') && ['date', 'port', 'template'].includes(k)) args[k] = argv[++i];
+      else if (argv[i + 1] && !argv[i + 1].startsWith('--') && ['date', 'port', 'template', 'only'].includes(k)) args[k] = argv[++i];
       else args[k] = true;
     } else args._.push(a);
   }
@@ -78,7 +80,11 @@ async function cmdCollect(cfg, args) {
   }
   const { brief, skipped } = await collectBrief(cfg, opts);
   if (skipped && inActions) {
-    notice(`${brief.date} 브리핑이 이미 있어 새로 만들지 않았습니다. 다시 만들려면 Run workflow 에서 '오늘 브리핑이 이미 있어도 다시 만들기'를 체크하세요.`);
+    notice(
+      process.env.GITHUB_EVENT_NAME === 'schedule'
+        ? `앞선 예약 실행이 ${brief.date} 브리핑을 이미 만들어, 이번 재시도는 수집을 건너뜁니다.`
+        : `${brief.date} 브리핑이 이미 있어 새로 만들지 않았습니다. 다시 만들려면 Run workflow 에서 '오늘 브리핑이 이미 있어도 다시 만들기'를 체크하세요.`,
+    );
   }
   if (!skipped) {
     const bad = brief.sources.filter((s) => !s.ok);
@@ -95,23 +101,66 @@ async function cmdCollect(cfg, args) {
   return brief;
 }
 
+/**
+ * 카카오톡·메일 발송. 설정된 수단마다 따로 보내고(하나가 실패해도 다른 하나는 보냄), 실패가 있으면 종료 코드 1.
+ * --scheduled: 예약 실행 — delivery.not_before(KST) 전이면 그때까지 기다렸다 보낸다.
+ */
 async function cmdSend(cfg, args, brief) {
-  if (!kakaoConfigured()) {
-    notice('카카오톡 설정이 없어 발송을 건너뜁니다 (KAKAO_REST_API_KEY·KAKAO_REFRESH_TOKEN, README 참고).');
-    return;
-  }
+  const only = typeof args.only === 'string' ? args.only : '';
+  if (only && !['kakao', 'mail'].includes(only)) throw new Error('--only 는 kakao 또는 mail 입니다.');
+  const channels = [
+    { key: 'kakao', name: '카카오톡', on: kakaoConfigured(), hint: 'KAKAO_REST_API_KEY·KAKAO_REFRESH_TOKEN' },
+    { key: 'mail', name: '메일', on: mailConfigured(), hint: 'SMTP_HOST·SMTP_USER·SMTP_PASS·MAIL_TO' },
+  ].filter((c) => !only || c.key === only);
+  for (const c of channels.filter((x) => !x.on)) notice(`${c.name} 설정이 없어 건너뜁니다 (${c.hint}, README 참고).`);
+  const active = channels.filter((c) => c.on);
+  if (!active.length) return;
   const b = args.test ? null : brief || pickBrief(cfg, args.date);
-  const r = await sendBrief(cfg, b, { test: Boolean(args.test), force: Boolean(args.force) });
-  if (r.skipped) {
-    notice(r.reason);
-    return;
+
+  const notBefore = cfg.delivery?.not_before;
+  if (args.scheduled && notBefore && !args.test) {
+    let ms = 0;
+    try {
+      ms = msUntilKst(notBefore);
+    } catch (err) {
+      warn(`config.json 의 delivery.not_before 값이 잘못돼 기다리지 않고 보냅니다: ${err.message}`);
+    }
+    if (ms > 0) {
+      console.log(`발송 시각(${notBefore} KST)까지 ${Math.ceil(ms / 60000)}분 기다립니다.`);
+      await sleep(Math.min(ms, 3 * 3600 * 1000));
+    }
   }
-  console.log(`카카오톡 발송 완료 (${r.template}${r.rotated ? ', 리프레시 토큰 갱신됨' : ''})${b ? `, ${b.date}` : ', 연결 확인 메시지'}`);
-  if (!cfg.site.url) warn('site.url(또는 SITE_URL)이 비어 있어 메시지에 웹 이력 버튼이 없습니다.');
+
+  const opts = { test: Boolean(args.test), force: Boolean(args.force) };
+  const what = b ? b.date : '연결 확인';
+  for (const c of active) {
+    try {
+      if (c.key === 'kakao') {
+        const r = await sendBrief(cfg, b, opts);
+        if (r.skipped) notice(r.reason);
+        else {
+          console.log(`카카오톡 발송 완료 (${r.template}${r.rotated ? ', 리프레시 토큰 갱신됨' : ''}): ${what}`);
+          if (!cfg.site.url) warn('site.url(또는 SITE_URL)이 비어 있어 카카오 메시지에 웹 이력 버튼이 없습니다.');
+        }
+      } else {
+        const r = await sendBriefMail(cfg, b, opts);
+        if (r.skipped) notice(r.reason);
+        else console.log(`메일 발송 완료 (받는 사람 ${r.accepted}명${r.rejected ? `, 거부 ${r.rejected}명` : ''}): ${what}`);
+      }
+    } catch (err) {
+      fail(`${c.name} 발송 실패: ${err?.message || err}`);
+    }
+  }
 }
 
 function cmdPreview(cfg, args) {
   const b = pickBrief(cfg, args.date);
+  if (args.mail) {
+    const out = join(cfg.siteDir, 'mail-preview.html');
+    writeAtomic(out, renderEmailHtml(b, { siteUrl: cfg.site.url, title: cfg.site.title }));
+    console.log(`제목: ${mailSubject(b, cfg.site.title)}\n본문: ${out}`);
+    return;
+  }
   const tpl = buildKakaoTemplate(b, { siteUrl: cfg.site.url, template: args.template || cfg.kakao.template });
   console.log(JSON.stringify(tpl, null, 2));
 }
@@ -202,8 +251,7 @@ async function main() {
     case 'run': {
       const brief = await cmdCollect(cfg, args);
       buildSite(cfg);
-      if (kakaoConfigured()) await cmdSend(cfg, args, brief);
-      else notice('카카오톡 설정이 없어 발송은 건너뜁니다 (README 의 카카오톡 설정 참고).');
+      await cmdSend(cfg, args, brief);
       break;
     }
     default:

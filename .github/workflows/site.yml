@@ -1,0 +1,61 @@
+# 화면·설정 코드를 고쳐 올리면 웹 이력을 바로 다시 게시한다 (수집·발송은 하지 않음)
+name: site
+
+on:
+  push:
+    branches: [main]
+    paths: ['src/**', 'config.json']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# 매일 브리핑과 같은 묶음: 게시가 겹치지 않게 차례로 돈다
+concurrency:
+  group: sec-brief
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: 웹 페이지 만들기
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.ref }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Pages 주소 확인
+        id: pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+        continue-on-error: true
+      - name: 웹 페이지 만들기
+        env:
+          PAGES_URL: ${{ steps.pages.outputs.base_url }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          url="${PAGES_URL:-https://${OWNER,,}.github.io/${REPO}}"
+          SITE_URL="${url%/}" node src/cli.mjs build
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: _site
+
+  deploy:
+    name: 웹 이력 게시
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

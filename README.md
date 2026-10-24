@@ -109,7 +109,7 @@ SMTP 비밀값을 넣으면 카카오톡과 함께 브리핑 전문을 메일로
 | Outlook.com·Hotmail | 비밀번호 방식 SMTP 를 막아 쓸 수 없음 (받는 주소로는 문제없음) |
 | 네이버 메일 | 앱 비밀번호가 필요하고, 해외 접속을 기본으로 막아 GitHub 서버에서 실패하기 쉬움 |
 
-1. 보낼 Gmail 계정에서 **2단계 인증**을 켭니다: https://myaccount.google.com/signinoptions/twosv
+1. 보낼 Gmail 계정에서 **2단계 인증**을 켭니다: https://myaccount.google.com/security → '2단계 인증'
 2. **앱 비밀번호**를 만듭니다: https://myaccount.google.com/apppasswords → 앱 이름 `sec-brief` →
    16자리 값이 한 번만 보입니다(띄어 쓴 채 붙여 넣어도 됩니다). 다른 곳에 적어 두지 마세요.
 3. 저장소 Secrets 에 넣습니다.

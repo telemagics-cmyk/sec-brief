@@ -1,0 +1,607 @@
+{
+  "version": 2,
+  "date": "2026-10-26",
+  "generated_at": "2026-10-26T07:20:03+09:00",
+  "window": {
+    "hours": 30,
+    "from": "2026-10-24T16:20:03.971Z",
+    "to": "2026-10-25T22:20:03.971Z"
+  },
+  "engine": "claude-haiku-5-5",
+  "overview": "기프티엘, 더존비즈온, 부경대 등 국내 개인정보 유출 사고가 잇따르고 PHP 결함 악용 공격이 확산 중입니다. 가장 시급한 조치는 PHP 및 Brotli 관련 서버와 패키지 점검입니다. 신규 인증 우회 취약점 2건(Snipe-IT, Parse Server)도 패치가 필요합니다.",
+  "cvss_min": 9,
+  "critical_total": 5,
+  "failed": {
+    "kev": false,
+    "nvd": false,
+    "kisa": false,
+    "news": false
+  },
+  "exploited": [],
+  "exploited_more": [],
+  "critical": [
+    {
+      "id": "CVE-2026-115995",
+      "ids": [
+        "CVE-2026-115995"
+      ],
+      "section": "critical",
+      "label": "CVE-2026-115995",
+      "vendor": "",
+      "cna": "cna@vuldb.com",
+      "status": "Received",
+      "published": "2026-10-24T23:16:58.323",
+      "description": "A security vulnerability has been detected in Unitree Robotics Unitree Go2 up to 1.1.11.4. The impacted element is the function set_volume of the file gpt_thread.py of the component chat_go. Such manipulation of the argument Value leads to os command injection. The attack can be launched remotely. Upgrading to version 1.1.11.5 is sufficient to resolve this issue. You should upgrade the affected component. The vendor confirmed early: \"Submission 990502 corresponds to our internal ticket #474 (Go2 chat_go set_volume OS command injection, CWE-78).\"",
+      "descriptions": [
+        {
+          "id": "CVE-2026-115995",
+          "text": "A security vulnerability has been detected in Unitree Robotics Unitree Go2 up to 1.1.11.4. The impacted element is the function set_volume of the file gpt_thread.py of the component chat_go. Such manipulation of the argument Value leads to os command injection. The attack can be launched remotely.…"
+        }
+      ],
+      "cwes": [
+        "CWE-77",
+        "CWE-78"
+      ],
+      "cvss": {
+        "score": 9.6,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H"
+      },
+      "ssvc": null,
+      "epss": 0.01377,
+      "links": [
+        "https://unitree-firmware.oss-cn-hangzhou.aliyuncs.com/firmware/release/package_1.1.11.5_GO2_Edu_Max_Pro_X_1761128358872.upk",
+        "https://vuldb.com/cve/CVE-2026-115995",
+        "https://vuldb.com/submit/990502"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-115995",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 10.17,
+      "ko": {
+        "title": "Unitree Go2 set_volume 명령 주입 취약점(CVSS 9.6)",
+        "target": "Unitree Go2 1.1.11.4 이하 (chat_go gpt_thread.py)",
+        "impact": "원격에서 OS 명령 주입 가능, 사용자 상호작용 필요, 기기 전체 장악 우려",
+        "action": "벤더 패치 적용 여부 확인, 해당 기기 외부 네트워크 노출 차단"
+      }
+    },
+    {
+      "id": "CVE-2026-116199",
+      "ids": [
+        "CVE-2026-116199"
+      ],
+      "section": "critical",
+      "label": "Snipe-IT",
+      "vendor": "",
+      "cna": "disclosure@vulncheck.com",
+      "status": "Received",
+      "published": "2026-10-25T14:17:00.593",
+      "description": "Snipe-IT before 8.6.3 contains an authentication bypass in GoogleAuthController::handleGoogleCallback, which logs in the user whose username matches the Google account email without enforcing the activated flag. Deactivated users with email-shaped usernames and still-live Google identities can sign in via Google SSO and regain sessions at their original permission level, including admin.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-116199",
+          "text": "Snipe-IT before 8.6.3 contains an authentication bypass in GoogleAuthController::handleGoogleCallback, which logs in the user whose username matches the Google account email without enforcing the activated flag. Deactivated users with email-shaped usernames and still-live Google identities can sign…"
+        }
+      ],
+      "cwes": [
+        "CWE-285"
+      ],
+      "cvss": {
+        "score": 9.2,
+        "version": "4.0",
+        "vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X"
+      },
+      "ssvc": null,
+      "epss": null,
+      "links": [
+        "https://github.com/grokability/snipe-it/security/advisories/GHSA-xf36-wx48-5rqp",
+        "https://www.vulncheck.com/advisories/snipe-it-before-8.6.3-authentication-bypass-via-google-sso-callback"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-116199",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 9.7,
+      "ko": {
+        "title": "Snipe-IT Google 로그인 인증 우회 취약점(CVSS 9.2)",
+        "target": "Snipe-IT 8.6.3 미만",
+        "impact": "비활성화된 계정이 Google 계정 연동으로 로그인 가능, 인증 우회 위험",
+        "action": "8.6.3 이상으로 업그레이드, 비활성 계정과 Google 연동 상태 점검"
+      }
+    },
+    {
+      "id": "CVE-2026-116163",
+      "ids": [
+        "CVE-2026-116163"
+      ],
+      "section": "critical",
+      "label": "Parse Server",
+      "vendor": "",
+      "cna": "disclosure@vulncheck.com",
+      "status": "Received",
+      "published": "2026-10-25T14:16:55.110",
+      "description": "Parse Server before 8.6.102 and 9.0.0 before 9.10.5-alpha.2 contains an authentication bypass because the validateSetUp, validateLogin, and validateUpdate methods of custom adapters subclassing AuthAdapter are never called, and an inherited default that accepts any authData is used instead. Attackers can supply arbitrary authData to sign up, link identities, log in as existing users, or skip custom additional authentication factors.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-116163",
+          "text": "Parse Server before 8.6.102 and 9.0.0 before 9.10.5-alpha.2 contains an authentication bypass because the validateSetUp, validateLogin, and validateUpdate methods of custom adapters subclassing AuthAdapter are never called, and an inherited default that accepts any authData is used instead. Attacke…"
+        }
+      ],
+      "cwes": [
+        "CWE-287"
+      ],
+      "cvss": {
+        "score": 9.1,
+        "version": "4.0",
+        "vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:H/VA:N/SC:N/SI:N/SA:N/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X"
+      },
+      "ssvc": null,
+      "epss": null,
+      "links": [
+        "https://github.com/parse-community/parse-server/security/advisories/GHSA-rq3w-5c6f-p7wr",
+        "https://www.vulncheck.com/advisories/parse-server-9.0.0-before-9.10.5-alpha.2-authentication-bypass-via-authadapter-subclasses"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-116163",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 9.6,
+      "ko": {
+        "title": "Parse Server 커스텀 인증 어댑터 인증 우회(CVSS 9.1)",
+        "target": "Parse Server 8.6.102 미만, 9.0.0 이상 9.10.5-alpha.2 미만",
+        "impact": "커스텀 AuthAdapter 검증 메서드 미호출로 모든 authData 허용, 인증 우회 가능",
+        "action": "8.6.102 또는 9.10.5-alpha.2 이상으로 업그레이드, 커스텀 어댑터 구현 점검"
+      }
+    }
+  ],
+  "critical_more": [
+    {
+      "id": "CVE-2026-116207",
+      "ids": [
+        "CVE-2026-116207"
+      ],
+      "label": "YesWiki",
+      "cvss": 9.1,
+      "title": "YesWiki SQL 삽입"
+    }
+  ],
+  "advisories": [],
+  "news": {
+    "domestic": [
+      {
+        "id": "n-203dd1a1",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "모바일 쿠폰 플랫폼 ‘기프티엘’ 해킹…고객 이름·휴대전화·이메일·환불 계좌번호 유출",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209044",
+        "source": "데일리시큐",
+        "published": "2026-10-25T03:51:49.000Z",
+        "snippet": "모바일 쿠폰 서비스 ‘기프티엘(Giftiel)’에서 해킹으로 고객 개인정보가 유출되는 사고가 발생했다. 유출된 정보에는 이름과 휴대전화번호, 이메일뿐 아니라 환불 계좌번호도 포함돼 있어 스미싱과 피싱, 금융사기 등 2차 피해에 대한 주의가 요구된다. 기프티엘 운영사 스푼 주식회사는 공식 홈페이지에 게시한 ‘개인정보 유출 사실 안내 및 사과문’을 통해 지난 10월 22일 외부의 비인가 접근으…",
+        "outlets": [
+          "데일리시큐",
+          "동아일보",
+          "천지일보",
+          "YTN",
+          "Chosunbiz",
+          "세이프타임즈",
+          "포쓰저널",
+          "한겨레",
+          "KBC광주방송",
+          "메디컬투데이",
+          "연합뉴스TV",
+          "한국경제TV",
+          "한국일보",
+          "www.dt.co.kr",
+          "KBS 뉴스",
+          "SBS 뉴스",
+          "SR타임스",
+          "한국NGO신문",
+          "서울경제",
+          "MBC 뉴스",
+          "시사저널",
+          "부산일보",
+          "문화일보",
+          "뉴스토마토",
+          "머니투데이",
+          "ER 이코노믹리뷰",
+          "강원도민일보",
+          "한국경제",
+          "SBS Biz",
+          "비즈중앙",
+          "www.ebn.co.kr",
+          "연합뉴스",
+          "이투데이",
+          "더팩트",
+          "IT조선",
+          "뉴스웨이",
+          "뉴시스",
+          "전자신문"
+        ],
+        "related": [
+          {
+            "title": "롯데 모바일 쿠폰 발행사 해킹… 환불 계좌번호도 유출",
+            "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5hYTJXVjctLTk3TXpLNWhVNDdCaWg4M0trbW9zSmtPYnp4OTFFYUhiYi0zdXlvR2VaejY2VkNOUVNLY2hMLVRwU0xhdXBSWW5XMEZOOURGQkhuSmthNWRxMk92X1NOOE9BUEd1SktJOVQ3UzIyOEHSAWZBVV95cUxOckJvSGV2bS1teFpFYlhFTmNSQVN3aDZtS2dLZ0lGRDVhOUZfNDAyN0FnOG9xUjE3RjhybEZqUWVMT2JsYWVrWTF3b1RnQ0hFY1phemxqcm1ZSnNBUl9LeTdqUjVDUUE?oc=5",
+            "source": "동아일보"
+          },
+          {
+            "title": "롯데 계열 ‘기프티엘’ 해킹… 환불 계좌번호 등 개인정보 유출",
+            "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTFBwT29YcjZTUndPcWZTZC1iTlpVLU43Tm4xTG1BbENRLW5JZ2FnWGhvaHFJWlQ2VFFVeFQ0Nl8wV2RKcnFXTkxfcmp0YVJNTzJZbDZ3ZlhHVzIybWNoaEdHSmFjSWNsTjBwR1E?oc=5",
+            "source": "천지일보"
+          },
+          {
+            "title": "롯데 쿠폰 발행사 고객정보 유출...이름·계좌번호 빠져나가",
+            "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE8zQk5zUk1NalRaSWZQSUphQk5fTWM5SGlOekVGUTdaemhsWTZtaEFJLUs4TXNkZ2VtZ1lIcDdUT244NjByaE9saHhHWlVHeTVoQzM3WUVOa3BFOENZLXc?oc=5",
+            "source": "YTN"
+          },
+          {
+            "title": "롯데 기프티엘 해킹… 고객 1만8359명 개인정보 유출 - 조선비즈",
+            "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxPS18xNjhCM0hYMlR3YkdKUEZfUGJGdFg2aWluRDhnM1RUZk1QRUFGM2lQR0h6T0ZKMXAtRGlYbnVQVGNCR3RZQUJUWDV5UUg2aFVXNGlLZUMyRXZNRktVTFgxVVpSdjM5WTRKRE1xSnRrUWlQREZkeXgyaDZhRml1czUtc2FTbFN5THfSAZ4BQVVfeXFMTkN4OFZLRjhFa2JIdUpER29VQzNpQUQwRmRmX2VPMHJ4RnQ4YnZ4VWlLV2tMNDFCOUctLXJsNzBzV3l1aUxoSHNQVDhmZGlvVVowT1RMYmpTcUlmaFEwUUZLOEJEa3N2Qzg5czJQdUFiZ3FITmFyU3NpYjJ6bnVPS29raTJvcTVrR3ZxRW1VamVUNXBZR3VXc1p1VXY5Q0E?oc=5",
+            "source": "Chosunbiz"
+          },
+          {
+            "title": "롯데 계열 모바일 상품권 '기프티엘' 개인정보 유출 사고",
+            "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE5JVW8wc3Q1cFhUUHpWVFc1SUktaUcta0szc0VoNG9SMXdXcGRGTFhuMFlZbU9hek1fS1RqZTZreUdEbzl4S2pPT19WSzFyTC1KekJFbGlvb09lUGR4X0pJSlRzVUUwYzVBdWMyWUhPellRX1HSAXNBVV95cUxOSVVvMHN0NXBYVFB6VlRXNUlJLWlHLWtLM3NFaDRvUjF3V3BkRkxYbjBZWW1PYXpNX0tUamU2a3lHRG85eEtqT09fVksxckwtSnpCRWxpb29PZVBkeF9KSUpUc1VFMGM1QXVjMllIT3pZUV9R?oc=5",
+            "source": "세이프타임즈"
+          }
+        ],
+        "cves": [],
+        "score": 22,
+        "title_ko": "모바일 쿠폰 기프티엘 해킹, 고객 개인정보·환불 계좌 유출",
+        "summary_ko": "기프티엘 해킹으로 이름, 휴대전화, 이메일, 환불 계좌번호가 유출됨. 유출 규모는 1만8359명으로 보도됨. 스미싱, 피싱 등 2차 피해 주의 필요."
+      },
+      {
+        "id": "n-2283f9d8",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "PHP 결함 노린 해킹 모의…北 라자루스 연계 의심",
+        "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1OZGhXMzdnQ2wyZ0JubGhTcXlUMkFWZU55b1h5NjlzVDRTRXVDenF3d1cwM3dCUUZ6Y0tQcWVhNFpGWXQ4eHl6bnV3WXR2cG1lNkIzUWdhYWMyd2plTWItaWR3cDk3aU1mV1hmVlN4Mlh5Uzh2?oc=5",
+        "source": "부산일보",
+        "published": "2026-10-25T05:21:11.000Z",
+        "snippet": "",
+        "outlets": [
+          "부산일보",
+          "뉴시스"
+        ],
+        "related": [
+          {
+            "title": "PHP 해킹, '패치'로 끝 아니다…협력사·중소기업 타고 번질라",
+            "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBwdnVKYTYyOW9CWVZScmJiODZOZFdDY1l5Z2tpRDM0a2Q2SC1NQ1FTYkZMNW9IUWFNWEFBQ0NXVExwRzcxZHBMUUVuZ3lNNXVNMVZtbEExXzZobmZ4eHRYUtIBeEFVX3lxTE1pZEt0ZmhLdDRKWDZEalh2UE1IVGFOQ0xHdWNpSnZWZ1R2RUZjQ2Z5U0Fld25qNUVHLTl3T3BJQnZZM0UyTTlsRzdYTVZFX3BwcFVGR29xdENUYk1BSUxRU2l4Uk5vd3EtNWJUUlJadlBXNjJ0LXVqOQ?oc=5",
+            "source": "뉴시스"
+          }
+        ],
+        "cves": [],
+        "score": 10.7,
+        "title_ko": "PHP 결함 노린 해킹 모의, 북한 라자루스 연계 의심",
+        "summary_ko": "PHP 결함을 노린 해킹 시도가 북한 라자루스와 연계됐을 것이라는 의심 보도임. 본문 정보가 제한적이라 원문 확인 필요. 패치 후에도 협력사 연쇄 감염 우려 있음."
+      },
+      {
+        "id": "n-f28a2127",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "더존비즈온, APO 백업서버 해킹 공지…암호화 데이터 외부 반출 정황",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209050",
+        "source": "데일리시큐",
+        "published": "2026-10-25T06:44:33.000Z",
+        "snippet": "더존비즈온이 APO백업서비스 서버에 대한 외부 침해와 암호화된 일부 데이터의 외부 반출 정황을 확인하고 고객사에 개인정보 유출 가능성을 공지했다. 개인정보 유출 여부와 대상 고객사, 유출 가능 항목은 아직 확정되지 않았다. 회사 측 공지에 따르면, 서비스 점검 중 이상징후를 발견한 뒤 백업 솔루션 제공사인 아세이(Ahsay)에 관련 내용을 문의하는 과정에서 솔루션에 취약점이 있다는 사실을…",
+        "outlets": [
+          "데일리시큐"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 7,
+        "title_ko": "더존비즈온 APO 백업서버 해킹, 암호화 데이터 반출 정황",
+        "summary_ko": "APO 백업서버 외부 침해로 암호화된 일부 데이터가 외부로 반출된 정황이 확인됨. 개인정보 유출 여부와 대상 고객사는 미확정이라 고객사 공지 확인 필요."
+      },
+      {
+        "id": "n-99312791",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "[단독] 국립 부경대 학생·직원 5,108명 개인정보 유출…공격자 금전 요구로 사고 인지",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209051",
+        "source": "데일리시큐",
+        "published": "2026-10-25T07:28:57.000Z",
+        "snippet": "국립부경대학교의 등록금 수납업무에 사용되는 수협은행 캠퍼스e모아시스템에서 외부 공격자의 비인가 접근으로 학생과 직원 총 5,108명의 개인정보가 유출됐다. 대학은 유출 정보를 이용한 금전 요구를 통해 사고를 인지했으며, 관계기관 신고와 피해 대상자 통지 등 대응에 나섰다. 국립부경대가 10월 23일 게시한 공지에 따르면, 유출 대상은 학생 5,106명과 등록금 업무담당 직원 2명이다. 학생…",
+        "outlets": [
+          "데일리시큐"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 9,
+        "title_ko": "국립부경대 학생·직원 5,108명 개인정보 유출",
+        "summary_ko": "등록금 수납시스템 캠퍼스e모아에 외부 비인가 접근이 발생함. 공격자가 금전을 요구하면서 사고를 인지함. 관계기관 신고와 피해자 통지 진행 중."
+      },
+      {
+        "id": "n-e18c0ea2",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "티켓베이 해킹으로 회원 1만6천명 개인정보 유출…공연·주문내역까지 노출",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209054",
+        "source": "데일리시큐",
+        "published": "2026-10-25T17:33:47.000Z",
+        "snippet": "티켓 거래 플랫폼 티켓베이에서 해킹으로 약 1만6천명의 회원 개인정보가 유출되는 사고가 발생했다. 유출 정보에는 회원 이름과 아이디뿐 아니라 공연명과 주문내역 등 거래정보까지 포함돼 있어 이를 악용한 피싱 등 2차 피해가 우려된다. 티켓베이는 개인정보 유출 안내문을 통해 지난 10월 21일 외부 공격자가 일부 API(응용프로그램 인터페이스)에 비정상적으로 접근해 현재까지 약 1만6천명의 회…",
+        "outlets": [
+          "데일리시큐"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 10,
+        "title_ko": "티켓베이 해킹, 회원 1만6천명 개인정보 유출",
+        "summary_ko": "10월 21일 외부 공격자가 일부 API에 비정상 접근해 회원 이름, 아이디, 공연명, 주문내역이 노출됨. 피싱 등 2차 피해 우려 있음."
+      }
+    ],
+    "international": [
+      {
+        "id": "n-da19872b",
+        "region": "international",
+        "lang": "en",
+        "title": "PHP2Shell Exploitation Hits Government Entity Amid Global Scanning and Signs of AI-Assisted Hacking",
+        "url": "https://thehackernews.com/2026/10/php2shell-exploitation-hits-government.html",
+        "source": "The Hacker News",
+        "published": "2026-10-25T17:19:46.000Z",
+        "snippet": "Threat actors have been observed using agentic artificial intelligence (AI) platforms for post-exploitation activity following the abuse of the PHP2Shell vulnerabilities tracked as CVE-2026-109618 and CVE-2026-109619. \"…",
+        "outlets": [
+          "The Hacker News",
+          "톱스타뉴스"
+        ],
+        "related": [
+          {
+            "title": "PHP2Shell 해킹 비상…보안 패치해도 남는 새 취약점 발견",
+            "url": "https://news.google.com/rss/articles/CBMickFVX3lxTFAwR1RMUGVfbXk2ZXJlcFE3bUdHcU0way1BR253T3BqWmZKODVqTVg2UDljYl80MElkLU5paS1KcUNRZFRxc25xYzlWckE5MVR3LTJXLS1DWHVFOUwyWWQwQUg3YWYyUGh3TjNiSnVVTTNUZw?oc=5",
+            "source": "톱스타뉴스"
+          }
+        ],
+        "cves": [
+          "CVE-2026-109618"
+        ],
+        "score": 14.2,
+        "title_ko": "PHP2Shell 악용 확산, 정부기관 피해와 AI 활용 해킹 징후",
+        "summary_ko": "CVE-2026-109618 PHP2Shell 취약점 악용 후 에이전트형 AI 플랫폼으로 사후 공격 활동이 관측됨. 전 세계 스캐닝과 정부기관 피해도 확인됨."
+      },
+      {
+        "id": "n-4bb61050",
+        "region": "international",
+        "lang": "ko",
+        "title": "노드.js만 패치하면 끝?…브로틀리 쓰는 파이썬·프록시도 점검 필요",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209049",
+        "source": "데일리시큐",
+        "published": "2026-10-25T06:34:52.000Z",
+        "snippet": "구글의 압축 라이브러리 ‘브로틀리(Brotli)’에서 조작된 데이터를 해제하는 과정에 악성코드가 실행될 수 있는 취약점이 확인됐다. 노드.js뿐 아니라 번(Bun), 파이썬 관련 패키지, 일부 프록시 환경에도 영향을 미칠 수 있어 제품별 보안 업데이트와 압축 처리 경로 점검이 필요하다. 취약점 식별번호는 ‘CVE-2026-111497’이다. 브로틀리는 웹페이지와 통신 데이터의 용량을 줄이는…",
+        "outlets": [
+          "데일리시큐"
+        ],
+        "related": [],
+        "cves": [
+          "CVE-2026-111497"
+        ],
+        "score": 6.5,
+        "title_ko": "Brotli 취약점, Node.js·Bun·파이썬 패키지 영향",
+        "summary_ko": "구글 압축 라이브러리 Brotli에서 조작된 데이터 해제 중 악성코드가 실행될 수 있는 취약점(CVE-2026-111497)이 확인됨. Node.js, Bun, 파이썬 패키지와 프록시 환경 점검 필요."
+      },
+      {
+        "id": "n-12637600",
+        "region": "international",
+        "lang": "ko",
+        "title": "일본 GMO, FX 자동매매 서버 해킹…모든 이용자에 5000엔 위로금",
+        "url": "https://zdnet.co.kr/view/?no=20261025163442",
+        "source": "지디넷코리아",
+        "published": "2026-10-25T07:54:00.000Z",
+        "snippet": "[지디넷코리아]일본 GMO인터넷그룹이 외환증거금거래(FX) 자동매매용 서버 해킹 피해를 계기로 정부의 능동적 사이버 방어를 긴급 요청했다. 이에 일본 정부는 개별 기업의 요청으로 발동하는 제도가 아니라며 신중한 태도를 보였다. 해킹으로 거래 계좌 인증정보가 유출돼 이용자들의 부정 거래 피해가 잇따랐다. 요미우리신문, 아사히신문 등 여러 외신은 GMO가 해킹 피해 보상 방침을 발표하고 정부에…",
+        "outlets": [
+          "지디넷코리아"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 7,
+        "title_ko": "일본 GMO, FX 자동매매 서버 해킹…이용자 5000엔 위로금",
+        "summary_ko": "FX 자동매매용 서버 해킹으로 거래 계좌 인증정보가 유출되어 부정 거래 피해가 이어짐. GMO는 정부의 능동적 사이버 방어를 요청했으나 일본 정부는 신중한 입장임."
+      },
+      {
+        "id": "n-33f7736e",
+        "region": "international",
+        "lang": "en",
+        "title": "Unpatched Tailscale SSH Flaws Could Let a Hacked Device Reach Root on Other Servers",
+        "url": "https://thehackernews.com/2026/10/unpatched-tailscale-ssh-flaws-could-let.html",
+        "source": "The Hacker News",
+        "published": "2026-10-25T17:44:09.000Z",
+        "snippet": "A single hacked device on a Tailscale network can be used to gain root access to other servers it can reach, according to a security researcher who published the findings this week. The attack requires two things: Tails…",
+        "outlets": [
+          "The Hacker News"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 10,
+        "title_ko": "Tailscale SSH 미패치 결함, 타 서버 root 권한 탈취 우려",
+        "summary_ko": "Tailscale 네트워크에서 침해된 단일 기기를 이용해 도달 가능한 다른 서버의 root 권한을 얻을 수 있다는 연구 결과 발표됨. 패치 여부와 버전은 벤더 공지 확인 필요."
+      },
+      {
+        "id": "n-d0be811f",
+        "region": "international",
+        "lang": "ko",
+        "title": "영국 “러시아, 해킹으로 정치 개입 시도”…정보요원 2명 제재",
+        "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFB2dnp4eFVRVmw5VndLaERVZmNYOFMzRzMtRUFBczNQeDEzSkl6UldFS1pMai1aOWxudU0tUHBaaVV3QWE3WS13WUoxM2FfeXo2MnJwRWhiRWdYc09ucFA5cmtua0ktSEtPSkZXaF9n?oc=5",
+        "source": "KBS 뉴스",
+        "published": "2026-10-25T14:04:14.000Z",
+        "snippet": "",
+        "outlets": [
+          "KBS 뉴스"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 7,
+        "title_ko": "영국, 러시아 해킹 정치 개입 시도로 정보요원 2명 제재",
+        "summary_ko": "영국 정부가 러시아의 해킹을 통한 정치 개입 시도를 문제 삼아 정보요원 2명을 제재함. 국가 배후 공격 동향으로 참고 필요."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "kev",
+      "name": "CISA KEV",
+      "ok": true,
+      "count": 2,
+      "ms": 299
+    },
+    {
+      "id": "securityweek",
+      "name": "SecurityWeek",
+      "ok": true,
+      "count": 10,
+      "ms": 320
+    },
+    {
+      "id": "bleepingcomputer",
+      "name": "BleepingComputer",
+      "ok": true,
+      "count": 15,
+      "ms": 359
+    },
+    {
+      "id": "thehackernews",
+      "name": "The Hacker News",
+      "ok": true,
+      "count": 50,
+      "ms": 439
+    },
+    {
+      "id": "zdnetkr",
+      "name": "지디넷코리아",
+      "ok": true,
+      "count": 30,
+      "ms": 451
+    },
+    {
+      "id": "darkreading",
+      "name": "Dark Reading",
+      "ok": true,
+      "count": 50,
+      "ms": 504
+    },
+    {
+      "id": "krebs",
+      "name": "Krebs on Security",
+      "ok": true,
+      "count": 10,
+      "ms": 565
+    },
+    {
+      "id": "therecord",
+      "name": "The Record",
+      "ok": true,
+      "count": 5,
+      "ms": 663
+    },
+    {
+      "id": "gnews-kr",
+      "name": "Google 뉴스",
+      "ok": true,
+      "count": 100,
+      "ms": 689
+    },
+    {
+      "id": "nvd-kev",
+      "name": "NVD (KEV 상세)",
+      "ok": true,
+      "count": 2,
+      "ms": 800
+    },
+    {
+      "id": "kisa-vuln",
+      "name": "KISA 취약점 정보",
+      "ok": true,
+      "count": 10,
+      "ms": 996
+    },
+    {
+      "id": "dailysecu",
+      "name": "데일리시큐",
+      "ok": true,
+      "count": 50,
+      "ms": 1074
+    },
+    {
+      "id": "kisa-notice",
+      "name": "KISA 보안공지",
+      "ok": true,
+      "count": 10,
+      "ms": 1141
+    },
+    {
+      "id": "kisa-alert",
+      "name": "KISA 경보단계",
+      "ok": true,
+      "count": 10,
+      "ms": 1207
+    },
+    {
+      "id": "datanet",
+      "name": "데이터넷",
+      "ok": true,
+      "count": 50,
+      "ms": 1217
+    },
+    {
+      "id": "boannews",
+      "name": "보안뉴스",
+      "ok": true,
+      "count": 50,
+      "ms": 1229
+    },
+    {
+      "id": "nvd",
+      "name": "NVD (신규 CVE)",
+      "ok": true,
+      "count": 138,
+      "ms": 640
+    },
+    {
+      "id": "epss",
+      "name": "FIRST EPSS",
+      "ok": true,
+      "count": 4,
+      "ms": 682
+    }
+  ],
+  "summarizer": {
+    "engine": "claude-haiku-5-5",
+    "ok": true,
+    "ms": 23098,
+    "applied": {
+      "news": 10,
+      "vulns": 3,
+      "overview": true
+    },
+    "rejected": [],
+    "input_tokens": 9418,
+    "output_tokens": 5329
+  },
+  "stats": {
+    "news": {
+      "items": 420,
+      "fresh": 120,
+      "clusters": 69,
+      "eligible": 59
+    },
+    "nvd_published": 138,
+    "kev_catalog": "2026.10.23",
+    "kev_recent": 2
+  }
+}

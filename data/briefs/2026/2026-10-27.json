@@ -1,0 +1,1040 @@
+{
+  "version": 2,
+  "date": "2026-10-27",
+  "generated_at": "2026-10-27T08:36:06+09:00",
+  "window": {
+    "hours": 30,
+    "from": "2026-10-25T17:36:06.289Z",
+    "to": "2026-10-26T23:36:06.289Z"
+  },
+  "engine": "claude-haiku-5-5",
+  "overview": "PHP 원격코드실행 취약점 CVE-2026-109618·109619가 실제 악용되어 CISA KEV에 등재됐으며 조치 기한은 10월 29일입니다. 국내에서는 KB국민은행 해킹 피해가 2,210명으로 늘었고 미래에셋생명도 개인정보 유출이 확인되어 금융권 점검을 강화해야 합니다.",
+  "cvss_min": 9,
+  "critical_total": 27,
+  "failed": {
+    "kev": false,
+    "nvd": false,
+    "kisa": false,
+    "news": false
+  },
+  "exploited": [
+    {
+      "id": "CVE-2026-109618",
+      "section": "exploited",
+      "vendor": "PHP Group",
+      "product": "PHP",
+      "name": "PHP Memory Corruption Vulnerability",
+      "dateAdded": "2026-10-26",
+      "due": "2026-10-29",
+      "ransomware": false,
+      "description": "PHP contains an out-of-memory corruption vulnerability that allows for unauthenticated remote code execution.",
+      "cwes": [
+        "CWE-416",
+        "CWE-755",
+        "CWE-824",
+        "CWE-1325",
+        "CWE-1419"
+      ],
+      "cvss": null,
+      "ssvc": null,
+      "epss": 0.99981,
+      "epssPct": 0.99981,
+      "published": "",
+      "links": [
+        "https://www.php.net/"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-109618",
+      "ko": {
+        "title": "PHP 메모리 손상 취약점 (원격코드실행)",
+        "target": "PHP (정확한 영향 버전은 벤더 공지 확인 필요)",
+        "impact": "인증 없이 원격 코드 실행 가능, EPSS 0.99981, 실제 악용 확인됨",
+        "action": "PHP 최신 버전 패치 즉시 적용, 2026-10-29 KEV 기한 준수"
+      }
+    },
+    {
+      "id": "CVE-2026-109619",
+      "section": "exploited",
+      "vendor": "PHP Group",
+      "product": "PHP",
+      "name": "PHP Stale Internal Request-State Vulnerability",
+      "dateAdded": "2026-10-26",
+      "due": "2026-10-29",
+      "ransomware": false,
+      "description": "PHP contains a stale internal request-state vulnerability that allows for unauthenticated remote code execution.",
+      "cwes": [
+        "CWE-416",
+        "CWE-755",
+        "CWE-824",
+        "CWE-1325",
+        "CWE-1419"
+      ],
+      "cvss": null,
+      "ssvc": null,
+      "epss": 0.99997,
+      "epssPct": 0.99989,
+      "published": "",
+      "links": [
+        "https://www.php.net/"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-109619",
+      "ko": {
+        "title": "PHP 오래된 내부 요청 상태 취약점 (원격코드실행)",
+        "target": "PHP (정확한 영향 버전은 벤더 공지 확인 필요)",
+        "impact": "인증 없이 원격 코드 실행 가능, EPSS 0.99997, 실제 악용 확인됨",
+        "action": "PHP 최신 버전 패치 즉시 적용, 2026-10-29 KEV 기한 준수"
+      }
+    }
+  ],
+  "exploited_more": [],
+  "critical": [
+    {
+      "id": "CVE-2026-107656",
+      "ids": [
+        "CVE-2026-107656"
+      ],
+      "section": "critical",
+      "label": "Fortinet FortiSandbox",
+      "vendor": "Fortinet",
+      "cna": "psirt@fortinet.com",
+      "status": "Awaiting Analysis",
+      "published": "2026-10-26T14:16:24.147",
+      "description": "An authentication bypass using an alternate path or channel vulnerability in Fortinet FortiSandbox 5.0.0 through 5.0.6, FortiSandbox 4.4.0 through 4.4.9, FortiSandbox 4.2 all versions, FortiSandbox PaaS 5.0.0 through 5.0.6, FortiSandbox PaaS 4.4 all versions, FortiSandbox PaaS 4.2 all versions may allow attacker to execute unauthorized code or commands via crafted HTTP requests",
+      "descriptions": [
+        {
+          "id": "CVE-2026-107656",
+          "text": "An authentication bypass using an alternate path or channel vulnerability in Fortinet FortiSandbox 5.0.0 through 5.0.6, FortiSandbox 4.4.0 through 4.4.9, FortiSandbox 4.2 all versions, FortiSandbox PaaS 5.0.0 through 5.0.6, FortiSandbox PaaS 4.4 all versions, FortiSandbox PaaS 4.2 all versions may…"
+        }
+      ],
+      "cwes": [
+        "CWE-288"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://fortiguard.fortinet.com/psirt/FG-IR-26-185"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-107656",
+      "flags": {
+        "watch": "Fortinet",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 12.8,
+      "ko": {
+        "title": "Fortinet FortiSandbox 인증 우회 취약점",
+        "target": "FortiSandbox 5.0.0~5.0.6, 4.4.0~4.4.9, 4.2 전 버전 및 PaaS 동일 범위",
+        "impact": "대체 경로·채널로 인증 우회, 네트워크에서 무인증 공격 가능, CVSS 9.8, 악용 미확인",
+        "action": "벤더 패치 적용 여부 확인, 관리 인터페이스 외부 노출 차단, 벤더 공지 확인 필요"
+      }
+    },
+    {
+      "id": "CVE-2026-107092",
+      "ids": [
+        "CVE-2026-107092"
+      ],
+      "section": "critical",
+      "label": "CVE-2026-107092",
+      "vendor": "",
+      "cna": "cve@mitre.org",
+      "status": "Deferred",
+      "published": "2026-10-26T14:16:23.737",
+      "description": "NexoPOS v6.2.4 is vulnerable to Directory Traversal via the api/update endpoint.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-107092",
+          "text": "NexoPOS v6.2.4 is vulnerable to Directory Traversal via the api/update endpoint."
+        }
+      ],
+      "cwes": [],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "poc",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "http://nexopos.com",
+        "https://github.com/raivenLockdown/CVE-2026-107092"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-107092",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 11.8,
+      "ko": {
+        "title": "NexoPOS 디렉터리 순회 취약점",
+        "target": "NexoPOS v6.2.4 (api/update 엔드포인트)",
+        "impact": "네트워크에서 무인증 공격 가능, CVSS 9.8, PoC 존재, 파일 조작 우려",
+        "action": "벤더 최신 버전 업데이트, api/update 접근 차단, 벤더 공지 확인 필요"
+      }
+    },
+    {
+      "id": "CVE-2026-116232",
+      "ids": [
+        "CVE-2026-116232"
+      ],
+      "section": "critical",
+      "label": "Oray Pugongying X5 Pro",
+      "vendor": "",
+      "cna": "cna@vuldb.com",
+      "status": "Deferred",
+      "published": "2026-10-26T08:17:17.837",
+      "description": "A weakness has been identified in Oray Pugongying X5 Pro 7.6.1. This affects the function snmp_set of the component SNMP Handler. Executing a manipulation of the argument info.community can lead to crlf injection. It is possible to launch the attack remotely. The exploit has been made available to the public and could be used for attacks. The vendor was contacted early about this disclosure but did not respond in any way.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-116232",
+          "text": "A weakness has been identified in Oray Pugongying X5 Pro 7.6.1. This affects the function snmp_set of the component SNMP Handler. Executing a manipulation of the argument info.community can lead to crlf injection. It is possible to launch the attack remotely. The exploit has been made available to…"
+        }
+      ],
+      "cwes": [
+        "CWE-74",
+        "CWE-93"
+      ],
+      "cvss": {
+        "score": 9.9,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "poc",
+        "automatable": "no",
+        "technicalImpact": "total"
+      },
+      "epss": 0.00436,
+      "links": [
+        "https://app.notion.com/p/Oray-Pgyer-X5-Pro-Router-7-6-1-A-Community-Newline-Makes-snmpd-Run-Commands-as-Root-3ea797159f1580f3bae8c6e7d8b91d1f",
+        "https://vuldb.com/cve/CVE-2026-116232",
+        "https://vuldb.com/submit/1005079"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-116232",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": false
+      },
+      "score": 10.92,
+      "ko": {
+        "title": "Oray 푸공잉 X5 Pro SNMP CRLF 인젝션 취약점",
+        "target": "Oray Pugongying X5 Pro 7.6.1 (SNMP Handler snmp_set)",
+        "impact": "community 인자 조작으로 CRLF 인젝션, 원격 공격 가능, CVSS 9.9, 공개 익스플로잇 존재",
+        "action": "벤더 패치 확인, SNMP 외부 노출 차단, 기본 community 문자열 변경"
+      }
+    },
+    {
+      "id": "CVE-2026-59106",
+      "ids": [
+        "CVE-2026-59106"
+      ],
+      "section": "critical",
+      "label": "CVE-2026-59106",
+      "vendor": "",
+      "cna": "a6d3dc9e-0591-4a13-bce7-0f5b31ff6158",
+      "status": "Awaiting Analysis",
+      "published": "2026-10-26T14:16:38.813",
+      "description": "A security vulnerability has been identified in the WolfProt interface implementation. Insufficient neutralization of user-controlled input could allow an unauthenticated attacker with network access to a vulnerable service to execute operating-system commands with the privileges of the affected application service.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-59106",
+          "text": "A security vulnerability has been identified in the WolfProt interface implementation. Insufficient neutralization of user-controlled input could allow an unauthenticated attacker with network access to a vulnerable service to execute operating-system commands with the privileges of the affected ap…"
+        }
+      ],
+      "cwes": [
+        "CWE-78"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://wolfvision.com/de/security/cve-2026-59106-2"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-59106",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 10.8,
+      "ko": {
+        "title": "WolfProt 인터페이스 OS 명령 삽입 취약점",
+        "target": "WolfProt 인터페이스 구현 (영향 버전 벤더 공지 확인 필요)",
+        "impact": "무인증 네트워크 공격으로 OS 명령 실행 가능, CVSS 9.8, 악용 미확인",
+        "action": "해당 WolfProt 사용 여부 확인, 벤더 패치 적용, 네트워크 접근 제한"
+      }
+    },
+    {
+      "id": "CVE-2026-115905",
+      "ids": [
+        "CVE-2026-115905"
+      ],
+      "section": "critical",
+      "label": "zip",
+      "vendor": "",
+      "cna": "security-advisories@github.com",
+      "status": "Awaiting Analysis",
+      "published": "2026-10-26T17:17:17.823",
+      "description": "zip is a zip library for Rust that supports reading and writing simple ZIP files. Through 9.0.4, ZipArchive treats Central Directory File Header filenames as authoritative while ZipStreamReader extracts using Local File Header filenames without reconciling the duplicate metadata in src/read/stream.rs. A crafted archive can therefore appear benign to a component that inspects the central directory but cause a streaming extractor to write a different attacker-selected path and content, potentially overwriting files used by a downstream service. This issue is fixed in version 9.0.5.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-115905",
+          "text": "zip is a zip library for Rust that supports reading and writing simple ZIP files. Through 9.0.4, ZipArchive treats Central Directory File Header filenames as authoritative while ZipStreamReader extracts using Local File Header filenames without reconciling the duplicate metadata in src/read/stream.…"
+        }
+      ],
+      "cwes": [
+        "CWE-20",
+        "CWE-436"
+      ],
+      "cvss": {
+        "score": 10,
+        "version": "4.0",
+        "vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:L/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X"
+      },
+      "ssvc": null,
+      "epss": null,
+      "links": [
+        "https://github.com/zip-rs/zip2/commit/8068ab480ccf8daa7411424e365fcdbe6d09443e",
+        "https://github.com/zip-rs/zip2/releases/tag/v9.0.5",
+        "https://github.com/zip-rs/zip2/security/advisories/GHSA-m665-v7pm-7grj"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-115905",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 10.5,
+      "ko": {
+        "title": "Rust zip 라이브러리 중복 헤더 파일명 처리 취약점",
+        "target": "Rust zip 라이브러리 9.0.4 이하 (ZipStreamReader)",
+        "impact": "중복 메타데이터 처리 불일치로 악성 ZIP 추출 시 무결성 훼손 우려, CVSS 10",
+        "action": "9.0.4 초과 버전으로 업데이트, 해당 라이브러리 사용 여부 확인"
+      }
+    }
+  ],
+  "critical_more": [
+    {
+      "id": "CVE-2026-116508",
+      "ids": [
+        "CVE-2026-116508"
+      ],
+      "label": "TOTOLINK A950RG",
+      "cvss": 10,
+      "title": "TOTOLINK A950RG 메모리 경계 오류"
+    },
+    {
+      "id": "CVE-2026-102649",
+      "ids": [
+        "CVE-2026-102649"
+      ],
+      "label": "Burrito",
+      "cvss": 9.9,
+      "title": "Burrito 중요 기능 인증 누락"
+    },
+    {
+      "id": "CVE-2026-59107",
+      "ids": [
+        "CVE-2026-59107"
+      ],
+      "label": "CVE-2026-59107",
+      "cvss": 9.8,
+      "title": "CVE-2026-59107 취약점"
+    },
+    {
+      "id": "CVE-2026-65184",
+      "ids": [
+        "CVE-2026-65184"
+      ],
+      "label": "CVE-2026-65184",
+      "cvss": 9.8,
+      "title": "CVE-2026-65184 OS 명령 삽입"
+    },
+    {
+      "id": "CVE-2026-112346",
+      "ids": [
+        "CVE-2026-112346"
+      ],
+      "label": "OpenHands Software Agent SDK",
+      "cvss": 9.8,
+      "title": "OpenHands Software Agent SDK 원격 코드 실행"
+    },
+    {
+      "id": "CVE-2026-10757",
+      "ids": [
+        "CVE-2026-10757"
+      ],
+      "label": "Esri ArcGIS Server",
+      "cvss": 9.8,
+      "title": "Esri ArcGIS Server SQL 삽입"
+    },
+    {
+      "id": "CVE-2026-93328",
+      "ids": [
+        "CVE-2026-93328"
+      ],
+      "label": "CVE-2026-93328",
+      "cvss": 9.3,
+      "title": "CVE-2026-93328 경로 조작"
+    },
+    {
+      "id": "CVE-2026-116235",
+      "ids": [
+        "CVE-2026-116235"
+      ],
+      "label": "Oray Pugongying X5 Pro",
+      "cvss": 9.1,
+      "title": "Oray Pugongying X5 Pro 삽입"
+    },
+    {
+      "id": "CVE-2026-110720",
+      "ids": [
+        "CVE-2026-110720"
+      ],
+      "label": "HashiCorp Consul-k8s",
+      "cvss": 9.9,
+      "title": "HashiCorp Consul-k8s 권한 검사 오류"
+    },
+    {
+      "id": "CVE-2026-116504",
+      "ids": [
+        "CVE-2026-116504"
+      ],
+      "label": "TOTOLINK A950RG",
+      "cvss": 9.9,
+      "title": "TOTOLINK A950RG 삽입"
+    },
+    {
+      "id": "CVE-2026-116506",
+      "ids": [
+        "CVE-2026-116506"
+      ],
+      "label": "TOTOLINK A950RG",
+      "cvss": 9.9,
+      "title": "TOTOLINK A950RG 삽입"
+    },
+    {
+      "id": "CVE-2026-116485",
+      "ids": [
+        "CVE-2026-116485"
+      ],
+      "label": "danmu_api",
+      "cvss": 9.8,
+      "title": "danmu_api 중요 기능 인증 누락"
+    },
+    {
+      "id": "CVE-2026-116747",
+      "ids": [
+        "CVE-2026-116747"
+      ],
+      "label": "Kener",
+      "cvss": 9.2,
+      "title": "Kener 하드코딩 암호 키"
+    },
+    {
+      "id": "CVE-2026-115693",
+      "ids": [
+        "CVE-2026-115693"
+      ],
+      "label": "CVE-2026-115693",
+      "cvss": 9.1,
+      "title": "CVE-2026-115693 인증서 검증 부적절"
+    },
+    {
+      "id": "CVE-2026-116231",
+      "ids": [
+        "CVE-2026-116231"
+      ],
+      "label": "Oray Pugongying X5 Pro",
+      "cvss": 9.9,
+      "title": "Oray Pugongying X5 Pro 삽입"
+    },
+    {
+      "id": "CVE-2026-115188",
+      "ids": [
+        "CVE-2026-115188"
+      ],
+      "label": "CVE-2026-115188",
+      "cvss": 9.9,
+      "title": "CVE-2026-115188 코드 삽입"
+    },
+    {
+      "id": "CVE-2026-110475",
+      "ids": [
+        "CVE-2026-110475"
+      ],
+      "label": "CVE-2026-110475",
+      "cvss": 9.3,
+      "title": "CVE-2026-110475 부적절한 인증"
+    },
+    {
+      "id": "CVE-2026-116214",
+      "ids": [
+        "CVE-2026-116214"
+      ],
+      "label": "CVE-2026-116214",
+      "cvss": 9.3,
+      "title": "CVE-2026-116214 비밀번호 복구 취약"
+    },
+    {
+      "id": "CVE-2026-116505",
+      "ids": [
+        "CVE-2026-116505"
+      ],
+      "label": "TOTOLINK A950RG",
+      "cvss": 9.1,
+      "title": "TOTOLINK A950RG 삽입"
+    },
+    {
+      "id": "CVE-2026-77055",
+      "ids": [
+        "CVE-2026-77055"
+      ],
+      "label": "CVE-2026-77055",
+      "cvss": 9.3,
+      "title": "CVE-2026-77055 취약점"
+    },
+    {
+      "id": "CVE-2026-116233",
+      "ids": [
+        "CVE-2026-116233"
+      ],
+      "label": "CVE-2026-116233",
+      "cvss": 9.1,
+      "title": "CVE-2026-116233 삽입"
+    },
+    {
+      "id": "CVE-2026-116234",
+      "ids": [
+        "CVE-2026-116234"
+      ],
+      "label": "CVE-2026-116234",
+      "cvss": 9.1,
+      "title": "CVE-2026-116234 삽입"
+    }
+  ],
+  "advisories": [
+    {
+      "id": "a-274146a1",
+      "source": "KISA 보안공지",
+      "title": "Google 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72238",
+      "date": "2026-10-26"
+    }
+  ],
+  "news": {
+    "domestic": [
+      {
+        "id": "n-2e490634",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "KB국민은행 해킹 피해 119명→2,210명으로 확대…초기 조사서 2,091명 누락",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209078",
+        "source": "데일리시큐",
+        "published": "2026-10-26T15:06:11.000Z",
+        "snippet": "KB국민은행의 해킹 사고로 개인정보가 유출된 인원이 당초 발표한 119명에서 2,210명으로 크게 늘어났다. 최초 조사에서 확인하지 못했던 고객과 임직원 2,091명의 정보유출 사실이 추가로 드러난 것이다. KB국민은행은 10월 26일 금융감독당국 및 관계기관과 기존 침해사고에 대한 정밀 분석을 진행한 결과, 고객 1,631명과 임직원 460명 등 총 2,091명의 개인정보 유출을 추가 확…",
+        "outlets": [
+          "데일리시큐",
+          "천지일보",
+          "나눔경제뉴스",
+          "CBC뉴스",
+          "서울경제",
+          "YTN",
+          "연합뉴스TV",
+          "투데이신문",
+          "Chosunbiz",
+          "뉴스1",
+          "매일일보",
+          "국제신문",
+          "연합뉴스",
+          "MBC 뉴스",
+          "뉴스핌",
+          "전자신문",
+          "연합인포맥스"
+        ],
+        "related": [
+          {
+            "title": "[천지일보 이슈종합] KB국민은행 해킹사고·이란 재타격·농어민과 대화·우크라전 종전 협상·막바지 국감도 고성·전작권 전환·코스피 하락·엔트로픽 나스닥",
+            "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTFBrbEh5OENLZEJGOUd5T1dGdzhNRnhYOTJXNkxKelhhUGtlMFVTdjR1NjhBUkVoTkdLSlZRNkxQT0FrSHFVYm1acGNtaVhId29EWWU2U0tHSnY4M3hCdnhYbHZDVzBDSWtSSkE?oc=5",
+            "source": "천지일보"
+          },
+          {
+            "title": "KB국민은행 정보유출 피해자 2091명 추가 확인…\"고객 보호 조치 최선\"",
+            "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5pX1ktaVRIdGI0UTc3RUQwNEpuLTRwZHBIVDhtYmhPWDUybFlqTjdNN1N6aU5leEgwT3RsQ0lKSWY2NmtiWExiWE4xSWRhRzRfNlVVYnNZWXpQWHBUU2t5eGpvRG9ENUhyaG5Gdg?oc=5",
+            "source": "나눔경제뉴스"
+          },
+          {
+            "title": "[추가유출] KB국민은행 해킹 피해자 2천210명으로 늘어…피해 범위 확대",
+            "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9SOXBoVkpZTHdyQTU3eTNVQm9IYV9PdGRob3BiZjhwUHJfYXN0b0dFM1loVVdRQVJYWkhfTHVlaEpadlVFaGw2eGpTR052eUJQVDhqYUwzeS1YS1JGYUxfVENSZDJQbzUy?oc=5",
+            "source": "CBC뉴스"
+          },
+          {
+            "title": "119명→2210명…KB국민은행 정보유출 피해 추가 확인",
+            "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9JcjEwbUVLSDZOR083ZnhoVnlpTUkxa1piRzlCeDRlZWdUemxtMG9STVQyN2xGUzZQbU5PSHk1My10WXVUMFVjMHl0Um95ZzIzaWfSAVNBVV95cUxNUnNLcE1uRVRQNzhvT3ZXaUhRU2pMYVRZXzdpbEUzZXRYTnVBZ0h5YXB6RVZXVkZveDZzcmxlS0tkRFUzZEFJbHpKZUwyeTY0aHlrUQ?oc=5",
+            "source": "서울경제"
+          },
+          {
+            "title": "KB국민은행 \"정보유출 피해 2,091명 추가 확인\"",
+            "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTFBCaFJ1a2hWUHZvZzAxeTRSOVByQWd5RllkbDhQbmVZTXBqdmxweVBHc2wyazU5TGNqb1pEdTJkVnRMcHhhMmRvLW9ZRmtkbEhNYk9rQjZMT0Faa1NpWjV0WjVCak1HWFhQLURFQ2JFWG12QVpJeEE?oc=5",
+            "source": "YTN"
+          }
+        ],
+        "cves": [],
+        "score": 22,
+        "title_ko": "KB국민은행 해킹 피해 2,210명으로 확대, 초기 조사 누락",
+        "summary_ko": "KB국민은행 해킹 유출 인원이 발표 119명에서 2,210명으로 늘었음. 초기 조사에서 누락된 고객·임직원 2,091명이 추가 확인됨. 금융권 해킹 피해 범위 재점검 필요."
+      },
+      {
+        "id": "n-9d553a83",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "미래에셋생명, 사이버 침해사고로 개인정보 유출... “전사적 비상대응 가동”",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=146752",
+        "source": "보안뉴스",
+        "published": "2026-10-26T07:01:14.000Z",
+        "snippet": "미래에셋생명에서 사이버 침해사고가 발생해 고객 개인정보가 유출됐다. 금융권 전반의 보안 관리 강화 요구가 커지는 가운데 생명보험사 주요 시스템이 해커 공격을 허용해 비상이 걸렸다. 미래에셋생명은 26일 “지난 25일 당사 일부 시스템의 이상 증상을 확인하고 사이버 침해사고를 인지해 긴급 대응 중”이라며 “외부 전문기관과 사고를 상세히 분석해 침해에 따른 개인정보 유출을 오늘 새벽 확인했다”…",
+        "outlets": [
+          "보안뉴스",
+          "데일리시큐",
+          "서울경제TV",
+          "뉴스로드",
+          "MBC 뉴스",
+          "지이코노미",
+          "이투데이",
+          "세이프타임즈",
+          "YTN",
+          "아시아경제",
+          "연합뉴스TV",
+          "동아일보",
+          "경향신문",
+          "경기일보",
+          "에너지경제신문",
+          "뉴스핌",
+          "전자신문",
+          "연합인포맥스",
+          "KBS 뉴스",
+          "연합뉴스",
+          "녹색경제신문"
+        ],
+        "related": [
+          {
+            "title": "미래에셋생명, 사이버 침해사고로 고객 개인·신용정보 유출 확인…피해 규모 조사 중",
+            "url": "https://www.dailysecu.com/news/articleView.html?idxno=209077",
+            "source": "데일리시큐"
+          },
+          {
+            "title": "미래에셋생명, 해킹에 고객정보 유출…보험권 첫 사례",
+            "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE9KXzVWQVloSGlkdW1Tdk5yOTZkVmI5SjJzWVh1S2p2RjhzWUxHSnFpZTktV3MzUXkyVWxJbmc2dHl5bHNXNS1iUjMxaUphYmNwZ0ZDTkNKNFFXTVp4R0oyNEZ6a0M?oc=5",
+            "source": "서울경제TV"
+          },
+          {
+            "title": "보험사 첫 해킹 유출에 금감원까지 움직였다…미래에셋생명 ‘사이버 침해’ 비상",
+            "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE82aEY0dnQxa0RCWS1YUFVNbUpPT3ZLM3M1aGU0cWJUN1BObUpKWFEzNGRHVEVRZldzQ01LMlRJMFRjU1lxMmk3Z3dxellZay1YakdwTmJtRVlkbmplMHdMUnNoMlE3SHNNZjFhcNIBb0FVX3lxTE81UGVWVFMxTjNhVGxqTGtjci16YzNGYTdLMTJaVUxzeHV3djREM0VMV0ItcnJfSlR1WnVkR0lOb1FNMkZtbmQwSWxyWDU0Mm1MWGJPckhYaUQ4Uy16TUN4WG5ZZ2hONHhTbEVQNFlDNA?oc=5",
+            "source": "뉴스로드"
+          },
+          {
+            "title": "미래에셋생명도 뚫렸다‥보험사 첫 해킹 피해",
+            "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTE03eTZST1FGdi1WZEdfejc2Ri1DVlpDSGlKY2FlaWEyU2pPLXEzMHoxOHVfVEhlS1gwZXpwWnNFZzNxUE5Yb0wtZEU4VGRNLS1lWUtkVHQ5b3B1YVhJQkplM242clFNRmhzZS1KbVBJOWxCejY5UDgtVWZB0gF6QVVfeXFMUE44amNQbnJZblRqMUh5Z3gzSGhkbDJVTURIQ0VWWEVtZ0s0UDFXaTNfQ0ZUc1EtaWs5V25SbWpGS3p1R0JIZkEtLXBkQlc3aXRKXzRyZUtZSTFTS05UT0JTRzRlLWl5Mk02aDd1NkJ0cXF5ZUF0NnFNUXc?oc=5",
+            "source": "MBC 뉴스"
+          },
+          {
+            "title": "미래에셋생명도 뚫렸다…보험업계 첫 해킹 정보유출에 금감원 긴급 점검",
+            "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFA2QUtrNTRMcDJPSGY2cmdKdHZLeTU1RkN4Y1JQXzlVcXUwSmZ5Wmc2Mks1Q3FHc3laY0FqLWhLbU1YQVR4c2hzY1JoR2EwbjRmYkdqakM4RnJQWG55Q0xnMUVHTzc?oc=5",
+            "source": "지이코노미"
+          }
+        ],
+        "cves": [],
+        "score": 22,
+        "title_ko": "미래에셋생명 사이버 침해사고로 고객 개인정보 유출",
+        "summary_ko": "미래에셋생명이 25일 일부 시스템 이상을 확인하고 침해사고를 인지해 긴급 대응 중임. 고객 개인정보 유출이 확인되어 보험권 첫 해킹 유출 사례로 주목됨."
+      },
+      {
+        "id": "n-4e7c091e",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "AI로 국내 90여 곳 해킹…개인정보 820만 건 탈취 조직 검거",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209080",
+        "source": "데일리시큐",
+        "published": "2026-10-26T15:28:17.000Z",
+        "snippet": "생성형 인공지능(AI)을 활용해 국내 기업과 기관 90여 곳을 해킹하고 개인정보 등 약 820만 건을 탈취한 일당이 경찰에 붙잡혔다. 공격자들은 탈취한 정보를 유출하겠다고 협박하며 피해 업체에 금품을 요구한 것으로 조사됐다. 서울경찰청 사이버수사과는 10월 26일 정보통신망법 위반과 공갈·공갈미수 등의 혐의로 총책 A씨(32)를 구속 송치하고, 공범 6명을 불구속 수사 중이라고 밝혔다. 경…",
+        "outlets": [
+          "데일리시큐",
+          "CBC뉴스",
+          "중앙일보",
+          "미주중앙일보",
+          "연합뉴스TV"
+        ],
+        "related": [
+          {
+            "title": "[AI 해킹 820만] \"기업 이미지 실추 협박\"… AI 해킹으로 3억 뜯은 일당 덜미",
+            "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE93SF9vcU5ac1NWUktES0lOX2FMcXJUWlJBUkJNaW9OR2Jwc3hLRGJuYjNwZDFodW91MmdCejQ2dHNKbUhDVDB5dVFGWEZ4aVgyNnFQVTJERUpjR0Jta2hTR1FabzlmTFZW?oc=5",
+            "source": "CBC뉴스"
+          },
+          {
+            "title": "[이광형의 퍼스펙티브] AI로 낮아진 해킹 문턱, ‘제로 트러스트’로 맞서야",
+            "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE5RODFlY1diZHc3MEZ3RV8wUFh5djZnUEhOUGl3ODVIamJJRHNOa0dGcnR0QnB6d25nYjdqcHlNMmhUbk1hUjlKcTUzb0ZtMTlPRWpzbDd3?oc=5",
+            "source": "중앙일보"
+          },
+          {
+            "title": "[이광형의 퍼스펙티브] AI로 낮아진 해킹 문턱, ‘제로 트러스트’로 맞서야",
+            "url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE5mVk5ybmFqTW9fX09lUFhoZ19GNjh4dTJYYTg3ZzY3ZUxwTTVnaFRmcHpjYWxhNzFROGJpdVRrbTd0di1rQVVORC1fMndhcTlNd2h6M3FJQ0FhSHJ5RmZNZ1lR?oc=5",
+            "source": "미주중앙일보"
+          },
+          {
+            "title": "AI로 기업 90곳 해킹·820만건 정보 탈취…\"돈 내놔\"협박했다 덜미",
+            "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5NTVpHU0RfWnYxV2lyNEFYRlBjek81UFBjaTVfd0c0eDVsUzNXcXVIRFBhMnlobU1jdm1CS0RvMDJ1UTNUdnlSdlBOSWY2bEVXOHg5TWJMakRCQTBJOGJrYWdUUjh4S2M?oc=5",
+            "source": "연합뉴스TV"
+          }
+        ],
+        "cves": [],
+        "score": 17.4,
+        "title_ko": "생성형 AI로 국내 90여 곳 해킹, 개인정보 820만건 탈취",
+        "summary_ko": "AI를 활용해 국내 기업·기관 90여 곳을 해킹하고 개인정보 약 820만건을 탈취한 일당이 검거됨. 피해 업체에 협박 금품 요구. AI 기반 공격 문턱 하락 우려."
+      },
+      {
+        "id": "n-80a1ea0f",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "과기정통부 “더존비즈온 2차례 침해사고, 민관합동조사단 조사 착수”",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=146738",
+        "source": "보안뉴스",
+        "published": "2026-10-26T00:48:29.000Z",
+        "snippet": "과학기술정보통신부(과기정통부)가 더존비즈온에서 두 차례에 걸쳐 발생한 침해사고 조사에 착수했다. 과기정통부는 더존비즈온 침해사고로 피해 현황 및 사고 원인 등을 조사하기 위해 민관합동조사단을 25일 구성하고 조사에 착수했다고 26일 밝혔다. 더존비즈온은 이달 16일과 21일 두 차례에 걸쳐 침해사고를 신고했다. 과기정통부와 한국인터넷진흥원(KISA)은 더존비즈온에 관련 자료 보전을 요구하고…",
+        "outlets": [
+          "보안뉴스",
+          "데일리시큐"
+        ],
+        "related": [
+          {
+            "title": "더존비즈온, 개발 서버 불법 접근 발생...관계기관 신고 및 조사 협조",
+            "url": "https://www.dailysecu.com/news/articleView.html?idxno=209071",
+            "source": "데일리시큐"
+          }
+        ],
+        "cves": [],
+        "score": 9.2,
+        "title_ko": "더존비즈온 침해사고 2건, 과기정통부 민관합동조사단 착수",
+        "summary_ko": "더존비즈온이 이달 16일과 21일 두 차례 침해사고를 신고함. 과기정통부와 KISA가 민관합동조사단을 구성해 피해 현황과 원인 조사 중. 고객사 민감정보 유출 가능성 제기됨."
+      },
+      {
+        "id": "n-4eff1494",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "롯데 모바일 상품권 ‘기프티엘’ 털렸다... 1만8359명 계좌번호 유출",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=146737",
+        "source": "보안뉴스",
+        "published": "2026-10-26T00:29:44.000Z",
+        "snippet": "롯데그룹 계열 모바일 교환권 플랫폼 ‘기프티엘’(giftiel)이 외부 해킹 공격을 받아 1만8000여명의 고객 개인정보와 계좌번호가 유출됐다. 기프티엘을 운영하는 스푼은 홈페이지에 개인정보 유출 사실 안내 및 사과문을 게시하고, 22일 외부 비인가 접근(해킹)으로 인해 일부 고객의 개인정보가 유출된 사실을 확인했다고 밝혔다. 이번 침해 사고로 정보가 유출된 피해 고객은 1만8359명으로…",
+        "outlets": [
+          "보안뉴스"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 9,
+        "title_ko": "롯데 모바일상품권 기프티엘 해킹, 1만8359명 계좌번호 유출",
+        "summary_ko": "롯데그룹 계열 모바일 교환권 플랫폼 기프티엘이 외부 해킹으로 고객 개인정보와 계좌번호가 유출됨. 운영사 스푼이 22일 확인하고 사과문 게시. 2차 피해 우려됨."
+      }
+    ],
+    "international": [
+      {
+        "id": "n-6a7e224b",
+        "region": "international",
+        "lang": "en",
+        "title": "PHP2Shell security flaws now sucessfully exploited in the wild",
+        "url": "https://www.bleepingcomputer.com/news/security/php2shell-security-flaws-now-sucessfully-exploited-in-the-wild/",
+        "source": "BleepingComputer",
+        "published": "2026-10-26T09:19:57.000Z",
+        "snippet": "Two critical RCE vulnerabilities (CVE-2026-109618 and CVE-2026-109619), collectively tracked as PHP2Shell, have been successfully exploited in the wild. [...]",
+        "outlets": [
+          "BleepingComputer"
+        ],
+        "related": [],
+        "cves": [
+          "CVE-2026-109618",
+          "CVE-2026-109619"
+        ],
+        "score": 9.5,
+        "title_ko": "PHP2Shell 취약점 2건, 실제 공격에 악용 확인",
+        "summary_ko": "PHP 원격코드실행 취약점 CVE-2026-109618·109619(PHP2Shell)가 실제 공격에 악용됨. 인증 없이 원격 코드 실행이 가능하며 CISA KEV에 신규 등재됨. 즉시 패치 필요."
+      },
+      {
+        "id": "n-6ef20d6a",
+        "region": "international",
+        "lang": "en",
+        "title": "Critical 'HTTP2Shell' Brotli vulnerability triggers emergency patches",
+        "url": "https://www.bleepingcomputer.com/news/security/critical-http2shell-brotli-vulnerability-triggers-emergency-patches/",
+        "source": "BleepingComputer",
+        "published": "2026-10-26T16:27:57.000Z",
+        "snippet": "A critical flaw dubbed 'HTTP2Shell' in Brotli, the C decoder library built into Node.js, could allow attackers to corrupt memory and access sensitive data. [...]",
+        "outlets": [
+          "BleepingComputer"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 10,
+        "title_ko": "Brotli 취약점 HTTP2Shell, Node.js 긴급 패치 촉발"
+      },
+      {
+        "id": "n-a26d3a2a",
+        "region": "international",
+        "lang": "en",
+        "title": "Gheist Uses Stolen GitHub Tokens to Steal Private Repository Secrets via Actions Logs",
+        "url": "https://thehackernews.com/2026/10/gheist-uses-stolen-github-tokens-to.html",
+        "source": "The Hacker News",
+        "published": "2026-10-26T07:49:46.000Z",
+        "snippet": "An automated campaign is using stolen GitHub tokens to plant workflows that print a repository's secrets into its GitHub Actions logs, which the attackers then download before deleting the runs. The attacks have succeed…",
+        "outlets": [
+          "The Hacker News",
+          "Dark Reading"
+        ],
+        "related": [
+          {
+            "title": "'Gheist' Weaponizes GitHub Tokens to Steal Cloud Secrets",
+            "url": "https://www.darkreading.com/cyberattacks-data-breaches/gheist-stolen-github-tokens-cloud-secrets",
+            "source": "Dark Reading"
+          }
+        ],
+        "cves": [],
+        "score": 9.7,
+        "title_ko": "Gheist, 탈취한 GitHub 토큰으로 저장소 시크릿 탈취",
+        "summary_ko": "자동화 캠페인이 탈취한 GitHub 토큰으로 워크플로를 심어 저장소 시크릿을 Actions 로그에 출력시킨 뒤 다운로드하고 실행 기록을 삭제함. 토큰 권한과 로그 접근 점검 필요."
+      },
+      {
+        "id": "n-4764a547",
+        "region": "international",
+        "lang": "en",
+        "title": "Hackers Infect 953 Online Stores With Scanner-Evading JavaScript, Mostly on Magento",
+        "url": "https://thehackernews.com/2026/10/hackers-infect-953-online-stores-with.html",
+        "source": "The Hacker News",
+        "published": "2026-10-26T18:12:22.000Z",
+        "snippet": "An unknown threat actor has infected 953 online stores, most of them running Magento, as part of a long-running campaign active since July 2025. According to Dutch e-commerce security company Sansec, the activity is des…",
+        "outlets": [
+          "The Hacker News",
+          "SecurityWeek"
+        ],
+        "related": [
+          {
+            "title": "953 Online Stores Infected in Long-Lasting Malware Campaign",
+            "url": "https://www.securityweek.com/953-online-stores-infected-in-long-lasting-malware-campaign/",
+            "source": "SecurityWeek"
+          }
+        ],
+        "cves": [],
+        "score": 8.7,
+        "title_ko": "스캐너 회피 자바스크립트로 온라인 쇼핑몰 953곳 감염",
+        "summary_ko": "2025년 7월부터 이어진 캠페인으로 953개 온라인 쇼핑몰이 감염됨, 대부분 Magento 기반. 보안업체 Sansec이 발견. 쇼핑몰 스크립트 무결성 점검 필요."
+      },
+      {
+        "id": "n-633608ee",
+        "region": "international",
+        "lang": "ko",
+        "title": "글로벌 컨택센터 솔루션 기업 제네시스 해킹…내부 고객관리시스템 정보 유출 확인",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209081",
+        "source": "데일리시큐",
+        "published": "2026-10-26T15:33:18.000Z",
+        "snippet": "글로벌 고객 경험 및 컨택센터 솔루션 기업 제네시스(Genesys)가 내부 업무시스템에 대한 사이버 침해사고를 공식 확인했다. 공격자는 고객관계관리시스템(CRM)과 교육관리시스템(LMS)에 무단 접근해 일부 정보를 열람하거나 외부로 반출한 것으로 파악됐다. 제네시스는 10월 19일 공식 보안 공지를 통해 지난 16일 외부 공격자의 비인가 접근 사실을 인지하고 조사에 착수했다고 밝혔다. 조사…",
+        "outlets": [
+          "데일리시큐"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 10,
+        "title_ko": "제네시스 컨택센터 솔루션 해킹, CRM·LMS 정보 유출 확인",
+        "summary_ko": "글로벌 컨택센터 솔루션 기업 제네시스가 외부 비인가 접근을 확인하고 10월 19일 공지함. 공격자가 CRM과 LMS에 접근해 일부 정보를 열람·반출함. 고객사 연계 영향 확인 필요."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "kev",
+      "name": "CISA KEV",
+      "ok": true,
+      "count": 2,
+      "ms": 289
+    },
+    {
+      "id": "bleepingcomputer",
+      "name": "BleepingComputer",
+      "ok": true,
+      "count": 15,
+      "ms": 451
+    },
+    {
+      "id": "therecord",
+      "name": "The Record",
+      "ok": true,
+      "count": 5,
+      "ms": 476
+    },
+    {
+      "id": "zdnetkr",
+      "name": "지디넷코리아",
+      "ok": true,
+      "count": 30,
+      "ms": 515
+    },
+    {
+      "id": "securityweek",
+      "name": "SecurityWeek",
+      "ok": true,
+      "count": 10,
+      "ms": 522
+    },
+    {
+      "id": "krebs",
+      "name": "Krebs on Security",
+      "ok": true,
+      "count": 10,
+      "ms": 528
+    },
+    {
+      "id": "thehackernews",
+      "name": "The Hacker News",
+      "ok": true,
+      "count": 50,
+      "ms": 663
+    },
+    {
+      "id": "gnews-kr",
+      "name": "Google 뉴스",
+      "ok": true,
+      "count": 100,
+      "ms": 849
+    },
+    {
+      "id": "nvd-kev",
+      "name": "NVD (KEV 상세)",
+      "ok": true,
+      "count": 0,
+      "ms": 860
+    },
+    {
+      "id": "darkreading",
+      "name": "Dark Reading",
+      "ok": true,
+      "count": 50,
+      "ms": 1107
+    },
+    {
+      "id": "datanet",
+      "name": "데이터넷",
+      "ok": true,
+      "count": 50,
+      "ms": 1314
+    },
+    {
+      "id": "kisa-vuln",
+      "name": "KISA 취약점 정보",
+      "ok": true,
+      "count": 10,
+      "ms": 1366
+    },
+    {
+      "id": "dailysecu",
+      "name": "데일리시큐",
+      "ok": true,
+      "count": 50,
+      "ms": 1394
+    },
+    {
+      "id": "kisa-notice",
+      "name": "KISA 보안공지",
+      "ok": true,
+      "count": 10,
+      "ms": 1509
+    },
+    {
+      "id": "kisa-alert",
+      "name": "KISA 경보단계",
+      "ok": true,
+      "count": 10,
+      "ms": 1562
+    },
+    {
+      "id": "boannews",
+      "name": "보안뉴스",
+      "ok": true,
+      "count": 50,
+      "ms": 1588
+    },
+    {
+      "id": "nvd",
+      "name": "NVD (신규 CVE)",
+      "ok": true,
+      "count": 747,
+      "ms": 576
+    },
+    {
+      "id": "epss",
+      "name": "FIRST EPSS",
+      "ok": true,
+      "count": 7,
+      "ms": 123
+    }
+  ],
+  "summarizer": {
+    "engine": "claude-haiku-5-5",
+    "ok": true,
+    "ms": 31228,
+    "applied": {
+      "news": 10,
+      "vulns": 7,
+      "overview": true
+    },
+    "rejected": [],
+    "input_tokens": 12038,
+    "output_tokens": 7677
+  },
+  "stats": {
+    "news": {
+      "items": 420,
+      "fresh": 185,
+      "clusters": 111,
+      "eligible": 75
+    },
+    "nvd_published": 747,
+    "kev_catalog": "2026.10.26",
+    "kev_recent": 2
+  }
+}

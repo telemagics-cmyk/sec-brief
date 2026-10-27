@@ -1,0 +1,1124 @@
+{
+  "version": 2,
+  "date": "2026-10-28",
+  "generated_at": "2026-10-28T08:32:10+09:00",
+  "window": {
+    "hours": 30,
+    "from": "2026-10-26T17:32:10.229Z",
+    "to": "2026-10-27T23:32:10.229Z"
+  },
+  "engine": "claude-haiku-5-5",
+  "overview": "Adobe Commerce와 Google Brotli 취약점이 실제 악용으로 확인돼 KEV 기한(2026-11-10) 전 패치가 가장 시급합니다. 국내에서는 미래에셋생명과 금융투자사 해킹 유출이 이어지고 있어 금융권 보안 점검이 필요합니다.",
+  "cvss_min": 9,
+  "critical_total": 62,
+  "failed": {
+    "kev": false,
+    "nvd": false,
+    "kisa": false,
+    "news": false
+  },
+  "exploited": [
+    {
+      "id": "CVE-2026-48356",
+      "section": "exploited",
+      "vendor": "Adobe",
+      "product": "Commerce and Magento",
+      "name": "Adobe Commerce and Magento Unrestricted Upload of File with Dangerous Type Vulnerability",
+      "dateAdded": "2026-10-27",
+      "due": "2026-11-10",
+      "ransomware": false,
+      "description": "Adobe Commerce and Magento contain an unrestricted upload of file with dangerous type vulnerability that could result in arbitrary code execution in the context of the current user, potentially gaining elevated access or control over the victim's account or session.",
+      "cwes": [
+        "CWE-434"
+      ],
+      "cvss": {
+        "score": 9.3,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N"
+      },
+      "ssvc": {
+        "exploitation": "active",
+        "automatable": "no",
+        "technicalImpact": "total"
+      },
+      "epss": 0.30582,
+      "epssPct": 0.98231,
+      "published": "2026-07-14T20:17:08.437",
+      "links": [
+        "https://www.adobe.com/trust/security/products/commerce/apsb26-73.html",
+        "https://helpx.adobe.com/security/products/magento/apsb26-73.html",
+        "https://sansec.io/research/magento-cms-block-loader-deepveindrilling#indicators-of-compromise"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-48356",
+      "ko": {
+        "title": "Adobe Commerce·Magento 위험 파일 업로드, 임의 코드 실행",
+        "target": "Adobe Commerce, Magento (영향 버전 자료 없음, 벤더 공지 확인)",
+        "impact": "사용자 상호작용 필요, 현재 사용자 권한으로 임의 코드 실행 가능, 악용 확인(KEV)됨 (CVSS 9.3)",
+        "action": "벤더 패치 즉시 적용, KEV 기한 2026-11-10 내 조치, 쇼핑몰 관리자 계정 점검"
+      }
+    },
+    {
+      "id": "CVE-2026-111497",
+      "section": "exploited",
+      "vendor": "Google",
+      "product": "Brotli",
+      "name": "Google Brotli Unchecked Return Value Vulnerability",
+      "dateAdded": "2026-10-27",
+      "due": "2026-11-10",
+      "ransomware": false,
+      "description": "Google Brotli contains an unchecked return value vulnerability that allows a remote unauthenticated attacker to corrupt adjacent decoder state memory, disclose sensitive memory contents, cause a denial of service, or potentially execute arbitrary code using a crafted Brotli-compressed stream.",
+      "cwes": [
+        "CWE-252",
+        "CWE-787"
+      ],
+      "cvss": {
+        "score": 9.2,
+        "version": "4.0",
+        "vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X"
+      },
+      "ssvc": {
+        "exploitation": "active",
+        "automatable": "no",
+        "technicalImpact": "total"
+      },
+      "epss": 0.55483,
+      "epssPct": 0.9903,
+      "published": "2026-10-22T14:17:37.190",
+      "links": [
+        "https://github.com/google/brotli/releases/tag/v1.2.1",
+        "https://github.com/andybalholm/brotli/releases/tag/v1.2.7",
+        "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases#nodejs-brotli-decoder-out-of-bounds-write-permits-remote-code-execution-cve-2026-111497---high"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-111497",
+      "ko": {
+        "title": "Google Brotli 반환값 미확인, 원격 메모리 손상·코드 실행",
+        "target": "Google Brotli 라이브러리 (영향 제품·버전 자료 없음)",
+        "impact": "인증 없이 원격 공격 가능, 메모리 노출·서비스 거부·임의 코드 실행 가능, 악용 확인(KEV)됨 (CVSS 9.2)",
+        "action": "Brotli 사용 제품 식별 후 벤더 패치 적용, KEV 기한 2026-11-10 내 조치"
+      }
+    }
+  ],
+  "exploited_more": [],
+  "critical": [
+    {
+      "id": "CVE-2026-105781",
+      "ids": [
+        "CVE-2026-105781",
+        "CVE-2026-104351",
+        "CVE-2026-104353",
+        "CVE-2026-105489",
+        "CVE-2026-105780",
+        "CVE-2026-104350",
+        "CVE-2026-104354",
+        "CVE-2026-105779"
+      ],
+      "section": "critical",
+      "label": "Adobe Campaign Classic",
+      "vendor": "Adobe",
+      "cna": "psirt@adobe.com",
+      "status": "Received",
+      "published": "2026-10-27T17:16:56.430",
+      "description": "Adobe Campaign Classic (ACC) is affected by an Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability that could result in arbitrary code execution in the context of the current user. An attacker could exploit this vulnerability to execute arbitrary SQL commands, potentially gaining elevated access or control over the victim's account or session. Exploitation of this issue does not require user interaction. Scope is changed.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-105781",
+          "text": "Adobe Campaign Classic (ACC) is affected by an Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability that could result in arbitrary code execution in the context of the current user. An attacker could exploit this vulnerability to execute arbitrary SQL c…"
+        },
+        {
+          "id": "CVE-2026-104351",
+          "text": "Adobe Campaign Classic (ACC) is affected by an Improper Control of Generation of Code ('Code Injection') vulnerability that could result in arbitrary code execution in the context of the current user. A low-privileged attacker could exploit this vulnerability to execute arbitrary code. Exploitation…"
+        },
+        {
+          "id": "CVE-2026-104353",
+          "text": "Adobe Campaign Classic (ACC) is affected by an Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') vulnerability that could result in arbitrary code execution in the context of the current user. A low-privileged attacker could exploit this vulnerability to exe…"
+        },
+        {
+          "id": "CVE-2026-105489",
+          "text": "Adobe Campaign Classic (ACC) is affected by an Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability that could result in arbitrary code execution in the context of the current user. A low-privileged attacker could exploit this vulnerability to execute a…"
+        },
+        {
+          "id": "CVE-2026-105780",
+          "text": "Adobe Campaign Classic (ACC) is affected by an Incorrect Authorization vulnerability that could result in arbitrary code execution in the context of the current user. A low-privileged attacker could exploit this vulnerability to execute arbitrary code. Exploitation of this issue does not require us…"
+        }
+      ],
+      "cwes": [
+        "CWE-89",
+        "CWE-94",
+        "CWE-78",
+        "CWE-863",
+        "CWE-79"
+      ],
+      "cvss": {
+        "score": 10,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H"
+      },
+      "ssvc": null,
+      "epss": null,
+      "links": [
+        "https://www.adobe.com/trust/security/products/campaign/apsb26-162.html"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-105781",
+      "flags": {
+        "watch": "Adobe",
+        "kisa": "",
+        "news": true,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 15.1,
+      "ko": {
+        "title": "Adobe Campaign Classic SQL·코드·OS 명령 주입 다수",
+        "target": "Adobe Campaign Classic (관련 CVE 8건, 버전 자료 없음)",
+        "impact": "인증 없이 네트워크에서 SQL·코드·OS 명령 실행 가능, 시스템 장악 우려 (CVSS 10)",
+        "action": "벤더 긴급 패치 확인 및 적용, 외부 노출 여부 점검, 공격 흔적 로그 확인"
+      }
+    },
+    {
+      "id": "CVE-2026-48360",
+      "ids": [
+        "CVE-2026-48360"
+      ],
+      "section": "critical",
+      "label": "Adobe Connect",
+      "vendor": "Adobe",
+      "cna": "psirt@adobe.com",
+      "status": "Received",
+      "published": "2026-10-27T17:17:00.740",
+      "description": "Adobe Connect is affected by an Improper Control of Generation of Code ('Code Injection') vulnerability that could result in arbitrary code execution in the context of the current user. An attacker could exploit this vulnerability to execute arbitrary code. Exploitation of this issue requires user interaction in that a victim must visit a maliciously crafted URL or interact with a compromised web page. Scope is changed.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-48360",
+          "text": "Adobe Connect is affected by an Improper Control of Generation of Code ('Code Injection') vulnerability that could result in arbitrary code execution in the context of the current user. An attacker could exploit this vulnerability to execute arbitrary code. Exploitation of this issue requires user…"
+        }
+      ],
+      "cwes": [
+        "CWE-94"
+      ],
+      "cvss": {
+        "score": 9.6,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H"
+      },
+      "ssvc": null,
+      "epss": null,
+      "links": [
+        "https://www.adobe.com/trust/security/products/connect/apsb26-182.html"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-48360",
+      "flags": {
+        "watch": "Adobe",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 12.1,
+      "ko": {
+        "title": "Adobe Connect 코드 인젝션, 원격 코드 실행",
+        "target": "Adobe Connect (영향 버전 자료 없음)",
+        "impact": "사용자 상호작용 필요, 원격 코드 실행 가능 (CVSS 9.6), 악용 여부 미확인",
+        "action": "벤더 패치 적용, 사용자에게 의심 링크 주의 안내, 벤더 공지 확인"
+      }
+    },
+    {
+      "id": "CVE-2026-114595",
+      "ids": [
+        "CVE-2026-114595"
+      ],
+      "section": "critical",
+      "label": "CVE-2026-114595",
+      "vendor": "",
+      "cna": "ics-cert@hq.dhs.gov",
+      "status": "Received",
+      "published": "2026-10-27T17:16:58.530",
+      "description": "In EPICS Base release 7.0.10 and prior, an integer overflow in network request processing can cause memory to be allocated with an incorrect size. Subsequent handling of attacker supplied data may result in memory corruption, denial of service, or potential remote code execution.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-114595",
+          "text": "In EPICS Base release 7.0.10 and prior, an integer overflow in network request processing can cause memory to be allocated with an incorrect size. Subsequent handling of attacker supplied data may result in memory corruption, denial of service, or potential remote code execution."
+        }
+      ],
+      "cwes": [
+        "CWE-190"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://www.cisa.gov/news-events/ics-advisories/icsa-26-300-01"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-114595",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 10.8,
+      "ko": {
+        "title": "EPICS Base 정수 오버플로, 메모리 손상·원격 코드 실행",
+        "target": "EPICS Base 7.0.10 이하",
+        "impact": "인증 없이 네트워크 요청으로 메모리 손상·서비스 거부 가능, 원격 코드 실행 가능성 있음 (CVSS 9.8)",
+        "action": "7.0.10 이하 사용 시 벤더 패치 확인, 산업제어 연동 환경 네트워크 격리"
+      }
+    },
+    {
+      "id": "CVE-2026-65145",
+      "ids": [
+        "CVE-2026-65145"
+      ],
+      "section": "critical",
+      "label": "NVIDIA NeMo Agent Toolkit",
+      "vendor": "NVIDIA",
+      "cna": "psirt@nvidia.com",
+      "status": "Awaiting Analysis",
+      "published": "2026-10-27T13:16:59.860",
+      "description": "NVIDIA NeMo Agent Toolkit contains a vulnerability where a attacker could cause a missing authentication issue. This vulnerability might lead to code execution, escalation of privileges, data tampering, denial of service, and information disclosure.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-65145",
+          "text": "NVIDIA NeMo Agent Toolkit contains a vulnerability where a attacker could cause a missing authentication issue. This vulnerability might lead to code execution, escalation of privileges, data tampering, denial of service, and information disclosure."
+        }
+      ],
+      "cwes": [
+        "CWE-306"
+      ],
+      "cvss": {
+        "score": 10,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H"
+      },
+      "ssvc": null,
+      "epss": null,
+      "links": [
+        "https://github.com/NVIDIA/product-security/tree/main/2026/5912",
+        "https://www.cve.org/CVERecord?id=CVE-2026-65145"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-65145",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 10.5,
+      "ko": {
+        "title": "NVIDIA NeMo Agent Toolkit 인증 누락, 권한 상승",
+        "target": "NVIDIA NeMo Agent Toolkit (영향 버전 자료 없음)",
+        "impact": "인증 없이 공격 가능, 코드 실행·권한 상승·데이터 변조 가능 (CVSS 10)",
+        "action": "NVIDIA 보안 공지 확인 후 업데이트, AI 에이전트 서비스 외부 노출 차단"
+      }
+    },
+    {
+      "id": "CVE-2026-18450",
+      "ids": [
+        "CVE-2026-18450"
+      ],
+      "section": "critical",
+      "label": "CVE-2026-18450",
+      "vendor": "",
+      "cna": "def9a96e-e099-41a9-bfac-30fd4f82c411",
+      "status": "Awaiting Analysis",
+      "published": "2026-10-27T08:16:53.710",
+      "description": "The BMC does not correctly enforce integrity and encryption requirements for IPMI commands. An attacker may be able to craft packets that execute arbitrary commands on an active session.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-18450",
+          "text": "The BMC does not correctly enforce integrity and encryption requirements for IPMI commands. An attacker may be able to craft packets that execute arbitrary commands on an active session."
+        }
+      ],
+      "cwes": [
+        "CWE-306"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": null,
+      "epss": 0.004,
+      "links": [
+        "https://www.supermicro.com/en/support/security_BMC_IPMI_Oct_2026_1"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-18450",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 10.32,
+      "ko": {
+        "title": "BMC IPMI 명령 무결성·암호화 미적용, 임의 명령 실행",
+        "target": "BMC 펌웨어 (제품 및 버전 자료 없음)",
+        "impact": "조작된 패킷으로 활성 세션에서 임의 명령 실행 가능, 네트워크 접근 필요 (CVSS 9.8)",
+        "action": "서버 BMC 펌웨어 벤더 공지 확인 및 업데이트, 관리망 분리와 IPMI 접근 제한"
+      }
+    }
+  ],
+  "critical_more": [
+    {
+      "id": "CVE-2026-116692",
+      "ids": [
+        "CVE-2026-116692"
+      ],
+      "label": "MLflow",
+      "cvss": 9.8,
+      "title": "MLflow 코드 삽입"
+    },
+    {
+      "id": "CVE-2026-76938",
+      "ids": [
+        "CVE-2026-76938",
+        "CVE-2026-76936",
+        "CVE-2026-76937"
+      ],
+      "label": "CVE-2026-76938",
+      "cvss": 9.8,
+      "title": "CVE-2026-76938 스푸핑 인증 우회 등 3건"
+    },
+    {
+      "id": "CVE-2026-82118",
+      "ids": [
+        "CVE-2026-82118",
+        "CVE-2026-82120"
+      ],
+      "label": "CVE-2026-82118",
+      "cvss": 9.8,
+      "title": "CVE-2026-82118 스택 버퍼 오버플로 등 2건"
+    },
+    {
+      "id": "CVE-2026-102788",
+      "ids": [
+        "CVE-2026-102788",
+        "CVE-2026-102789"
+      ],
+      "label": "Joomla",
+      "cvss": 9.3,
+      "title": "Joomla SQL 삽입 등 2건"
+    },
+    {
+      "id": "CVE-2026-103594",
+      "ids": [
+        "CVE-2026-103594"
+      ],
+      "label": "CVE-2026-103594",
+      "cvss": 9.5,
+      "title": "CVE-2026-103594 스택 버퍼 오버플로"
+    },
+    {
+      "id": "CVE-2026-117601",
+      "ids": [
+        "CVE-2026-117601",
+        "CVE-2026-117603"
+      ],
+      "label": "Electrum",
+      "cvss": 9.3,
+      "title": "Electrum 전자서명 검증 부적절 등 2건"
+    },
+    {
+      "id": "CVE-2026-82119",
+      "ids": [
+        "CVE-2026-82119"
+      ],
+      "label": "CVE-2026-82119",
+      "cvss": 9.8,
+      "title": "CVE-2026-82119 OS 명령 삽입"
+    },
+    {
+      "id": "CVE-2026-76934",
+      "ids": [
+        "CVE-2026-76934"
+      ],
+      "label": "CVE-2026-76934",
+      "cvss": 9.8,
+      "title": "CVE-2026-76934 스택 버퍼 오버플로"
+    },
+    {
+      "id": "CVE-2026-76939",
+      "ids": [
+        "CVE-2026-76939"
+      ],
+      "label": "CVE-2026-76939",
+      "cvss": 9.8,
+      "title": "CVE-2026-76939 힙 버퍼 오버플로"
+    },
+    {
+      "id": "CVE-2026-82116",
+      "ids": [
+        "CVE-2026-82116"
+      ],
+      "label": "CVE-2026-82116",
+      "cvss": 9.8,
+      "title": "CVE-2026-82116 중요 기능 인증 누락"
+    },
+    {
+      "id": "CVE-2026-82117",
+      "ids": [
+        "CVE-2026-82117"
+      ],
+      "label": "CVE-2026-82117",
+      "cvss": 9.8,
+      "title": "CVE-2026-82117 스푸핑 인증 우회"
+    },
+    {
+      "id": "CVE-2026-86574",
+      "ids": [
+        "CVE-2026-86574"
+      ],
+      "label": "CVE-2026-86574",
+      "cvss": 9.8,
+      "title": "CVE-2026-86574 힙 버퍼 오버플로"
+    },
+    {
+      "id": "CVE-2026-86575",
+      "ids": [
+        "CVE-2026-86575",
+        "CVE-2026-86576",
+        "CVE-2026-86577"
+      ],
+      "label": "CVE-2026-86575",
+      "cvss": 9.4,
+      "title": "CVE-2026-86575 스택 버퍼 오버플로 등 3건"
+    },
+    {
+      "id": "CVE-2026-117532",
+      "ids": [
+        "CVE-2026-117532"
+      ],
+      "label": "CVE-2026-117532",
+      "cvss": 9.8,
+      "title": "CVE-2026-117532 인증 부적절"
+    },
+    {
+      "id": "CVE-2026-117564",
+      "ids": [
+        "CVE-2026-117564"
+      ],
+      "label": "nest-admin",
+      "cvss": 9.8,
+      "title": "nest-admin 하드코딩 암호 키"
+    },
+    {
+      "id": "CVE-2026-112709",
+      "ids": [
+        "CVE-2026-112709"
+      ],
+      "label": "CVE-2026-112709",
+      "cvss": 9.2,
+      "title": "CVE-2026-112709 힙 버퍼 오버플로"
+    },
+    {
+      "id": "CVE-2026-112710",
+      "ids": [
+        "CVE-2026-112710"
+      ],
+      "label": "CVE-2026-112710",
+      "cvss": 9.2,
+      "title": "CVE-2026-112710 힙 버퍼 오버플로"
+    },
+    {
+      "id": "CVE-2026-93857",
+      "ids": [
+        "CVE-2026-93857"
+      ],
+      "label": "CVE-2026-93857",
+      "cvss": 9.2,
+      "title": "CVE-2026-93857 버퍼 오버플로"
+    },
+    {
+      "id": "CVE-2026-93865",
+      "ids": [
+        "CVE-2026-93865"
+      ],
+      "label": "CVE-2026-93865",
+      "cvss": 9.2,
+      "title": "CVE-2026-93865 명령 삽입"
+    },
+    {
+      "id": "CVE-2026-93866",
+      "ids": [
+        "CVE-2026-93866"
+      ],
+      "label": "CVE-2026-93866",
+      "cvss": 9.2,
+      "title": "CVE-2026-93866 정수 오버플로"
+    },
+    {
+      "id": "CVE-2026-76932",
+      "ids": [
+        "CVE-2026-76932",
+        "CVE-2026-76933"
+      ],
+      "label": "CVE-2026-76932",
+      "cvss": 9.4,
+      "title": "CVE-2026-76932 스택 버퍼 오버플로 등 2건"
+    },
+    {
+      "id": "CVE-2026-112362",
+      "ids": [
+        "CVE-2026-112362"
+      ],
+      "label": "CVE-2026-112362",
+      "cvss": 9.1,
+      "title": "CVE-2026-112362 취약점"
+    },
+    {
+      "id": "CVE-2026-108014",
+      "ids": [
+        "CVE-2026-108014"
+      ],
+      "label": "CVE-2026-108014",
+      "cvss": 9.1,
+      "title": "CVE-2026-108014 취약한 암호 알고리즘"
+    },
+    {
+      "id": "CVE-2026-108015",
+      "ids": [
+        "CVE-2026-108015"
+      ],
+      "label": "CVE-2026-108015",
+      "cvss": 9.1,
+      "title": "CVE-2026-108015 취약한 암호 알고리즘"
+    },
+    {
+      "id": "CVE-2026-108142",
+      "ids": [
+        "CVE-2026-108142"
+      ],
+      "label": "CVE-2026-108142",
+      "cvss": 9.1,
+      "title": "CVE-2026-108142 취약점"
+    },
+    {
+      "id": "CVE-2026-112352",
+      "ids": [
+        "CVE-2026-112352"
+      ],
+      "label": "Sunhillo SureLine",
+      "cvss": 9.1,
+      "title": "Sunhillo SureLine 인증 우회"
+    },
+    {
+      "id": "CVE-2026-76935",
+      "ids": [
+        "CVE-2026-76935"
+      ],
+      "label": "CVE-2026-76935",
+      "cvss": 9.4,
+      "title": "CVE-2026-76935 스택 버퍼 오버플로"
+    },
+    {
+      "id": "CVE-2026-82122",
+      "ids": [
+        "CVE-2026-82122"
+      ],
+      "label": "CVE-2026-82122",
+      "cvss": 9.4,
+      "title": "CVE-2026-82122 스택 버퍼 오버플로"
+    },
+    {
+      "id": "CVE-2026-90465",
+      "ids": [
+        "CVE-2026-90465"
+      ],
+      "label": "FireCluster Sync",
+      "cvss": 9.4,
+      "title": "FireCluster Sync 명령 삽입"
+    },
+    {
+      "id": "CVE-2026-115216",
+      "ids": [
+        "CVE-2026-115216"
+      ],
+      "label": "CVE-2026-115216",
+      "cvss": 9.1,
+      "title": "CVE-2026-115216 인증서 검증 부적절"
+    },
+    {
+      "id": "CVE-2026-58256",
+      "ids": [
+        "CVE-2026-58256"
+      ],
+      "label": "GRR",
+      "cvss": 9.1,
+      "title": "GRR 코드 삽입"
+    },
+    {
+      "id": "CVE-2026-106076",
+      "ids": [
+        "CVE-2026-106076"
+      ],
+      "label": "CVE-2026-106076",
+      "cvss": 9,
+      "title": "CVE-2026-106076 SQL 삽입"
+    },
+    {
+      "id": "CVE-2026-92885",
+      "ids": [
+        "CVE-2026-92885"
+      ],
+      "label": "CVE-2026-92885",
+      "cvss": 9.8,
+      "title": "CVE-2026-92885 인증 부적절"
+    },
+    {
+      "id": "CVE-2026-116863",
+      "ids": [
+        "CVE-2026-116863"
+      ],
+      "label": "Tribulant Software Newsletters",
+      "cvss": 9.6,
+      "title": "Tribulant Software Newsletters 사이트 간 요청 위조(CSRF)"
+    }
+  ],
+  "advisories": [],
+  "news": {
+    "domestic": [
+      {
+        "id": "n-e9f56eaa",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "미래에셋생명, 개인정보 해킹 유출…보험사 중 첫 금감원 현장점검",
+        "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE5NelFIdUU2SkFESHlZQzNKSjItdE1FSUQ5bVBiN1paN2NJR2VXdVBjdFUtZFlrQXMzb3dWNm0xLWQ1LXpBTnZNTnpSYXg4aHN2S0RqWXR2TG5kVUN4cE5kTTRmVnBOeU1ieTJLb2FzNXTSAXRBVV95cUxPX2daYm15b2FfMElLRktENWhYUXpHZl93VlZYRFNBTFlESk9Vd0tialBzQzd2cWliWllsVUNJTnZCNi1pYnRFa3FVMUlxclNXMDhBeG1WMDR6bU1YZ011VTNZOURVdnR1Q3ZpUEU5MWp4ci11dQ?oc=5",
+        "source": "주간한국",
+        "published": "2026-10-27T10:18:15.000Z",
+        "snippet": "",
+        "outlets": [
+          "주간한국",
+          "부산일보",
+          "서울파이낸스",
+          "대한경제",
+          "서울경제",
+          "메디컬투데이",
+          "동아일보",
+          "MBC 뉴스"
+        ],
+        "related": [
+          {
+            "title": "미래에셋생명서도 정보 유출",
+            "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTFBJcnNhaTRBTXRsRERFYVBFcjdiZ0NqeXVZWGgzZkFXbWVucktxNzU3NlFCeTVXcm9fUDQyd05zVVd1Qm8yZ0p4SnVXUXNRbDlFWU1VazNUMW5mYnQ2dDJNdVpKclMyTDNaZS1YZ2ZKMldhRjA2?oc=5",
+            "source": "부산일보"
+          },
+          {
+            "title": "금감원, 미래에셋생명 해킹사고 현장점검···\"피해규모 파악 중\"",
+            "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1WNWJ4YTNLUDZGc1BuejJiS003UncxOUlwd0pKRWJfN1VPd3FBV3F1MlI4bVZXd1FqM1ZnZk5pTGYtSmt3MnVsRDNBYkxIcUFZQnJFZG1MYkNnZ0tQSTRvQzdOQTREci1oYVE?oc=5",
+            "source": "서울파이낸스"
+          },
+          {
+            "title": "미래에셋생명, 보험사 첫 해킹 정보 유출…“홈페이지 폐쇄”",
+            "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE01U1lfZ1dwQ1ZHY2NXLVdvWXE4cFlLX3R4WWtickI1aXlHU3BGazllN3ZNam54Qlpfd1dvcmYyNkd6WnNRVGZ1X2t1MmoyUUlWNUdSYkhmZFFycUlDQUVUNXU0MTg1R3J2NkxHSHh0R2ZYT1BC?oc=5",
+            "source": "대한경제"
+          },
+          {
+            "title": "해킹피해 미래에셋생명, 보안투자 비중 2.4%P↓",
+            "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE5MM0Y2Z01seWpCTVhyTFFKQVNRMHl1eWtMVHhoQ1lLLXB2MnBGYTNVZHEyZTJNM21jYW83aEtOenJnMFhlXzUtQUFPRGNXbFg3Q1HSAVNBVV95cUxOaE9leUpBRXRQWFYzSXpoYV9JYXFCcndSUU14M2ZuUnNOd3NsSU4xMVkwc05UTUlUMkpDZUEyTEEwRkZ4b2FXSGg5cEw4Q2YyQ3p2Zw?oc=5",
+            "source": "서울경제"
+          },
+          {
+            "title": "금감원 ,'해킹 사고' 미래에셋생명 현장점검…유출 규모 정밀 조사",
+            "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE81THlkSnFVQWtYcU1wNkE2eGNYOEU5X09WQ1I3eUw2N2cwUzZ6M2ZJZFd4NzE0Y2Ixa1p5cVB2T1BzSzhTTXRIWUZQc2lyRTluWmFYcFdWbHVkbmdLQklxd2c1ZG1VTTlNYnNxdQ?oc=5",
+            "source": "메디컬투데이"
+          }
+        ],
+        "cves": [],
+        "score": 18.6,
+        "title_ko": "미래에셋생명 해킹 개인정보 유출, 보험사 첫 현장점검",
+        "summary_ko": "해킹으로 개인정보가 유출돼 홈페이지를 폐쇄함. 보험사 중 처음으로 금감원 현장점검이 이뤄지며 피해 규모는 파악 중임. 민감 보험계약 정보 포함 여부가 쟁점임."
+      },
+      {
+        "id": "n-d11e4ddd",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "[속보] 이찬진 “주요 금투사서 전반적인 해킹 사고 발생”…IT보안 당부",
+        "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTFAtd0ZlV21wMmFNUmYwS1R3a001dFN3TjZsc0RkYzV5SXRPc3BnZktRWWNVUnhFV3ZLWFNXRDlqWlRjWHlfb296azVjWjVxcXZrNGFIV1hwYnJUcHRfRGlVYU01UE5LTm91VU10MmY1MGRMb0U?oc=5",
+        "source": "스페셜타임스",
+        "published": "2026-10-27T23:24:22.000Z",
+        "snippet": "",
+        "outlets": [
+          "스페셜타임스",
+          "한국경제",
+          "연합뉴스 한민족센터",
+          "매일경제 마켓"
+        ],
+        "related": [
+          {
+            "title": "[속보] 이찬진 \"주요 금투사서 전반적인 해킹 사고 발생\"…IT보안 당부",
+            "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE52cm9neEVuc0FBRkhxTXE5clJjcmxPQjdyT3p5UzRkX3ZTbldoS3Ezb0RtRjBUdzFPNlFVWWdHc1RuZFhENGJBUnFZNzRTcWdNX2U2WXNIaEJGQQ?oc=5",
+            "source": "한국경제"
+          },
+          {
+            "title": "[속보] 이찬진 \"주요 금투사서 전반적인 해킹 사고 발생\"…IT보안 당부",
+            "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1ramliYndDTTEtWWxIVTBtSzlOR3NGaUgwYUpQSjhydEFRMGJZNURBT2xNSmNxeHBWSk9KQnp1TkVjc3pNV0otVVdZSHpiSjhaN0RaWFEzeTRtZmQ5N21CUHI5dFQzbzY0RGZMX0YyaE1NS2da?oc=5",
+            "source": "연합뉴스 한민족센터"
+          },
+          {
+            "title": "[속보] 이찬진 \"주요 금투사서 전반적인 해킹 사고 발생\"…IT보안 당부",
+            "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9Oc1haWUx1a3Z4S3J2V0pzTXdzbkJuWUlNMlREdTlFcjNzT1JWOU1Ob0V4c1UzVVh2VXpBdTVsbTNYMGVmNTR6VXFuVDZWbkdrWGc?oc=5",
+            "source": "매일경제 마켓"
+          }
+        ],
+        "cves": [],
+        "score": 13.4,
+        "title_ko": "주요 금융투자사 전반적 해킹 사고 발생, 당국 IT보안 당부",
+        "summary_ko": "이찬진 발언으로 주요 금융투자사에서 전반적인 해킹 사고가 발생했음이 알려짐. 당국은 금융사에 IT보안 강화를 당부함. 개별 사고 규모와 침해 경로는 자료에 없어 확인 필요함."
+      },
+      {
+        "id": "n-d5c0c97c",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "KB국민은행 개인정보 유출 추가 확인…119명→2210명 확산",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=146769",
+        "source": "보안뉴스",
+        "published": "2026-10-27T02:51:18.000Z",
+        "snippet": "KB국민은행의 개인(신용)정보 유출 사고 피해 규모가 당초 119명에서 2000명 이상으로 늘었다. KB국민은행은 26일 ‘기존 개인(신용)정보 유출 관련 추가 안내’ 공지를 통해 2일 공지한 정보유출 사고에 대한 후속 점검 과정에서 최초 확인된 119명 이외에 2091명(고객 1631명, 전현직 임직원 460명)의 개인(신용) 정보가 유출된 사실을 확인했다고 밝혔다. 이로써 KB 국민은행…",
+        "outlets": [
+          "보안뉴스",
+          "뉴스핌",
+          "서울특별시 미디어재단 TBS"
+        ],
+        "related": [
+          {
+            "title": "[단독] 168→119명→2210명…KB국민은행, 해킹 피해 집계 부실",
+            "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE52TFU3bGtlSDZLZ3FmZHNCZldxajN1TWZrMGVORC1BUUZfeExQUTVueTRCMUg5N0N3cVdwV0R4Y1dLSmh3SGx2RElDb0R0ZEpsWXRqS3doR3pPeVpn?oc=5",
+            "source": "뉴스핌"
+          },
+          {
+            "title": "KB국민은행 개인정보유출 119→2,210명..뒤늦게 수정",
+            "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxOTFI5dkhrODZFTEhwZjZnd2FuRTBpenM2UEpXQWhLWlZoR2RoV2FjU3pNVlNMdVNHRm9CV1lJX3VEbk1MOFdRTW40WmY3cHpDWFlWbi1PZWM1LVkwWFNaM1JMRURKZEtmWmRmRnhZd0lKMF9XUU8zRmdyaGpzQThjdHJQclNkZWthelE?oc=5",
+            "source": "서울특별시 미디어재단 TBS"
+          }
+        ],
+        "cves": [],
+        "score": 12.6,
+        "title_ko": "KB국민은행 개인정보 유출, 피해 119명에서 2210명으로 확대",
+        "summary_ko": "후속 점검 결과 최초 확인 119명 외에 2091명(고객 1631명, 전현직 임직원 460명)의 개인신용정보 유출이 추가 확인됨. 초기 집계 부실 논란이 제기됨. 추가 피해 여부 점검 필요함."
+      },
+      {
+        "id": "n-b434e7ad",
+        "region": "domestic",
+        "lang": "en",
+        "title": "Lazarus Abuses South Korean Security Software to Deploy Malware Using Post-Quantum Encryption",
+        "url": "https://thehackernews.com/2026/10/lazarus-abuses-south-korean-security.html",
+        "source": "The Hacker News",
+        "published": "2026-10-27T11:32:31.000Z",
+        "snippet": "The North Korea-linked Lazarus Group has been attributed to a cyber espionage campaign dubbed Operation FlashHole targeting at least three organizations in South Korea spanning the construction, software, and wire-commu…",
+        "outlets": [
+          "The Hacker News"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 8.5,
+        "title_ko": "Lazarus, 국내 보안 소프트웨어 악용 악성코드 유포",
+        "summary_ko": "북한 연계 Lazarus가 Operation FlashHole 캠페인으로 국내 건설·소프트웨어 등 최소 3개 기관을 겨냥함. 포스트퀀텀 암호를 쓰는 악성코드를 배포함. 국내 기관 침해 여부 점검 필요함."
+      },
+      {
+        "id": "n-041f18f9",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "금융·공공 해킹에 정부 긴급 점검…민간 기반시설 172곳 대상",
+        "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFB4UDNiaUNJLW95eFdLX0ZQTzk1YjZnVEhjdTlZWE0td0JFR0l0THBBZmtYMkFhT2MzRVJneGhqY1UzZXhZQUlKVjZQS0JxT01IUEE?oc=5",
+        "source": "매일경제 마켓",
+        "published": "2026-10-27T23:18:54.000Z",
+        "snippet": "",
+        "outlets": [
+          "매일경제 마켓"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 9.5,
+        "title_ko": "금융·공공 해킹 대응, 민간 기반시설 172곳 긴급 점검",
+        "summary_ko": "정부가 금융·공공 해킹 사고에 대응해 민간 기반시설 172곳을 대상으로 긴급 점검을 진행함. 세부 점검 내용과 결과는 자료에 없어 확인 필요함. 연쇄 침해 가능성에 대비해야 함."
+      }
+    ],
+    "international": [
+      {
+        "id": "n-998d29e9",
+        "region": "international",
+        "lang": "en",
+        "title": "CISA confirms PHP2Shell vulnerabilities now exploited in attacks",
+        "url": "https://www.bleepingcomputer.com/news/security/cisa-confirms-php2shell-vulnerabilities-now-exploited-in-attacks/",
+        "source": "BleepingComputer",
+        "published": "2026-10-27T08:20:54.000Z",
+        "snippet": "The U. S. Cybersecurity and Infrastructure Security Agency (CISA) has added the PHP2Shell vulnerabilities to its catalog of actively exploited security flaws and ordered federal agencies to patch their systems by Thursd…",
+        "outlets": [
+          "BleepingComputer"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 9,
+        "title_ko": "CISA, PHP2Shell 취약점 실제 공격에 악용 확인",
+        "summary_ko": "CISA가 PHP2Shell 취약점을 악용 중인 KEV 목록에 추가하고 연방기관에 패치를 명령함. 국내 PHP 사용 서비스도 보안 업데이트와 침해 흔적 점검이 필요함."
+      },
+      {
+        "id": "n-6e33a604",
+        "region": "international",
+        "lang": "en",
+        "title": "Apple Backports Fix for Exploited CoreGraphics Flaw to Older iPhones and iPads",
+        "url": "https://thehackernews.com/2026/10/apple-backports-fix-for-exploited.html",
+        "source": "The Hacker News",
+        "published": "2026-10-27T13:59:09.000Z",
+        "snippet": "Apple on Monday backported fixes for a high-severity security flaw that was exploited in real-world cyber attacks to older devices. The vulnerability, tracked as CVE-2026-86950 (CVSS score: 8.8), is an out-of-bounds wri…",
+        "outlets": [
+          "The Hacker News",
+          "BleepingComputer"
+        ],
+        "related": [
+          {
+            "title": "Apple backports CoreGraphics zero-day patches to older iPhones",
+            "url": "https://www.bleepingcomputer.com/news/apple/apple-backports-coregraphics-zero-day-patches-to-older-iphones/",
+            "source": "BleepingComputer"
+          }
+        ],
+        "cves": [
+          "CVE-2026-86950"
+        ],
+        "score": 14.2,
+        "title_ko": "Apple, 악용된 CoreGraphics 결함 패치 구형 기기에도 적용",
+        "summary_ko": "Apple이 실제 공격에 악용된 고위험 CoreGraphics 취약점(CVE-2026-86950, CVSS 8.8) 수정본을 구형 iPhone·iPad에도 백포트함. 구형 기기 사용자는 업데이트 적용이 필요함."
+      },
+      {
+        "id": "n-6154e608",
+        "region": "international",
+        "lang": "en",
+        "title": "Hackers hijack Convertr analytics script to steal payment card data",
+        "url": "https://www.bleepingcomputer.com/news/security/hackers-hijack-convertr-analytics-script-to-steal-payment-card-data/",
+        "source": "BleepingComputer",
+        "published": "2026-10-27T20:57:25.000Z",
+        "snippet": "A credit card skimming group reportedly compromised a shared analytics script used by e-commerce platform Convertr to steal shoppers' payment data during checkout. [...]",
+        "outlets": [
+          "BleepingComputer"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 8.5,
+        "title_ko": "Convertr 분석 스크립트 해킹, 결제카드 정보 탈취",
+        "summary_ko": "신용카드 스키밍 그룹이 e커머스 플랫폼 Convertr의 공유 분석 스크립트를 침해해 결제 과정에서 쇼핑객의 카드 정보를 훔침. 해당 스크립트를 쓰는 쇼핑몰은 점검이 필요함."
+      },
+      {
+        "id": "n-e40d47a6",
+        "region": "international",
+        "lang": "ko",
+        "title": "HPE, 기업용 와이파이 보안 취약점 72개 발견…8개는 ‘최고 위험’ 등급",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=146736",
+        "source": "보안뉴스",
+        "published": "2026-10-27T02:18:44.000Z",
+        "snippet": "휴렛팩커드엔터프라이즈(HPE)의 기업용 무선 네트워크 운영체제에서 보안 취약점 72개가 한꺼번에 발견됐다. 이 가운데 8개는 최고 위험 등급으로 분류됐으며 일부 결함은 공격자가 로그인 절차 없이 원격에서 장비를 장악하는 데 악용될 수 있어 기업 네트워크 관리자들의 주의가 요구된다. 최근 HPE는 기업용 무선 네트워크 운영체제인 아루바OS(ArubaOS)의 취약점 72개를 수정하는 보안 업데…",
+        "outlets": [
+          "보안뉴스",
+          "SecurityWeek"
+        ],
+        "related": [
+          {
+            "title": "HPE Patches Dozens of Critical Flaws in Networking Products",
+            "url": "https://www.securityweek.com/hpe-patches-dozens-of-critical-flaws-in-networking-products/",
+            "source": "SecurityWeek"
+          }
+        ],
+        "cves": [],
+        "score": 11.7,
+        "title_ko": "HPE ArubaOS 취약점 72개 발견, 8개 최고 위험",
+        "summary_ko": "HPE 기업용 무선 OS ArubaOS에서 취약점 72개가 발견되고 8개가 최고 위험 등급으로 분류됨. 일부는 로그인 없이 원격 장악이 가능함. 무선 장비 관리자는 벤더 패치 확인이 필요함."
+      },
+      {
+        "id": "n-1f8e3431",
+        "region": "international",
+        "lang": "en",
+        "title": "Tailscale Rushes Patches After Uncoordinated Disclosure of ‘Tailworm’ Flaws",
+        "url": "https://www.securityweek.com/tailscale-rushes-patches-after-uncoordinated-disclosure-of-tailworm-flaws/",
+        "source": "SecurityWeek",
+        "published": "2026-10-27T15:26:12.000Z",
+        "snippet": "Tailscale is preparing a patch for Tailscale SSH flaws whose details went public over the weekend, before any fixes had been released. The post Tailscale Rushes Patches After Uncoordinated Disclosure of ‘Tailworm’ Flaws…",
+        "outlets": [
+          "SecurityWeek",
+          "BleepingComputer"
+        ],
+        "related": [
+          {
+            "title": "Tailscale warns of SSH flaws allowing root privilege escalation",
+            "url": "https://www.bleepingcomputer.com/news/security/tailscale-warns-of-serious-ssh-flaws-allowing-root-privilege-escalation/",
+            "source": "BleepingComputer"
+          }
+        ],
+        "cves": [],
+        "score": 13.2,
+        "title_ko": "Tailscale SSH 결함 Tailworm 사전 공개, 긴급 패치 중",
+        "summary_ko": "패치 출시 전에 Tailscale SSH 결함 상세 정보가 주말에 공개돼 긴급 패치를 준비 중임. root 권한 상승 가능성이 있음. 해당 서비스 사용 시 벤더 공지 확인이 필요함."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "kev",
+      "name": "CISA KEV",
+      "ok": true,
+      "count": 4,
+      "ms": 189
+    },
+    {
+      "id": "bleepingcomputer",
+      "name": "BleepingComputer",
+      "ok": true,
+      "count": 15,
+      "ms": 289
+    },
+    {
+      "id": "securityweek",
+      "name": "SecurityWeek",
+      "ok": true,
+      "count": 10,
+      "ms": 322
+    },
+    {
+      "id": "therecord",
+      "name": "The Record",
+      "ok": true,
+      "count": 5,
+      "ms": 338
+    },
+    {
+      "id": "zdnetkr",
+      "name": "지디넷코리아",
+      "ok": true,
+      "count": 30,
+      "ms": 374
+    },
+    {
+      "id": "krebs",
+      "name": "Krebs on Security",
+      "ok": true,
+      "count": 10,
+      "ms": 388
+    },
+    {
+      "id": "thehackernews",
+      "name": "The Hacker News",
+      "ok": true,
+      "count": 50,
+      "ms": 506
+    },
+    {
+      "id": "gnews-kr",
+      "name": "Google 뉴스",
+      "ok": true,
+      "count": 100,
+      "ms": 662
+    },
+    {
+      "id": "darkreading",
+      "name": "Dark Reading",
+      "ok": true,
+      "count": 50,
+      "ms": 960
+    },
+    {
+      "id": "nvd-kev",
+      "name": "NVD (KEV 상세)",
+      "ok": true,
+      "count": 4,
+      "ms": 1066
+    },
+    {
+      "id": "dailysecu",
+      "name": "데일리시큐",
+      "ok": true,
+      "count": 50,
+      "ms": 1150
+    },
+    {
+      "id": "kisa-vuln",
+      "name": "KISA 취약점 정보",
+      "ok": true,
+      "count": 10,
+      "ms": 1206
+    },
+    {
+      "id": "kisa-notice",
+      "name": "KISA 보안공지",
+      "ok": true,
+      "count": 10,
+      "ms": 1232
+    },
+    {
+      "id": "boannews",
+      "name": "보안뉴스",
+      "ok": true,
+      "count": 50,
+      "ms": 1356
+    },
+    {
+      "id": "kisa-alert",
+      "name": "KISA 경보단계",
+      "ok": true,
+      "count": 10,
+      "ms": 1350
+    },
+    {
+      "id": "datanet",
+      "name": "데이터넷",
+      "ok": true,
+      "count": 50,
+      "ms": 1779
+    },
+    {
+      "id": "nvd",
+      "name": "NVD (신규 CVE)",
+      "ok": true,
+      "count": 1108,
+      "ms": 466
+    },
+    {
+      "id": "epss",
+      "name": "FIRST EPSS",
+      "ok": true,
+      "count": 34,
+      "ms": 314
+    }
+  ],
+  "summarizer": {
+    "engine": "claude-haiku-5-5",
+    "ok": true,
+    "ms": 37610,
+    "applied": {
+      "news": 10,
+      "vulns": 7,
+      "overview": true
+    },
+    "rejected": [],
+    "input_tokens": 10250,
+    "output_tokens": 9315
+  },
+  "stats": {
+    "news": {
+      "items": 420,
+      "fresh": 182,
+      "clusters": 140,
+      "eligible": 100
+    },
+    "nvd_published": 1108,
+    "kev_catalog": "2026.10.27",
+    "kev_recent": 4
+  }
+}

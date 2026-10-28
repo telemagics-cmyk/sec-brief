@@ -287,3 +287,20 @@ test('로그인 콜백의 오류 문구는 화면에 이스케이프해 보여 �
   assert.ok(html.includes('&lt;script&gt;'));
   await failed;
 });
+
+test('메일 이름(MAIL_TITLE)은 브리핑 메일의 제목·본문과 연결 확인 메일에 쓰인다', async () => {
+  let s = setup({ MAIL_TITLE: 'OO팀 일일 보안 브리핑' });
+  await sendBriefMail(s.cfg, sampleBrief(), { env: s.env, log: quiet });
+  const m = sent[0].message;
+  assert.match(m.subject, /\[OO팀 일일 보안 브리핑\] 10\.23\(금\) \|/);
+  assert.ok(m.body.content.includes('>OO팀 일일 보안 브리핑</p>'), '본문 머리');
+  assert.ok(!m.body.content.includes('>일일 보안 브리핑</p>'));
+  await sendBriefMail(s.cfg, null, { test: true, env: s.env, log: quiet });
+  assert.equal(sent[1].message.subject, '[OO팀 일일 보안 브리핑] 메일 연결 확인');
+  rmSync(s.dir, { recursive: true, force: true });
+
+  s = setup();
+  await sendBriefMail(s.cfg, sampleBrief(), { env: s.env, log: quiet });
+  assert.match(sent[0].message.subject, /\[일일 보안 브리핑\] 10\.23\(금\) \|/, '없으면 site.title');
+  rmSync(s.dir, { recursive: true, force: true });
+});

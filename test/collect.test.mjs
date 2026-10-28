@@ -4,7 +4,7 @@ import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, test } from 'node:test';
-import { collectBrief } from '../src/collect.mjs';
+import { collectBrief, collectWindow } from '../src/collect.mjs';
 import { DEFAULTS, deepMerge } from '../src/config.mjs';
 import { setBackoffScale } from '../src/http.mjs';
 import { briefFile } from '../src/store.mjs';
@@ -136,5 +136,45 @@ test('수집: 다음 날에는 이미 실은 CVE·기사·공지를 빼고, 같�
   assert.equal(next.brief.exploited.length, 0, '어제 실은 KEV 는 제외');
   assert.equal(next.brief.critical.length, 0, '어제 실은 CVE 는 제외');
   assert.equal(next.brief.advisories.length, 0, '어제 실은 공지는 제외');
+  rmSync(dir, { recursive: true, force: true });
+});
+
+test('수집 기간: 평소엔 설정값, 주말·연휴를 쉬고 온 날은 지난 브리핑 이후 전부(최대 10일)', () => {
+  const cfg = deepMerge(DEFAULTS, {});
+  const at = (iso) => new Date(iso);
+  // 어제 브리핑에 이어지면 평소대로
+  let w = collectWindow(cfg, { now: at('2026-10-28T21:05:00Z'), date: '2026-10-29', prev: { date: '2026-10-28', window: { to: '2026-10-27T21:04:00Z' } } });
+  assert.deepEqual(w, { hours: 30, kevSince: '2026-10-26', advisoryDays: 2, sinceBrief: '2026-10-28' });
+  // 금요일 06:05 브리핑 → 월요일 06:05: 72시간 + 1시간 겹침, KEV·KISA 도 금요일부터
+  w = collectWindow(cfg, { now: at('2026-11-01T21:05:00Z'), date: '2026-11-02', prev: { date: '2026-10-30', window: { to: '2026-10-29T21:05:00Z' } } });
+  assert.deepEqual(w, { hours: 73, kevSince: '2026-10-30', advisoryDays: 4, sinceBrief: '2026-10-30' });
+  // 오래 멈췄다 돌아오면 10일까지만
+  w = collectWindow(cfg, { now: at('2026-11-30T21:05:00Z'), date: '2026-12-01', prev: { date: '2026-11-01', generated_at: '2026-11-01T06:04:00+09:00' } });
+  assert.deepEqual(w, { hours: 240, kevSince: '2026-11-21', advisoryDays: 11, sinceBrief: '2026-11-01' });
+  // 첫 브리핑·시각이 없는 옛 브리핑
+  assert.deepEqual(collectWindow(cfg, { now: at('2026-10-28T21:05:00Z'), date: '2026-10-29' }), { hours: 30, kevSince: '2026-10-26', advisoryDays: 2, sinceBrief: '' });
+  assert.equal(collectWindow(cfg, { now: at('2026-10-28T21:05:00Z'), date: '2026-10-29', prev: { date: '2026-10-28', legacy: true } }).hours, 30);
+});
+
+test('수집: 닷새 쉬고 온 날은 NVD·기사를 지난 브리핑 이후부터 모으고 브리핑에 그 기간을 남긴다', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'sb-collect-'));
+  const urls = [];
+  const inner = router();
+  globalThis.fetch = (url, opts) => {
+    urls.push(String(url));
+    return inner(url, opts);
+  };
+  const cfg = cfgFor(dir);
+  await collectBrief(cfg, { now: NOW, env, log: quiet }); // 10-24 06:40 KST
+  urls.length = 0;
+  const later = new Date(NOW.getTime() + 5 * 24 * 3600e3); // 10-29 06:40 KST
+  const { brief } = await collectBrief(cfg, { now: later, env, log: quiet });
+  assert.equal(brief.date, '2026-10-29');
+  assert.equal(brief.window.hours, 121);
+  assert.equal(brief.window.since_brief, '2026-10-24');
+  const pub = new URL(urls.find((u) => u.includes('pubStartDate')));
+  assert.equal(pub.searchParams.get('pubStartDate'), new Date(later.getTime() - 121 * 3600e3).toISOString());
+  const kev = new URL(urls.find((u) => u.includes('kevStartDate')));
+  assert.equal(kev.searchParams.get('kevStartDate'), '2026-10-24T00:00:00.000Z', 'KEV 등재도 지난 브리핑 날부터');
   rmSync(dir, { recursive: true, force: true });
 });

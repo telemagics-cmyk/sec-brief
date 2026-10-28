@@ -10,8 +10,10 @@
 //   node src/cli.mjs mail-login     처음 한 번: Outlook.com 계정(예: @outlook.kr)으로 로그인해 메일 발송 토큰 받기
 //   node src/cli.mjs import <폴더>  이전 도구의 브리핑 파일(daily-brief-*.md)을 웹 이력으로 옮기기
 //   node src/cli.mjs serve          _site/ 를 http://localhost:8080 으로 열람
+//   node src/cli.mjs workday        오늘 할지: 정시·예약 실행(--scheduled)은 주말·공휴일에 쉼 (워크플로의 첫 단계)
+//   node src/cli.mjs holidays [연도] 그해 공휴일 목록 (src/holidays.mjs + config.json 의 임시공휴일)
 import { spawnSync } from 'node:child_process';
-import { existsSync, readFileSync, statSync } from 'node:fs';
+import { appendFileSync, existsSync, readFileSync, statSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { extname, join, normalize, resolve, sep } from 'node:path';
 import { createInterface } from 'node:readline/promises';
@@ -19,13 +21,14 @@ import { setTimeout as sleep } from 'node:timers/promises';
 import { buildKakaoTemplate } from './brief.mjs';
 import { collectBrief } from './collect.mjs';
 import { loadConfig } from './config.mjs';
+import { dayOff, holidaysKnown, holidaysOf } from './holidays.mjs';
 import { kakaoConfigured, kakaoLogin, sendBrief } from './kakao.mjs';
 import { importLegacy } from './legacy.mjs';
-import { mailConfigured, mailSubject, renderEmailHtml, sendBriefMail, testMail } from './mail.mjs';
+import { mailConfigured, mailSubject, mailTitle, renderEmailHtml, sendBriefMail, testMail } from './mail.mjs';
 import { outlookLogin } from './outlook.mjs';
 import { buildSite } from './site.mjs';
 import { listBriefDates, loadBrief, writeAtomic } from './store.mjs';
-import { isYmd, kstDate, msUntilKst } from './util.mjs';
+import { isYmd, kstDate, msUntilKst, shortDay, weekdayKo } from './util.mjs';
 
 const HELP = readFileSync(new URL(import.meta.url), 'utf8')
   .split(/\r?\n/)
@@ -75,11 +78,62 @@ function pickBrief(cfg, date) {
   return loadBrief(cfg.dataDir, dates[dates.length - 1]);
 }
 
+/** 정시·예약 실행이 쉬는 날이면 그 이유('토요일'·'추석' 등), 하는 날이면 '' (schedule.workdays_only 가 꺼져 있으면 늘 '') */
+function offReason(cfg, date) {
+  if (!cfg.schedule?.workdays_only) return '';
+  const r = dayOff(date, cfg.schedule.extra_holidays || {});
+  return r.off ? r.reason : '';
+}
+
+/**
+ * 오늘 브리핑을 만들고 보낼지 — 워크플로의 첫 단계. 정시·예약 실행(--scheduled)은 주말·공휴일에 쉬고,
+ * 직접 실행은 언제든 한다. GitHub Actions 에서는 proceed=true|false 를 GITHUB_OUTPUT 에 남긴다.
+ */
+function cmdWorkday(cfg, args) {
+  const date = typeof args.date === 'string' ? args.date : kstDate();
+  if (!isYmd(date)) throw new Error(`날짜 형식은 YYYY-MM-DD 입니다: ${date}`);
+  for (const k of Object.keys(cfg.schedule?.extra_holidays || {})) {
+    if (!isYmd(k)) warn(`config.json 의 schedule.extra_holidays 날짜 형식이 잘못돼 무시됩니다(YYYY-MM-DD): ${k}`);
+  }
+  if (cfg.schedule?.workdays_only && !holidaysKnown(date.slice(0, 4))) {
+    warn(`${date.slice(0, 4)}년 공휴일 자료가 없어 올해는 주말만 쉽니다. src/holidays.mjs 에 그해 월력요항의 공휴일을 더하세요(README '쉬는 날').`);
+  }
+  const reason = offReason(cfg, date);
+  const run = !reason || !args.scheduled;
+  if (!reason) console.log(`${shortDay(date)}은 평일입니다. 브리핑을 만들고 보냅니다.`);
+  else if (args.scheduled) notice(`${shortDay(date)}은 쉬는 날(${reason})이라 브리핑을 만들지도 보내지도 않습니다.`);
+  else notice(`${shortDay(date)}은 쉬는 날(${reason})이지만 직접 실행이라 만듭니다.`);
+  if (inActions && process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT, `proceed=${run}\n`);
+}
+
+function cmdHolidays(cfg, args) {
+  const year = Number(args._[1]) || Number(kstDate().slice(0, 4));
+  const extra = cfg.schedule?.extra_holidays || {};
+  if (!holidaysKnown(year)) console.log(`${year}년 공휴일 자료가 없습니다(src/holidays.mjs). 아래는 config.json 에서 더한 날만입니다.`);
+  const list = holidaysOf(year, extra);
+  const weekend = (d) => ['토', '일'].includes(weekdayKo(d));
+  for (const { date, name } of list) {
+    console.log(`${date} (${weekdayKo(date)}) ${name}${weekend(date) ? '  — 주말과 겹침' : ''}${Object.hasOwn(extra, date) ? '  — config.json 에서 더함' : ''}`);
+  }
+  const days = list.filter((x) => !weekend(x.date)).length;
+  console.log(
+    `\n${year}년 평일에 걸린 공휴일 ${days}일. ${cfg.schedule?.workdays_only ? '정시·예약 실행은 이날과 주말에 쉽니다.' : 'schedule.workdays_only 가 꺼져 있어 지금은 매일 실행합니다.'}`,
+  );
+}
+
 async function cmdCollect(cfg, args) {
   const opts = { force: Boolean(args.force) };
   if (args.date) {
     if (!isYmd(args.date)) throw new Error(`날짜 형식은 YYYY-MM-DD 입니다: ${args.date}`);
     opts.date = args.date;
+  }
+  if (args.scheduled) {
+    const day = opts.date || kstDate();
+    const reason = offReason(cfg, day);
+    if (reason) {
+      notice(`${shortDay(day)}은 쉬는 날(${reason})이라 브리핑을 만들지 않습니다.`);
+      return null;
+    }
   }
   const { brief, skipped } = await collectBrief(cfg, opts);
   if (skipped && inActions) {
@@ -98,7 +152,6 @@ async function cmdCollect(cfg, args) {
     if (brief.summarizer?.error) warn(`Claude 요약 실패(규칙 기반으로 대체): ${brief.summarizer.error}`);
   }
   if (inActions && process.env.GITHUB_OUTPUT) {
-    const { appendFileSync } = await import('node:fs');
     appendFileSync(process.env.GITHUB_OUTPUT, `date=${brief.date}\n`);
   }
   return brief;
@@ -113,6 +166,14 @@ const MAX_WAIT_MS = 110 * 60 * 1000;
  *   MAX_WAIT_MS 보다 더 이르면(밤중에 손으로 부른 경우 등) 기다리지 않고 이번에는 보내지 않는다.
  */
 async function cmdSend(cfg, args, brief) {
+  if (args.scheduled && !args.test) {
+    const day = typeof args.date === 'string' ? args.date : kstDate();
+    const reason = offReason(cfg, day);
+    if (reason) {
+      notice(`${shortDay(day)}은 쉬는 날(${reason})이라 보내지 않습니다.`);
+      return;
+    }
+  }
   const only = typeof args.only === 'string' ? args.only : '';
   if (only && !['kakao', 'mail'].includes(only)) throw new Error('--only 는 kakao 또는 mail 입니다.');
   const channels = [
@@ -177,8 +238,9 @@ function cmdPreview(cfg, args) {
   const b = pickBrief(cfg, args.date);
   if (args.mail) {
     const out = join(cfg.siteDir, 'mail-preview.html');
-    writeAtomic(out, renderEmailHtml(b, { siteUrl: cfg.site.url, title: cfg.site.title }));
-    console.log(`제목: ${mailSubject(b, cfg.site.title)}\n본문: ${out}`);
+    const title = mailTitle(cfg);
+    writeAtomic(out, renderEmailHtml(b, { siteUrl: cfg.site.url, title }));
+    console.log(`제목: ${mailSubject(b, title)}\n본문: ${out}`);
     return;
   }
   const tpl = buildKakaoTemplate(b, { siteUrl: cfg.site.url, template: args.template || cfg.kakao.template });
@@ -201,7 +263,6 @@ async function cmdLogin(cfg, args) {
     console.log('');
     console.log('이 토큰은 비밀번호처럼 다루세요. 화면 기록을 공유하지 마세요.');
     if (args.save) {
-      const { appendFileSync } = await import('node:fs');
       appendFileSync(join(cfg.root, '.env'), `\nKAKAO_REST_API_KEY=${r.clientId}\n${r.clientSecret ? `KAKAO_CLIENT_SECRET=${r.clientSecret}\n` : ''}KAKAO_REFRESH_TOKEN=${r.refreshToken}\n`);
       console.log('.env 에도 저장했습니다(로컬 실행용, 저장소에는 올라가지 않음).');
     }
@@ -237,7 +298,6 @@ async function cmdMailLogin(cfg, args) {
     console.log('');
     console.log('리프레시 토큰은 비밀번호처럼 다루세요(채팅·메신저에 붙여 넣지 마세요). 이후에는 매일 실행 때 자동으로 갱신됩니다.');
     if (args.save) {
-      const { appendFileSync } = await import('node:fs');
       appendFileSync(join(cfg.root, '.env'), `\nOUTLOOK_CLIENT_ID=${r.clientId}\nOUTLOOK_REFRESH_TOKEN=${r.refreshToken}\n`);
       console.log('.env 에도 저장했습니다(로컬 실행용, 저장소에는 올라가지 않음).');
     }
@@ -307,8 +367,15 @@ async function main() {
     case 'serve':
       cmdServe(cfg, args);
       break;
+    case 'workday':
+      cmdWorkday(cfg, args);
+      break;
+    case 'holidays':
+      cmdHolidays(cfg, args);
+      break;
     case 'run': {
       const brief = await cmdCollect(cfg, args);
+      if (!brief) break; // 쉬는 날
       buildSite(cfg);
       await cmdSend(cfg, args, brief);
       break;

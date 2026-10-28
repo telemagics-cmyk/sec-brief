@@ -5,6 +5,7 @@
 #   Settings > Secrets and variables > Actions
 #     KAKAO_REST_API_KEY, KAKAO_CLIENT_SECRET, KAKAO_REFRESH_TOKEN   카카오톡 발송
 #     OUTLOOK_CLIENT_ID, OUTLOOK_REFRESH_TOKEN, MAIL_TO   (선택) Outlook.com 계정으로 메일 발송
+#     MAIL_TITLE          (선택) 메일 제목·본문의 이름 (없으면 config.json 의 site.title)
 #     SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, MAIL_FROM  (선택) 또는 SMTP(Gmail 등)로 메일 발송
 #     ANTHROPIC_API_KEY   (선택) Claude 한국어 요약·번역
 #     NVD_API_KEY         (선택) NVD 요청 한도 완화
@@ -19,6 +20,7 @@ on:
   # 정시 실행은 외부 호출(workflow_dispatch, scheduled: true)이 맡는다. GitHub 예약은 붐비면 늦게 시작해서
   # (2026-10-25~28 실측: 매일 2~3.5시간) 외부 호출이 오지 않은 날을 위한 예비로 둔다.
   # 어느 실행이든 앞 실행이 이미 만들고 보냈으면 수집·발송을 건너뛰므로 같은 날 두 번 오지 않는다.
+  # 주말·공휴일에는 매일 부르는 호출이 와도 첫 작업(day)에서 끝난다.
   schedule:
     - cron: '5 20 * * *' # 05:05 KST
     - cron: '35 21 * * *' # 06:35 KST
@@ -46,8 +48,30 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # 정시·예약 실행은 주말·공휴일(src/holidays.mjs + config.json schedule)에 여기서 끝난다. 직접 실행은 언제든 한다.
+  day:
+    name: 오늘 할지 (주말·공휴일 쉼)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      proceed: ${{ steps.day.outputs.proceed }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.ref }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - name: 주말·공휴일 확인
+        id: day
+        env:
+          SCHEDULED: ${{ (github.event_name == 'schedule' || inputs.scheduled) && '--scheduled' || '' }}
+        run: node src/cli.mjs workday $SCHEDULED
+
   brief:
     name: 수집·이력 저장·웹 페이지
+    needs: day
+    if: ${{ needs.day.outputs.proceed == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
@@ -157,6 +181,7 @@ jobs:
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
           MAIL_FROM: ${{ secrets.MAIL_FROM }}
           MAIL_TO: ${{ secrets.MAIL_TO }}
+          MAIL_TITLE: ${{ secrets.MAIL_TITLE }}
           MODE: ${{ inputs.send == '연결 확인 메시지만' && '--test' || '' }}
           FORCE: ${{ inputs.force && '--force' || '' }}
           WAIT: ${{ (github.event_name == 'schedule' || inputs.scheduled) && '--scheduled' || '' }}

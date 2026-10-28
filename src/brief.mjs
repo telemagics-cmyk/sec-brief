@@ -1,7 +1,13 @@
 // 브리핑 조립과 출력 형식: 저장용 Markdown, 카카오톡 메시지(리스트형·텍스트형 템플릿).
-import { charLength, fmtPercent, shortDay, truncate, weekdayKo } from './util.mjs';
+import { addDays, charLength, fmtPercent, shortDay, truncate, weekdayKo } from './util.mjs';
 
 export const BRIEF_VERSION = 2;
+
+/** 주말·연휴 뒤 브리핑이면 '10.30(금) 브리핑 이후' — 바로 전날 브리핑에 이어지면 빈 문자열 */
+export function sinceNote(b) {
+  const s = b.window?.since_brief;
+  return s && s < addDays(b.date, -1) ? `${shortDay(s)} 브리핑 이후` : '';
+}
 
 export function briefUrl(siteUrl, date) {
   return siteUrl ? `${siteUrl}/b/${date}.html` : '';
@@ -104,7 +110,8 @@ export function renderMarkdown(b, { siteUrl = '' } = {}) {
   const alert = alertOf(b);
   if (alert) L.push(`**경보** ${mdLink(alert.title, alert.url)} (${mdEscape(alert.source)}, ${alert.date})`, '');
   L.push(`> ${mdEscape(b.overview)}`, '');
-  L.push(`생성 ${b.generated_at.replace('T', ' ').slice(0, 16)} KST · 요약 ${b.engine === 'rules' ? '규칙 기반' : b.engine}${siteUrl ? ` · ${mdLink('웹에서 보기', briefUrl(siteUrl, b.date))}` : ''}`, '');
+  const since = sinceNote(b);
+  L.push(`생성 ${b.generated_at.replace('T', ' ').slice(0, 16)} KST${since ? ` · ${since}` : ''} · 요약 ${b.engine === 'rules' ? '규칙 기반' : b.engine}${siteUrl ? ` · ${mdLink('웹에서 보기', briefUrl(siteUrl, b.date))}` : ''}`, '');
 
   const vulnBlock = (v, i, header) => {
     L.push(`### ${i}. ${header}`);

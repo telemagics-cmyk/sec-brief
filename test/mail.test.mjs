@@ -5,7 +5,8 @@ import { createServer } from 'node:net';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { after, before, test } from 'node:test';
-import { explainMailError, mailSettings, mailSubject, renderEmailHtml, sendBriefMail } from '../src/mail.mjs';
+import { renderMarkdown, sinceNote } from '../src/brief.mjs';
+import { explainMailError, mailSettings, mailSubject, mailTitle, renderEmailHtml, sendBriefMail } from '../src/mail.mjs';
 import { msUntilKst } from '../src/util.mjs';
 import { sampleBrief } from './fixtures.mjs';
 
@@ -169,4 +170,20 @@ test('발송 시각 기다리기 계산 (KST)', () => {
   assert.equal(msUntilKst('06:30', at('2026-10-23T20:05:00Z')), 85 * 60000, '05:05 KST → 06:30 까지 85분');
   assert.equal(msUntilKst('06:30', at('2026-10-23T21:40:00Z')), 0, '이미 지났으면 0');
   assert.throws(() => msUntilKst('6시'), /HH:MM/);
+});
+
+test('주말·연휴 뒤 브리핑은 메일·Markdown 머리에 "지난 브리핑 이후"를 적는다', () => {
+  const b = sampleBrief({ date: '2026-10-26', window: { hours: 73, since_brief: '2026-10-23' } });
+  assert.equal(sinceNote(b), '10.23(금) 브리핑 이후');
+  assert.match(renderEmailHtml(b, {}), /KST 생성 · 10\.23\(금\) 브리핑 이후/);
+  assert.match(renderMarkdown(b), /KST · 10\.23\(금\) 브리핑 이후 · 요약/);
+  assert.equal(sinceNote(sampleBrief({ date: '2026-10-27', window: { since_brief: '2026-10-26' } })), '', '바로 전날 브리핑에 이어지면 적지 않음');
+  assert.equal(sinceNote(sampleBrief()), '', '기간 정보가 없는 브리핑');
+});
+
+test('메일 이름: Secret MAIL_TITLE 이 있으면 그것, 없으면 site.title (웹·카카오와 별개)', () => {
+  const cfg = { site: { title: '일일 보안 브리핑' } };
+  assert.equal(mailTitle(cfg, {}), '일일 보안 브리핑');
+  assert.equal(mailTitle(cfg, { MAIL_TITLE: '  OO팀 일일 보안 브리핑 ' }), 'OO팀 일일 보안 브리핑');
+  assert.equal(mailTitle(cfg, { MAIL_TITLE: ' ' }), '일일 보안 브리핑', '공백만 있으면 없는 것으로');
 });

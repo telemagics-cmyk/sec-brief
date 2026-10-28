@@ -5,12 +5,15 @@ import { join } from 'node:path';
 import { test } from 'node:test';
 import { DEFAULTS, deepMerge, loadConfig, loadDotEnv, ROOT } from '../src/config.mjs';
 
+// 키를 사용자가 정하는 항목(날짜 → 이름)은 안을 보지 않는다
+const FREE_FORM = new Set(['schedule.extra_holidays']);
+
 function keysOf(obj, prefix = '') {
   const out = [];
   for (const [k, v] of Object.entries(obj)) {
     if (k.startsWith('_')) continue;
     out.push(prefix + k);
-    if (v && typeof v === 'object' && !Array.isArray(v)) out.push(...keysOf(v, `${prefix}${k}.`));
+    if (v && typeof v === 'object' && !Array.isArray(v) && !FREE_FORM.has(prefix + k)) out.push(...keysOf(v, `${prefix}${k}.`));
   }
   return out;
 }
@@ -114,5 +117,25 @@ test('README 의 외부 호출(cron-job.org) 설정이 워크플로·발송 시�
   assert.ok(cron, 'cron-job.org 일정 식');
   for (const minute of cron[1].split(',').map(Number)) {
     assert.ok(Number(cron[2]) * 60 + minute + 15 <= h * 60 + m, `${cron[2]}:${minute} 호출은 ${cfg.delivery.not_before} 발송에 늦음`);
+  }
+});
+
+test('워크플로: 첫 작업(day)이 주말·공휴일이면 수집·게시·발송을 모두 건너뛰게 한다', () => {
+  const daily = readFileSync(join(ROOT, '.github', 'workflows', 'daily-brief.yml'), 'utf8');
+  const dayJob = /\n {2}day:\n([\s\S]*?)\n {2}brief:\n/.exec(daily)?.[1];
+  assert.ok(dayJob, 'day 작업');
+  assert.match(dayJob, /outputs:\n {6}proceed: \$\{\{ steps\.day\.outputs\.proceed \}\}/);
+  assert.match(dayJob, /run: node src\/cli\.mjs workday \$SCHEDULED\n/);
+  assert.match(daily, /\n {2}brief:\n {4}name: .+\n {4}needs: day\n {4}if: \$\{\{ needs\.day\.outputs\.proceed == 'true' \}\}\n/);
+  // deploy·deliver 는 brief 에 기대므로 brief 를 건너뛰면 함께 건너뛴다
+  assert.match(daily, /\n {2}deploy:\n[\s\S]*?\n {4}needs: brief\n/);
+  assert.match(daily, /needs\.brief\.result == 'success'/);
+  // day 작업은 npm ci 없이 돈다 → src 가 npm 패키지를 정적으로 import 하면 안 된다(필요할 때 import())
+  assert.ok(!dayJob.includes('npm ci'));
+  for (const dir of ['src', join('src', 'sources')]) {
+    for (const f of readdirSync(join(ROOT, dir)).filter((x) => x.endsWith('.mjs'))) {
+      const src = readFileSync(join(ROOT, dir, f), 'utf8');
+      assert.ok(!/^import [^;]* from '(?!node:|\.)/m.test(src), `${dir}/${f}: npm 패키지를 정적으로 import — day 작업이 깨짐`);
+    }
   }
 });

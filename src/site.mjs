@@ -8,7 +8,7 @@
 //   feed.xml              RSS
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { alertOf, allNews, emptyNote, vulnBadges } from './brief.mjs';
+import { alertOf, allNews, emptyNote, sinceNote, vulnBadges } from './brief.mjs';
 import { SITE_CSS, SITE_JS } from './site-assets.mjs';
 import { loadAllBriefs } from './store.mjs';
 import { escapeHtml as h, fmtPercent, kstStamp, safeUrl, shortDay, truncate, weekdayKo } from './util.mjs';
@@ -76,7 +76,7 @@ function page({ base, title, desc = '', body, current = '', site }) {
 </header>
 ${body}
 <footer class="site-foot">
-  <p>${h(site.title)} · 매일 아침 자동 생성 · 출처: CISA KEV, NVD, FIRST EPSS, KISA 보호나라, 국내외 보안 언론 RSS</p>
+  <p>${h(site.title)} · 자동 생성 · 출처: CISA KEV, NVD, FIRST EPSS, KISA 보호나라, 국내외 보안 언론 RSS</p>
 </footer>
 <script src="${base}assets/site.js" defer></script>
 </body>
@@ -168,7 +168,7 @@ function briefBody(b) {
   const head = `<header class="brief-head">
   <p class="kicker">일일 보안 브리핑</p>
   <h1>${longDate(b.date)}</h1>
-  <p class="meta">${h(b.generated_at?.slice(11, 16) || '')} KST 생성 · ${h(engineLabel(b.engine))}</p>
+  <p class="meta">${h(b.generated_at?.slice(11, 16) || '')} KST 생성${sinceNote(b) ? ` · ${h(sinceNote(b))}` : ''} · ${h(engineLabel(b.engine))}</p>
   <ul class="counts">
     ${tiles.map(([id, n, label, cls]) => `<li${cls ? ` class="${cls}"` : ''}><a href="#${id}"><b>${h(n)}</b><span>${h(label)}</span></a></li>`).join('\n    ')}
   </ul>
@@ -380,7 +380,7 @@ function rss(briefs, site) {
     return `<item><title>${h(`${b.date} (${weekdayKo(b.date)}) 보안 브리핑`)}</title><link>${h(link)}</link><guid isPermaLink="${base ? 'true' : 'false'}">${h(link)}</guid><pubDate>${(Number.isNaN(when.getTime()) ? new Date() : when).toUTCString()}</pubDate><description>${h(desc)}</description></item>`;
   });
   return `<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>${h(site.title)}</title><link>${h(base ? `${base}/` : '')}</link><description>매일 아침 보안 뉴스·주요 취약점 브리핑</description><language>ko</language>
+<rss version="2.0"><channel><title>${h(site.title)}</title><link>${h(base ? `${base}/` : '')}</link><description>보안 뉴스·주요 취약점 브리핑</description><language>ko</language>
 ${items.join('\n')}
 </channel></rss>
 `;

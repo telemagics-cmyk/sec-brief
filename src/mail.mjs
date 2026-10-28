@@ -5,7 +5,7 @@
 // 공개 저장소이므로 주소·계정·토큰은 저장소가 아니라 비밀값(환경 변수)으로만 받고, Actions 기록에서는 가린다.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { alertOf, briefUrl, emptyNote, renderMarkdown, vulnBadges } from './brief.mjs';
+import { alertOf, briefUrl, emptyNote, renderMarkdown, sinceNote, vulnBadges } from './brief.mjs';
 import { secret } from './config.mjs';
 import { getAccount, mask, obtainAccessToken, outlookConfigured, sendGraphMail } from './outlook.mjs';
 import { writeAtomic } from './store.mjs';
@@ -109,6 +109,7 @@ export function renderEmailHtml(b, { siteUrl = '', title = '일일 보안 브리
   const adv = b.advisories || [];
   const alert = alertOf(b);
   const exTotal = ex.length + (b.exploited_more?.length || 0);
+  const since = sinceNote(b);
   const date = `${Number(b.date.slice(0, 4))}년 ${Number(b.date.slice(5, 7))}월 ${Number(b.date.slice(8, 10))}일 (${weekdayKo(b.date)})`;
   const tiles = [
     ['news-domestic', b.news?.domestic?.length || 0, '국내 뉴스', C.ink],
@@ -124,7 +125,7 @@ ${a(anchor(id), `<span style="display:block;font-size:20px;font-weight:bold;colo
   const parts = [];
   parts.push(`<p style="margin:0;font-size:12px;letter-spacing:.12em;color:${C.accent};font-weight:bold;">${h(title)}</p>
 <h1 style="margin:4px 0 2px;font-size:22px;color:${C.ink};">${date}</h1>
-<p style="margin:0;font-size:13px;color:${C.muted};">${h(b.generated_at?.slice(11, 16) || '')} KST 생성${dayUrl ? ` · ${a(dayUrl, '웹에서 보기')}` : ''}</p>
+<p style="margin:0;font-size:13px;color:${C.muted};">${h(b.generated_at?.slice(11, 16) || '')} KST 생성${since ? ` · ${h(since)}` : ''}${dayUrl ? ` · ${a(dayUrl, '웹에서 보기')}` : ''}</p>
 <table role="presentation" style="width:100%;border-collapse:collapse;margin-top:12px;"><tr>${tileCells}</tr></table>`);
   if (alert) {
     parts.push(`<div style="margin-top:14px;padding:10px 12px;background:${C.warnSoft};border:1px solid ${C.warn};border-radius:6px;font-size:14px;"><b style="color:${C.warn};">경보</b> ${a(alert.url, h(alert.title), `color:${C.ink};font-weight:bold;`)} <span style="color:${C.faint};font-size:12.5px;">${h(alert.source)} · ${h(alert.date)}</span></div>`);
@@ -149,7 +150,7 @@ ${a(anchor(id), `<span style="display:block;font-size:20px;font-weight:bold;colo
   if (b.critical_more?.length) parts.push(`<p style="font-size:13px;color:${C.muted};">그 밖의 고위험 ${b.critical_more.length}묶음은 ${dayUrl ? a(anchor('critical'), '웹 페이지') : '웹 페이지'}에서 볼 수 있습니다.</p>`);
 
   const ok = (b.sources || []).filter((s) => s.ok).length;
-  parts.push(`<p style="margin:24px 0 0;padding-top:12px;border-top:1px solid ${C.rule};font-size:12.5px;color:${C.faint};">수집 ${ok}/${(b.sources || []).length}곳 정상${siteUrl ? ` · ${a(`${siteUrl}/archive.html`, '지난 브리핑')}` : ''} · 매일 아침 자동 발송</p>`);
+  parts.push(`<p style="margin:24px 0 0;padding-top:12px;border-top:1px solid ${C.rule};font-size:12.5px;color:${C.faint};">수집 ${ok}/${(b.sources || []).length}곳 정상${siteUrl ? ` · ${a(`${siteUrl}/archive.html`, '지난 브리핑')}` : ''} · 자동 발송</p>`);
 
   return `<!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${h(mailSubject(b, title))}</title></head>
@@ -161,11 +162,20 @@ ${parts.join('\n')}
 `;
 }
 
-export function testMail(cfg) {
+/**
+ * 메일 제목·본문에 쓰는 이름. Secret MAIL_TITLE 이 있으면 그것(공개 저장소·웹에 남기지 않을 이름), 없으면 site.title.
+ * 웹 페이지와 카카오톡은 site.title 그대로.
+ */
+export function mailTitle(cfg, env = process.env) {
+  return secret('MAIL_TITLE', env) || cfg.site.title;
+}
+
+export function testMail(cfg, env = process.env) {
+  const title = mailTitle(cfg, env);
   const url = cfg.site.url ? `${cfg.site.url}/` : '';
-  const text = `[${cfg.site.title}] 메일 연결 확인입니다. 이 메일이 보이면 메일 발송 설정이 끝났습니다.${url ? `\n웹 이력: ${url}` : ''}`;
+  const text = `[${title}] 메일 연결 확인입니다. 이 메일이 보이면 메일 발송 설정이 끝났습니다.${url ? `\n웹 이력: ${url}` : ''}`;
   return {
-    subject: `[${cfg.site.title}] 메일 연결 확인`,
+    subject: `[${title}] 메일 연결 확인`,
     text,
     html: `<p style="font-family:'Malgun Gothic',sans-serif;font-size:15px;">${h(text).replace(/\n/g, '<br>')}</p>`,
   };
@@ -275,12 +285,13 @@ export async function sendBriefMail(cfg, brief, { test = false, force = false, e
   }
   // 공개 저장소의 Actions 기록에 주소가 찍히지 않게(오류 문구 포함)
   for (const addr of s.to) mask(addr, env);
+  const title = mailTitle(cfg, env);
   const msg = test || !brief
-    ? testMail(cfg)
+    ? testMail(cfg, env)
     : {
-        subject: mailSubject(brief, cfg.site.title),
-        html: renderEmailHtml(brief, { siteUrl: cfg.site.url, title: cfg.site.title }),
-        text: renderMarkdown(brief, { siteUrl: cfg.site.url }),
+        subject: mailSubject(brief, title),
+        html: renderEmailHtml(brief, { siteUrl: cfg.site.url, title }),
+        text: `${title}\n\n${renderMarkdown(brief, { siteUrl: cfg.site.url })}`,
       };
   const r = s.kind === 'outlook' ? await sendViaOutlook(path, s, msg, { env, log }) : await sendViaSmtp(s, msg, { transportOverride });
   if (!test && brief) {

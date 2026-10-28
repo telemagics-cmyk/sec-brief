@@ -9,7 +9,7 @@ import { fetchKev } from './sources/kev.mjs';
 import { fetchNaverNews } from './sources/naver.mjs';
 import { fetchNvdKevAdded, fetchNvdPublished } from './sources/nvd.mjs';
 import { fetchFeed, splitAggregatorTitle } from './sources/rss.mjs';
-import { loadBrief, recentHistory, saveBrief } from './store.mjs';
+import { listBriefDates, loadBrief, recentHistory, saveBrief } from './store.mjs';
 import { applySummary, callClaude } from './summarize.mjs';
 import { addDays, canonicalUrl, kstDate, kstIso, shortHash } from './util.mjs';
 import { newsTextOf, selectCritical, selectExploited } from './vulns.mjs';
@@ -43,6 +43,35 @@ export function selectAdvisories(results, { date, days = 2, seen = new Set(), li
   }
   out.sort((a, b) => Number(Boolean(b.alert)) - Number(Boolean(a.alert)) || b.date.localeCompare(a.date));
   return out.slice(0, limit);
+}
+
+/** 주말·연휴를 쉬고 온 날에도 거슬러 모으는 최대 기간 */
+const MAX_GAP_DAYS = 10;
+
+/**
+ * 수집 기간. 평소에는 설정값(기사 window_hours·KEV kev_days·KISA advisories.days)이고,
+ * 주말·공휴일에 쉬고 온 날은 지난 브리핑 이후를 모두 모은다(최대 MAX_GAP_DAYS일).
+ * @param {object|null} prev 오늘 이전 가장 최근 브리핑
+ * @returns {{hours:number, kevSince:string, advisoryDays:number, sinceBrief:string}}
+ */
+export function collectWindow(cfg, { now, date, prev = null }) {
+  let hours = cfg.window_hours;
+  let kevSince = addDays(date, -cfg.vulns.kev_days);
+  let advisoryDays = cfg.advisories.days;
+  if (prev?.date && prev.date < date) {
+    const last = Date.parse(prev.window?.to || prev.generated_at || '');
+    // 지난 수집 끝 시각과 한 시간 겹치게(늦게 올라온 기사)
+    if (!Number.isNaN(last)) hours = Math.max(hours, Math.ceil((now.getTime() - last) / 3600000) + 1);
+    if (prev.date < kevSince) kevSince = prev.date;
+    advisoryDays = Math.max(advisoryDays, Math.round((Date.parse(date) - Date.parse(prev.date)) / 86400000) + 1);
+  }
+  const floor = addDays(date, -MAX_GAP_DAYS);
+  return {
+    hours: Math.min(hours, MAX_GAP_DAYS * 24),
+    kevSince: kevSince < floor ? floor : kevSince,
+    advisoryDays: Math.min(advisoryDays, MAX_GAP_DAYS + 1),
+    sinceBrief: prev?.date && prev.date < date ? prev.date : '',
+  };
 }
 
 function hostOf(u) {
@@ -99,13 +128,21 @@ export async function collectBrief(cfg, { now = new Date(), date = kstDate(now),
     }
   };
 
-  const windowStart = new Date(now.getTime() - cfg.window_hours * 3600 * 1000);
-  const kevSince = addDays(date, -cfg.vulns.kev_days);
+  const prevDate = listBriefDates(cfg.dataDir).filter((d) => d < date).pop();
+  let prev = null;
+  try {
+    prev = prevDate ? loadBrief(cfg.dataDir, prevDate) : null;
+  } catch {
+    // 지난 브리핑을 못 읽으면 평소 기간으로
+  }
+  const win = collectWindow(cfg, { now, date, prev });
+  const windowStart = new Date(now.getTime() - win.hours * 3600 * 1000);
+  const kevSince = win.kevSince;
   const nvdKey = secret('NVD_API_KEY', env);
   const naverId = secret('NAVER_CLIENT_ID', env);
   const naverSecret = secret('NAVER_CLIENT_SECRET', env);
 
-  log(`${date} 브리핑 수집 시작 (기사 ${cfg.window_hours}시간, KEV ${kevSince} 이후 등재분)`);
+  log(`${date} 브리핑 수집 시작 (기사 ${win.hours}시간${win.hours > cfg.window_hours ? ` — 지난 브리핑 ${win.sinceBrief} 이후` : ''}, KEV ${kevSince} 이후 등재분)`);
   const feeds = cfg.news.feeds.filter((f) => f.enabled !== false && f.url);
   const [kev, feedResults, advResults, naverItems, nvd] = await Promise.all([
     track('kev', 'CISA KEV', () => fetchKev({ since: kevSince })),
@@ -143,14 +180,14 @@ export async function collectBrief(cfg, { now = new Date(), date = kstDate(now),
   for (const it of naverItems || []) items.push({ ...it, outlet: hostOf(it.link) || '네이버 뉴스', lang: 'ko', kind: 'search', priority: 50 });
   const newsSel = selectNews(items, {
     now,
-    windowHours: cfg.window_hours,
+    windowHours: win.hours,
     history,
     domesticLimit: cfg.news.domestic_limit,
     internationalLimit: cfg.news.international_limit,
   });
 
   // KISA 공지
-  const advisories = selectAdvisories(advResults, { date, days: cfg.advisories.days, seen: history.advisoryUrls, limit: cfg.advisories.limit });
+  const advisories = selectAdvisories(advResults, { date, days: win.advisoryDays, seen: history.advisoryUrls, limit: cfg.advisories.limit });
 
   // 취약점
   const kevItems = kev?.items || [];
@@ -231,7 +268,7 @@ export async function collectBrief(cfg, { now = new Date(), date = kstDate(now),
     version: BRIEF_VERSION,
     date,
     generated_at: kstIso(now),
-    window: { hours: cfg.window_hours, from: windowStart.toISOString(), to: now.toISOString() },
+    window: { hours: win.hours, from: windowStart.toISOString(), to: now.toISOString(), since_brief: win.sinceBrief },
     engine: summarizer.ok ? summarizer.engine : 'rules',
     overview: '',
     cvss_min: cfg.vulns.cvss_min,

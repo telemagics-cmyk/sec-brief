@@ -78,6 +78,12 @@ export const DEFAULTS = {
     // 예약 실행은 이른 시각에 시작하되(GitHub 지연 대비) 이 시각(KST) 전에는 카카오톡·메일을 보내지 않는다. 비우면 바로 발송.
     not_before: '06:30',
   },
+  schedule: {
+    // 정시·예약 실행은 주말·공휴일(src/holidays.mjs)에 쉰다. 직접 실행은 언제든 한다.
+    workdays_only: true,
+    // 새로 정해진 임시공휴일 등 { "YYYY-MM-DD": "이름" }
+    extra_holidays: {},
+  },
 };
 
 function isPlainObject(v) {

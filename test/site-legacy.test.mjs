@@ -119,3 +119,23 @@ test('중복 방지 기록은 오늘 이전 브리핑에서 읽는다', () => {
   assert.equal(none.exploitedIds.size, 0, '같은 날짜는 빼야 --force 로 다시 만들 때 겹치지 않는다');
   rmSync(dir, { recursive: true, force: true });
 });
+
+test('기사 제목 비교: 주말·연휴에 쉬어도 바로 앞 브리핑과는 비교한다(최근 2일 또는 최근 2회 중 긴 쪽)', () => {
+  const { dir, cfg } = workspace();
+  saveBrief(cfg.dataDir, sampleBrief({ date: '2026-10-23' })); // 금
+  assert.equal(recentHistory(cfg.dataDir, '2026-10-26').recentNewsTitles.length, 2, '월요일: 금요일 브리핑 제목과 비교');
+  saveBrief(cfg.dataDir, sampleBrief({ date: '2026-10-26' }));
+  saveBrief(cfg.dataDir, sampleBrief({ date: '2026-10-27' }));
+  assert.equal(recentHistory(cfg.dataDir, '2026-10-28').recentNewsTitles.length, 4, '수요일: 월·화만(금요일은 빠짐)');
+  rmSync(dir, { recursive: true, force: true });
+});
+
+test('웹 페이지: 주말·연휴 뒤 브리핑은 머리에 "지난 브리핑 이후"를 적는다', () => {
+  const { dir, cfg } = workspace();
+  saveBrief(cfg.dataDir, sampleBrief({ date: '2026-10-23' }));
+  saveBrief(cfg.dataDir, sampleBrief({ date: '2026-10-26', window: { hours: 73, since_brief: '2026-10-23' } }));
+  buildSite(cfg, { log: () => {} });
+  assert.match(readFileSync(join(cfg.siteDir, 'b', '2026-10-26.html'), 'utf8'), /KST 생성 · 10\.23\(금\) 브리핑 이후 ·/);
+  assert.ok(!readFileSync(join(cfg.siteDir, 'b', '2026-10-23.html'), 'utf8').includes('브리핑 이후'));
+  rmSync(dir, { recursive: true, force: true });
+});

@@ -57,10 +57,14 @@ export function loadAllBriefs(dataDir) {
 
 /**
  * 오늘 이전 브리핑에서 이미 다룬 것들. 같은 날 다시 만들 때(--force) 자기 자신과 겹치지 않게 오늘은 뺀다.
+ * 기사 제목은 최근 titleDays 일과 최근 titleDays 회 중 더 긴 쪽과 비교한다(주말·연휴에 쉬어도 바로 앞 브리핑과는 비교).
  */
 export function recentHistory(dataDir, today, { days = 30, titleDays = 2 } = {}) {
   const from = addDays(today, -days);
-  const titleFrom = addDays(today, -titleDays);
+  const dates = listBriefDates(dataDir).filter((d) => d >= from && d < today);
+  const lastBriefs = dates[Math.max(0, dates.length - titleDays)];
+  const byDays = addDays(today, -titleDays);
+  const titleFrom = lastBriefs && lastBriefs < byDays ? lastBriefs : byDays;
   const h = {
     seenUrls: new Set(),
     exploitedIds: new Set(),
@@ -68,8 +72,7 @@ export function recentHistory(dataDir, today, { days = 30, titleDays = 2 } = {})
     advisoryUrls: new Set(),
     recentNewsTitles: [],
   };
-  for (const date of listBriefDates(dataDir)) {
-    if (date < from || date >= today) continue;
+  for (const date of dates) {
     let b;
     try {
       b = loadBrief(dataDir, date);

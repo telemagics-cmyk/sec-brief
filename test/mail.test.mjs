@@ -108,7 +108,8 @@ test('메일 본문: 웹과 같은 순서, 글 이스케이프, javascript: 주�
   assert.ok(!/href="javascript:/i.test(html));
   assert.ok(html.includes('href="https://u.github.io/sec-brief/b/2026-10-23.html#kisa"'), '건수 칸은 웹 페이지 섹션으로 연결');
   assert.ok(!/<script|<style|<link /i.test(html), '메일에는 스크립트·외부 스타일 없음');
-  assert.equal(mailSubject(b), '[경보] [일일 보안 브리핑] 10.23(금) | 국내 1·해외 1·KISA 3·악용 3·고위험 69');
+  assert.equal(mailSubject(b), '[경보] [일일 보안 브리핑] 10.23(금)', '날짜까지만(건수 없음)');
+  assert.equal(mailSubject({ ...b, advisories: [] }, 'OO팀 일일 보안 브리핑'), '[OO팀 일일 보안 브리핑] 10.23(금)');
 });
 
 test('발송: 로그인·받는 사람·제목, 같은 날은 한 번만, 기록 파일에는 주소를 남기지 않음', async () => {

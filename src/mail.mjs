@@ -40,21 +40,9 @@ export function mailConfigured(env = process.env) {
   }
 }
 
-function countsLine(b) {
-  const ex = (b.exploited?.length || 0) + (b.exploited_more?.length || 0);
-  return [
-    `국내 ${b.news?.domestic?.length || 0}`,
-    `해외 ${b.news?.international?.length || 0}`,
-    `KISA ${b.advisories?.length || 0}`,
-    ex ? `악용 ${ex}` : '',
-    b.critical_total ? `고위험 ${b.critical_total}` : '',
-  ]
-    .filter(Boolean)
-    .join('·');
-}
-
+/** 메일 제목은 날짜까지만(건수는 본문 위쪽 칸에). 경보 단계가 바뀐 날만 맨 앞에 [경보]. */
 export function mailSubject(b, title = '일일 보안 브리핑') {
-  return `${alertOf(b) ? '[경보] ' : ''}[${title}] ${shortDay(b.date)} | ${countsLine(b)}`;
+  return `${alertOf(b) ? '[경보] ' : ''}[${title}] ${shortDay(b.date)}`;
 }
 
 // ------------------------------------------------------------------ HTML 본문 (메일 프로그램용: 인라인 스타일만)

@@ -182,6 +182,12 @@ test('주말·연휴 뒤 브리핑은 메일·Markdown 머리에 "지난 브리�
   assert.equal(sinceNote(sampleBrief()), '', '기간 정보가 없는 브리핑');
 });
 
+test('메일 본문 맨 위 이름은 글자 간격을 벌리지 않는다(영문 약어가 떨어져 보이지 않게)', () => {
+  const html = renderEmailHtml(sampleBrief(), { title: 'ABC 일일 보안 브리핑' });
+  assert.match(html, />ABC 일일 보안 브리핑<\/p>/);
+  assert.ok(!html.includes('letter-spacing'));
+});
+
 test('메일 이름: Secret MAIL_TITLE 이 있으면 그것, 없으면 site.title (웹·카카오와 별개)', () => {
   const cfg = { site: { title: '일일 보안 브리핑' } };
   assert.equal(mailTitle(cfg, {}), '일일 보안 브리핑');

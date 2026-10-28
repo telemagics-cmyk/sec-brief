@@ -140,7 +140,8 @@ export function renderEmailHtml(b, { siteUrl = '', title = '일일 보안 브리
 ${a(anchor(id), `<span style="display:block;font-size:20px;font-weight:bold;color:${color};">${h(n)}</span><span style="display:block;font-size:11.5px;color:${C.muted};">${h(label)}</span>`, 'text-decoration:none;')}</div></td>`)
     .join('');
   const parts = [];
-  parts.push(`<p style="margin:0;font-size:12px;letter-spacing:.12em;color:${C.accent};font-weight:bold;">${h(title)}</p>
+  // 글자 사이를 벌리면(letter-spacing) 영문 약어가 'G OC' 처럼 떨어져 보여 간격은 두지 않는다
+  parts.push(`<p style="margin:0;font-size:13px;color:${C.accent};font-weight:bold;">${h(title)}</p>
 <h1 style="margin:4px 0 2px;font-size:22px;color:${C.ink};">${date}</h1>
 <p style="margin:0;font-size:13px;color:${C.muted};">${h(b.generated_at?.slice(11, 16) || '')} KST 생성${since ? ` · ${h(since)}` : ''}${dayUrl ? ` · ${a(dayUrl, '웹에서 보기')}` : ''}</p>
 <table role="presentation" style="width:100%;border-collapse:collapse;margin-top:12px;"><tr>${tileCells}</tr></table>`);

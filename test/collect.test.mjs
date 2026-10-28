@@ -144,15 +144,15 @@ test('수집 기간: 평소엔 설정값, 주말·연휴를 쉬고 온 날은 �
   const at = (iso) => new Date(iso);
   // 어제 브리핑에 이어지면 평소대로
   let w = collectWindow(cfg, { now: at('2026-10-28T21:05:00Z'), date: '2026-10-29', prev: { date: '2026-10-28', window: { to: '2026-10-27T21:04:00Z' } } });
-  assert.deepEqual(w, { hours: 30, kevSince: '2026-10-26', advisoryDays: 2, sinceBrief: '2026-10-28' });
+  assert.deepEqual(w, { hours: 30, kevSince: '2026-10-26', advisoryDays: 2, sinceBrief: '2026-10-28', sinceAt: '2026-10-27T21:04:00.000Z' });
   // 금요일 06:05 브리핑 → 월요일 06:05: 72시간 + 1시간 겹침, KEV·KISA 도 금요일부터
   w = collectWindow(cfg, { now: at('2026-11-01T21:05:00Z'), date: '2026-11-02', prev: { date: '2026-10-30', window: { to: '2026-10-29T21:05:00Z' } } });
-  assert.deepEqual(w, { hours: 73, kevSince: '2026-10-30', advisoryDays: 4, sinceBrief: '2026-10-30' });
+  assert.deepEqual(w, { hours: 73, kevSince: '2026-10-30', advisoryDays: 4, sinceBrief: '2026-10-30', sinceAt: '2026-10-29T21:05:00.000Z' });
   // 오래 멈췄다 돌아오면 10일까지만
   w = collectWindow(cfg, { now: at('2026-11-30T21:05:00Z'), date: '2026-12-01', prev: { date: '2026-11-01', generated_at: '2026-11-01T06:04:00+09:00' } });
-  assert.deepEqual(w, { hours: 240, kevSince: '2026-11-21', advisoryDays: 11, sinceBrief: '2026-11-01' });
+  assert.deepEqual(w, { hours: 240, kevSince: '2026-11-21', advisoryDays: 11, sinceBrief: '2026-11-01', sinceAt: '2026-10-31T21:04:00.000Z' });
   // 첫 브리핑·시각이 없는 옛 브리핑
-  assert.deepEqual(collectWindow(cfg, { now: at('2026-10-28T21:05:00Z'), date: '2026-10-29' }), { hours: 30, kevSince: '2026-10-26', advisoryDays: 2, sinceBrief: '' });
+  assert.deepEqual(collectWindow(cfg, { now: at('2026-10-28T21:05:00Z'), date: '2026-10-29' }), { hours: 30, kevSince: '2026-10-26', advisoryDays: 2, sinceBrief: '', sinceAt: '' });
   assert.equal(collectWindow(cfg, { now: at('2026-10-28T21:05:00Z'), date: '2026-10-29', prev: { date: '2026-10-28', legacy: true } }).hours, 30);
 });
 
@@ -172,6 +172,7 @@ test('수집: 닷새 쉬고 온 날은 NVD·기사를 지난 브리핑 이후부
   assert.equal(brief.date, '2026-10-29');
   assert.equal(brief.window.hours, 121);
   assert.equal(brief.window.since_brief, '2026-10-24');
+  assert.equal(brief.window.since_at, NOW.toISOString(), '지난 브리핑의 수집 끝 시각');
   const pub = new URL(urls.find((u) => u.includes('pubStartDate')));
   assert.equal(pub.searchParams.get('pubStartDate'), new Date(later.getTime() - 121 * 3600e3).toISOString());
   const kev = new URL(urls.find((u) => u.includes('kevStartDate')));

@@ -150,7 +150,7 @@ function pairSimilarity(a, b, A, B, cvesA, cvesB) {
  * 단일 연결은 '퇴직자 포함' 같은 표현을 공유한 다른 사건(놀유니버스·한전)을 사슬처럼 엮는다.
  * @param {object[]} items  {title, link, outlet, lang, kind, published, description}
  */
-export function clusterItems(items, { threshold = 0.36 } = {}) {
+export function clusterItems(items, { threshold = 0.36, foldSubjects = true } = {}) {
   const n = items.length;
   for (const it of items) it._tf = features(it.title);
   const df = vectorize(items);
@@ -197,7 +197,9 @@ export function clusterItems(items, { threshold = 0.36 } = {}) {
     members.get(a).push(...members.get(b));
     members.delete(b);
   }
-  return foldBySubject([...members.values()].map((idx) => idx.map((i) => items[i])));
+  const groups = [...members.values()].map((idx) => idx.map((i) => items[i]));
+  // 한 회사 기사만 모은 경우처럼 모든 제목의 주어가 같으면 주어로 합치지 않는다(foldSubjects: false)
+  return foldSubjects ? foldBySubject(groups) : groups;
 }
 
 // 주어로 쓰여도 사건을 가르지 못하는 말

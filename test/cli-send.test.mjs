@@ -66,10 +66,12 @@ function cli(dir, { date = DATE, kstTime = '07:00:00', event = 'workflow_dispatc
     OUTLOOK_CLIENT_ID: '0a1b2c3d-1111-2222-3333-444455556666',
     OUTLOOK_REFRESH_TOKEN: 'seed-rt',
     MAIL_TO: 'me@example.org',
-    // 저장소의 .env(로컬 비밀값)가 끼어들어 실제로 보내지 않게, 빈 값 대신 공백으로 막는다(공백은 '설정 없음')
+    // 저장소의 .env(로컬 비밀값)가 끼어들어 실제로 보내거나 Google 뉴스를 부르지 않게, 빈 값 대신 공백으로 막는다(공백은 '설정 없음')
     KAKAO_REST_API_KEY: ' ',
     KAKAO_REFRESH_TOKEN: ' ',
     SMTP_HOST: ' ',
+    MAIL_TITLE: ' ',
+    MAIL_NEWS_KEYWORD: ' ',
   };
   const clock = pathToFileURL(join(ROOT, 'test', 'fake-clock.mjs')).href;
   const started = Date.now();

@@ -20,7 +20,7 @@
   ├─ 웹 이력 게시: GitHub Pages (https://<아이디>.github.io/<저장소>/)
   └─ 06:30 발송
        ├─ 카카오톡: 주요 3건 카드 + [오늘 브리핑 전체] [지난 브리핑] 버튼
-       └─ (선택) 메일: 브리핑 전문(웹 페이지와 같은 순서)
+       └─ (선택) 메일: 브리핑 전문(웹 페이지와 같은 순서) + (선택) 맨 아래 관심 키워드 뉴스
 ```
 
 ## 무엇이 나아졌나 (이전 도구 대비)
@@ -91,6 +91,7 @@ REST API 키와 클라이언트 시크릿을 물으면 붙여 넣습니다. 브�
 | `KAKAO_REFRESH_TOKEN` | 3단계에서 받은 리프레시 토큰 | 카카오톡에 필요 |
 | `OUTLOOK_CLIENT_ID`, `OUTLOOK_REFRESH_TOKEN`, `MAIL_TO` | 아래 [메일로도 받기](#메일로도-받기-선택) — Outlook.com 계정 | 선택: 메일 |
 | `MAIL_TITLE` | 메일 제목·본문의 이름 (예: `OO팀 일일 보안 브리핑`). 비우면 `site.title` | 선택: 메일 |
+| `MAIL_NEWS_KEYWORD` | 메일 맨 아래 '○○ 관련 뉴스' 칸의 검색어 (예: 회사 이름). 비우면 칸 없음 | 선택: 메일 |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_TO` (`MAIL_FROM`) | 아래 [메일로도 받기](#메일로도-받기-선택) — Gmail 등 | 선택: 메일 |
 | `ANTHROPIC_API_KEY` | Claude API 키 | 선택: 한국어 요약·선별 |
 | `NVD_API_KEY` | [NVD API 키](https://nvd.nist.gov/developers/request-an-api-key) (무료) | 선택: NVD 요청 한도 완화 |
@@ -213,6 +214,15 @@ GitHub(해외 서버)에서 처음 보낼 때 Microsoft 가 스팸 의심으로 
 메일에만 다른 이름(예: 팀·기관 이름을 붙인 `OO팀 일일 보안 브리핑`)을 쓰려면 Secret `MAIL_TITLE` 에 넣습니다.
 Secret 이라 공개 저장소·웹 페이지·카카오톡에는 나타나지 않습니다.
 
+#### 메일 맨 아래 관심 키워드 뉴스 (선택)
+
+Secret `MAIL_NEWS_KEYWORD` 에 검색어(예: 회사 이름)를 넣으면, 메일 맨 아래(신규 고위험 취약점 다음)에 '○○ 관련 뉴스' 칸이 붙습니다.
+- 메일을 보낼 때 Google 뉴스에서 지난 브리핑 이후 기사를 찾아, 같은 사건끼리 묶고 여러 매체가 다룬 순으로 5건(나머지는 Google 뉴스 링크).
+- **메일에만** 붙습니다. 기사는 저장하지 않으므로 공개 저장소·웹 이력·카카오톡에는 남지 않습니다.
+- 여러 이름을 함께 찾으려면 `이름1 OR 이름2` 처럼 씁니다(Google 뉴스 검색 문법).
+- 미리 보기: `$env:MAIL_NEWS_KEYWORD='검색어'; node src/cli.mjs preview --mail` (PowerShell, 그 창에서만 적용)
+- 가져오지 못한 날은 칸에 '기사를 가져오지 못했습니다'만 적고 나머지 메일은 그대로 보냅니다.
+
 #### Gmail 로 보내기
 
 1. 보낼 Gmail 계정에서 **2단계 인증**을 켭니다: https://myaccount.google.com/security → '2단계 인증'
@@ -244,6 +254,7 @@ Secret 이라 공개 저장소·웹 페이지·카카오톡에는 나타나지 �
 
 **메일** (설정했을 때) — 제목 `[일일 보안 브리핑] 10.23(금) | 국내 5·해외 5·KISA 3·악용 6·고위험 69`
 (경보 단계가 바뀐 날은 맨 앞에 `[경보]`). 본문은 웹 페이지와 같은 순서의 전문이고, 위쪽 건수 칸을 누르면 웹 페이지의 해당 섹션으로 갑니다.
+`MAIL_NEWS_KEYWORD` 를 넣었으면 맨 아래에 그 검색어의 관련 뉴스가 붙습니다(메일에만).
 
 **웹 이력**
 - 날짜별 브리핑: 위쪽 건수 요약, 오늘의 요약, 국내 보안 뉴스 → 해외 보안 뉴스(함께 보도한 매체 목록) → KISA 공지 →
@@ -388,6 +399,7 @@ npm test                         # 자동 시험
   Outlook 은 메일 보내기(`Mail.Send`)와 기본 프로필 읽기 권한만 요청하고 받은 메일을 읽는 권한은 요청하지 않습니다.
   로그인은 클라이언트 비밀 없이 PKCE·확인값(state)으로 보호하고, Actions 기록에서는 토큰과 메일 주소를 가립니다.
   메일 주소·SMTP 계정은 Secrets 에만 있고 저장소에 남는 발송 기록에는 받는 사람 수만 적습니다.
+  메일 이름(`MAIL_TITLE`)·관심 키워드(`MAIL_NEWS_KEYWORD`)도 Secret 이라 Actions 기록에서 가려지고, 관심 뉴스 기사는 저장하지 않습니다.
 
 ## 파일 구성
 
@@ -409,6 +421,7 @@ sec-brief/
 │   ├── brief.mjs               Markdown·카카오 메시지
 │   ├── kakao.mjs               토큰 갱신·암호화 보관·발송·로그인 도우미
 │   ├── mail.mjs                (선택) 메일 본문·SMTP 발송
+│   ├── mail-news.mjs           (선택) 메일 맨 아래 관심 키워드 뉴스(발송 때 Google 뉴스에서)
 │   ├── outlook.mjs             (선택) Outlook.com 메일 API 발송·토큰 갱신·로그인 도우미
 │   ├── holidays.mjs            대한민국 공휴일(월력요항)·쉬는 날 판단
 │   ├── site.mjs, site-assets.mjs  웹 이력

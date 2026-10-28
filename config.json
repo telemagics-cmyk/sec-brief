@@ -12,7 +12,7 @@
     "cvss_min": 9,
     "kev_days": 3,
     "exploited_limit": 10,
-    "critical_limit": 5,
+    "critical_limit": 3,
     "watch": [
       "Microsoft",
       "Windows",

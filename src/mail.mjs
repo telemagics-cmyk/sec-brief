@@ -9,7 +9,8 @@ import { alertOf, briefUrl, emptyNote, renderMarkdown, sinceNote, vulnBadges } f
 import { secret } from './config.mjs';
 import { getAccount, mask, obtainAccessToken, outlookConfigured, sendGraphMail } from './outlook.mjs';
 import { writeAtomic } from './store.mjs';
-import { escapeHtml as h, kstIso, safeUrl, shortDay, truncate, weekdayKo } from './util.mjs';
+import { fetchMailNews, mailNewsSearchUrl } from './mail-news.mjs';
+import { escapeHtml as h, kstIso, kstStamp, safeUrl, shortDay, truncate, weekdayKo } from './util.mjs';
 
 const EMAIL_RE = /^[^\s@<>(),;:"]+@[^\s@<>(),;:"]+\.[^\s@<>(),;:"]+$/;
 
@@ -100,8 +101,36 @@ function vulnItem(v, color) {
 </div>`;
 }
 
-/** 웹 페이지와 같은 순서: 국내 뉴스 → 해외 뉴스 → KISA 공지 → 악용 확인 → 신규 고위험 */
-export function renderEmailHtml(b, { siteUrl = '', title = '일일 보안 브리핑' } = {}) {
+/** 글자 메일(SMTP 의 text 부분)에 붙는 같은 내용 */
+function keywordNewsText(extra) {
+  if (!extra) return '';
+  const lines = extra.items.map((n) => `- ${n.title} (${n.outlet}${n.outlets > 1 ? ` 외 ${n.outlets - 1}곳` : ''}) ${n.url}`);
+  return `\n\n## ${extra.keyword} 관련 뉴스\n\n${extra.error || (lines.length ? lines.join('\n') : '새 기사가 없습니다.')}\n`;
+}
+
+/** (선택) 메일에만 붙는 '○○ 관련 뉴스' (src/mail-news.mjs) */
+function keywordNews(extra) {
+  const head = sectionTitle(`${extra.keyword} 관련 뉴스`, 'Google 뉴스 · 지난 브리핑 이후');
+  const note = (text) => `<p style="margin:0;color:${C.muted};font-size:14px;">${h(text)}</p>`;
+  if (extra.error) return head + note(extra.error);
+  if (!extra.items.length) return head + note('새 기사가 없습니다.');
+  const more = extra.total > extra.items.length
+    ? `<p style="font-size:13px;color:${C.muted};">그 밖의 ${extra.total - extra.items.length}건은 ${a(mailNewsSearchUrl(extra.keyword), 'Google 뉴스')}에서 볼 수 있습니다.</p>`
+    : '';
+  return `${head}<ol style="margin:0;padding-left:20px;">${extra.items
+    .map((n) => {
+      const others = n.outlets > 1 ? ` 외 ${n.outlets - 1}곳` : '';
+      const when = kstStamp(new Date(n.published)).slice(5).replace('-', '.');
+      return `<li style="margin:0 0 10px;">
+<div style="font-size:15px;font-weight:bold;line-height:1.45;">${a(n.url, h(n.title), `color:${C.ink};text-decoration:none;`)}</div>
+<div style="font-size:12.5px;color:${C.faint};">${h(n.outlet)}${h(others)} · ${h(when)}</div>
+</li>`;
+    })
+    .join('')}</ol>${more}`;
+}
+
+/** 웹 페이지와 같은 순서: 국내 뉴스 → 해외 뉴스 → KISA 공지 → 악용 확인 → 신규 고위험 (→ 메일에만 관심 키워드 뉴스) */
+export function renderEmailHtml(b, { siteUrl = '', title = '일일 보안 브리핑', extraNews = null } = {}) {
   const dayUrl = briefUrl(siteUrl, b.date);
   const anchor = (id) => (dayUrl ? `${dayUrl}#${id}` : '');
   const ex = b.exploited || [];
@@ -148,6 +177,7 @@ ${a(anchor(id), `<span style="display:block;font-size:20px;font-weight:bold;colo
   parts.push(sectionTitle('신규 고위험 취약점', crSub));
   parts.push(cr.length ? cr.map((g) => vulnItem(g, C.warn)).join('') : `<p style="margin:0;color:${C.muted};font-size:14px;">${h(emptyNote(b, 'critical'))}</p>`);
   if (b.critical_more?.length) parts.push(`<p style="font-size:13px;color:${C.muted};">그 밖의 고위험 ${b.critical_more.length}묶음은 ${dayUrl ? a(anchor('critical'), '웹 페이지') : '웹 페이지'}에서 볼 수 있습니다.</p>`);
+  if (extraNews) parts.push(keywordNews(extraNews));
 
   const ok = (b.sources || []).filter((s) => s.ok).length;
   parts.push(`<p style="margin:24px 0 0;padding-top:12px;border-top:1px solid ${C.rule};font-size:12.5px;color:${C.faint};">수집 ${ok}/${(b.sources || []).length}곳 정상${siteUrl ? ` · ${a(`${siteUrl}/archive.html`, '지난 브리핑')}` : ''} · 자동 발송</p>`);
@@ -276,7 +306,7 @@ async function sendViaSmtp(s, msg, { transportOverride }) {
  * 받는 사람이 여럿이면 서로의 주소가 보이지 않게 숨은 참조로 보낸다.
  * @returns {Promise<{sent:boolean, skipped?:boolean, reason?:string, via?:string, accepted?:number, rejected?:number}>}
  */
-export async function sendBriefMail(cfg, brief, { test = false, force = false, env = process.env, transportOverride, log = console.log } = {}) {
+export async function sendBriefMail(cfg, brief, { test = false, force = false, env = process.env, transportOverride, feedOverride, log = console.log } = {}) {
   const s = mailSettings(env);
   if (!s) return { sent: false, skipped: true, reason: '메일 설정이 없어 건너뜁니다 (OUTLOOK_CLIENT_ID·OUTLOOK_REFRESH_TOKEN 또는 SMTP_HOST·MAIL_TO).' };
   const path = mailStatePath(cfg);
@@ -286,12 +316,14 @@ export async function sendBriefMail(cfg, brief, { test = false, force = false, e
   // 공개 저장소의 Actions 기록에 주소가 찍히지 않게(오류 문구 포함)
   for (const addr of s.to) mask(addr, env);
   const title = mailTitle(cfg, env);
+  const extraNews = test || !brief ? null : await fetchMailNews(brief, { env, ...(feedOverride ? { getFeed: feedOverride } : {}) });
+  if (extraNews?.error) log('메일 맨 아래 관심 뉴스를 가져오지 못해 안내 문구만 넣습니다.');
   const msg = test || !brief
     ? testMail(cfg, env)
     : {
         subject: mailSubject(brief, title),
-        html: renderEmailHtml(brief, { siteUrl: cfg.site.url, title }),
-        text: `${title}\n\n${renderMarkdown(brief, { siteUrl: cfg.site.url })}`,
+        html: renderEmailHtml(brief, { siteUrl: cfg.site.url, title, extraNews }),
+        text: `${title}\n\n${renderMarkdown(brief, { siteUrl: cfg.site.url })}${keywordNewsText(extraNews)}`,
       };
   const r = s.kind === 'outlook' ? await sendViaOutlook(path, s, msg, { env, log }) : await sendViaSmtp(s, msg, { transportOverride });
   if (!test && brief) {

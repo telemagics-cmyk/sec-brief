@@ -24,6 +24,7 @@ import { loadConfig } from './config.mjs';
 import { dayOff, holidaysKnown, holidaysOf } from './holidays.mjs';
 import { kakaoConfigured, kakaoLogin, sendBrief } from './kakao.mjs';
 import { importLegacy } from './legacy.mjs';
+import { fetchMailNews } from './mail-news.mjs';
 import { mailConfigured, mailSubject, mailTitle, renderEmailHtml, sendBriefMail, testMail } from './mail.mjs';
 import { outlookLogin } from './outlook.mjs';
 import { buildSite } from './site.mjs';
@@ -234,13 +235,15 @@ async function cmdSend(cfg, args, brief) {
   }
 }
 
-function cmdPreview(cfg, args) {
+async function cmdPreview(cfg, args) {
   const b = pickBrief(cfg, args.date);
   if (args.mail) {
     const out = join(cfg.siteDir, 'mail-preview.html');
     const title = mailTitle(cfg);
-    writeAtomic(out, renderEmailHtml(b, { siteUrl: cfg.site.url, title }));
+    const extraNews = await fetchMailNews(b);
+    writeAtomic(out, renderEmailHtml(b, { siteUrl: cfg.site.url, title, extraNews }));
     console.log(`제목: ${mailSubject(b, title)}\n본문: ${out}`);
+    if (extraNews) console.log(`맨 아래 관심 뉴스: ${extraNews.error || `${extraNews.items.length}건(전체 ${extraNews.total}묶음)`}`);
     return;
   }
   const tpl = buildKakaoTemplate(b, { siteUrl: cfg.site.url, template: args.template || cfg.kakao.template });
@@ -353,7 +356,7 @@ async function main() {
       await cmdSend(cfg, args);
       break;
     case 'preview':
-      cmdPreview(cfg, args);
+      await cmdPreview(cfg, args);
       break;
     case 'kakao-login':
       await cmdLogin(cfg, args);

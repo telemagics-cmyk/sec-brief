@@ -52,16 +52,21 @@ const MAX_GAP_DAYS = 10;
  * 수집 기간. 평소에는 설정값(기사 window_hours·KEV kev_days·KISA advisories.days)이고,
  * 주말·공휴일에 쉬고 온 날은 지난 브리핑 이후를 모두 모은다(최대 MAX_GAP_DAYS일).
  * @param {object|null} prev 오늘 이전 가장 최근 브리핑
- * @returns {{hours:number, kevSince:string, advisoryDays:number, sinceBrief:string}}
+ * @returns {{hours:number, kevSince:string, advisoryDays:number, sinceBrief:string, sinceAt:string}}
+ *   sinceAt: 지난 브리핑의 수집 끝 시각(메일 관심 뉴스가 그 이후 기사만 고르는 데 씀)
  */
 export function collectWindow(cfg, { now, date, prev = null }) {
   let hours = cfg.window_hours;
   let kevSince = addDays(date, -cfg.vulns.kev_days);
   let advisoryDays = cfg.advisories.days;
+  let sinceAt = '';
   if (prev?.date && prev.date < date) {
     const last = Date.parse(prev.window?.to || prev.generated_at || '');
-    // 지난 수집 끝 시각과 한 시간 겹치게(늦게 올라온 기사)
-    if (!Number.isNaN(last)) hours = Math.max(hours, Math.ceil((now.getTime() - last) / 3600000) + 1);
+    if (!Number.isNaN(last)) {
+      // 지난 수집 끝 시각과 한 시간 겹치게(늦게 올라온 기사)
+      hours = Math.max(hours, Math.ceil((now.getTime() - last) / 3600000) + 1);
+      sinceAt = new Date(last).toISOString();
+    }
     if (prev.date < kevSince) kevSince = prev.date;
     advisoryDays = Math.max(advisoryDays, Math.round((Date.parse(date) - Date.parse(prev.date)) / 86400000) + 1);
   }
@@ -71,6 +76,7 @@ export function collectWindow(cfg, { now, date, prev = null }) {
     kevSince: kevSince < floor ? floor : kevSince,
     advisoryDays: Math.min(advisoryDays, MAX_GAP_DAYS + 1),
     sinceBrief: prev?.date && prev.date < date ? prev.date : '',
+    sinceAt,
   };
 }
 
@@ -268,7 +274,7 @@ export async function collectBrief(cfg, { now = new Date(), date = kstDate(now),
     version: BRIEF_VERSION,
     date,
     generated_at: kstIso(now),
-    window: { hours: win.hours, from: windowStart.toISOString(), to: now.toISOString(), since_brief: win.sinceBrief },
+    window: { hours: win.hours, from: windowStart.toISOString(), to: now.toISOString(), since_brief: win.sinceBrief, since_at: win.sinceAt },
     engine: summarizer.ok ? summarizer.engine : 'rules',
     overview: '',
     cvss_min: cfg.vulns.cvss_min,

@@ -6,6 +6,7 @@
 #     KAKAO_REST_API_KEY, KAKAO_CLIENT_SECRET, KAKAO_REFRESH_TOKEN   카카오톡 발송
 #     OUTLOOK_CLIENT_ID, OUTLOOK_REFRESH_TOKEN, MAIL_TO   (선택) Outlook.com 계정으로 메일 발송
 #     MAIL_TITLE          (선택) 메일 제목·본문의 이름 (없으면 config.json 의 site.title)
+#     MAIL_NEWS_KEYWORD   (선택) 메일 맨 아래 '○○ 관련 뉴스' 검색어 — 메일에만, 저장소에 남지 않음
 #     SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, MAIL_FROM  (선택) 또는 SMTP(Gmail 등)로 메일 발송
 #     ANTHROPIC_API_KEY   (선택) Claude 한국어 요약·번역
 #     NVD_API_KEY         (선택) NVD 요청 한도 완화
@@ -182,6 +183,7 @@ jobs:
           MAIL_FROM: ${{ secrets.MAIL_FROM }}
           MAIL_TO: ${{ secrets.MAIL_TO }}
           MAIL_TITLE: ${{ secrets.MAIL_TITLE }}
+          MAIL_NEWS_KEYWORD: ${{ secrets.MAIL_NEWS_KEYWORD }}
           MODE: ${{ inputs.send == '연결 확인 메시지만' && '--test' || '' }}
           FORCE: ${{ inputs.force && '--force' || '' }}
           WAIT: ${{ (github.event_name == 'schedule' || inputs.scheduled) && '--scheduled' || '' }}

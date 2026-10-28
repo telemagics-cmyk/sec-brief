@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "seed": "a23ee3c9b2e0f7b9",
+  "refreshed_at": "2026-10-28T12:33:31+09:00",
+  "token": {
+    "alg": "A256GCM",
+    "iv": "F9e1+ac8R2AaPEtG",
+    "tag": "9N8kD+aSJoWPMfWmXG/KbQ==",
+    "data": "lBgaapcwu9GMmDG31B30WO3Zg8l5YGLdf79O9pw63UvvxyX8TcEZ46LS99w7j7QZzv7DofgFDUQ0T+C1DZm6NTye2PEA9a5AYJ2fw8iZj74IwezvQD8togoJkBT3q7rQ7cfpBMxXPiD5QOvQ8/Uk4p926euKeCwbvcm/TjGyfFIu3Ki1EXmzX6mS1y8aHrkrnl3/QV8ICgtvrdPIK/GOMZEffRKeDD7jt2VCQ3Vz/g44vkRR0/ClanpxQE2pRu4u6o+wEurm9mrS22pCIc8Bh42rVrx9ja6JKCRDr0GbzAqEH2Tul7VUsVFw78pIlEqtklsUDk03OjAQTeXtfd0ADbF230BtcYRsbd5XN/wedRB+MK8uOaxAmr8mi2CaP1FUYBrIeMD3e9x1OPA/5KOiaDlzoNxPMwv/4vzAGdTiYEuYNQ9skRlKnlMMTEqaeTPsTfaM7EyN1L3StgV9uDOQ0IlruBUIXW4COZzGY/fIBp1Z6A0Z1aKl5egTKi1xAryM0ysrgNcQn/aRqsH0D3/2BOgJcYWTpvrF3+PzLeY7h5yeHD6gZji742NDeWOTc0HBjzhb1TPTNTRQmIihsV7cPGIZ/kJNzhPMePYmGOBbLaJyPH1zGovgFLaYx8xcZ02coZVAjc3QcU6WPUxXj511DEPqf5OxkYw932X8GIxxekugj3U3+z9lvGo="
+  },
+  "rotated_at": "2026-10-28T12:33:31+09:00"
+}

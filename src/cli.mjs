@@ -7,8 +7,10 @@
 //   node src/cli.mjs send           오늘(또는 --date) 브리핑을 카카오톡·메일로 (--test: 연결 확인, --only kakao|mail)
 //   node src/cli.mjs preview        카카오톡으로 보낼 메시지를 화면에만 출력 (--mail: 메일 HTML 을 파일로)
 //   node src/cli.mjs kakao-login    처음 한 번: 카카오 로그인으로 리프레시 토큰 받기
+//   node src/cli.mjs mail-login     처음 한 번: Outlook.com 계정(예: @outlook.kr)으로 로그인해 메일 발송 토큰 받기
 //   node src/cli.mjs import <폴더>  이전 도구의 브리핑 파일(daily-brief-*.md)을 웹 이력으로 옮기기
 //   node src/cli.mjs serve          _site/ 를 http://localhost:8080 으로 열람
+import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { extname, join, normalize, resolve, sep } from 'node:path';
@@ -19,7 +21,8 @@ import { collectBrief } from './collect.mjs';
 import { loadConfig } from './config.mjs';
 import { kakaoConfigured, kakaoLogin, sendBrief } from './kakao.mjs';
 import { importLegacy } from './legacy.mjs';
-import { mailConfigured, mailSubject, renderEmailHtml, sendBriefMail } from './mail.mjs';
+import { mailConfigured, mailSubject, renderEmailHtml, sendBriefMail, testMail } from './mail.mjs';
+import { outlookLogin } from './outlook.mjs';
 import { buildSite } from './site.mjs';
 import { listBriefDates, loadBrief, writeAtomic } from './store.mjs';
 import { isYmd, kstDate, msUntilKst } from './util.mjs';
@@ -110,7 +113,7 @@ async function cmdSend(cfg, args, brief) {
   if (only && !['kakao', 'mail'].includes(only)) throw new Error('--only 는 kakao 또는 mail 입니다.');
   const channels = [
     { key: 'kakao', name: '카카오톡', on: kakaoConfigured(), hint: 'KAKAO_REST_API_KEY·KAKAO_REFRESH_TOKEN' },
-    { key: 'mail', name: '메일', on: mailConfigured(), hint: 'SMTP_HOST·SMTP_USER·SMTP_PASS·MAIL_TO' },
+    { key: 'mail', name: '메일', on: mailConfigured(), hint: 'OUTLOOK_CLIENT_ID·OUTLOOK_REFRESH_TOKEN 또는 SMTP_HOST·SMTP_USER·SMTP_PASS·MAIL_TO' },
   ].filter((c) => !only || c.key === only);
   for (const c of channels.filter((x) => !x.on)) notice(`${c.name} 설정이 없어 건너뜁니다 (${c.hint}, README 참고).`);
   const active = channels.filter((c) => c.on);
@@ -145,7 +148,7 @@ async function cmdSend(cfg, args, brief) {
       } else {
         const r = await sendBriefMail(cfg, b, opts);
         if (r.skipped) notice(r.reason);
-        else console.log(`메일 발송 완료 (받는 사람 ${r.accepted}명${r.rejected ? `, 거부 ${r.rejected}명` : ''}): ${what}`);
+        else console.log(`메일 발송 완료 (${r.via}, 받는 사람 ${r.accepted}명${r.rejected ? `, 거부 ${r.rejected}명` : ''}): ${what}`);
       }
     } catch (err) {
       fail(`${c.name} 발송 실패: ${err?.message || err}`);
@@ -183,6 +186,42 @@ async function cmdLogin(cfg, args) {
     if (args.save) {
       const { appendFileSync } = await import('node:fs');
       appendFileSync(join(cfg.root, '.env'), `\nKAKAO_REST_API_KEY=${r.clientId}\n${r.clientSecret ? `KAKAO_CLIENT_SECRET=${r.clientSecret}\n` : ''}KAKAO_REFRESH_TOKEN=${r.refreshToken}\n`);
+      console.log('.env 에도 저장했습니다(로컬 실행용, 저장소에는 올라가지 않음).');
+    }
+  } finally {
+    rl.close();
+  }
+}
+
+/** 긴 토큰을 터미널에서 긁어 복사하다 끊기지 않게 클립보드로 */
+function copyToClipboard(text) {
+  const cmd = process.platform === 'win32' ? 'clip' : process.platform === 'darwin' ? 'pbcopy' : '';
+  if (!cmd) return false;
+  try {
+    return spawnSync(cmd, [], { input: text, stdio: ['pipe', 'ignore', 'ignore'], timeout: 10000 }).status === 0;
+  } catch {
+    return false;
+  }
+}
+
+async function cmdMailLogin(cfg, args) {
+  const rl = createInterface({ input: process.stdin, output: process.stdout });
+  try {
+    const r = await outlookLogin({ port: Number(args.port) || 8766, ask: (q) => rl.question(q), open: !args['no-browser'], message: testMail(cfg) });
+    console.log('');
+    console.log(`로그인 성공: ${r.account.address}${r.sent ? ' — 이 주소로 확인 메일을 보냈습니다(받은 편지함과 정크 메일함을 보세요)' : ''}`);
+    if (!/Mail\.Send/i.test(r.scopes)) warn(`동의 범위에 Mail.Send 가 없습니다(${r.scopes || '확인 불가'}). 앱 등록의 API 사용 권한을 확인하고 다시 로그인하세요.`);
+    const copied = !args.show && copyToClipboard(r.refreshToken);
+    console.log('');
+    console.log('GitHub 저장소 > Settings > Secrets and variables > Actions 에 아래 값을 넣으세요.');
+    console.log(`  OUTLOOK_CLIENT_ID      ${r.clientId}`);
+    console.log(`  OUTLOOK_REFRESH_TOKEN  ${copied ? `클립보드에 복사했습니다(${r.refreshToken.length}자) — 바로 붙여 넣으세요. 화면에 보려면 --show` : r.refreshToken}`);
+    console.log(`  MAIL_TO                (선택) 받을 주소. 여러 개면 쉼표로. 비우면 ${r.account.address} 자신에게 보냅니다.`);
+    console.log('');
+    console.log('리프레시 토큰은 비밀번호처럼 다루세요(채팅·메신저에 붙여 넣지 마세요). 이후에는 매일 실행 때 자동으로 갱신됩니다.');
+    if (args.save) {
+      const { appendFileSync } = await import('node:fs');
+      appendFileSync(join(cfg.root, '.env'), `\nOUTLOOK_CLIENT_ID=${r.clientId}\nOUTLOOK_REFRESH_TOKEN=${r.refreshToken}\n`);
       console.log('.env 에도 저장했습니다(로컬 실행용, 저장소에는 올라가지 않음).');
     }
   } finally {
@@ -241,6 +280,9 @@ async function main() {
       break;
     case 'kakao-login':
       await cmdLogin(cfg, args);
+      break;
+    case 'mail-login':
+      await cmdMailLogin(cfg, args);
       break;
     case 'import':
       cmdImport(cfg, args);

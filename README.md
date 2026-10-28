@@ -86,7 +86,8 @@ REST API 키와 클라이언트 시크릿을 물으면 붙여 넣습니다. 브�
 | `KAKAO_REST_API_KEY` | REST API 키 | 카카오톡에 필요 |
 | `KAKAO_CLIENT_SECRET` | 클라이언트 시크릿 (사용 안 하면 생략) | 카카오톡에 필요 |
 | `KAKAO_REFRESH_TOKEN` | 3단계에서 받은 리프레시 토큰 | 카카오톡에 필요 |
-| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_TO` (`MAIL_FROM`) | 아래 [메일로도 받기](#메일로도-받기-선택) | 선택: 메일 |
+| `OUTLOOK_CLIENT_ID`, `OUTLOOK_REFRESH_TOKEN`, `MAIL_TO` | 아래 [메일로도 받기](#메일로도-받기-선택) — Outlook.com 계정 | 선택: 메일 |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_TO` (`MAIL_FROM`) | 아래 [메일로도 받기](#메일로도-받기-선택) — Gmail 등 | 선택: 메일 |
 | `ANTHROPIC_API_KEY` | Claude API 키 | 선택: 한국어 요약·선별 |
 | `NVD_API_KEY` | [NVD API 키](https://nvd.nist.gov/developers/request-an-api-key) (무료) | 선택: NVD 요청 한도 완화 |
 | `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET` | 네이버 검색 API | 선택: 국내 기사 보강 |
@@ -100,14 +101,55 @@ REST API 키와 클라이언트 시크릿을 물으면 붙여 넣습니다. 브�
 
 ### 메일로도 받기 (선택)
 
-SMTP 비밀값을 넣으면 카카오톡과 함께 브리핑 전문을 메일로도 보냅니다(넣지 않으면 메일은 건너뜀).
-보내는 계정은 **Gmail** 을 권합니다. GitHub 서버(해외)에서 접속하므로 아래 사정이 있습니다.
+설정하면 카카오톡과 함께 브리핑 전문을 메일로도 보냅니다(설정하지 않으면 메일은 건너뜀). 보내는 계정은 둘 중 하나입니다.
 
-| 보내는 메일 | 쓸 수 있나 |
-|---|---|
-| Gmail | 2단계 인증 + **앱 비밀번호**로 가능 (하루 500통 한도) |
-| Outlook.com·Hotmail | 비밀번호 방식 SMTP 를 막아 쓸 수 없음 (받는 주소로는 문제없음) |
-| 네이버 메일 | 앱 비밀번호가 필요하고, 해외 접속을 기본으로 막아 GitHub 서버에서 실패하기 쉬움 |
+| 보내는 계정 | 보내는 방식 | 준비 |
+|---|---|---|
+| **Outlook.com** (@outlook.kr·@outlook.com·@hotmail.com) | Microsoft Graph 메일 API | Microsoft 앱 등록 + 이 PC 에서 로그인 한 번 |
+| Gmail | SMTP | 2단계 인증 + 앱 비밀번호 |
+
+Outlook.com 은 비밀번호 방식 SMTP 를 막았고(OAuth 만 허용), 새 계정은 SMTP 자체가 꺼진 경우가 많아 메일 API 로 보냅니다.
+둘 다 설정하면 Outlook 으로 보냅니다. 네이버 메일은 해외(GitHub 서버) 접속을 기본으로 막아 권하지 않습니다.
+
+#### Outlook.com 계정으로 보내기
+
+1. **앱 등록** — https://entra.microsoft.com 에 보낼 Outlook 계정으로 로그인 → **앱 등록 → 새 등록**
+   - 이름: `sec-brief`
+   - 지원되는 계정 유형: **개인 Microsoft 계정만**
+   - 리디렉션 URI: 플랫폼 **퍼블릭 클라이언트/네이티브(모바일 및 데스크톱)**, 주소 `http://localhost`
+   - **등록** 후 **개요** 화면의 **애플리케이션(클라이언트) ID** 를 복사해 둡니다(비밀값 아님).
+
+   > 개인 계정은 디렉터리가 없어 앱 등록 화면이 열리지 않거나 `AADSTS50020`('Microsoft Services' 테넌트) 오류가 날 수 있습니다.
+   > 그때는 같은 계정으로 [Azure 무료 계정](https://azure.microsoft.com/free/)에 가입하면 디렉터리가 만들어집니다
+   > (본인 확인으로 휴대폰·카드 정보를 묻지만 앱 등록에는 요금이 없습니다). 이 단계가 막히면 아래 Gmail 방법을 쓰세요.
+2. **API 사용 권한 → 권한 추가 → Microsoft Graph → 위임된 권한** 에서 `Mail.Send` 를 추가합니다(`User.Read` 는 처음부터 있음).
+   받은 메일을 읽는 권한은 필요 없습니다.
+3. **이 PC 에서 로그인 (한 번)**
+
+   ```powershell
+   cd C:\Users\user\sec-brief
+   node src/cli.mjs mail-login
+   ```
+
+   애플리케이션 ID 를 붙여 넣으면 브라우저가 열립니다. 보낼 Outlook 계정으로 로그인하고 권한에 동의하면
+   그 계정으로 확인 메일이 오고, 리프레시 토큰이 클립보드에 복사됩니다.
+4. 저장소 Secrets 에 넣습니다.
+
+   | 이름 | 값 |
+   |---|---|
+   | `OUTLOOK_CLIENT_ID` | 1의 애플리케이션(클라이언트) ID |
+   | `OUTLOOK_REFRESH_TOKEN` | 3에서 클립보드에 복사된 값(그대로 붙여 넣기) |
+   | `MAIL_TO` | (선택) 받을 주소. 여러 개면 쉼표로 구분(서로 주소가 보이지 않게 숨은 참조). 비우면 보내는 계정 자신에게 |
+
+5. **Run workflow → 연결 확인 메시지만** 으로 확인 메일이 오는지 봅니다(정크 메일함도 확인).
+
+리프레시 토큰은 매일 실행 때 새 값으로 바뀌고, 새 값은 `data/mail-state.json` 에 암호화해 저장합니다
+(키는 `OUTLOOK_REFRESH_TOKEN` 에서 유도 — 카카오와 같은 방식, 저장소만으로는 풀 수 없음). 다음 경우에는 `mail-login` 을 다시 하고
+`OUTLOOK_REFRESH_TOKEN` 을 바꾸세요: 실행이 두세 달 멈췄을 때, 계정 비밀번호를 바꿨을 때,
+[계정의 앱 권한](https://account.live.com/consent/Manage)에서 sec-brief 를 지웠을 때(오류에 `invalid_grant` 가 보입니다).
+새로 만든 Outlook 계정은 처음 보낼 때 outlook.com 에서 휴대폰 확인을 요구할 수 있습니다(`ErrorMessageSubmissionBlocked`).
+
+#### Gmail 로 보내기
 
 1. 보낼 Gmail 계정에서 **2단계 인증**을 켭니다: https://myaccount.google.com/security → '2단계 인증'
 2. **앱 비밀번호**를 만듭니다: https://myaccount.google.com/apppasswords → 앱 이름 `sec-brief` →
@@ -216,6 +258,7 @@ node src/cli.mjs build           # _site/ 웹 페이지
 node src/cli.mjs serve           # http://localhost:8080
 node src/cli.mjs preview         # 카카오톡으로 보낼 메시지(JSON)만 출력
 node src/cli.mjs preview --mail  # 메일 제목 출력, 본문은 _site/mail-preview.html
+node src/cli.mjs mail-login      # 처음 한 번: Outlook.com 계정 로그인(메일 발송 토큰)
 node src/cli.mjs send --only mail --test   # 메일 연결만 확인
 npm test                         # 자동 시험
 ```
@@ -249,7 +292,9 @@ npm test                         # 자동 시험
 - 웹 페이지는 외부 스크립트·글꼴을 쓰지 않고, 모든 글을 이스케이프하며, http(s) 주소만 링크로 만듭니다.
 - RSS 는 DTD·외부 엔티티를 해석하지 않는 방식으로 읽고, 응답 크기·시간에 상한을 둡니다.
 - `kakao-login` 의 임시 서버는 127.0.0.1 에서만 열리고, 요청 확인값(state)이 다른 요청은 무시합니다.
-- 메일은 TLS(465 SSL 또는 587 STARTTLS 필수)로만 보내고, 본문의 외부 글은 모두 이스케이프하며 스크립트·외부 이미지를 넣지 않습니다.
+- 메일은 HTTPS(Outlook 메일 API) 또는 TLS(SMTP 465 SSL·587 STARTTLS 필수)로만 보내고, 본문의 외부 글은 모두 이스케이프하며 스크립트·외부 이미지를 넣지 않습니다.
+  Outlook 은 메일 보내기(`Mail.Send`)와 기본 프로필 읽기 권한만 요청하고 받은 메일을 읽는 권한은 요청하지 않습니다.
+  로그인은 클라이언트 비밀 없이 PKCE·확인값(state)으로 보호하고, Actions 기록에서는 토큰과 메일 주소를 가립니다.
   메일 주소·SMTP 계정은 Secrets 에만 있고 저장소에 남는 발송 기록에는 받는 사람 수만 적습니다.
 
 ## 파일 구성
@@ -272,6 +317,7 @@ sec-brief/
 │   ├── brief.mjs               Markdown·카카오 메시지
 │   ├── kakao.mjs               토큰 갱신·암호화 보관·발송·로그인 도우미
 │   ├── mail.mjs                (선택) 메일 본문·SMTP 발송
+│   ├── outlook.mjs             (선택) Outlook.com 메일 API 발송·토큰 갱신·로그인 도우미
 │   ├── site.mjs, site-assets.mjs  웹 이력
 │   ├── store.mjs               이력 저장·중복 방지(최근 브리핑에서 읽음)
 │   └── legacy.mjs              이전 브리핑 옮기기
@@ -293,6 +339,11 @@ sec-brief/
 | 메시지는 오는데 버튼이 없음 | [제품 링크 관리] > [웹 도메인] 에 `https://<아이디>.github.io` 등록 |
 | 카드를 눌렀더니 404 | 웹 게시가 실패했거나 아직 반영 전 — Actions 의 '웹 이력 게시' 작업과 Pages 설정(Source: GitHub Actions) |
 | 브리핑에 '수집 실패' | 하단 수집 상태의 오류 문구. NVD 는 가끔 느리거나 점검 중입니다 |
+| Outlook `invalid_grant` | 리프레시 토큰 만료·취소 → `mail-login` 다시, `OUTLOOK_REFRESH_TOKEN` 교체 |
+| Outlook `AADSTS50011` (로그인 때) | 리디렉션 URI 를 '퍼블릭 클라이언트/네이티브(모바일 및 데스크톱)'에 `http://localhost` 로 등록했는지 |
+| Outlook `AADSTS700016`·`unauthorized_client` | 애플리케이션 ID 값, 지원되는 계정 유형이 '개인 Microsoft 계정만'인지 |
+| Outlook `ErrorAccessDenied` | API 사용 권한에 `Mail.Send` 추가 후 `mail-login` 다시 |
+| Outlook `ErrorMessageSubmissionBlocked` | outlook.com 에 로그인해 계정 확인(휴대폰 등) 안내를 따름 |
 | 메일 `SMTP 로그인 실패` | Gmail 은 계정 비밀번호가 아니라 **앱 비밀번호**를 `SMTP_PASS` 에. 2단계 인증을 끄면 앱 비밀번호도 무효 |
 | 메일 `연결하지 못했습니다` | `SMTP_HOST`·`SMTP_PORT` 값. 네이버는 해외 접속 차단 설정 |
 | 메일이 안 보임 | 받는 쪽 스팸(정크) 메일함. Actions 로그에 '메일 발송 완료'가 있으면 보낸 것입니다 |

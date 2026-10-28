@@ -1,22 +1,26 @@
-// 메일 발송(선택): SMTP 로 브리핑을 HTML 메일(+텍스트 본문)로 보낸다.
-// 공개 저장소이므로 받는 주소·계정·비밀번호는 저장소가 아니라 비밀값(환경 변수)으로만 받는다.
-//   SMTP_HOST, SMTP_PORT(기본 465), SMTP_USER, SMTP_PASS, MAIL_TO(쉼표로 여러 개), MAIL_FROM(선택)
+// 메일 발송(선택): 브리핑을 HTML 메일로 보낸다. 보내는 길은 둘 중 하나(둘 다 있으면 Outlook).
+//   Outlook.com(개인 Microsoft 계정): OUTLOOK_CLIENT_ID, OUTLOOK_REFRESH_TOKEN — Graph 메일 API (outlook.mjs)
+//   SMTP(Gmail 앱 비밀번호 등)     : SMTP_HOST, SMTP_PORT(기본 465), SMTP_USER, SMTP_PASS, MAIL_FROM(선택)
+//   받는 주소: MAIL_TO(쉼표로 여러 개). Outlook 은 비우면 보내는 계정 자신에게.
+// 공개 저장소이므로 주소·계정·토큰은 저장소가 아니라 비밀값(환경 변수)으로만 받고, Actions 기록에서는 가린다.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { alertOf, briefUrl, emptyNote, renderMarkdown, vulnBadges } from './brief.mjs';
 import { secret } from './config.mjs';
+import { getAccount, mask, obtainAccessToken, outlookConfigured, sendGraphMail } from './outlook.mjs';
 import { writeAtomic } from './store.mjs';
 import { escapeHtml as h, kstIso, safeUrl, shortDay, truncate, weekdayKo } from './util.mjs';
 
 const EMAIL_RE = /^[^\s@<>(),;:"]+@[^\s@<>(),;:"]+\.[^\s@<>(),;:"]+$/;
 
-/** 비밀값에서 메일 설정을 읽는다. 받는 주소나 서버가 없으면 null(메일 끔). */
+/** 비밀값에서 메일 설정을 읽는다. 보낼 길(Outlook, 또는 SMTP+받는 주소)이 없으면 null(메일 끔). */
 export function mailSettings(env = process.env) {
-  const host = secret('SMTP_HOST', env);
   const to = secret('MAIL_TO', env).split(/[,;\s]+/).filter(Boolean);
-  if (!host || !to.length) return null;
   const bad = to.filter((a) => !EMAIL_RE.test(a));
   if (bad.length) throw new Error(`MAIL_TO 에 메일 주소가 아닌 값이 있습니다(${bad.length}개). 쉼표로 구분해 넣으세요.`);
+  if (outlookConfigured(env)) return { kind: 'outlook', to };
+  const host = secret('SMTP_HOST', env);
+  if (!host || !to.length) return null;
   const port = Number(secret('SMTP_PORT', env) || 465);
   // 465 는 처음부터 TLS(SSL), 그 밖(587 등)은 STARTTLS 를 반드시 쓴다. none 은 시험용.
   const security = secret('SMTP_SECURITY', env) || (port === 465 ? 'ssl' : 'starttls');
@@ -24,7 +28,7 @@ export function mailSettings(env = process.env) {
   // Gmail 앱 비밀번호는 'abcd efgh ijkl mnop' 처럼 띄어 보여 준다 → 그대로 붙여 넣어도 되게 공백을 뺀다
   const raw = secret('SMTP_PASS', env);
   const pass = /^[a-z]{4}( [a-z]{4}){3}$/i.test(raw) ? raw.replace(/ /g, '') : raw;
-  return { host, port, security, user, pass, from: secret('MAIL_FROM', env) || user, to };
+  return { kind: 'smtp', host, port, security, user, pass, from: secret('MAIL_FROM', env) || user, to };
 }
 
 export function mailConfigured(env = process.env) {
@@ -204,19 +208,20 @@ export function explainMailError(err, s) {
   }
 }
 
-/**
- * 브리핑 메일 발송. 같은 날짜는 한 번만 보낸다(--force 로 다시).
- * 받는 사람이 여럿이면 서로의 주소가 보이지 않게 숨은 참조로 보낸다.
- * @returns {Promise<{sent:boolean, skipped?:boolean, reason?:string, accepted?:number, rejected?:number}>}
- */
-export async function sendBriefMail(cfg, brief, { test = false, force = false, env = process.env, transportOverride } = {}) {
-  const s = mailSettings(env);
-  if (!s) return { sent: false, skipped: true, reason: '메일 설정이 없어 건너뜁니다 (SMTP_HOST·MAIL_TO).' };
-  const path = mailStatePath(cfg);
-  const state = loadMailState(path);
-  if (!test && !force && brief && state.last_sent === brief.date) {
-    return { sent: false, skipped: true, reason: `${brief.date} 브리핑 메일은 이미 보냈습니다 (다시 보내려면 --force).` };
-  }
+/** Outlook.com: 토큰 갱신(새 토큰은 바로 저장) → 계정 주소 확인 → Graph 로 발송 */
+async function sendViaOutlook(path, s, msg, { env, log }) {
+  const { accessToken, rotated } = await obtainAccessToken(path, { env, log });
+  const { address } = await getAccount(accessToken, { env });
+  if (!address) throw new Error('Outlook 계정 주소를 확인하지 못했습니다. mail-login 을 다시 하세요.');
+  mask(address, env);
+  const to = s.to.length ? s.to : [address];
+  // 여럿이면 서로 주소가 보이지 않게: 받는 사람 칸은 보내는 계정, 실제 받는 사람은 숨은 참조
+  const envelope = to.length > 1 ? { to: [address], bcc: to } : { to };
+  await sendGraphMail(accessToken, { subject: msg.subject, html: msg.html, ...envelope, env });
+  return { via: 'Outlook', accepted: to.length, rejected: 0, rotated };
+}
+
+async function sendViaSmtp(s, msg, { transportOverride }) {
   let transport = transportOverride;
   if (!transport) {
     let nodemailer;
@@ -240,13 +245,6 @@ export async function sendBriefMail(cfg, brief, { test = false, force = false, e
       disableUrlAccess: true,
     });
   }
-  const msg = test || !brief
-    ? testMail(cfg)
-    : {
-        subject: mailSubject(brief, cfg.site.title),
-        html: renderEmailHtml(brief, { siteUrl: cfg.site.url, title: cfg.site.title }),
-        text: renderMarkdown(brief, { siteUrl: cfg.site.url }),
-      };
   const envelope = s.to.length > 1 ? { to: s.from, bcc: s.to } : { to: s.to[0] };
   let info;
   try {
@@ -260,9 +258,35 @@ export async function sendBriefMail(cfg, brief, { test = false, force = false, e
   const accepted = count(info.accepted) || (info.accepted || []).length;
   const rejected = count(info.rejected);
   if (!accepted) throw new Error(`받는 주소가 모두 거부됐습니다 (${rejected}개). MAIL_TO 를 확인하세요.`);
-  if (!test && brief) {
-    // 공개 저장소에 남으므로 주소는 적지 않는다(건수만)
-    writeAtomic(path, `${JSON.stringify({ version: 1, last_sent: brief.date, last_sent_at: kstIso(), recipients: s.to.length }, null, 2)}\n`);
+  return { via: 'SMTP', accepted, rejected };
+}
+
+/**
+ * 브리핑 메일 발송. 같은 날짜는 한 번만 보낸다(--force 로 다시).
+ * 받는 사람이 여럿이면 서로의 주소가 보이지 않게 숨은 참조로 보낸다.
+ * @returns {Promise<{sent:boolean, skipped?:boolean, reason?:string, via?:string, accepted?:number, rejected?:number}>}
+ */
+export async function sendBriefMail(cfg, brief, { test = false, force = false, env = process.env, transportOverride, log = console.log } = {}) {
+  const s = mailSettings(env);
+  if (!s) return { sent: false, skipped: true, reason: '메일 설정이 없어 건너뜁니다 (OUTLOOK_CLIENT_ID·OUTLOOK_REFRESH_TOKEN 또는 SMTP_HOST·MAIL_TO).' };
+  const path = mailStatePath(cfg);
+  if (!test && !force && brief && loadMailState(path).last_sent === brief.date) {
+    return { sent: false, skipped: true, reason: `${brief.date} 브리핑 메일은 이미 보냈습니다 (다시 보내려면 --force).` };
   }
-  return { sent: true, accepted, rejected };
+  // 공개 저장소의 Actions 기록에 주소가 찍히지 않게(오류 문구 포함)
+  for (const addr of s.to) mask(addr, env);
+  const msg = test || !brief
+    ? testMail(cfg)
+    : {
+        subject: mailSubject(brief, cfg.site.title),
+        html: renderEmailHtml(brief, { siteUrl: cfg.site.url, title: cfg.site.title }),
+        text: renderMarkdown(brief, { siteUrl: cfg.site.url }),
+      };
+  const r = s.kind === 'outlook' ? await sendViaOutlook(path, s, msg, { env, log }) : await sendViaSmtp(s, msg, { transportOverride });
+  if (!test && brief) {
+    // 공개 저장소에 남으므로 주소는 적지 않는다(건수만). Outlook 토큰 상태는 그대로 둔다.
+    const next = { ...loadMailState(path), version: 1, last_sent: brief.date, last_sent_at: kstIso(), recipients: r.accepted };
+    writeAtomic(path, `${JSON.stringify(next, null, 2)}\n`);
+  }
+  return { sent: true, ...r };
 }

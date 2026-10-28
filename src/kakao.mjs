@@ -16,7 +16,7 @@ import { buildKakaoTemplate } from './brief.mjs';
 import { secret } from './config.mjs';
 import { HttpError, request } from './http.mjs';
 import { writeAtomic } from './store.mjs';
-import { kstIso, sha256 } from './util.mjs';
+import { escapeHtml, kstIso, sha256 } from './util.mjs';
 
 const HINTS = {
   KOE322: '리프레시 토큰이 만료됐거나 무효입니다. 로컬에서 `node src/cli.mjs kakao-login` 을 다시 실행해 새 값을 KAKAO_REFRESH_TOKEN 에 넣으세요.',
@@ -104,23 +104,24 @@ export async function sendMemo(accessToken, templateObject, { env } = {}) {
 
 // ------------------------------------------------------------------ 토큰 상태 (암호화)
 
-function keyFrom(seed) {
-  return Buffer.from(hkdfSync('sha256', Buffer.from(seed, 'utf8'), Buffer.from('sec-brief/kakao'), Buffer.from('refresh-token-state/v1'), 32));
+// ns: 서비스별로 키를 나눈다(kakao·outlook). 카카오 상태 파일과 호환되게 기본값은 kakao.
+function keyFrom(seed, ns = 'kakao') {
+  return Buffer.from(hkdfSync('sha256', Buffer.from(seed, 'utf8'), Buffer.from(`sec-brief/${ns}`), Buffer.from('refresh-token-state/v1'), 32));
 }
 
 export function seedId(seed) {
   return sha256(`sec-brief:${seed}`).slice(0, 16);
 }
 
-export function encryptToken(seed, payload) {
+export function encryptToken(seed, payload, ns = 'kakao') {
   const iv = randomBytes(12);
-  const c = createCipheriv('aes-256-gcm', keyFrom(seed), iv);
+  const c = createCipheriv('aes-256-gcm', keyFrom(seed, ns), iv);
   const data = Buffer.concat([c.update(JSON.stringify(payload), 'utf8'), c.final()]);
   return { alg: 'A256GCM', iv: iv.toString('base64'), tag: c.getAuthTag().toString('base64'), data: data.toString('base64') };
 }
 
-export function decryptToken(seed, box) {
-  const d = createDecipheriv('aes-256-gcm', keyFrom(seed), Buffer.from(box.iv, 'base64'));
+export function decryptToken(seed, box, ns = 'kakao') {
+  const d = createDecipheriv('aes-256-gcm', keyFrom(seed, ns), Buffer.from(box.iv, 'base64'));
   d.setAuthTag(Buffer.from(box.tag, 'base64'));
   return JSON.parse(Buffer.concat([d.update(Buffer.from(box.data, 'base64')), d.final()]).toString('utf8'));
 }
@@ -143,10 +144,10 @@ function saveState(path, state) {
 }
 
 /** 지금 쓸 리프레시 토큰: 시드가 같으면 저장된(갱신된) 값, 아니면 시드 */
-export function currentRefreshToken(state, seed) {
+export function currentRefreshToken(state, seed, ns = 'kakao') {
   if (state?.seed === seedId(seed) && state.token) {
     try {
-      const v = decryptToken(seed, state.token);
+      const v = decryptToken(seed, state.token, ns);
       if (v?.refresh_token) return { token: v.refresh_token, from: 'state' };
     } catch {
       // 키가 맞지 않거나 파일이 손상됨 → 시드로
@@ -241,7 +242,7 @@ export async function sendBrief(cfg, brief, { test = false, force = false, env =
 
 // ------------------------------------------------------------------ 처음 한 번: 로그인 도우미
 
-function openBrowser(url) {
+export function openBrowser(url) {
   try {
     const [cmd, args] =
       process.platform === 'win32'
@@ -256,21 +257,21 @@ function openBrowser(url) {
   }
 }
 
-const DONE_PAGE = (ok, msg) => `<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>카카오 로그인 ${ok ? '완료' : '실패'}</title><body style="font-family:system-ui,'Malgun Gothic',sans-serif;max-width:560px;margin:60px auto;padding:0 16px;line-height:1.6">
-<h1 style="font-size:22px">${ok ? '로그인 완료' : '로그인 실패'}</h1><p>${msg}</p><p>이 창을 닫고 터미널로 돌아가세요.</p></body></html>`;
+const DONE_PAGE = (ok, msg, label = '카카오') => `<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escapeHtml(label)} 로그인 ${ok ? '완료' : '실패'}</title><body style="font-family:system-ui,'Malgun Gothic',sans-serif;max-width:560px;margin:60px auto;padding:0 16px;line-height:1.6">
+<h1 style="font-size:22px">${ok ? '로그인 완료' : '로그인 실패'}</h1><p>${escapeHtml(msg)}</p><p>이 창을 닫고 터미널로 돌아가세요.</p></body></html>`;
 
-/** 인가 코드를 받을 때까지 로컬 서버를 연다. */
-export function waitForCode({ port, state, timeoutMs = 5 * 60 * 1000, host = '127.0.0.1' }) {
+/** 인가 코드를 받을 때까지 로컬 서버를 연다. (path: 리다이렉트 주소의 경로, label: 화면에 쓸 서비스 이름) */
+export function waitForCode({ port, state, timeoutMs = 5 * 60 * 1000, host = '127.0.0.1', path = '/oauth', label = '카카오' }) {
   return new Promise((resolve, reject) => {
     const server = createServer((req, res) => {
       const u = new URL(req.url, `http://localhost:${port}`);
-      if (u.pathname !== '/oauth') {
+      if (u.pathname !== path) {
         res.writeHead(404).end();
         return;
       }
       const finish = (ok, msg, value) => {
-        res.writeHead(ok ? 200 : 400, { 'content-type': 'text/html; charset=utf-8' }).end(DONE_PAGE(ok, msg));
+        res.writeHead(ok ? 200 : 400, { 'content-type': 'text/html; charset=utf-8' }).end(DONE_PAGE(ok, msg, label));
         clearTimeout(timer);
         server.close();
         if (ok) resolve(value);
@@ -278,11 +279,11 @@ export function waitForCode({ port, state, timeoutMs = 5 * 60 * 1000, host = '12
       };
       // 확인값이 다른 요청(다른 탭·위조 요청)은 거절만 하고 진짜 콜백을 계속 기다린다
       if (u.searchParams.get('state') !== state) {
-        res.writeHead(400, { 'content-type': 'text/html; charset=utf-8' }).end(DONE_PAGE(false, '요청 확인값(state)이 맞지 않아 무시했습니다.'));
+        res.writeHead(400, { 'content-type': 'text/html; charset=utf-8' }).end(DONE_PAGE(false, '요청 확인값(state)이 맞지 않아 무시했습니다.', label));
         return undefined;
       }
       if (u.searchParams.get('error')) {
-        return finish(false, `카카오가 오류를 돌려줬습니다: ${u.searchParams.get('error')} ${u.searchParams.get('error_description') || ''}`.trim());
+        return finish(false, `${label} 가 오류를 돌려줬습니다: ${u.searchParams.get('error')} ${u.searchParams.get('error_description') || ''}`.trim());
       }
       const code = u.searchParams.get('code');
       if (!code) return finish(false, '인가 코드가 없습니다.');

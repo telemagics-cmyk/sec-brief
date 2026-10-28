@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
@@ -58,6 +58,17 @@ test('워크플로: 액션은 커밋 해시로 고정, run 안에 ${{ }} 직접 
   assert.match(daily, /--scheduled/);
   assert.match(daily, /concurrency:/);
   assert.match(readFileSync(join(ROOT, '.github', 'workflows', 'site.yml'), 'utf8'), /group: sec-brief/);
+});
+
+test('워크플로: 코드가 읽는 비밀값은 모두 daily-brief 에서 넘겨준다(빠뜨리면 조용히 꺼짐)', () => {
+  const daily = readFileSync(join(ROOT, '.github', 'workflows', 'daily-brief.yml'), 'utf8');
+  const testOnly = new Set(['SMTP_SECURITY']);
+  const names = new Set();
+  for (const f of readdirSync(join(ROOT, 'src')).filter((x) => x.endsWith('.mjs'))) {
+    for (const m of readFileSync(join(ROOT, 'src', f), 'utf8').matchAll(/secret\('([A-Z0-9_]+)'/g)) names.add(m[1]);
+  }
+  assert.ok(names.has('OUTLOOK_REFRESH_TOKEN'));
+  for (const n of names) if (!testOnly.has(n)) assert.match(daily, new RegExp(`${n}: \\$\\{\\{ secrets\\.${n} \\}\\}`), n);
 });
 
 test('설정: 예약 실행의 발송 시각은 05:05 시작과 06:35 재시도 사이', () => {

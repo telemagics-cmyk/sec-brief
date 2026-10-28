@@ -3,11 +3,12 @@
 매일 아침 **이슈가 된 보안 뉴스와 주요 취약점**을 모아 **카카오톡(나에게 보내기)** 과 (선택) **메일**로 받고,
 지난 브리핑을 **웹 이력**(날짜별 페이지·취약점 색인·검색)으로 남깁니다.
 
-GitHub Actions 가 매일 05:05(KST)에 시작해 06:30 이후에 보냅니다(06:35 재시도). PC 를 켜 둘 필요가 없고,
+매일 06:00(KST)에 무료 예약 서비스(cron-job.org)가 GitHub Actions 를 시작시키고 06:30 에 보냅니다
+(06:15 재호출, GitHub 자체 예약 05:05·06:35 는 예비). PC 를 켜 둘 필요가 없고,
 공개 저장소라면 비용이 들지 않습니다(Claude 요약을 켜면 API 사용료만 듭니다).
 
 ```
-매일 05:05 KST 시작 (06:35 재시도) ─ GitHub Actions
+매일 06:00 KST 시작 (06:15 재호출) ─ cron-job.org 가 부르는 GitHub Actions (GitHub 예약은 예비)
   ├─ 수집: CISA KEV · NVD · FIRST EPSS · KISA 보호나라(보안공지·취약점·경보단계)
   │        국내외 보안 매체 RSS · Google 뉴스(국내) · (선택) 네이버 뉴스 검색
   ├─ 선별: 여러 매체가 함께 다룬 사건을 묶어 '이슈' 판단, 홍보·행사 기사 제외
@@ -15,7 +16,7 @@ GitHub Actions 가 매일 05:05(KST)에 시작해 06:30 이후에 보냅니다(0
   ├─ (선택) Claude: 기사 고르기·한국어 요약 — 사실(CVE·점수·링크)은 원본 그대로
   ├─ 이력 저장: data/briefs/YYYY/YYYY-MM-DD.json·.md → 저장소에 커밋
   ├─ 웹 이력 게시: GitHub Pages (https://<아이디>.github.io/<저장소>/)
-  └─ 06:30 이후 발송
+  └─ 06:30 발송
        ├─ 카카오톡: 주요 3건 카드 + [오늘 브리핑 전체] [지난 브리핑] 버튼
        └─ (선택) 메일: 브리핑 전문(웹 페이지와 같은 순서)
 ```
@@ -99,6 +100,54 @@ REST API 키와 클라이언트 시크릿을 물으면 붙여 넣습니다. 브�
 연결만 확인하려면 **연결 확인 메시지만** 을 고르세요(카카오톡·메일 모두 짧은 확인 메시지만 갑니다).
 손으로 실행하면 06:30 을 기다리지 않고 바로 보냅니다.
 
+### 6. 정시에 받기 — 외부 예약 호출 (권장, 약 10분)
+
+GitHub 자체 예약(cron)은 붐비면 시작이 늦어집니다. 실측으로는 매일 2~3.5시간 늦었습니다
+(2026-10-25~28: 05:05 예약이 07:16~08:35 에 시작). 그래서 무료 예약 서비스 [cron-job.org](https://cron-job.org) 가
+매일 06:00·06:15 에 GitHub 에 '실행' 요청을 보내게 합니다. 요청으로 시작한 실행은 늦지 않고 바로 시작하며,
+수집·게시를 마친 뒤 06:30 에 보냅니다. 06:15 호출은 06:00 실행이 실패했을 때의 재시도이고, 이미 끝났으면 건너뜁니다.
+GitHub 자체 예약(05:05·06:35)은 그대로 두어 외부 호출이 오지 않은 날의 예비로 씁니다(같은 날 두 번 보내지 않음).
+
+1. **실행 전용 토큰 만들기** — GitHub 오른쪽 위 프로필 사진 → **Settings → Developer settings →
+   Personal access tokens → Fine-grained tokens → Generate new token**
+   - Token name: `sec-brief cron-job.org`
+   - Expiration: 1년 (만료일을 달력에 적어 두세요)
+   - Repository access: **Only select repositories** → `sec-brief` 하나만
+   - Permissions: **Actions → Read and write** 하나만 (Metadata 읽기는 자동으로 붙음)
+   - **Generate token** → `github_pat_…` 값을 복사 (화면을 벗어나면 다시 볼 수 없음)
+
+   이 토큰으로는 이 저장소의 워크플로를 실행·취소하는 것만 할 수 있고, 코드·Secrets 는 읽거나 바꿀 수 없습니다.
+
+2. **cron-job.org 작업 만들기** — [console.cron-job.org](https://console.cron-job.org) 에 가입(무료)·로그인 → **CREATE CRONJOB**
+   - Title: `sec-brief`
+   - URL: `https://api.github.com/repos/<아이디>/sec-brief/actions/workflows/daily-brief.yml/dispatches`
+   - 실행 일정: 매일 **06:00·06:15** — 사용자 지정(Custom)에서 시(Hours) `6`, 분(Minutes) `0`·`15`
+     (식으로 넣는 칸이면 `0,15 6 * * *`). 06:00 한 번만 해도 됩니다(06:15 재시도가 빠질 뿐).
+   - 시간대(Time zone): **Asia/Seoul** — 기본값이 UTC 일 수 있으니 꼭 확인
+   - 알림: 실행이 실패하면 메일 받기를 켭니다
+   - 고급(ADVANCED) 탭
+     - Request method: **POST**
+     - Headers — 아래 4개 (Key / Value)
+
+       | Key | Value |
+       |---|---|
+       | `Authorization` | `Bearer github_pat_…` (1에서 복사한 토큰, 앞에 `Bearer` 와 띄어쓰기 한 칸) |
+       | `Accept` | `application/vnd.github+json` |
+       | `X-GitHub-Api-Version` | `2026-03-10` |
+       | `Content-Type` | `application/json` |
+
+     - Request body: `{"ref":"main","inputs":{"scheduled":"true"}}`
+   - **TEST RUN** → 응답이 `200` 이면 성공(본문에 실행 주소가 옵니다) → 저장(CREATE / SAVE)
+
+3. **확인** — 저장소 **Actions** 에 **정시 실행 (외부 호출)** 이 생깁니다. 06:30 전이면 발송 단계가 06:30 까지 기다리고,
+   오늘 것을 이미 보냈다면 수집·발송을 건너뜁니다. 실행 목록 이름으로 어느 쪽이 돌았는지 구분합니다:
+   **정시 실행 (외부 호출)** / **GitHub 예약 실행 (예비)** / **직접 실행**.
+   예비가 발송까지 한 날은 그 실행에 '늦은 발송' 경고가 붙습니다 — cron-job.org 실행 기록(History)을 보세요.
+
+밤 00:00~04:40 에 TEST RUN 을 누르면 그 실행은 브리핑만 만들고 보내지는 않습니다(06:30 까지 너무 길어서). 그날 06:00 호출이 보냅니다.
+토큰이 만료되면 cron-job.org 기록에 `401` 이 찍히고 그날부터는 GitHub 예비가 늦게 보냅니다.
+같은 설정으로 새 토큰을 받아(GitHub 의 그 토큰 화면에서 **Regenerate token**, 없으면 1을 다시) cron-job.org 의 `Authorization` 값을 바꾸세요.
+
 ### 메일로도 받기 (선택)
 
 설정하면 카카오톡과 함께 브리핑 전문을 메일로도 보냅니다(설정하지 않으면 메일은 건너뜀). 보내는 계정은 둘 중 하나입니다.
@@ -148,6 +197,11 @@ Outlook.com 은 비밀번호 방식 SMTP 를 막았고(OAuth 만 허용), 새 �
 `OUTLOOK_REFRESH_TOKEN` 을 바꾸세요: 실행이 두세 달 멈췄을 때, 계정 비밀번호를 바꿨을 때,
 [계정의 앱 권한](https://account.live.com/consent/Manage)에서 sec-brief 를 지웠을 때(오류에 `invalid_grant` 가 보입니다).
 새로 만든 Outlook 계정은 처음 보낼 때 outlook.com 에서 휴대폰 확인을 요구할 수 있습니다(`ErrorMessageSubmissionBlocked`).
+GitHub(해외 서버)에서 처음 보낼 때 Microsoft 가 스팸 의심으로 계정을 묶기도 합니다(2026-10-28 실제로 `ErrorAccountSuspend` →
+다음 실행은 `service abuse mode`). 그때는 account.microsoft.com 에 로그인해 안내대로(휴대폰 보안 코드 등) 계정을 풀고
+(그 선택지가 없으면 화면의 aka.ms/ 링크로 복구 요청 — Microsoft [잠긴 계정 안내](https://support.microsoft.com/help/13956)),
+`mail-login` 을 다시 해 `OUTLOOK_REFRESH_TOKEN` 을 바꾼 뒤
+**연결 확인 메시지만** 으로 확인합니다. 풀고 나서도 다시 묶이면 Gmail 로 바꾸세요(Outlook Secrets 를 지우면 SMTP 로 보냄).
 
 #### Gmail 로 보내기
 
@@ -204,18 +258,20 @@ Outlook.com 은 비밀번호 방식 SMTP 를 막았고(OAuth 만 허용), 새 �
 | `summarizer.engine` | `auto`(키가 있으면 Claude) / `claude` / `rules` | auto |
 | `summarizer.model` | Claude 모델 (`claude-haiku-5-5` 월 약 0.1~0.2달러 / `claude-opus-5-5` 월 약 3~6달러) | claude-haiku-5-5 |
 | `kakao.template` | `list`(카드 3건) / `text`(200자 글) | list |
-| `delivery.not_before` | 예약 실행이 이 시각(KST) 전에 끝나면 기다렸다 보냄. `""` 이면 끝나는 대로 | 06:30 |
+| `delivery.not_before` | 정시·예약 실행이 이 시각(KST) 전에 끝나면 기다렸다 보냄. `""` 이면 끝나는 대로 | 06:30 |
 
-**실행 시각**은 `.github/workflows/daily-brief.yml` 의 `cron`(UTC 기준)에서 바꿉니다.
-GitHub 예약 실행은 붐비면 시작이 몇 분~몇 시간 늦어지고, 드물게 빠지기도 합니다(2026-10-24 은 06:35 예약이 08:57 에 시작).
-그래서 두 번 예약해 두었습니다.
+**실행 시각**은 cron-job.org 작업의 일정([6. 정시에 받기](#6-정시에-받기--외부-예약-호출-권장-약-10분))과
+`.github/workflows/daily-brief.yml` 의 `cron`(UTC 기준, 예비)에서 바꿉니다.
+GitHub 예약 실행은 붐비면 시작이 몇 분~몇 시간 늦어지고 드물게 빠지기도 해서(2026-10-25~28 실측 매일 2~3.5시간), 정시 실행은 외부 호출에 맡깁니다.
 
-| 예약 (UTC → KST) | 하는 일 |
+| 실행 (KST) | 하는 일 |
 |---|---|
-| `5 20 * * *` → 05:05 | 수집·이력 저장·웹 게시를 먼저 끝내고 `delivery.not_before`(06:30)까지 기다렸다 발송 |
-| `35 21 * * *` → 06:35 | 재시도. 앞 실행이 이미 만들고 보냈으면 수집·발송을 모두 건너뜀(같은 날 두 번 오지 않음) |
+| 06:00 cron-job.org 호출 | 수집·이력 저장·웹 게시를 먼저 끝내고 `delivery.not_before`(06:30)까지 기다렸다 발송 |
+| 06:15 cron-job.org 호출 | 재시도. 앞 실행이 이미 만들고 보냈으면 수집·발송을 모두 건너뜀(같은 날 두 번 오지 않음) |
+| GitHub 예약 `5 20 * * *`(05:05)·`35 21 * * *`(06:35) | 예비. 실제로는 몇 시간 늦게 시작하고, 정시 실행이 끝냈으면 모두 건너뜀 |
 
-05:05 실행이 06:30 넘어 시작해도 끝나는 대로 바로 보냅니다. 예약을 바꿀 때는 `not_before` 가 두 예약 사이에 오게 하세요.
+정시·예약 실행은 06:30 넘어 시작하면 끝나는 대로 바로 보냅니다. 시각을 바꿀 때는 외부 호출이 `not_before` 보다 15분 이상 앞서게 하세요
+(호출 → 발송 준비 약 5분, 밤중처럼 110분 넘게 이르면 그 실행은 보내지 않고 다음 실행에 맡김).
 
 ## Claude 요약 (선택)
 
@@ -270,7 +326,9 @@ npm test                         # 자동 시험
 ## 운영
 
 - **실패 알림**: 워크플로가 실패하면 GitHub 가 메일을 보냅니다(기본 알림 설정). Actions 화면에서 원인을 봅니다.
-  카카오톡과 메일은 따로 보내므로 하나가 실패해도 다른 하나는 갑니다. 실패한 쪽은 06:35 재시도 때 한 번 더 보냅니다.
+  카카오톡과 메일은 따로 보내므로 하나가 실패해도 다른 하나는 갑니다. 실패한 쪽은 06:15 재호출이나 GitHub 예비 실행 때 한 번 더 보냅니다.
+- **정시 호출 토큰**: cron-job.org 에 넣은 GitHub 토큰은 만든 지 1년에 만료됩니다. 만료 전에 새로 받아 바꾸세요([6. 정시에 받기](#6-정시에-받기--외부-예약-호출-권장-약-10분)).
+  잊어도 GitHub 예비 실행이 늦게라도 보냅니다.
 - **코드·설정을 고쳐 올리면**: `site` 워크플로가 웹 이력을 바로 다시 게시합니다(수집·발송은 하지 않음).
 - **카카오 토큰**: 리프레시 토큰은 약 60일 유효하고, 남은 기간이 1개월 미만이 되면 갱신 응답에 새 값이 옵니다.
   새 값은 `data/kakao-state.json` 에 AES-256-GCM 으로 암호화해 커밋합니다(키는 `KAKAO_REFRESH_TOKEN` 에서 유도 —
@@ -289,6 +347,9 @@ npm test                         # 자동 시험
 - 비밀값은 GitHub Secrets(로컬은 `.env`)에만 둡니다. 저장소에는 암호화된 카카오 상태 파일만 들어갑니다.
 - 공개 저장소이므로 기관 내부 정보·자산 목록을 `config.json` 에 넣지 마세요(`vulns.watch` 에 제품명 정도는 무방하나 판단은 기관 기준으로).
 - 워크플로의 액션은 커밋 해시로 고정했고, 작업별 권한을 최소로 줬으며, 입력값은 스크립트에 직접 넣지 않고 환경 변수로 넘깁니다.
+- cron-job.org 에 맡기는 토큰은 이 저장소 하나에 Actions 권한만 가진 fine-grained 토큰입니다. 새어 나가도 코드·Secrets 는 건드릴 수 없지만
+  워크플로를 실행·취소할 수는 있으니(예: '다시 만들기'로 같은 날 여러 번 발송), 의심되면 GitHub 에서 그 토큰을 지우고(Delete) 새로 만드세요.
+  저장소의 다른 비밀값은 외부 서비스에 넘기지 않습니다.
 - 웹 페이지는 외부 스크립트·글꼴을 쓰지 않고, 모든 글을 이스케이프하며, http(s) 주소만 링크로 만듭니다.
 - RSS 는 DTD·외부 엔티티를 해석하지 않는 방식으로 읽고, 응답 크기·시간에 상한을 둡니다.
 - `kakao-login` 의 임시 서버는 127.0.0.1 에서만 열리고, 요청 확인값(state)이 다른 요청은 무시합니다.
@@ -303,7 +364,7 @@ npm test                         # 자동 시험
 sec-brief/
 ├── config.json                 설정 (비밀값 없음)
 ├── .github/workflows/
-│   ├── daily-brief.yml         매일 수집·게시·발송 (05:05 시작, 06:35 재시도)
+│   ├── daily-brief.yml         매일 수집·게시·발송 (06:00 외부 호출, GitHub 예약 05:05·06:35 는 예비)
 │   ├── site.yml                코드를 바꾸면 웹 이력 다시 게시
 │   └── test.yml                코드를 바꾸면 시험
 ├── src/
@@ -344,7 +405,12 @@ sec-brief/
 | Outlook `AADSTS700016`·`unauthorized_client` | 애플리케이션 ID 값, 지원되는 계정 유형이 '개인 Microsoft 계정만'인지 |
 | Outlook `ErrorAccessDenied` | API 사용 권한에 `Mail.Send` 추가 후 `mail-login` 다시 |
 | Outlook `ErrorMessageSubmissionBlocked` | outlook.com 에 로그인해 계정 확인(휴대폰 등) 안내를 따름 |
+| Outlook `ErrorAccountSuspend`, `service abuse mode` | Microsoft 가 스팸 의심으로 계정을 묶음(토큰 문제 아님) → account.microsoft.com 로그인·휴대폰 보안 코드로 풀기 → `mail-login` 다시, `OUTLOOK_REFRESH_TOKEN` 교체. 되풀이되면 Gmail 로 |
 | 메일 `SMTP 로그인 실패` | Gmail 은 계정 비밀번호가 아니라 **앱 비밀번호**를 `SMTP_PASS` 에. 2단계 인증을 끄면 앱 비밀번호도 무효 |
 | 메일 `연결하지 못했습니다` | `SMTP_HOST`·`SMTP_PORT` 값. 네이버는 해외 접속 차단 설정 |
 | 메일이 안 보임 | 받는 쪽 스팸(정크) 메일함. Actions 로그에 '메일 발송 완료'가 있으면 보낸 것입니다 |
-| 메시지가 늦게 옴 | GitHub 예약 실행 지연. Actions 화면에서 실행이 시작된 시각을 보세요(05:05·06:35 두 번 중 먼저 시작한 쪽이 보냄) |
+| 메시지가 늦게 옴 | Actions 실행 이름이 **GitHub 예약 실행 (예비)** 면 정시 호출이 오지 않은 것 → cron-job.org 실행 기록(History)·토큰 만료일. **정시 실행 (외부 호출)** 이 06:00 이 아닌 때에 있으면 cron-job.org 작업의 시간대(Asia/Seoul) |
+| cron-job.org 기록에 `401` | 토큰 만료·오타. `Authorization` 값이 `Bearer github_pat_…` 꼴인지(Bearer 뒤 한 칸) |
+| cron-job.org 기록에 `403` | 토큰 권한이 Actions **Read and write** 인지, 저장소 선택에 `sec-brief` 가 있는지 |
+| cron-job.org 기록에 `404` | URL 의 아이디·저장소·`daily-brief.yml` 글자, 토큰의 저장소 선택 |
+| cron-job.org 기록에 `422` | 요청 본문이 `{"ref":"main","inputs":{"scheduled":"true"}}` 와 글자까지 같은지 |

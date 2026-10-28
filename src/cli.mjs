@@ -84,8 +84,8 @@ async function cmdCollect(cfg, args) {
   const { brief, skipped } = await collectBrief(cfg, opts);
   if (skipped && inActions) {
     notice(
-      process.env.GITHUB_EVENT_NAME === 'schedule'
-        ? `앞선 예약 실행이 ${brief.date} 브리핑을 이미 만들어, 이번 재시도는 수집을 건너뜁니다.`
+      args.scheduled
+        ? `앞선 실행이 ${brief.date} 브리핑을 이미 만들어, 이번 실행은 수집을 건너뜁니다.`
         : `${brief.date} 브리핑이 이미 있어 새로 만들지 않았습니다. 다시 만들려면 Run workflow 에서 '오늘 브리핑이 이미 있어도 다시 만들기'를 체크하세요.`,
     );
   }
@@ -104,9 +104,13 @@ async function cmdCollect(cfg, args) {
   return brief;
 }
 
+/** 예약 실행이 발송 시각까지 기다리는 최대 시간 — 워크플로 deliver 작업의 시간 제한(120분) 안에서 */
+const MAX_WAIT_MS = 110 * 60 * 1000;
+
 /**
  * 카카오톡·메일 발송. 설정된 수단마다 따로 보내고(하나가 실패해도 다른 하나는 보냄), 실패가 있으면 종료 코드 1.
- * --scheduled: 예약 실행 — delivery.not_before(KST) 전이면 그때까지 기다렸다 보낸다.
+ * --scheduled: 정시·예약 실행 — delivery.not_before(KST) 전이면 그때까지 기다렸다 보낸다.
+ *   MAX_WAIT_MS 보다 더 이르면(밤중에 손으로 부른 경우 등) 기다리지 않고 이번에는 보내지 않는다.
  */
 async function cmdSend(cfg, args, brief) {
   const only = typeof args.only === 'string' ? args.only : '';
@@ -128,31 +132,44 @@ async function cmdSend(cfg, args, brief) {
     } catch (err) {
       warn(`config.json 의 delivery.not_before 값이 잘못돼 기다리지 않고 보냅니다: ${err.message}`);
     }
+    if (ms > MAX_WAIT_MS) {
+      notice(`발송 시각(${notBefore} KST)까지 ${Math.ceil(ms / 60000)}분 남아 이번 실행에서는 보내지 않습니다. 다음 정시·예약 실행이 보냅니다.`);
+      return;
+    }
     if (ms > 0) {
       console.log(`발송 시각(${notBefore} KST)까지 ${Math.ceil(ms / 60000)}분 기다립니다.`);
-      await sleep(Math.min(ms, 3 * 3600 * 1000));
+      await sleep(ms);
     }
   }
 
   const opts = { test: Boolean(args.test), force: Boolean(args.force) };
   const what = b ? b.date : '연결 확인';
+  let delivered = 0;
   for (const c of active) {
     try {
       if (c.key === 'kakao') {
         const r = await sendBrief(cfg, b, opts);
         if (r.skipped) notice(r.reason);
         else {
+          delivered += 1;
           console.log(`카카오톡 발송 완료 (${r.template}${r.rotated ? ', 리프레시 토큰 갱신됨' : ''}): ${what}`);
           if (!cfg.site.url) warn('site.url(또는 SITE_URL)이 비어 있어 카카오 메시지에 웹 이력 버튼이 없습니다.');
         }
       } else {
         const r = await sendBriefMail(cfg, b, opts);
         if (r.skipped) notice(r.reason);
-        else console.log(`메일 발송 완료 (${r.via}, 받는 사람 ${r.accepted}명${r.rejected ? `, 거부 ${r.rejected}명` : ''}): ${what}`);
+        else {
+          delivered += 1;
+          console.log(`메일 발송 완료 (${r.via}, 받는 사람 ${r.accepted}명${r.rejected ? `, 거부 ${r.rejected}명` : ''}): ${what}`);
+        }
       }
     } catch (err) {
       fail(`${c.name} 발송 실패: ${err?.message || err}`);
     }
+  }
+  // 정시 실행(외부 호출)이 보냈다면 GitHub 예약은 건너뛰었을 것이다 — 예비가 보냈다면 늦게 간 것
+  if (delivered && !args.test && process.env.GITHUB_EVENT_NAME === 'schedule') {
+    warn('GitHub 예비 예약 실행이 보냈습니다(늦은 발송). 06:00 정시 호출이 오지 않았거나 그 실행이 보내지 못했습니다 — cron-job.org 실행 기록과 실행 토큰 만료일을 확인하세요(README 정시에 받기).');
   }
 }
 

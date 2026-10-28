@@ -39,6 +39,8 @@ before(async () => {
         const f = Object.fromEntries(new URLSearchParams(body));
         if (f.client_id !== CLIENT) return aad(res, 'unauthorized_client', 700016, `Application with identifier '${f.client_id}' was not found.`);
         if (!/Mail\.Send/.test(f.scope) || !/offline_access/.test(f.scope)) return aad(res, 'invalid_scope', 70011, 'bad scope');
+        // 2026-10-28 실제 응답: 발송 정지 뒤 토큰 갱신도 이 문구로 막힘
+        if (f.refresh_token === 'abused') return aad(res, 'invalid_grant', 70000, 'User account is found to be in service abuse mode.');
         if (f.grant_type === 'refresh_token' && !valid.has(f.refresh_token)) {
           return aad(res, 'invalid_grant', 70000, 'The provided value for the input parameter refresh_token is not valid.');
         }
@@ -195,6 +197,30 @@ test('Outlook 오류 안내: 만료된 토큰·권한 없음·잘못된 앱 ID, 
   s = setup({ OUTLOOK_CLIENT_ID: '99999999-9999-9999-9999-999999999999' });
   await assert.rejects(sendBriefMail(s.cfg, sampleBrief(), { env: s.env, log: quiet }), /unauthorized_client.*AADSTS700016.*지원되는 계정 유형/);
   assert.ok(!existsSync(join(s.dir, 'mail-state.json')));
+  rmSync(s.dir, { recursive: true, force: true });
+});
+
+test('Outlook 오류 안내: 계정 정지·서비스 남용 모드는 토큰 만료가 아니라 계정 잠금으로 안내', async () => {
+  // 2026-10-28 GitHub Actions 에서 실제로 받은 두 응답
+  let s = setup();
+  sendError = {
+    status: 403,
+    body: { error: { code: 'ErrorAccountSuspend', message: 'Account suspended. Follow the instructions in your Inbox to verify your account., WASCL UserAction verdict is not None. Actual verdict is Suspend, ShowTierUpgrade.' } },
+  };
+  await assert.rejects(sendBriefMail(s.cfg, sampleBrief(), { env: s.env, log: quiet }), (err) => {
+    assert.match(err.message, /^Outlook ErrorAccountSuspend: Account suspended/);
+    assert.match(err.message, /스팸 의심으로 이 계정을 묶었습니다.*휴대폰 보안 코드.*mail-login/);
+    return true;
+  });
+  rmSync(s.dir, { recursive: true, force: true });
+
+  s = setup({ OUTLOOK_REFRESH_TOKEN: 'abused' });
+  await assert.rejects(sendBriefMail(s.cfg, sampleBrief(), { env: s.env, log: quiet }), (err) => {
+    assert.match(err.message, /invalid_grant AADSTS70000: User account is found to be in service abuse mode/);
+    assert.match(err.message, /휴대폰 보안 코드/);
+    assert.ok(!/만료됐거나 무효/.test(err.message), '만료된 토큰으로 잘못 안내하지 않음');
+    return true;
+  });
   rmSync(s.dir, { recursive: true, force: true });
 });
 

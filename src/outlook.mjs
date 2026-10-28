@@ -17,6 +17,8 @@ import { kstIso } from './util.mjs';
 export const SCOPES = 'offline_access https://graph.microsoft.com/Mail.Send https://graph.microsoft.com/User.Read';
 const GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const RELOGIN = '로컬에서 `node src/cli.mjs mail-login` 을 다시 실행해 새 값을 OUTLOOK_REFRESH_TOKEN 에 넣으세요.';
+// 계정 정지·서비스 남용 모드는 토큰이 아니라 계정 문제라 사람이 직접 풀어야 한다
+const LOCKED = `Microsoft 가 스팸 의심으로 이 계정을 묶었습니다(토큰 문제 아님). account.microsoft.com 에 로그인해 안내대로(휴대폰 보안 코드 등) 계정을 푼 뒤, ${RELOGIN}`;
 
 const HINTS = {
   invalid_grant: `리프레시 토큰이 만료됐거나 무효입니다(오래 쓰지 않았거나 비밀번호를 바꿨거나 권한을 취소함). ${RELOGIN}`,
@@ -28,6 +30,7 @@ const HINTS = {
   ErrorAccessDenied: "메일 보내기 권한(Mail.Send)이 없습니다. 앱 등록 > API 사용 권한 > Microsoft Graph > 위임된 권한 > Mail.Send 를 추가하고 mail-login 을 다시 하세요.",
   InvalidAuthenticationToken: `액세스 토큰이 거절됐습니다. 계속되면 ${RELOGIN}`,
   ErrorMessageSubmissionBlocked: 'Outlook.com 이 이 계정의 발송을 막았습니다(새 계정 확인·스팸 의심 등). outlook.com 에 로그인해 안내(휴대폰 확인 등)를 따르세요.',
+  ErrorAccountSuspend: LOCKED,
   ErrorSubmissionQuotaExceeded: 'Outlook.com 의 하루 발송 한도를 넘었습니다. 내일 다시 보냅니다.',
   MailboxNotEnabledForRESTAPI: '이 계정의 사서함에서 메일 API 를 쓸 수 없습니다. outlook.com 에 한 번 로그인해 받은 편지함을 연 뒤 다시 시도하세요.',
 };
@@ -40,7 +43,8 @@ export class OutlookError extends Error {
     const code = graph?.code || aad || oauth;
     // Microsoft 오류 설명 끝의 'Trace ID ...' 꼬리는 뗀다
     const text = String(graph?.message || info?.error_description || info?.msg || `HTTP ${status}`).replace(/\s*Trace ID:[\s\S]*$/, '').slice(0, 300);
-    const hint = HINTS[graph?.code] || HINTS[aad] || HINTS[oauth] || '';
+    // 'service abuse mode' 는 invalid_grant(AADSTS70000)로 오지만 만료된 토큰이 아니다
+    const hint = (/service abuse mode/i.test(text) && LOCKED) || HINTS[graph?.code] || HINTS[aad] || HINTS[oauth] || '';
     const prefix = graph?.code ? `${graph.code}: ` : oauth && oauth !== code ? `${oauth} ` : '';
     super(`Outlook ${prefix}${text}${hint ? ` / ${hint}` : ''}`);
     this.name = 'OutlookError';

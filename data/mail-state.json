@@ -1,15 +1,15 @@
 {
   "version": 1,
   "seed": "66f84b2fde7a7850",
-  "refreshed_at": "2026-10-29T06:30:03+09:00",
+  "refreshed_at": "2026-10-30T06:30:03+09:00",
   "token": {
     "alg": "A256GCM",
-    "iv": "vUbNyjzaKW5FNWGQ",
-    "tag": "lC6zG8quf4ktOc/sCntdkQ==",
-    "data": "K+/Yec+z32GGpQGDnOHiyi91sM0nOiwPcCbZAdfmSDr/iT6Co8ZUrFTn2EpggiG6BDgwBf4iMhgRwx7E2dvux7mSAr/3gtsCyInktcKyZEd1x0Q2iiLdNu3D+8aTX2Hno4PcSMYJraxHvlGZF5V4rEsFquOhkObWQBb3UKiUavUDuOMcR0hfk1kBerWR/DBtDTDnD3KcXAtJPcRSXOljcVuAIrYCOXao5Y3Xz7nMbkwW5m51mmj5a/Tlb43bt7yJntOZEgOMFKF38gYmQK7QPU1xOmbjWX8hAAtFNmj3umFuby9bVRV26RyK+pc8OgosqaM4RqgAk06MF0AZ0hLbKUwcuPMqOCeO2/iOHgtCB+08beb5Fy9YQ/asQijSBEo/niuJXEbfp1KONqDN2Yr6Iw+GwST3+tej4kH3YCX1mKQ5tF3VxvmJ027OK0pbmPlHuzlIkQdZXfqdhpsgxKto7BxPafxyf4qHe5tLVpXCKq87w1erpgF4q8VK/QD2/XxQZhILQPsv61pnAVFeszwbWdkDcc+SsOeVU8skkBeOPMMDLdUyDUmUQ4yhKkd4RtY0kKAxOh6vSMNLRAgwI9S1DHc+HNiMb5j4xIYehvB2tJzfRCC8y5v/f8ii+spQ8rOJmURwibV5PWvn+HrIiIEEIyA6+cS7KWNEJcSXMgcslXlc4hq4d2Hy/3M="
+    "iv": "fyYrVaW+qjf1lQdV",
+    "tag": "D5BiDng5N5UXs7EC5cAmHA==",
+    "data": "kN4gPowfmQwoBmT0KWk+FH81ZD7+lm6YJL0JLTbSBFwjelLDe5vCQiyogMIywB7efxNxqtV1joEbAn/6HQEG3AoVjn9hBP2eCWHdx9v5qFC+9M1p0SUv+oC/y0SEUMEdORaXbPDKGXi0IxoC1fkJzKzhjeFnltUoOH+qWlytvyGDNfuuWy45U5Q0BYc7cVyUM+cxF6Q6d1T1PksDGw37G6wxHXYSgnLMGTF0cVEriG4oPlYvUu4HPqwGeZkW9En9Oy0XCctvaW5SobShMaUfnJwpeq0LuaT7WKCev4UaztZWjtPdvVZTJ3K1dbEsKASTbg+D4OJfaSdkZ0DOGvB57/dyeNOznpiSjW4Nv+EMnfFpw2fp/KPq22ZuS2TpIYmoMfQpFPuaKNCASXpT/YdxkN3BfwGtZCLjWxt70ehgRE6bUEVXPyHeV/re5VkBR3xotXFEvU5ws6CnA3o/jdnqpZeXYm3CrSz7ZgclZ5eaRFRQ1d0D67TfaKdgwsEh8DsxLagE8rOPuIkr+tlkD8xJkqbk2Fl6+4mnl7NmJt+xTrdH2Ni/wpNYGj90c9QqXVSFg0KFwtIqLau/VyDWqdeg0r5UFGFqvL0BD7PKsngzpK+SrnmVIdlw0K9j1OS5412R39ENm7tUUmA15r4C13P3k9qD5o0etYB07wKkoog++5AwIiwhmabOXgY="
   },
-  "rotated_at": "2026-10-29T06:30:03+09:00",
-  "last_sent": "2026-10-29",
-  "last_sent_at": "2026-10-29T06:30:03+09:00",
-  "recipients": 4
+  "rotated_at": "2026-10-30T06:30:03+09:00",
+  "last_sent": "2026-10-30",
+  "last_sent_at": "2026-10-30T06:30:04+09:00",
+  "recipients": 6
 }

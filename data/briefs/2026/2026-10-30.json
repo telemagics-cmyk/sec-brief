@@ -1,0 +1,1325 @@
+{
+  "version": 2,
+  "date": "2026-10-30",
+  "generated_at": "2026-10-30T06:00:54+09:00",
+  "window": {
+    "hours": 30,
+    "from": "2026-10-28T15:00:54.590Z",
+    "to": "2026-10-29T21:00:54.590Z",
+    "since_brief": "2026-10-29",
+    "since_at": "2026-10-28T21:00:56.302Z"
+  },
+  "engine": "claude-haiku-5-5",
+  "overview": "국내에서는 빗썸, SK플래닛, 진에어 등 개인정보 유출이 잇따랐으며 금융권 해킹으로 실제 자산 피해도 확인됐습니다. 해외에서는 Cisco 방화벽과 SD-WAN 제로데이가 실제 악용 중이므로 해당 장비 패치와 노출 여부 점검이 가장 시급합니다. 유출 고객 대상 2차 피해 대응도 병행해야 합니다.",
+  "cvss_min": 9,
+  "critical_total": 70,
+  "failed": {
+    "kev": false,
+    "nvd": false,
+    "kisa": false,
+    "news": false
+  },
+  "exploited": [
+    {
+      "id": "CVE-2026-76418",
+      "section": "exploited",
+      "vendor": "Cisco",
+      "product": "Secure Firewall ASA Software and Cisco Secure FTD Software",
+      "name": "Cisco Secure Firewall ASA Software and Cisco Secure FTD Software Unchecked Return Value to NULL Pointer Dereference Vulnerability",
+      "dateAdded": "2026-10-29",
+      "due": "2026-11-01",
+      "ransomware": false,
+      "description": "Cisco Secure Firewall ASA Software and Cisco Secure FTD Software contains an unchecked return value to NULL pointer dereference vulnerability that could allow an unauthenticated, remote attacker to cause the device to reload unexpectedly, resulting in a denial of service (DoS) condition.",
+      "cwes": [
+        "CWE-690"
+      ],
+      "cvss": {
+        "score": 8.6,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:N/I:N/A:H"
+      },
+      "ssvc": {
+        "exploitation": "active",
+        "automatable": "yes",
+        "technicalImpact": "partial"
+      },
+      "epss": 0.00574,
+      "epssPct": 0.47308,
+      "published": "2026-10-28T20:18:47.063",
+      "links": [
+        "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-asaftd-tunnel-dos-s6mgkb75",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-76418"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-76418",
+      "ko": {
+        "title": "Cisco ASA·FTD 널 포인터 참조, 원격 DoS",
+        "target": "Cisco Secure Firewall ASA Software, Cisco Secure FTD Software",
+        "impact": "미인증 원격 공격자가 장비를 예기치 않게 재부팅시켜 서비스 거부 유발 가능. 실제 악용 확인됨(CVSS 8.6)",
+        "action": "Cisco 보안 권고에 따라 패치 적용. CISA KEV 조치 기한 2026-11-01 준수 필요"
+      }
+    },
+    {
+      "id": "CVE-2026-97229",
+      "section": "exploited",
+      "vendor": "GitLab",
+      "product": "Community Edition and Enterprise Edition",
+      "name": "GitLab Community Edition and Enterprise Edition Integer Overflow or Wraparound Vulnerability",
+      "dateAdded": "2026-10-29",
+      "due": "2026-11-01",
+      "ransomware": false,
+      "description": "GitLab Community Edition and Enterprise Edition contain a integer overflow or wraparound vulnerability that could allow an unauthenticated user to execute arbitrary code on the GitLab server via a specially crafted regular expression in a CI/CD configuration, due to insufficient regular expression validation.",
+      "cwes": [
+        "CWE-190"
+      ],
+      "cvss": null,
+      "ssvc": null,
+      "epss": 0.18427,
+      "epssPct": 0.97229,
+      "published": "",
+      "links": [
+        "https://www.ruby-lang.org/en/news/2026/10/23/regexp-fixes-for-gitlab-cves",
+        "https://docs.gitlab.com/releases/patches/patch-release-gitlab-19-4-2-released/"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-97229",
+      "ko": {
+        "title": "GitLab 정수 오버플로로 원격 코드 실행",
+        "target": "GitLab Community Edition, Enterprise Edition (영향 버전 벤더 공지 확인 필요)",
+        "impact": "미인증 사용자가 조작된 정규식이 담긴 CI/CD 설정으로 서버에서 임의 코드 실행 가능. 실제 악용 확인, EPSS 0.18",
+        "action": "GitLab 패치 버전 확인 후 즉시 적용. CISA KEV 조치 기한 2026-11-01 준수 필요"
+      }
+    }
+  ],
+  "exploited_more": [],
+  "critical": [
+    {
+      "id": "CVE-2026-107058",
+      "ids": [
+        "CVE-2026-107058",
+        "CVE-2026-107015"
+      ],
+      "section": "critical",
+      "label": "CVE-2026-107058",
+      "vendor": "",
+      "cna": "cve@mitre.org",
+      "status": "Received",
+      "published": "2026-10-29T17:17:58.620",
+      "description": "An issue in Shelter versionCode 445 allows attackers to register their own auth_key and execute a takeover of another user's binder service API and preference state.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-107058",
+          "text": "An issue in Shelter versionCode 445 allows attackers to register their own auth_key and execute a takeover of another user's binder service API and preference state."
+        },
+        {
+          "id": "CVE-2026-107015",
+          "text": "Insecure permissions in Simple Contacts Pro versionCode 107 allow unauthorized attackers to write and read notes in another user's' note database."
+        }
+      ],
+      "cwes": [
+        "CWE-287",
+        "CWE-284"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "poc",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://f-droid.org/packages/net.typeblog.shelter/",
+        "https://github.com/FFG0d/fdroid-android-advisories/blob/main/advisories/CVE-2026-107058.md",
+        "https://github.com/PeterCxy/Shelter"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-107058",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 12.5,
+      "ko": {
+        "title": "안드로이드 앱 Shelter·Simple Contacts Pro 인증·권한 결함",
+        "target": "Shelter versionCode 445, Simple Contacts Pro versionCode 107 (안드로이드 앱)",
+        "impact": "공격자가 자신의 auth_key를 등록해 타 사용자의 binder API와 설정을 장악하고 노트 데이터를 읽고 쓸 수 있음. CVSS 9.8, PoC 존재",
+        "action": "해당 앱 설치 여부 점검 후 벤더의 최신 버전으로 업데이트. 업데이트 공지 확인 필요"
+      }
+    },
+    {
+      "id": "CVE-2026-118579",
+      "ids": [
+        "CVE-2026-118579"
+      ],
+      "section": "critical",
+      "label": "D-Link DIR-505",
+      "vendor": "",
+      "cna": "cna@vuldb.com",
+      "status": "Deferred",
+      "published": "2026-10-28T23:17:09.940",
+      "description": "A weakness has been identified in D-Link DIR-505 1.10B02. The impacted element is the function main of the file /secmark1524.cgi of the component Web Management CGI. This manipulation of the argument accu/pass/code/hash/cmds causes backdoor. The attack is possible to be carried out remotely. The exploit has been made available to the public and could be used for attacks.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-118579",
+          "text": "A weakness has been identified in D-Link DIR-505 1.10B02. The impacted element is the function main of the file /secmark1524.cgi of the component Web Management CGI. This manipulation of the argument accu/pass/code/hash/cmds causes backdoor. The attack is possible to be carried out remotely. The ex…"
+        }
+      ],
+      "cwes": [
+        "CWE-912"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "poc",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": 0.00787,
+      "links": [
+        "https://github.com/Walnut1337/DIR-505_backdoor/tree/main/poc",
+        "https://vuldb.com/cve/CVE-2026-118579",
+        "https://vuldb.com/submit/1025351"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-118579",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 11.84,
+      "ko": {
+        "title": "D-Link DIR-505 secmark1524.cgi 백도어 취약점",
+        "target": "D-Link DIR-505 1.10B02 웹 관리 CGI",
+        "impact": "원격 공격자가 accu/pass/code/hash/cmds 인자 조작으로 백도어 동작 가능. CVSS 9.8, PoC 공개 상태",
+        "action": "해당 장비 사용 여부 확인, 웹 관리 인터페이스 외부 차단, 벤더 펌웨어 업데이트 확인 필요"
+      }
+    },
+    {
+      "id": "CVE-2026-84295",
+      "ids": [
+        "CVE-2026-84295",
+        "CVE-2026-90868",
+        "CVE-2026-90863",
+        "CVE-2026-90864",
+        "CVE-2026-90866",
+        "CVE-2026-90865"
+      ],
+      "section": "critical",
+      "label": "Progress Software WS_FTP Server",
+      "vendor": "Progress",
+      "cna": "security@progress.com",
+      "status": "Awaiting Analysis",
+      "published": "2026-10-29T16:19:29.860",
+      "description": "Improper authentication in Progress Software WS_FTP Server versions prior to 2024.0.6 and 2025.0.3 on Windows could allow an unauthenticated remote attacker to access sensitive information, including administrative credentials.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-84295",
+          "text": "Improper authentication in Progress Software WS_FTP Server versions prior to 2024.0.6 and 2025.0.3 on Windows could allow an unauthenticated remote attacker to access sensitive information, including administrative credentials."
+        },
+        {
+          "id": "CVE-2026-90868",
+          "text": "An OS command injection vulnerability in Progress Software WS_FTP Server versions prior to 2024.0.7 and 2025.0.4 on Windows could allow arbitrary command execution under certain configurations."
+        },
+        {
+          "id": "CVE-2026-90863",
+          "text": "Missing authorization in the administrative interface of Progress Software WS_FTP Server versions prior to 2024.0.7 and 2025.0.4 on Windows could allow a delegated Host Administrator to exceed their authorized scope, potentially enabling arbitrary command execution with elevated privileges and comp…"
+        },
+        {
+          "id": "CVE-2026-90864",
+          "text": "A path traversal vulnerability in Progress Software WS_FTP Server versions prior to 2024.0.7 and 2025.0.4 on Windows could allow a delegated Host Administrator to access or modify files outside their authorized scope."
+        },
+        {
+          "id": "CVE-2026-90866",
+          "text": "A path traversal vulnerability in Progress Software WS_FTP Server versions prior to 2024.0.7 and 2025.0.4 on Windows could allow a delegated Host Administrator to access locations outside their authorized scope, potentially enabling remote code execution."
+        }
+      ],
+      "cwes": [
+        "CWE-287",
+        "CWE-522",
+        "CWE-78",
+        "CWE-88",
+        "CWE-862",
+        "CWE-915",
+        "CWE-22",
+        "CWE-434"
+      ],
+      "cvss": {
+        "score": 10,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H"
+      },
+      "ssvc": null,
+      "epss": null,
+      "links": [
+        "https://progress.lightning.force.com/lightning/r/Knowledge__kav/ka7Pb000001vl86IAA/view"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-84295",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 11.1,
+      "ko": {
+        "title": "WS_FTP Server 인증 우회·명령 주입 다수 취약점",
+        "target": "Progress WS_FTP Server Windows 2024.0.6 미만, 2025.0.3 미만 (명령 주입은 2024.0.7 미만, 20…",
+        "impact": "미인증 원격 공격자가 관리자 자격 증명 등 민감 정보에 접근하고 임의 명령 실행 가능. CVSS 10.0",
+        "action": "2024.0.7 이상 또는 2025.0.4 이상으로 즉시 업그레이드. 관리자 계정 비밀번호 교체 필요"
+      }
+    }
+  ],
+  "critical_more": [
+    {
+      "id": "CVE-2026-104339",
+      "ids": [
+        "CVE-2026-104339"
+      ],
+      "label": "IBM Langflow OSS",
+      "cvss": 9.8,
+      "title": "IBM Langflow OSS 코드 삽입"
+    },
+    {
+      "id": "CVE-2026-110186",
+      "ids": [
+        "CVE-2026-110186",
+        "CVE-2026-93680"
+      ],
+      "label": "IBM Langflow OSS",
+      "cvss": 9.8,
+      "title": "IBM Langflow OSS 코드 삽입 등 2건"
+    },
+    {
+      "id": "CVE-2026-118690",
+      "ids": [
+        "CVE-2026-118690"
+      ],
+      "label": "Signal K Server",
+      "cvss": 9.8,
+      "title": "Signal K Server 중요 기능 인증 누락"
+    },
+    {
+      "id": "CVE-2026-42922",
+      "ids": [
+        "CVE-2026-42922"
+      ],
+      "label": "CVE-2026-42922",
+      "cvss": 9.8,
+      "title": "CVE-2026-42922 권한 검사 부적절"
+    },
+    {
+      "id": "CVE-2026-107327",
+      "ids": [
+        "CVE-2026-107327",
+        "CVE-2026-107328",
+        "CVE-2026-107329"
+      ],
+      "label": "IBM Langflow OSS",
+      "cvss": 9.9,
+      "title": "IBM Langflow OSS 권한 검사 누락 등 3건"
+    },
+    {
+      "id": "CVE-2026-97854",
+      "ids": [
+        "CVE-2026-97854"
+      ],
+      "label": "CVE-2026-97854",
+      "cvss": 9.8,
+      "title": "CVE-2026-97854 OS 명령 삽입"
+    },
+    {
+      "id": "CVE-2026-61564",
+      "ids": [
+        "CVE-2026-61564",
+        "CVE-2026-61567"
+      ],
+      "label": "AVideo",
+      "cvss": 10,
+      "title": "AVideo 코드 삽입 등 2건"
+    },
+    {
+      "id": "CVE-2026-114358",
+      "ids": [
+        "CVE-2026-114358"
+      ],
+      "label": "CVE-2026-114358",
+      "cvss": 9.3,
+      "title": "CVE-2026-114358 SQL 삽입"
+    },
+    {
+      "id": "CVE-2026-112256",
+      "ids": [
+        "CVE-2026-112256"
+      ],
+      "label": "OpenText Advanced Authentication Server",
+      "cvss": 9.2,
+      "title": "OpenText Advanced Authentication Server 취약점"
+    },
+    {
+      "id": "CVE-2026-118769",
+      "ids": [
+        "CVE-2026-118769"
+      ],
+      "label": "Botan",
+      "cvss": 9.2,
+      "title": "Botan 범위 밖 읽기"
+    },
+    {
+      "id": "CVE-2026-119145",
+      "ids": [
+        "CVE-2026-119145"
+      ],
+      "label": "Frappe",
+      "cvss": 9.9,
+      "title": "Frappe 경로 조작"
+    },
+    {
+      "id": "CVE-2026-103093",
+      "ids": [
+        "CVE-2026-103093"
+      ],
+      "label": "ServiceNow",
+      "cvss": 9.4,
+      "title": "ServiceNow 접근 통제 부적절"
+    },
+    {
+      "id": "CVE-2026-111732",
+      "ids": [
+        "CVE-2026-111732"
+      ],
+      "label": "P-Net",
+      "cvss": 9.3,
+      "title": "P-Net 범위 밖 쓰기"
+    },
+    {
+      "id": "CVE-2026-118762",
+      "ids": [
+        "CVE-2026-118762"
+      ],
+      "label": "Monkeytype",
+      "cvss": 9.3,
+      "title": "Monkeytype 신뢰할 수 없는 기능 포함"
+    },
+    {
+      "id": "CVE-2026-119050",
+      "ids": [
+        "CVE-2026-119050"
+      ],
+      "label": "PandasTools",
+      "cvss": 9.2,
+      "title": "PandasTools 안전하지 않은 리플렉션"
+    },
+    {
+      "id": "CVE-2026-119128",
+      "ids": [
+        "CVE-2026-119128"
+      ],
+      "label": "Login V2 UI",
+      "cvss": 9.1,
+      "title": "Login V2 UI 인증 우회"
+    },
+    {
+      "id": "CVE-2026-66088",
+      "ids": [
+        "CVE-2026-66088"
+      ],
+      "label": "CVE-2026-66088",
+      "cvss": 9.4,
+      "title": "CVE-2026-66088 OS 명령 삽입"
+    },
+    {
+      "id": "CVE-2026-109516",
+      "ids": [
+        "CVE-2026-109516"
+      ],
+      "label": "CVE-2026-109516",
+      "cvss": 9.8,
+      "title": "CVE-2026-109516 인증 부적절"
+    },
+    {
+      "id": "CVE-2026-113616",
+      "ids": [
+        "CVE-2026-113616"
+      ],
+      "label": "CVE-2026-113616",
+      "cvss": 9.8,
+      "title": "CVE-2026-113616 권한 관리 부적절"
+    },
+    {
+      "id": "CVE-2026-115245",
+      "ids": [
+        "CVE-2026-115245"
+      ],
+      "label": "CVE-2026-115245",
+      "cvss": 9.8,
+      "title": "CVE-2026-115245 위험한 형식 파일 업로드"
+    },
+    {
+      "id": "CVE-2026-54858",
+      "ids": [
+        "CVE-2026-54858"
+      ],
+      "label": "CVE-2026-54858",
+      "cvss": 9.8,
+      "title": "CVE-2026-54858 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-54859",
+      "ids": [
+        "CVE-2026-54859"
+      ],
+      "label": "CVE-2026-54859",
+      "cvss": 9.8,
+      "title": "CVE-2026-54859 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-62001",
+      "ids": [
+        "CVE-2026-62001"
+      ],
+      "label": "CVE-2026-62001",
+      "cvss": 9.8,
+      "title": "CVE-2026-62001 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-62002",
+      "ids": [
+        "CVE-2026-62002"
+      ],
+      "label": "CVE-2026-62002",
+      "cvss": 9.8,
+      "title": "CVE-2026-62002 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-62006",
+      "ids": [
+        "CVE-2026-62006"
+      ],
+      "label": "CVE-2026-62006",
+      "cvss": 9.8,
+      "title": "CVE-2026-62006 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-62008",
+      "ids": [
+        "CVE-2026-62008"
+      ],
+      "label": "CVE-2026-62008",
+      "cvss": 9.8,
+      "title": "CVE-2026-62008 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-62012",
+      "ids": [
+        "CVE-2026-62012"
+      ],
+      "label": "CVE-2026-62012",
+      "cvss": 9.8,
+      "title": "CVE-2026-62012 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-62013",
+      "ids": [
+        "CVE-2026-62013"
+      ],
+      "label": "CVE-2026-62013",
+      "cvss": 9.8,
+      "title": "CVE-2026-62013 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-62017",
+      "ids": [
+        "CVE-2026-62017"
+      ],
+      "label": "CVE-2026-62017",
+      "cvss": 9.8,
+      "title": "CVE-2026-62017 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-62018",
+      "ids": [
+        "CVE-2026-62018"
+      ],
+      "label": "CVE-2026-62018",
+      "cvss": 9.8,
+      "title": "CVE-2026-62018 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-61991",
+      "ids": [
+        "CVE-2026-61991"
+      ],
+      "label": "CVE-2026-61991",
+      "cvss": 10,
+      "title": "CVE-2026-61991 코드 삽입"
+    },
+    {
+      "id": "CVE-2026-54856",
+      "ids": [
+        "CVE-2026-54856"
+      ],
+      "label": "CVE-2026-54856",
+      "cvss": 9.8,
+      "title": "CVE-2026-54856 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-54857",
+      "ids": [
+        "CVE-2026-54857"
+      ],
+      "label": "CVE-2026-54857",
+      "cvss": 9.8,
+      "title": "CVE-2026-54857 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-54860",
+      "ids": [
+        "CVE-2026-54860"
+      ],
+      "label": "CVE-2026-54860",
+      "cvss": 9.8,
+      "title": "CVE-2026-54860 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-61992",
+      "ids": [
+        "CVE-2026-61992"
+      ],
+      "label": "CVE-2026-61992",
+      "cvss": 9.8,
+      "title": "CVE-2026-61992 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-61997",
+      "ids": [
+        "CVE-2026-61997"
+      ],
+      "label": "CVE-2026-61997",
+      "cvss": 9.8,
+      "title": "CVE-2026-61997 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-61998",
+      "ids": [
+        "CVE-2026-61998"
+      ],
+      "label": "CVE-2026-61998",
+      "cvss": 9.8,
+      "title": "CVE-2026-61998 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-62003",
+      "ids": [
+        "CVE-2026-62003"
+      ],
+      "label": "CVE-2026-62003",
+      "cvss": 9.8,
+      "title": "CVE-2026-62003 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-62004",
+      "ids": [
+        "CVE-2026-62004"
+      ],
+      "label": "CVE-2026-62004",
+      "cvss": 9.8,
+      "title": "CVE-2026-62004 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-62005",
+      "ids": [
+        "CVE-2026-62005"
+      ],
+      "label": "CVE-2026-62005",
+      "cvss": 9.8,
+      "title": "CVE-2026-62005 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-62009",
+      "ids": [
+        "CVE-2026-62009"
+      ],
+      "label": "CVE-2026-62009",
+      "cvss": 9.8,
+      "title": "CVE-2026-62009 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-62010",
+      "ids": [
+        "CVE-2026-62010"
+      ],
+      "label": "CVE-2026-62010",
+      "cvss": 9.8,
+      "title": "CVE-2026-62010 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-62011",
+      "ids": [
+        "CVE-2026-62011"
+      ],
+      "label": "CVE-2026-62011",
+      "cvss": 9.8,
+      "title": "CVE-2026-62011 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-62014",
+      "ids": [
+        "CVE-2026-62014"
+      ],
+      "label": "CVE-2026-62014",
+      "cvss": 9.8,
+      "title": "CVE-2026-62014 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-62015",
+      "ids": [
+        "CVE-2026-62015"
+      ],
+      "label": "CVE-2026-62015",
+      "cvss": 9.8,
+      "title": "CVE-2026-62015 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-62016",
+      "ids": [
+        "CVE-2026-62016"
+      ],
+      "label": "CVE-2026-62016",
+      "cvss": 9.8,
+      "title": "CVE-2026-62016 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-62131",
+      "ids": [
+        "CVE-2026-62131"
+      ],
+      "label": "CVE-2026-62131",
+      "cvss": 9.8,
+      "title": "CVE-2026-62131 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-115964",
+      "ids": [
+        "CVE-2026-115964"
+      ],
+      "label": "StylemixThemes Motors",
+      "cvss": 9.3,
+      "title": "StylemixThemes Motors SQL 삽입"
+    },
+    {
+      "id": "CVE-2026-113617",
+      "ids": [
+        "CVE-2026-113617"
+      ],
+      "label": "CVE-2026-113617",
+      "cvss": 9.9,
+      "title": "CVE-2026-113617 경로 조작"
+    },
+    {
+      "id": "CVE-2026-103693",
+      "ids": [
+        "CVE-2026-103693"
+      ],
+      "label": "CVE-2026-103693",
+      "cvss": 9,
+      "title": "CVE-2026-103693 신뢰할 수 없는 데이터 역직렬화"
+    }
+  ],
+  "advisories": [
+    {
+      "id": "a-5f418153",
+      "source": "KISA 보안공지",
+      "title": "Palo Alto Networks 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72252",
+      "date": "2026-10-29"
+    },
+    {
+      "id": "a-8b7e0212",
+      "source": "KISA 보안공지",
+      "title": "Synology 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72251",
+      "date": "2026-10-29"
+    },
+    {
+      "id": "a-34d26def",
+      "source": "KISA 보안공지",
+      "title": "Samba 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72250",
+      "date": "2026-10-29"
+    },
+    {
+      "id": "a-989a575e",
+      "source": "KISA 보안공지",
+      "title": "Juniper Networks 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72249",
+      "date": "2026-10-29"
+    },
+    {
+      "id": "a-9ffb625a",
+      "source": "KISA 보안공지",
+      "title": "Linux 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72248",
+      "date": "2026-10-29"
+    },
+    {
+      "id": "a-90c6add3",
+      "source": "KISA 보안공지",
+      "title": "Adobe 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72247",
+      "date": "2026-10-29"
+    },
+    {
+      "id": "a-a48fa7a8",
+      "source": "KISA 보안공지",
+      "title": "JFrog 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72246",
+      "date": "2026-10-29"
+    },
+    {
+      "id": "a-16205dba",
+      "source": "KISA 보안공지",
+      "title": "Splunk 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72245",
+      "date": "2026-10-29"
+    },
+    {
+      "id": "a-765084f1",
+      "source": "KISA 보안공지",
+      "title": "Cisco 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72244",
+      "date": "2026-10-29"
+    },
+    {
+      "id": "a-9c20c19d",
+      "source": "KISA 보안공지",
+      "title": "Redis 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72243",
+      "date": "2026-10-29"
+    }
+  ],
+  "news": {
+    "domestic": [
+      {
+        "id": "n-52c74695",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "빗썸 해킹, 고객 6,444명·임직원 715명 개인정보 유출…주민번호·신분증 사본 포함",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209174",
+        "source": "데일리시큐",
+        "published": "2026-10-29T11:23:53.000Z",
+        "snippet": "국내 가상자산 거래소 빗썸에서 발생한 해킹 사고로 고객 6,444명과 임직원 및 협력사 직원 715명의 개인정보가 외부로 유출된 것으로 확인됐다. 유출 정보에는 주민등록번호와 운전면허번호, 계좌번호, 신분증 사본 등 민감한 개인정보가 포함돼 있어 2차 피해 우려가 커지고 있다. 빗썸은 10월 29일 오후 5시 49분 공식 홈페이지에 개인정보 유출 안내문을 게시하고, 지난 27일 사내 모바일…",
+        "outlets": [
+          "데일리시큐",
+          "지디넷코리아",
+          "한국인권신문",
+          "MTN 머니투데이방송",
+          "연합뉴스TV",
+          "매일신문",
+          "블루밍비트",
+          "뉴닉",
+          "KBC광주방송",
+          "연합뉴스",
+          "머니투데이",
+          "뉴시안",
+          "금융신문",
+          "한겨레",
+          "글로벌이코노믹",
+          "아시아경제",
+          "연합인포맥스",
+          "디일렉",
+          "전기신문",
+          "신아일보",
+          "뉴스핌",
+          "IT조선",
+          "이코노미스트",
+          "MBC 뉴스",
+          "디지털데일리",
+          "경향신문"
+        ],
+        "related": [
+          {
+            "title": "빗썸 사내 그룹웨어 해킹…이용자·임직원 7159명 정보 유출",
+            "url": "https://zdnet.co.kr/view/?no=20261029183404",
+            "source": "지디넷코리아"
+          },
+          {
+            "title": "빗썸 해킹에 고객 6444명 개인정보 유출…844명은 주민번호·신분증까지 노출",
+            "url": "https://news.google.com/rss/articles/CBMiR0FVX3lxTE9pWW0wNDdad1A0X0RndDJKN3gzdC1BUC1xZkFtcHdxbTVwbHo1NUJCbFBtbDV3TlRPaVNfX3h2VTNlUkhCZXBv?oc=5",
+            "source": "한국인권신문"
+          },
+          {
+            "title": "빗썸, 고객 844명 개인정보 유출…\"2차 피해 예방 당부\"",
+            "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBJUHpBc1FVVXBiaUhZWjRja3EyVnJCYjVOWDRyaHEzakI5U3g2R0JhNlBERlNlU1ZicnRlT1lfbXhkdXVrNFA0emp3Z0c2b0xVN0xDVUU4Z0xPdzZKQ1RV?oc=5",
+            "source": "MTN 머니투데이방송"
+          },
+          {
+            "title": "빗썸, 해킹 사고로 고객 정보도 수백건 유출",
+            "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE1lX2JmSE5CQzM3N2VIV1NCcVhVR3lnc3Jzdnl5N2xYQTlGZ1g1ZGJNV2pqSmYzNkxuc3pGNnJGdnRNWWZQekRJZXNidkpmWTdsX1RPQmhOWlRrS1BOYzdWYjE3V1F6cms?oc=5",
+            "source": "연합뉴스TV"
+          },
+          {
+            "title": "빗썸 해킹, 고객 844명 계좌번호·신분증 사본까지 노출",
+            "url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE13NHRFSUtKdUFlMnBuWk5wZDd5MGpGVUREdHFaUGh4Q0pjdUhQeG9Hdlk1aTBkdW1yX1JmU3Y2NjhKR2YxamhVWklVcnNnZ2xWNVpNRklhSUFOOGhmczduSTJ3?oc=5",
+            "source": "매일신문"
+          }
+        ],
+        "cves": [],
+        "score": 22,
+        "title_ko": "빗썸 해킹, 고객·임직원 개인정보 유출·신분증 사본 포함",
+        "summary_ko": "빗썸 해킹으로 고객 6,444명과 임직원·협력사 직원 715명의 개인정보가 유출됨. 주민등록번호, 운전면허번호, 계좌번호, 신분증 사본이 포함돼 2차 피해 우려가 큼. 대상 고객 안내와 금융사기 대비 점검이 필요함."
+      },
+      {
+        "id": "n-8464b065",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "SK플래닛 기프티콘, 개인정보 유출 정황…쿠폰 일련번호·환급계좌도 포함",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209175",
+        "source": "데일리시큐",
+        "published": "2026-10-29T12:16:24.000Z",
+        "snippet": "SK플래닛이 운영하는 모바일 쿠폰 서비스 기프티콘에서 고객 개인정보와 쿠폰 정보가 유출된 정황이 확인됐다. 유출 추정 항목에는 이름과 전화번호뿐 아니라 구매쿠폰 일련번호와 환급계좌도 포함됐다. 회사는 외부의 비정상적인 접근을 차단하고 정확한 유출 범위와 피해 고객을 확인하기 위한 정밀 조사에 착수했다. SK플래닛은 10월 29일 고객 대상 ‘개인정보 유출 사실 및 조치 안내’를 통해 최근…",
+        "outlets": [
+          "데일리시큐",
+          "지디넷코리아",
+          "세이프타임즈",
+          "매일신문",
+          "서울경제TV",
+          "연합뉴스TV",
+          "뉴스핌",
+          "아시아경제",
+          "디지털데일리",
+          "전자신문",
+          "MTN 머니투데이방송",
+          "Chosunbiz",
+          "연합뉴스"
+        ],
+        "related": [
+          {
+            "title": "SK플래닛 기프티콘, 개인정보 유출…이름·전화번호·환급계좌 등 포함",
+            "url": "https://zdnet.co.kr/view/?no=20261029203243",
+            "source": "지디넷코리아"
+          },
+          {
+            "title": "SK플래닛 기프티콘 고객정보 유출 … 피해 규모 '깜깜'",
+            "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE1nQ3FGOVBqQS1Oa29IMldpNXhsY2FvWmd6d19KdGVHVE5Ua1U5a3A5S1IwaTc1bERUQ3VoWVl5UWhwRXZPQXhXUDV0VWVZSkFXZjJpcVVIblppbHVVLTVUdEl6V1RtbjMwdG1iYlVCc9IBc0FVX3lxTE5ZODVBWTBRMVpJSktSVUJCZE1relNSTFkxWXp3SlVZeVNpZm1FMHAwZUtnWDBvZUFRVS11VkxzLUNLYlVPclZjMlgzWWZWbDJ1OE94aDJ5NzNJWTQtUDcySDZwTGZCMEozNEZOUW1KZVBaN0E?oc=5",
+            "source": "세이프타임즈"
+          },
+          {
+            "title": "SK플래닛 기프티콘 해킹…환급계좌까지 유출 정황",
+            "url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE1oMzU5bjVzOWJ0RTRlek9aUi1ZYkFXLVRsWVJNZThLcGhSNEdGd1Zfd0t5WXlVQ2ZzbHZsY2U5T0gzalRzdjdZU3lrUGNLQ3E5TkxJUXhyY0JmMHdyQTAtOUhB?oc=5",
+            "source": "매일신문"
+          },
+          {
+            "title": "SK플래닛, 기프티콘·개인정보 유출…“피해 규모 조사중”",
+            "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE11ZjFVRldBOUd6Z2s3OEFUTmxfWWtFaEhrdTJOLXZyenZ2dm9md2d5VC0zbUNjNGozUnhzWUxGQWZ5LXlteEdXTkZhblg5Q1J5YW5fQXI4d1V6QmFIbXAwYzFxeFg?oc=5",
+            "source": "서울경제TV"
+          },
+          {
+            "title": "SK플래닛 기프티콘 이용자 개인정보 유출…피해 규모 조사 중",
+            "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE9TSlJpVVhiVXoyTkwwdUk4WEk5TmV4aHhiQ0tXRnBrREpaNmk3V0NvYTc4Y1ozR1pabllFcnRfbmVhVDl0eWF5ZF9BdFBadklJQnJfYk9ubVg2UGZIcDFseFR0YUdsSUE?oc=5",
+            "source": "연합뉴스TV"
+          }
+        ],
+        "cves": [],
+        "score": 21.8,
+        "title_ko": "SK플래닛 기프티콘 개인정보 유출 정황, 환급계좌 포함",
+        "summary_ko": "SK플래닛 기프티콘에서 이름, 전화번호, 구매쿠폰 일련번호, 환급계좌가 유출된 정황이 확인됨. 회사는 외부 비정상 접근을 차단하고 유출 범위를 정밀 조사 중임. 환급계좌 악용 여부 모니터링이 필요함."
+      },
+      {
+        "id": "n-14c335f7",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "진에어, 1454명 개인정보 유출…“비밀번호·결제내역 등은 안전”",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=146877",
+        "source": "보안뉴스",
+        "published": "2026-10-29T09:55:11.000Z",
+        "snippet": "진에어에서 1400명 이상의 개인정보가 유출되는 사고가 발생했다. 비밀번호나 금융정보, 결제 내역 등 악용 우려가 큰 핵심 민간 정보는 유출되지 않았다는 설명이다. 진에어는 29일 공지사항을 통해 “내부 시스템에 대한 외부의 비정상적인 접근 정황이 확인됐다”며 “사고에 대한 조사는 진행 중이나 현재까지 파악된 바에 의하면 회원정보 조회 API에 대한 외부 비정상적인 공격이 발생해 지난 28…",
+        "outlets": [
+          "보안뉴스",
+          "데일리시큐",
+          "세이프타임즈",
+          "브릿지경제",
+          "뉴스핌",
+          "뉴스1",
+          "연합뉴스TV",
+          "Chosunbiz",
+          "매일일보",
+          "글로벌이코노믹",
+          "디지털데일리",
+          "전자신문"
+        ],
+        "related": [
+          {
+            "title": "진에어, 회원정보 조회 API 공격으로 1,454명 개인정보 유출",
+            "url": "https://www.dailysecu.com/news/articleView.html?idxno=209172",
+            "source": "데일리시큐"
+          },
+          {
+            "title": "진에어 1454명 고객정보 유출, 항공사 보안망 또 '구멍'",
+            "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE1aZlNTZlRBb0hPaDJxZjVFbU51WThZZG9OYXExNm9rNzk3aWdCeDIxX0d2QXptUUlWaHhnUDltSWJwLU5uQ1g3eTY5Y2xqUFpOdE5YNjBmRDdSQy1FMlZMOXBzeEFaY3Y0eTRocUJhY9IBc0FVX3lxTE9LNVhPOGdVN09YOVJRZHhhZEZJVUZ1emQ0SDBKN083WjV6c0E4V20zOUt0b25jWFl6QjRPNTRfS1ZHaThRa0hLWTJidFRjNC1Ha192QUMteFlJVk96NEpLdWpfWGtLbVZQekRoN1F2b2d3QWc?oc=5",
+            "source": "세이프타임즈"
+          },
+          {
+            "title": "진에어도 외부 해킹 공격 당했다… 회원 1454명 개인정보 유출",
+            "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE01a1VpamRNQUpLalNyVGhJR0h2bWx6VWdSNzZlRFc0ZFVuLVZMYVlyUHU3TVVhMVFhbi1QQ0hhUVBFLU1CSXFmZnlna1pqUDVscmVHQVZIZFBVdw?oc=5",
+            "source": "브릿지경제"
+          },
+          {
+            "title": "진에어, 외부 해킹에 회원 1454명 개인정보 유출…\"비밀번호·결제정보는 무사\"",
+            "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1iZW1YdThya2FLTENHajhzMEoweDc3b1B5TFFTQWNOTXpSTXBEOHZQZXZ0MXhWTHJEUFhNODlHRVlBeE9ES2w2Q2R0c0QtRzIycTZoZGMxZFFjRWNn?oc=5",
+            "source": "뉴스핌"
+          },
+          {
+            "title": "진에어도 해킹에 뚫렸다…회원 1454명 개인정보 유출",
+            "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBnWlpaaHBOTWlpUmdZeVczZXlvZmcxXzBoblZMMFV0N1NvbTJaV3BveXhTazVVV1hYWEc1bkxwcld5Mnk3Ykd1U3JYdE9PQ2FGeHBKd25zbGVYcmpMb1M0SExmdUY?oc=5",
+            "source": "뉴스1"
+          }
+        ],
+        "cves": [],
+        "score": 21.5,
+        "title_ko": "진에어 해킹, 회원 1454명 개인정보 유출",
+        "summary_ko": "진에어 회원정보 조회 API에 대한 외부 비정상 접근으로 1,454명의 이름과 전화번호 등이 유출됨. 비밀번호와 결제·금융정보는 유출되지 않았다고 설명함. 유사 API의 접근통제 점검이 필요함."
+      },
+      {
+        "id": "n-1bf4cc98",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "금융권 해킹 첫 자산 피해… 프라뱅 1억 털렸다",
+        "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTFBFanctWUxBVDJDUEp3UDRMTlo0cFc3TWhkT1FKbHc3OWtvNWJXQXdhZTZYOHpuR29WN3dDNDJtWjNodlRHR21vajNZWlRCbkpVOWExSGVSRHM4eGY4dlltNk1rNkpPajdILWIwbU9PMzJRdFM5Y1HSAWZBVV95cUxNX0dXRW9jbkIyV1NQTDNUOC1tVUdBVjAtLVpGSnpxM3ZjcXdyaTJIeWc5cGNCZUxsQllnMFQ3SEdRTnY0NDlMdG5TSFdyVG9zMnhWUU5HNy1yNE9MZTg0R21yYzFwSGc?oc=5",
+        "source": "동아일보",
+        "published": "2026-10-29T15:30:00.000Z",
+        "snippet": "",
+        "outlets": [
+          "동아일보",
+          "연합뉴스TV",
+          "연합뉴스"
+        ],
+        "related": [
+          {
+            "title": "프라뱅, 해킹에 1억 피해…빗썸, 고객정보도 유출",
+            "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE1HTWkzcFZvclp5UmE1N24xYzRxSTFzNno5T0d4dXQ3aUZIMUR3d3BhSnlqQ2ZITHlOTnBsa2N0TzJRLWt5dERoREYycS1aVHR2cjNzRXlzUmtqMVFfMVZzTmhDN2Z5MWs?oc=5",
+            "source": "연합뉴스TV"
+          },
+          {
+            "title": "프라뱅, 해킹에 1억원 피해…금융권 '비상'",
+            "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE1Hd3VTZXlKemoyVUp0U0JRb1pKRURQUThiVmFYck15YnJEbEg3S1FoNjdKRFBtUzduWmJHQTBWc2ZaWnRINERCZFVYNWNkRWRlWmktdUxubzhEUDhCN004U9IBYEFVX3lxTE1Hd3VTZXlKemoyVUp0U0JRb1pKRURQUThiVmFYck15YnJEbEg3S1FoNjdKRFBtUzduWmJHQTBWc2ZaWnRINERCZFVYNWNkRWRlWmktdUxubzhEUDhCN004Uw?oc=5",
+            "source": "연합뉴스"
+          }
+        ],
+        "cves": [],
+        "score": 15.1,
+        "title_ko": "금융권 해킹 첫 자산 피해, 프라뱅 1억 원 탈취",
+        "summary_ko": "금융권 연쇄 해킹으로 프라뱅에서 약 1억 원의 자산 피해가 발생한 것으로 보도됨. 금융권 해킹이 실제 자산 손실로 이어진 사례임. 이상거래 모니터링과 관리자 접근 통제 강화가 필요함."
+      },
+      {
+        "id": "n-7353c3bb",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "대학가 해킹 '몸살'…부경대 학생 5106명 정보 유출",
+        "url": "https://zdnet.co.kr/view/?no=20261029185947",
+        "source": "지디넷코리아",
+        "published": "2026-10-29T10:01:01.000Z",
+        "snippet": "[지디넷코리아]서강대학교와 연세대학교에 이어 국립부경대학교에서도 해킹으로 학생과 교직원의 개인정보가 유출됐다. 피해자는 학생 5106명과 직원 2명이다. 대학은 공격이 시작된 지 사흘 만에 해커의 금전 요구를 받고서야 사고를 알았다. 부경대에 따르면 외부 공격자는 수협은행의 캠퍼스e모아시스템 취약점을 악용해 비인가 관리자 계정을 만들었다. 공격은 지난 17일 낮 12시57분부터 18일 오전…",
+        "outlets": [
+          "지디넷코리아",
+          "부산경남대표방송 KNN 뉴스"
+        ],
+        "related": [
+          {
+            "title": "부경대 등록금 시스템 해킹, 5천여 명 개인정보 유출",
+            "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE51a2N0c0laLWlkLVJxMnJwaVZnT2JtMnJRbURjWkNPbWlZTnExWUQ0NzhXWmI5Ny1TVzF5Umo0OVR2TXh6WjNIQy1KQkRvcV83dnVGOQ?oc=5",
+            "source": "부산경남대표방송 KNN 뉴스"
+          }
+        ],
+        "cves": [],
+        "score": 13.2,
+        "title_ko": "부경대 해킹, 학생 5106명 개인정보 유출",
+        "summary_ko": "공격자가 수협은행 캠퍼스e모아시스템의 취약점을 악용해 비인가 관리자 계정을 만든 뒤 학생 5,106명과 직원 2명의 정보를 유출함. 대학은 공격 시작 사흘 뒤 해커의 금전 요구를 받고 사고를 알았음. 연계 시스템 취약점 점검이 필요함."
+      }
+    ],
+    "international": [
+      {
+        "id": "n-96402b0b",
+        "region": "international",
+        "lang": "en",
+        "title": "Hackers Exploited Cisco SD-WAN Flaw to Plant Malware Built to Steal Encryption Keys",
+        "url": "https://thehackernews.com/2026/10/hackers-exploited-cisco-sd-wan-flaw-to.html",
+        "source": "The Hacker News",
+        "published": "2026-10-29T08:24:22.000Z",
+        "snippet": "Hackers exploited a critical Cisco Catalyst SD-WAN flaw, fixed in February, to plant custom malware inside the systems that control an organization's SD-WAN network. The malware, called KeyDrift, is designed to copy the…",
+        "outlets": [
+          "The Hacker News",
+          "BleepingComputer"
+        ],
+        "related": [
+          {
+            "title": "Hackers exploit Cisco SD-WAN flaw to deploy custom KeyDrift malware",
+            "url": "https://www.bleepingcomputer.com/news/security/hackers-exploit-cisco-sd-wan-flaw-to-deploy-custom-keydrift-malware/",
+            "source": "BleepingComputer"
+          }
+        ],
+        "cves": [
+          "CVE-2026-20127"
+        ],
+        "score": 14.2,
+        "title_ko": "Cisco SD-WAN 결함 악용, KeyDrift 악성코드 설치",
+        "summary_ko": "수정된 Cisco Catalyst SD-WAN 결함을 악용해 SD-WAN 제어 시스템에 KeyDrift 악성코드가 심어짐. 이 악성코드는 암호화 키 탈취를 목적으로 설계됨. 장비 패치 여부와 무단 설치 흔적 점검이 필요함."
+      },
+      {
+        "id": "n-e6783ab1",
+        "region": "international",
+        "lang": "en",
+        "title": "Attackers Exploit Second Cisco Firewall VPN Zero-Day Since August",
+        "url": "https://www.securityweek.com/attackers-exploit-second-cisco-firewall-vpn-zero-day-since-august/",
+        "source": "SecurityWeek",
+        "published": "2026-10-29T09:47:10.000Z",
+        "snippet": "An exploited flaw in the Remote Access SSL VPN service lets unauthenticated attackers remotely force ASA and FTD firewalls to reload. The post Attackers Exploit Second Cisco Firewall VPN Zero-Day Since August appeared f…",
+        "outlets": [
+          "SecurityWeek",
+          "BleepingComputer"
+        ],
+        "related": [
+          {
+            "title": "New Cisco firewall zero-day exploited to crash SSL VPN devices",
+            "url": "https://www.bleepingcomputer.com/news/security/cisco-warns-of-firewall-zero-day-exploited-to-crash-ssl-vpn-devices/",
+            "source": "BleepingComputer"
+          }
+        ],
+        "cves": [],
+        "score": 13.2,
+        "title_ko": "Cisco 방화벽 VPN 제로데이 추가 악용, 장비 재부팅 유발",
+        "summary_ko": "8월 이후 두 번째 Cisco 방화벽 VPN 제로데이가 악용되고 있음. 미인증 공격자가 ASA·FTD 장비의 원격 접속 SSL VPN을 통해 장비를 재부팅시킬 수 있음. 패치 적용과 SSL VPN 외부 노출 여부 점검이 시급함."
+      },
+      {
+        "id": "n-65d32c68",
+        "region": "international",
+        "lang": "ko",
+        "title": "미국 CISA, ‘Node2Shell’ 취약점 실제 공격 악용 확인…서버·가상화 관리시스템 비상",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209154",
+        "source": "데일리시큐",
+        "published": "2026-10-29T02:59:55.000Z",
+        "snippet": "미국 사이버보안·인프라보안국(CISA)이 브로틀리(Brotli) 압축 라이브러리에서 발견된 보안 취약점이 실제 사이버공격에 악용되고 있다고 공식 확인했다. 해당 취약점은 웹서버뿐 아니라 애플리케이션과 가상화 관리시스템 등 다양한 소프트웨어에 영향을 미칠 수 있어 기업들의 긴급 점검이 요구된다. CISA는 10월 27일 CVE-2026-111497을 실제 공격에 악용된 취약점 목록(KEV)에…",
+        "outlets": [
+          "데일리시큐"
+        ],
+        "related": [],
+        "cves": [
+          "CVE-2026-111497"
+        ],
+        "score": 10,
+        "title_ko": "CISA, Brotli 압축 라이브러리 결함 실제 악용 확인",
+        "summary_ko": "CISA가 10월 27일 Brotli 압축 라이브러리의 CVE-2026-111497이 실제 공격에 악용되고 있다고 확인하고 KEV에 등재함. 웹서버와 가상화 관리시스템 등 다양한 소프트웨어가 영향권임. 긴급 점검과 업데이트가 필요함."
+      },
+      {
+        "id": "n-d54fc179",
+        "region": "international",
+        "lang": "en",
+        "title": "Hackers Steal 2.6 Million Records From Sony’s Japanese ISP So-net",
+        "url": "https://www.securityweek.com/hackers-steal-2-6-million-records-from-sonys-japanese-isp-so-net/",
+        "source": "SecurityWeek",
+        "published": "2026-10-29T11:00:00.000Z",
+        "snippet": "The data of So-net and Plala customers in Japan was exposed, along with 54,401 email account passwords and 16 bank account records. The post Hackers Steal 2.6 Million Records From Sony’s Japanese ISP So-net appeared fir…",
+        "outlets": [
+          "SecurityWeek",
+          "BleepingComputer"
+        ],
+        "related": [
+          {
+            "title": "Sony ISP subsidiary data breach exposes 2.5 million customer records",
+            "url": "https://www.bleepingcomputer.com/news/security/sony-isp-subsidiary-data-breach-exposes-25-million-customer-records/",
+            "source": "BleepingComputer"
+          }
+        ],
+        "cves": [],
+        "score": 13.2,
+        "title_ko": "Sony 자회사 So-net 해킹, 고객 정보 258만 건 유출",
+        "summary_ko": "일본 Sony 네트워크 자회사 So-net과 plala 고객 정보 약 258만 건이 유출됨. 54,401개 이메일 계정 비밀번호와 16건의 은행 계좌 정보도 포함됨. 계정 비밀번호 재사용 여부 확인과 피싱 주의 안내가 필요함."
+      },
+      {
+        "id": "n-48f467fc",
+        "region": "international",
+        "lang": "en",
+        "title": "China-Linked Hackers Exploited VMware ESX Zero-Day to Reduce Audit Trail Visibility",
+        "url": "https://thehackernews.com/2026/10/china-linked-hackers-exploited-vmware.html",
+        "source": "The Hacker News",
+        "published": "2026-10-29T06:22:33.000Z",
+        "snippet": "The U. S. Cybersecurity and Infrastructure Security Agency (CISA) on Wednesday added a security flaw impacting Broadcom VMware ESX to its Known Exploited Vulnerabilities (KEV) catalog, after CrowdStrike revealed that it…",
+        "outlets": [
+          "The Hacker News"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 9,
+        "title_ko": "중국 연계 해커, VMware ESX 제로데이로 감사 로그 은닉",
+        "summary_ko": "CISA가 CrowdStrike 분석 이후 Broadcom VMware ESX 결함을 KEV 목록에 추가함. 중국 연계 해커가 이 제로데이를 악용해 감사 로그 가시성을 낮춘 것으로 보도됨. ESX 패치와 로그 무결성 점검이 필요함."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "kev",
+      "name": "CISA KEV",
+      "ok": true,
+      "count": 6,
+      "ms": 192
+    },
+    {
+      "id": "bleepingcomputer",
+      "name": "BleepingComputer",
+      "ok": true,
+      "count": 15,
+      "ms": 361
+    },
+    {
+      "id": "securityweek",
+      "name": "SecurityWeek",
+      "ok": true,
+      "count": 10,
+      "ms": 571
+    },
+    {
+      "id": "therecord",
+      "name": "The Record",
+      "ok": true,
+      "count": 5,
+      "ms": 588
+    },
+    {
+      "id": "zdnetkr",
+      "name": "지디넷코리아",
+      "ok": true,
+      "count": 30,
+      "ms": 630
+    },
+    {
+      "id": "thehackernews",
+      "name": "The Hacker News",
+      "ok": true,
+      "count": 50,
+      "ms": 663
+    },
+    {
+      "id": "gnews-kr",
+      "name": "Google 뉴스",
+      "ok": true,
+      "count": 100,
+      "ms": 676
+    },
+    {
+      "id": "krebs",
+      "name": "Krebs on Security",
+      "ok": true,
+      "count": 10,
+      "ms": 695
+    },
+    {
+      "id": "darkreading",
+      "name": "Dark Reading",
+      "ok": true,
+      "count": 50,
+      "ms": 707
+    },
+    {
+      "id": "boannews",
+      "name": "보안뉴스",
+      "ok": true,
+      "count": 50,
+      "ms": 1084
+    },
+    {
+      "id": "dailysecu",
+      "name": "데일리시큐",
+      "ok": true,
+      "count": 50,
+      "ms": 1089
+    },
+    {
+      "id": "datanet",
+      "name": "데이터넷",
+      "ok": true,
+      "count": 50,
+      "ms": 1109
+    },
+    {
+      "id": "kisa-vuln",
+      "name": "KISA 취약점 정보",
+      "ok": true,
+      "count": 10,
+      "ms": 1321
+    },
+    {
+      "id": "kisa-alert",
+      "name": "KISA 경보단계",
+      "ok": true,
+      "count": 10,
+      "ms": 1394
+    },
+    {
+      "id": "kisa-notice",
+      "name": "KISA 보안공지",
+      "ok": true,
+      "count": 10,
+      "ms": 1461
+    },
+    {
+      "id": "nvd-kev",
+      "name": "NVD (KEV 상세)",
+      "ok": true,
+      "count": 4,
+      "ms": 2937
+    },
+    {
+      "id": "nvd",
+      "name": "NVD (신규 CVE)",
+      "ok": true,
+      "count": 752,
+      "ms": 1630
+    },
+    {
+      "id": "epss",
+      "name": "FIRST EPSS",
+      "ok": true,
+      "count": 25,
+      "ms": 180
+    }
+  ],
+  "summarizer": {
+    "engine": "claude-haiku-5-5",
+    "ok": true,
+    "ms": 30489,
+    "applied": {
+      "news": 10,
+      "vulns": 5,
+      "overview": true
+    },
+    "rejected": [],
+    "input_tokens": 13536,
+    "output_tokens": 7215
+  },
+  "stats": {
+    "news": {
+      "items": 420,
+      "fresh": 199,
+      "clusters": 112,
+      "eligible": 74
+    },
+    "nvd_published": 752,
+    "kev_catalog": "2026.10.29",
+    "kev_recent": 6
+  }
+}

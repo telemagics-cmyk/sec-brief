@@ -11,7 +11,7 @@ import { fetchNvdKevAdded, fetchNvdPublished } from './sources/nvd.mjs';
 import { fetchFeed, splitAggregatorTitle } from './sources/rss.mjs';
 import { listBriefDates, loadBrief, recentHistory, saveBrief } from './store.mjs';
 import { applySummary, callClaude } from './summarize.mjs';
-import { addDays, canonicalUrl, kstDate, kstIso, shortHash } from './util.mjs';
+import { addDays, canonicalUrl, kstDate, kstIso, publicError, shortHash } from './util.mjs';
 import { newsTextOf, selectCritical, selectExploited } from './vulns.mjs';
 
 function countOf(r) {
@@ -128,8 +128,8 @@ export async function collectBrief(cfg, { now = new Date(), date = kstDate(now),
       sources.push({ id, name, ok: true, count: countOf(r), ms: Date.now() - t0 });
       return r;
     } catch (err) {
-      sources.push({ id, name, ok: false, count: 0, ms: Date.now() - t0, error: String(err?.message || err).slice(0, 200) });
-      log(`  ! ${name}: ${err?.message || err}`);
+      sources.push({ id, name, ok: false, count: 0, ms: Date.now() - t0, error: publicError(err) });
+      log(`  ! ${name}: ${publicError(err)}`);
       return null;
     }
   };
@@ -255,7 +255,7 @@ export async function collectBrief(cfg, { now = new Date(), date = kstDate(now),
           output_tokens: usage.output_tokens ?? null,
         };
       } catch (err) {
-        summarizer = { engine: 'rules', ok: false, ms: Date.now() - t0, error: String(err?.message || err).slice(0, 200) };
+        summarizer = { engine: 'rules', ok: false, ms: Date.now() - t0, error: publicError(err) };
         log(`  ! Claude 요약 실패, 규칙 기반 문안으로 계속: ${summarizer.error}`);
       }
     }

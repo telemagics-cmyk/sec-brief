@@ -273,7 +273,7 @@ Secret `MAIL_NEWS_KEYWORD` 에 검색어(예: 회사 이름)를 넣으면, 메�
 | `vulns.cvss_min` | 고위험 기준 점수 | 9.0 |
 | `vulns.kev_days` | KEV 신규 등재를 며칠 전까지 볼지 (주말 대비) | 3 |
 | `vulns.critical_limit` | 본문에 싣는 고위험 묶음 수 (나머지는 목록) | 5 |
-| `vulns.watch` | 관심 제품·벤더 — **기관에서 쓰는 제품을 넣으면** 순위가 올라갑니다 | 주요 벤더 60여 개 |
+| `vulns.watch` | 관심 제품·벤더(순위가 올라감). **공개 저장소이니 실제로 쓰는 제품·버전 목록(자산 정보)은 넣지 마세요** — 일반적인 주요 벤더만 | 주요 벤더 60여 개 |
 | `news.domestic_limit` / `international_limit` | 국내·해외 기사 수 | 5 / 5 |
 | `news.feeds` | 뉴스 출처. `enabled: false` 로 끄고, 같은 형식으로 추가 | 11곳 |
 | `summarizer.engine` | `auto`(키가 있으면 Claude) / `claude` / `rules` | auto |
@@ -386,13 +386,22 @@ npm test                         # 자동 시험
 
 ## 보안
 
-- 비밀값은 GitHub Secrets(로컬은 `.env`)에만 둡니다. 저장소에는 암호화된 카카오 상태 파일만 들어갑니다.
-- 공개 저장소이므로 기관 내부 정보·자산 목록을 `config.json` 에 넣지 마세요(`vulns.watch` 에 제품명 정도는 무방하나 판단은 기관 기준으로).
+- 비밀값은 GitHub Secrets(로컬은 `.env`)에만 둡니다. 저장소에는 암호화된 카카오·Outlook 토큰 상태 파일만 들어갑니다
+  (키는 Secret 의 리프레시 토큰에서 유도 — 저장소만으로는 풀 수 없음).
+- **공개 범위**: 저장소(코드·`data/` 이력)·웹 페이지·Actions 실행 기록은 누구나 볼 수 있습니다. 그래서
+  - 기관 이름·내부 정보·실제 자산 목록(쓰는 제품·버전)을 `config.json`·README 에 넣지 않습니다(`vulns.watch` 는 일반적인 주요 벤더만).
+    기관·회사 이름이 필요한 곳(메일 이름·관심 키워드)은 Secret 으로만 넣습니다.
+  - 공개되는 오류 문구(브리핑 JSON·웹·Actions 기록)에서는 외부 서비스가 섞어 보내는 계정·조직 식별자, 키처럼 보이는 값, 메일 주소를 가립니다.
+  - 웹 페이지에는 요약에 쓴 모델·사용량·오류 문구를 싣지 않습니다(원본 JSON 에는 남음).
+- 웹 페이지는 외부 스크립트·글꼴을 쓰지 않고, 모든 글을 이스케이프하며, http(s) 주소만 링크로 만듭니다(외부 링크는 `noopener noreferrer`).
+  더해서 모든 페이지에 CSP(`Content-Security-Policy`)를 넣어 이 사이트의 스크립트(인라인은 해시로 지정한 하나)만 실행되고
+  외부로 보내는 요청·폼·플러그인은 막습니다. 검색 엔진에는 올리지 않습니다(`noindex`).
+- **저장소 설정 권장**(GitHub 화면에서): 계정 2단계 인증, Settings → Actions → General → *Fork pull request workflows from outside collaborators* 를
+  *Require approval for all outside collaborators* 로, Settings → Code security 의 *Secret scanning*·*Push protection* 켜짐 확인.
 - 워크플로의 액션은 커밋 해시로 고정했고, 작업별 권한을 최소로 줬으며, 입력값은 스크립트에 직접 넣지 않고 환경 변수로 넘깁니다.
 - cron-job.org 에 맡기는 토큰은 이 저장소 하나에 Actions 권한만 가진 fine-grained 토큰입니다. 새어 나가도 코드·Secrets 는 건드릴 수 없지만
   워크플로를 실행·취소할 수는 있으니(예: '다시 만들기'로 같은 날 여러 번 발송), 의심되면 GitHub 에서 그 토큰을 지우고(Delete) 새로 만드세요.
   저장소의 다른 비밀값은 외부 서비스에 넘기지 않습니다.
-- 웹 페이지는 외부 스크립트·글꼴을 쓰지 않고, 모든 글을 이스케이프하며, http(s) 주소만 링크로 만듭니다.
 - RSS 는 DTD·외부 엔티티를 해석하지 않는 방식으로 읽고, 응답 크기·시간에 상한을 둡니다.
 - `kakao-login` 의 임시 서버는 127.0.0.1 에서만 열리고, 요청 확인값(state)이 다른 요청은 무시합니다.
 - 메일은 HTTPS(Outlook 메일 API) 또는 TLS(SMTP 465 SSL·587 STARTTLS 필수)로만 보내고, 본문의 외부 글은 모두 이스케이프하며 스크립트·외부 이미지를 넣지 않습니다.

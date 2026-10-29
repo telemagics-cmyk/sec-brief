@@ -29,7 +29,7 @@ import { mailConfigured, mailSubject, mailTitle, renderEmailHtml, sendBriefMail,
 import { outlookLogin } from './outlook.mjs';
 import { buildSite } from './site.mjs';
 import { listBriefDates, loadBrief, writeAtomic } from './store.mjs';
-import { isYmd, kstDate, msUntilKst, shortDay, weekdayKo } from './util.mjs';
+import { isYmd, kstDate, msUntilKst, publicError, shortDay, weekdayKo } from './util.mjs';
 
 const HELP = readFileSync(new URL(import.meta.url), 'utf8')
   .split(/\r?\n/)
@@ -226,7 +226,7 @@ async function cmdSend(cfg, args, brief) {
         }
       }
     } catch (err) {
-      fail(`${c.name} 발송 실패: ${err?.message || err}`);
+      fail(`${c.name} 발송 실패: ${publicError(err, 600)}`);
     }
   }
   // 정시 실행(외부 호출)이 보냈다면 GitHub 예약은 건너뛰었을 것이다 — 예비가 보냈다면 늦게 간 것
@@ -389,4 +389,4 @@ async function main() {
   }
 }
 
-main().catch((err) => fail(err?.message || String(err)));
+main().catch((err) => fail(publicError(err, 600)));

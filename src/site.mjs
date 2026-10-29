@@ -6,6 +6,7 @@
 //   cves.html             지금까지 실린 취약점 색인 (cves.json 을 읽어 그림)
 //   search.html           전체 검색 (search.json)
 //   feed.xml              RSS
+import { createHash } from 'node:crypto';
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { alertOf, allNews, emptyNote, sinceNote, vulnBadges } from './brief.mjs';
@@ -17,10 +18,23 @@ function longDate(ymd) {
   return `${Number(ymd.slice(0, 4))}년 ${Number(ymd.slice(5, 7))}월 ${Number(ymd.slice(8, 10))}일 (${weekdayKo(ymd)})`;
 }
 
-function engineLabel(engine) {
-  if (!engine || engine === 'rules') return '규칙 기반 요약';
-  return `Claude 요약 (${engine})`;
-}
+// 테마(밝게·어둡게)를 그리기 전에 정하는 유일한 인라인 스크립트 — CSP 에 이 내용의 해시만 허용한다
+const THEME_JS = "try{var t=localStorage.getItem('sb-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}";
+
+/**
+ * 웹 페이지는 외부 피드의 글을 싣는다. 이스케이프에 더해 CSP 로 이 사이트 밖의 스크립트·전송·프레임을 막는다.
+ * GitHub Pages 는 응답 머리글을 정할 수 없어 meta 로 넣는다(frame-ancestors 는 meta 로는 안 됨).
+ */
+export const CSP = [
+  "default-src 'self'",
+  `script-src 'self' 'sha256-${createHash('sha256').update(THEME_JS).digest('base64')}'`,
+  "style-src 'self'",
+  "img-src 'self' data:",
+  "connect-src 'self'",
+  "base-uri 'none'",
+  "form-action 'none'",
+  "object-src 'none'",
+].join('; ');
 
 function a(url, text, cls = '') {
   const href = safeUrl(url);
@@ -62,10 +76,11 @@ function page({ base, title, desc = '', body, current = '', site }) {
 <meta property="og:title" content="${h(title)}">
 <meta property="og:description" content="${h(desc)}">
 <meta name="robots" content="noindex">
+<meta http-equiv="Content-Security-Policy" content="${CSP}">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='3' y='3' width='11' height='11' rx='2' fill='%23fdecea'/%3E%3Crect x='1' y='1' width='11' height='11' rx='2' fill='%230b6b88'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="${base}assets/site.css">
 <link rel="alternate" type="application/rss+xml" title="${h(site.title)}" href="${base}feed.xml">
-<script>try{var t=localStorage.getItem('sb-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}</script>
+<script>${THEME_JS}</script>
 </head>
 <body>
 <a class="skip" href="#main">본문으로 건너뛰기</a>
@@ -135,12 +150,9 @@ function sourcesBlock(b) {
   const rows = list
     .map((s) => `<tr class="${s.ok ? 'ok' : 'bad'}"><td>${h(s.name)}</td><td>${s.ok ? '정상' : '실패'}</td><td class="num">${s.count ?? ''}</td><td>${h(s.error || '')}</td></tr>`)
     .join('');
+  // 공개 페이지라 요약에 쓴 모델·사용량·오류 문구는 싣지 않는다(원인은 Actions 기록에서)
   const sum = b.summarizer || {};
-  const sumLine = sum.ok
-    ? `요약: ${h(sum.engine)} (입력 ${sum.input_tokens ?? '?'} · 출력 ${sum.output_tokens ?? '?'} 토큰)`
-    : sum.error
-      ? `요약: 규칙 기반 (Claude 실패 — ${h(sum.error)})`
-      : '요약: 규칙 기반';
+  const sumLine = sum.ok ? '요약: 자동 요약' : sum.error ? '요약: 규칙 기반 (자동 요약 실패)' : '요약: 규칙 기반';
   return `<details class="sources"><summary>수집 상태 ${ok}/${list.length} 정상${ok < list.length ? ' — 일부 실패' : ''}</summary>
   <table><thead><tr><th>출처</th><th>상태</th><th class="num">건수</th><th>비고</th></tr></thead><tbody>${rows}</tbody></table>
   <p>${sumLine}</p></details>`;
@@ -168,7 +180,7 @@ function briefBody(b) {
   const head = `<header class="brief-head">
   <p class="kicker">일일 보안 브리핑</p>
   <h1>${longDate(b.date)}</h1>
-  <p class="meta">${h(b.generated_at?.slice(11, 16) || '')} KST 생성${sinceNote(b) ? ` · ${h(sinceNote(b))}` : ''} · ${h(engineLabel(b.engine))}</p>
+  <p class="meta">${h(b.generated_at?.slice(11, 16) || '')} KST 생성${sinceNote(b) ? ` · ${h(sinceNote(b))}` : ''}</p>
   <ul class="counts">
     ${tiles.map(([id, n, label, cls]) => `<li${cls ? ` class="${cls}"` : ''}><a href="#${id}"><b>${h(n)}</b><span>${h(label)}</span></a></li>`).join('\n    ')}
   </ul>

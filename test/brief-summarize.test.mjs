@@ -54,6 +54,8 @@ test('규칙 기반 요약과 Markdown', () => {
   assert.ok(!b.overview.includes('경보'), '경보는 따로 강조하므로 요약에 넣지 않는다');
   const md = renderMarkdown(b, { siteUrl: 'https://u.github.io/sec-brief' });
   assert.match(md, /^# 2026-10-23 \(금\) 보안 브리핑/);
+  assert.match(md, /^생성 2026-10-23 06:41 KST · \[웹에서 보기\]/m, '요약 엔진 이름은 싣지 않음');
+  assert.ok(!/요약 (rules|규칙|claude)/i.test(md));
   assert.match(md, /\*\*경보\*\* \[사이버위기 경보 단계/);
   assert.match(md, /## 악용 확인 취약점 \(CISA KEV 신규 3건\)/);
   assert.match(md, /수집: 1\/2곳 정상 · 실패: NVD\(시간 초과\)/);

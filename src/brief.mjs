@@ -111,7 +111,7 @@ export function renderMarkdown(b, { siteUrl = '' } = {}) {
   if (alert) L.push(`**경보** ${mdLink(alert.title, alert.url)} (${mdEscape(alert.source)}, ${alert.date})`, '');
   L.push(`> ${mdEscape(b.overview)}`, '');
   const since = sinceNote(b);
-  L.push(`생성 ${b.generated_at.replace('T', ' ').slice(0, 16)} KST${since ? ` · ${since}` : ''} · 요약 ${b.engine === 'rules' ? '규칙 기반' : b.engine}${siteUrl ? ` · ${mdLink('웹에서 보기', briefUrl(siteUrl, b.date))}` : ''}`, '');
+  L.push(`생성 ${b.generated_at.replace('T', ' ').slice(0, 16)} KST${since ? ` · ${since}` : ''}${siteUrl ? ` · ${mdLink('웹에서 보기', briefUrl(siteUrl, b.date))}` : ''}`, '');
 
   const vulnBlock = (v, i, header) => {
     L.push(`### ${i}. ${header}`);

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { parseFeed, splitAggregatorTitle } from '../src/sources/rss.mjs';
-import { canonicalUrl, cleanText, findCveIds, kstDate, parseFeedDate, safeUrl, shortDay, truncate } from '../src/util.mjs';
+import { canonicalUrl, cleanText, findCveIds, kstDate, parseFeedDate, publicError, safeUrl, shortDay, truncate } from '../src/util.mjs';
 
 test('날짜: 시간대 없는 국내 RSS 시각은 한국 시간으로 본다', () => {
   assert.equal(parseFeedDate('2026-10-23 14:46:14').date.toISOString(), '2026-10-23T05:46:14.000Z');
@@ -77,4 +77,18 @@ test('RSS: DTD·엔티티 선언은 해석하지 않는다', () => {
 <rss><channel><item><title>&b;</title><link>https://example.com/</link></item></channel></rss>`;
   const [it] = parseFeed(evil);
   assert.equal(it.title, '&b;');
+});
+
+test('공개 오류 문구: 조직·요청 번호, 키, 메일 주소를 가리고 나머지는 그대로', () => {
+  const rate = '429 {"type":"error","error":{"type":"rate_limit_error","message":"This request would exceed the rate limit for your organization (4d1b7c1d-1a2b-4c3d-8e9f-0123456789ab) of 50,000 input tokens per minute."},"request_id":"req_011CTabcdefGHIJK"}';
+  const r = publicError(new Error(rate), 400);
+  assert.ok(!r.includes('4d1b7c1d') && !r.includes('req_011'), r);
+  assert.match(r, /rate_limit_error/);
+  assert.equal(publicError('HTTP 401 https://api.example.com/v1?serviceKey=AbC123%2Bxyz&_type=json'), 'HTTP 401 https://api.example.com/v1?serviceKey=…&_type=json');
+  assert.equal(publicError('invalid x-api-key sk-ant-api03-ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 'invalid x-api-key …');
+  assert.equal(publicError('SMTP 로그인 실패 me@gmail.com'), 'SMTP 로그인 실패 …@…');
+  assert.equal(publicError('HTTP 503'), 'HTTP 503');
+  assert.equal(publicError('AADSTS70000: User account is found to be in service abuse mode.'), 'AADSTS70000: User account is found to be in service abuse mode.');
+  assert.equal(publicError('가'.repeat(300)).length, 200, '길이 상한');
+  assert.equal(publicError(`토큰 ${'A1'.repeat(20)} 끝`), '토큰 … 끝', '긴 불투명 값은 키로 보고 가림');
 });

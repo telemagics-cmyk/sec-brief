@@ -179,3 +179,18 @@ test('수집: 닷새 쉬고 온 날은 NVD·기사를 지난 브리핑 이후부
   assert.equal(kev.searchParams.get('kevStartDate'), '2026-10-24T00:00:00.000Z', 'KEV 등재도 지난 브리핑 날부터');
   rmSync(dir, { recursive: true, force: true });
 });
+
+test('수집: 출처 오류 문구는 키·메일 주소를 가려 공개 브리핑에 남긴다', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'sb-collect-'));
+  const inner = router();
+  globalThis.fetch = (url, opts) => {
+    if (String(url).includes('dailysecu')) throw new TypeError('blocked https://feed.example/rss?apikey=SECRET1234567890 for admin@corp.example');
+    return inner(url, opts);
+  };
+  const { brief } = await collectBrief(cfgFor(dir), { now: NOW, env, log: quiet });
+  const s = brief.sources.find((x) => x.name === '데일리시큐');
+  assert.equal(s.ok, false);
+  assert.ok(!s.error.includes('SECRET1234567890') && !s.error.includes('admin@corp.example'), s.error);
+  assert.match(s.error, /apikey=…/);
+  rmSync(dir, { recursive: true, force: true });
+});

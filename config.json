@@ -8,7 +8,7 @@
   },
   "window_hours": 30,
   "vulns": {
-    "_설명": "cvss_min 이상 신규 CVE 중 critical_limit 묶음을 본문에 싣습니다. watch 에 기관이 쓰는 제품을 넣으면 순위가 올라갑니다.",
+    "_설명": "cvss_min 이상 신규 CVE 중 critical_limit 묶음을 본문에 싣습니다. watch 의 제품은 순위가 올라갑니다. 공개 저장소이니 실제로 쓰는 제품·버전 목록(자산 정보)은 넣지 마세요 — 일반적인 주요 벤더만.",
     "cvss_min": 9,
     "kev_days": 3,
     "exploited_limit": 10,

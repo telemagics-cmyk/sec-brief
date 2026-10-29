@@ -177,7 +177,7 @@ test('주말·연휴 뒤 브리핑은 메일·Markdown 머리에 "지난 브리�
   const b = sampleBrief({ date: '2026-10-26', window: { hours: 73, since_brief: '2026-10-23' } });
   assert.equal(sinceNote(b), '10.23(금) 브리핑 이후');
   assert.match(renderEmailHtml(b, {}), /KST 생성 · 10\.23\(금\) 브리핑 이후/);
-  assert.match(renderMarkdown(b), /KST · 10\.23\(금\) 브리핑 이후 · 요약/);
+  assert.match(renderMarkdown(b), /KST · 10\.23\(금\) 브리핑 이후\n/);
   assert.equal(sinceNote(sampleBrief({ date: '2026-10-27', window: { since_brief: '2026-10-26' } })), '', '바로 전날 브리핑에 이어지면 적지 않음');
   assert.equal(sinceNote(sampleBrief()), '', '기간 정보가 없는 브리핑');
 });

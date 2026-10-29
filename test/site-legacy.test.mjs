@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -135,7 +136,38 @@ test('웹 페이지: 주말·연휴 뒤 브리핑은 머리에 "지난 브리핑
   saveBrief(cfg.dataDir, sampleBrief({ date: '2026-10-23' }));
   saveBrief(cfg.dataDir, sampleBrief({ date: '2026-10-26', window: { hours: 73, since_brief: '2026-10-23' } }));
   buildSite(cfg, { log: () => {} });
-  assert.match(readFileSync(join(cfg.siteDir, 'b', '2026-10-26.html'), 'utf8'), /KST 생성 · 10\.23\(금\) 브리핑 이후 ·/);
+  assert.match(readFileSync(join(cfg.siteDir, 'b', '2026-10-26.html'), 'utf8'), /KST 생성 · 10\.23\(금\) 브리핑 이후<\/p>/);
   assert.ok(!readFileSync(join(cfg.siteDir, 'b', '2026-10-23.html'), 'utf8').includes('브리핑 이후'));
+  rmSync(dir, { recursive: true, force: true });
+});
+
+test('공개 웹: 요약 모델·사용량·오류 문구를 싣지 않고, 모든 페이지에 CSP(인라인 스크립트는 해시로만)', () => {
+  const { dir, cfg } = workspace();
+  const ok = { ...sampleBrief({ date: '2026-10-23' }), engine: 'claude-haiku-5-5', summarizer: { engine: 'claude-haiku-5-5', ok: true, input_tokens: 12257, output_tokens: 7188 } };
+  const bad = { ...sampleBrief({ date: '2026-10-22' }), engine: 'rules', summarizer: { engine: 'rules', ok: false, error: 'rate limit for your organization (…)' } };
+  saveBrief(cfg.dataDir, ok);
+  saveBrief(cfg.dataDir, bad);
+  buildSite(cfg, { log: () => {} });
+  const day = readFileSync(join(cfg.siteDir, 'b', '2026-10-23.html'), 'utf8');
+  assert.ok(!/claude|haiku|12257|토큰/i.test(day), '날짜 아래·수집 상태에 모델 이름·사용량 없음');
+  assert.match(day, /<p class="meta">\d\d:\d\d KST 생성<\/p>/);
+  assert.match(day, /요약: 자동 요약/);
+  const failed = readFileSync(join(cfg.siteDir, 'b', '2026-10-22.html'), 'utf8');
+  assert.match(failed, /요약: 규칙 기반 \(자동 요약 실패\)/);
+  assert.ok(!failed.includes('organization'), '오류 문구는 웹에 싣지 않음');
+  for (const f of ['index.html', 'archive.html', 'cves.html', 'search.html', 'b/2026-10-23.html']) {
+    const html = readFileSync(join(cfg.siteDir, f), 'utf8');
+    const csp = /<meta http-equiv="Content-Security-Policy" content="([^"]+)">/.exec(html)?.[1];
+    assert.ok(csp, `${f}: CSP 없음`);
+    assert.match(csp, /default-src 'self'/);
+    assert.match(csp, /object-src 'none'/);
+    // 인라인 스크립트마다 CSP 에 그 해시가 있어야 실행된다(바꾸면 함께 바뀌는지)
+    for (const [, body] of html.matchAll(/<script>([\s\S]*?)<\/script>/g)) {
+      const hash = createHash('sha256').update(body).digest('base64');
+      assert.ok(csp.includes(`'sha256-${hash}'`), `${f}: 인라인 스크립트 해시가 CSP 에 없음`);
+    }
+    assert.ok(!/ on\w+="/i.test(html), `${f}: 인라인 이벤트 처리기는 CSP 에 막힘`);
+    assert.ok(!/ style="/i.test(html), `${f}: style 속성은 CSP(style-src 'self')에 막힘`);
+  }
   rmSync(dir, { recursive: true, force: true });
 });

@@ -158,3 +158,17 @@ export function fmtPercent(p, digits = 1) {
   if (p === null || p === undefined || Number.isNaN(p)) return '';
   return `${(p * 100).toFixed(digits)}%`;
 }
+
+/**
+ * 공개되는 곳(브리핑 JSON·웹 페이지·공개 Actions 기록)에 남기는 오류 문구.
+ * 외부 서비스 오류에 섞여 오는 계정·조직 식별자(UUID·요청 번호), 키처럼 보이는 값, 메일 주소를 가린다.
+ */
+export function publicError(err, max = 200) {
+  return String(err?.message || err || '')
+    .replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi, '…')
+    .replace(/\b(?:req|request|org|user|msg|sk-ant|sk|ghp|github_pat)[_-][A-Za-z0-9_-]{6,}/gi, '…')
+    .replace(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g, '…@…')
+    .replace(/([?&](?:api_?key|key|token|access_token|service_?key|client_secret|code)=)[^&\s"']+/gi, '$1…')
+    .replace(/[A-Za-z0-9_-]{32,}/g, '…')
+    .slice(0, max);
+}

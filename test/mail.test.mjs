@@ -101,13 +101,16 @@ test('메일 본문: 웹과 같은 순서, 글 이스케이프, javascript: 주�
   const html = renderEmailHtml(b, { siteUrl: 'https://u.github.io/sec-brief' });
   const heads = [...html.matchAll(/<h2[^>]*>([^<]+)/g)].map((m) => m[1].trim());
   assert.deepEqual(heads, ['국내 보안 뉴스', '해외 보안 뉴스', 'KISA 공지', '악용 확인 취약점', '신규 고위험 취약점']);
-  const tiles = [...html.matchAll(/font-size:11\.5px;[^>]*>([^<]+)/g)].map((m) => m[1]);
-  assert.deepEqual(tiles, ['국내 뉴스', '해외 뉴스', 'KISA 공지', '악용 확인', '고위험 9.0+'], '건수 칸도 같은 순서');
+  const tiles = [...html.matchAll(/class="tile-label[^"]*"[^>]*>([^<]+)/g)].map((m) => m[1]);
+  assert.deepEqual(tiles, ['국내 뉴스', '해외 뉴스', 'KISA 공지', '악용 확인', '고위험'], '건수 칸도 같은 순서(휴대폰에서 한 줄)');
   assert.ok(!html.includes('<img src=x'));
   assert.ok(html.includes('&lt;img src=x onerror=alert(1)&gt; 해킹'));
   assert.ok(!/href="javascript:/i.test(html));
   assert.ok(html.includes('href="https://u.github.io/sec-brief/b/2026-10-23.html#kisa"'), '건수 칸은 웹 페이지 섹션으로 연결');
-  assert.ok(!/<script|<style|<link /i.test(html), '메일에는 스크립트·외부 스타일 없음');
+  assert.ok(!/<script|<link |<img /i.test(html), '메일에는 스크립트·외부 스타일·이미지 없음');
+  // <style> 은 어두운 화면용 덮어쓰기·Outlook 글꼴뿐(외부 자원·사용자 글 없음)
+  const css = [...html.matchAll(/<style>([\s\S]*?)<\/style>/g)].map((m) => m[1]).join('\n');
+  assert.ok(!/url\(|@import|expression|<|>/i.test(css), css);
   assert.equal(mailSubject(b), '[경보] [일일 보안 브리핑] 10.23(금)', '날짜까지만(건수 없음)');
   assert.equal(mailSubject({ ...b, advisories: [] }, 'OO팀 일일 보안 브리핑'), '[OO팀 일일 보안 브리핑] 10.23(금)');
 });
@@ -193,4 +196,63 @@ test('메일 이름: Secret MAIL_TITLE 이 있으면 그것, 없으면 site.titl
   assert.equal(mailTitle(cfg, {}), '일일 보안 브리핑');
   assert.equal(mailTitle(cfg, { MAIL_TITLE: '  OO팀 일일 보안 브리핑 ' }), 'OO팀 일일 보안 브리핑');
   assert.equal(mailTitle(cfg, { MAIL_TITLE: ' ' }), '일일 보안 브리핑', '공백만 있으면 없는 것으로');
+});
+
+test('메일 디자인: Outlook 용 표 뼈대, 받은편지함 미리 보기 글, 어두운 화면 선언', () => {
+  const b = sampleBrief();
+  b.overview = '오늘의 요약 문장입니다. 패치가 시급합니다.';
+  const html = renderEmailHtml(b, { siteUrl: 'https://u.github.io/sec-brief', title: 'OO팀 일일 보안 브리핑' });
+  // Outlook(Windows) 은 div 의 최대 폭을 무시하므로 680px 표로 감싼다
+  assert.match(html, /<!--\[if mso\]><table role="presentation" width="680"/);
+  assert.match(html, /max-width:680px/);
+  assert.ok(!/<div style="max-width/.test(html), '폭을 div 로 정하지 않음');
+  // 미리 보기 글: 요약 문장(본문에는 숨김)
+  assert.match(html, /<div style="display:none;[^"]*mso-hide:all;[^"]*">오늘의 요약 문장입니다\. 패치가 시급합니다\./);
+  assert.match(html, /<meta name="color-scheme" content="light dark">/);
+  assert.match(html, /@media \(prefers-color-scheme: dark\)/);
+  assert.match(html, /<p [^>]*>오늘의 요약<\/p>/, '요약 상자에 이름표');
+});
+
+test('메일 디자인: 국내 기사는 제목 한 번, 번역한 해외 기사만 원문 제목, KISA 는 짧은 날짜', () => {
+  const b = sampleBrief();
+  b.news.domestic[0] = { ...b.news.domestic[0], lang: 'ko', title: '원래 국내 제목', title_ko: '다듬은 국내 제목' };
+  b.news.international[0] = { ...b.news.international[0], lang: 'en', title: 'Original English Title', title_ko: '번역한 제목' };
+  const html = renderEmailHtml(b, {});
+  assert.ok(html.includes('다듬은 국내 제목') && !html.includes('원래 국내 제목'), '국내 기사 제목은 한 번만');
+  assert.ok(html.includes('번역한 제목') && html.includes('Original English Title'), '해외 기사는 원문 제목도');
+  assert.match(html, /보안뉴스 외 2곳 · \d\d\.\d\d \d\d:\d\d/, '매체·시각');
+  assert.match(html, />10\.23<\/td>/, 'KISA 날짜는 MM.DD');
+  assert.ok(!/KISA 보안공지 ·/.test(html), '보안공지 출처는 되풀이하지 않음');
+});
+
+test('메일 디자인: 취약점 표시는 색 있는 칸(KEV·CVSS 9 이상 빨강), 조치는 굵게', () => {
+  const raw = renderEmailHtml(sampleBrief(), {});
+  // Outlook(Windows) 에서만 보이는 안쪽 빈칸: 표시·단추마다 앞뒤로
+  const pad = '<!--[if mso]>&nbsp;<![endif]-->';
+  assert.ok(raw.includes(`>${pad}KEV${pad}</span>`));
+  assert.ok(raw.includes(`>${pad}NVD${pad}</a>`));
+  assert.match(raw, /<\/span> <span class="p-/, '표시 사이에 빈칸(Outlook 에서 붙지 않게)');
+  const html = raw.split(pad).join('').replace(/<\/span> <span/g, '</span><span');
+  assert.match(html, /class="p-hot"[^>]*>KEV<\/span>/);
+  assert.match(html, /class="p-hot"[^>]*>CVSS 10\.0<\/span>/);
+  assert.match(html, /class="p-warn"[^>]*>기한 2026-11-10<\/span>/);
+  assert.match(html, /class="p-note"[^>]*>KISA 권고<\/span>/);
+  assert.match(html, />조치<\/td>\n<td class="ink" [^>]*font-weight:bold;">즉시 패치<\/td>/);
+  // 악용 카드는 KEV 가 맨 앞, EPSS(참고)는 맨 뒤
+  const first = /<div>(<span class="p-\w+"[^>]*>[^<]+<\/span>)+<\/div>/.exec(html)[0];
+  const labels = [...first.matchAll(/>([^<]+)<\/span>/g)].map((m) => m[1]);
+  assert.deepEqual(labels, ['KEV', 'CVSS 8.6', '기한 2026-11-10', 'EPSS 0.8%']);
+});
+
+test('메일 크기: 평소 분량이면 Gmail 이 뒷부분을 자르는 크기(약 102KB)보다 넉넉히 작다', () => {
+  const b = sampleBrief();
+  const long = '가'.repeat(150);
+  b.news.domestic = Array.from({ length: 5 }, (_, i) => ({ ...b.news.domestic[0], id: `d${i}`, summary_ko: long, outlets: Array.from({ length: 20 }, (_, k) => `매체${k}`) }));
+  b.news.international = Array.from({ length: 5 }, (_, i) => ({ ...b.news.international[0], id: `i${i}`, summary_ko: long }));
+  b.advisories = Array.from({ length: 10 }, (_, i) => ({ ...b.advisories[1], id: `a${i}`, url: `https://www.boho.or.kr/${i}` }));
+  b.exploited = [b.exploited[0], { ...b.exploited[0], id: 'CVE-2026-2' }];
+  b.critical = [b.critical[0], { ...b.critical[0], id: 'CVE-2026-3' }, { ...b.critical[0], id: 'CVE-2026-4' }];
+  const extraNews = { keyword: '가나다전지', total: 9, items: Array.from({ length: 5 }, (_, i) => ({ title: `가나다전지 소식 ${i}`, url: `https://n.example/${i}`, outlet: '가신문', outlets: 3, published: '2026-10-28T01:00:00Z' })) };
+  const size = Buffer.byteLength(renderEmailHtml(b, { siteUrl: 'https://u.github.io/sec-brief', extraNews }));
+  assert.ok(size < 90 * 1024, `${Math.round(size / 1024)}KB`);
 });

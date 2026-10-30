@@ -45,48 +45,176 @@ export function mailSubject(b, title = '일일 보안 브리핑') {
   return `${alertOf(b) ? '[경보] ' : ''}[${title}] ${shortDay(b.date)}`;
 }
 
-// ------------------------------------------------------------------ HTML 본문 (메일 프로그램용: 인라인 스타일만)
+// ------------------------------------------------------------------ HTML 본문 (메일 프로그램용)
+// Outlook(Windows) 은 Word 로 그려 div 의 폭·여백·둥근 모서리를 무시하므로 뼈대는 표로 짜고, 배경색은 bgcolor 로도 준다.
+// 스타일은 인라인이 기본이고, <style> 에는 어두운 화면용 덮어쓰기와 Outlook 글꼴 지정만 둔다
+// (지원하지 않는 메일 앱은 무시하고 인라인 색 그대로 보인다).
 
+const FONT = "'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo','Noto Sans KR',Arial,sans-serif";
+const MONO = "Consolas,'Courier New',monospace";
 const C = {
-  ink: '#111827', ink2: '#1f2937', muted: '#5b6573', faint: '#7b8593', rule: '#e1e5ea', bg: '#f3f4f6',
-  accent: '#0b6b88', accentSoft: '#e2f0f4', hot: '#b42318', warn: '#8f5400', warnSoft: '#fff3db',
+  page: '#eef1f5', card: '#ffffff', soft: '#f6f8fa', rule: '#e3e7ec',
+  ink: '#111827', ink2: '#2b3442', muted: '#5b6573', faint: '#667085',
+  band: '#0b3c4f', bandInk: '#ffffff', bandSub: '#b9d6e0',
+  accent: '#0b6b88', accentSoft: '#e3f1f5',
+  hot: '#b42318', hotSoft: '#fdecea', warn: '#9a5300', warnSoft: '#fff4e0', warnLine: '#f0c98a', note: '#3a55ad', noteSoft: '#e8edfb',
 };
+const TBL = 'role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"';
 
-function a(url, text, style = '') {
+// 어두운 화면을 지원하는 메일 앱(Apple Mail·Outlook iOS/Mac 등)에서만 쓰이는 덮어쓰기
+const DARK_CSS = `:root { color-scheme: light dark; supported-color-schemes: light dark; }
+@media (prefers-color-scheme: dark) {
+  .bg { background: #0d1117 !important; }
+  .card { background: #151b23 !important; border-color: #29313c !important; }
+  .vcard { background: #151b23 !important; border-top-color: #29313c !important; border-right-color: #29313c !important; border-bottom-color: #29313c !important; }
+  .soft { background: #1b222c !important; border-color: #29313c !important; }
+  .ov { background: #12303a !important; }
+  .warnbox { background: #3a2c12 !important; border-color: #6b4a14 !important; }
+  .line { border-color: #29313c !important; }
+  .ink { color: #e6edf3 !important; }
+  .ink2 { color: #d0d7de !important; }
+  .muted, .faint { color: #9aa5b1 !important; }
+  .acc { color: #56b8d6 !important; }
+  .hot { color: #ff8a80 !important; }
+  .warn { color: #f0b75a !important; }
+  .p-hot { background: #3b1d1b !important; color: #ff8a80 !important; }
+  .p-warn { background: #3a2c12 !important; color: #f0b75a !important; }
+  .p-note { background: #1e2747 !important; color: #9db1ff !important; }
+  .p-acc { background: #12303a !important; color: #56b8d6 !important; }
+  .p-neu { background: #1b222c !important; color: #9aa5b1 !important; }
+}`;
+// Outlook(Windows) 은 표 안 글자에 글꼴을 물려주지 않아 따로 정한다
+// 한글과 숫자·영문 사이에 Word 가 저절로 띄우는 간격('2026 년')도 끈다
+const MSO_CSS = `<!--[if mso]><style>table,td,p,a,span,h1,h2,div{font-family:'Malgun Gothic',Arial,sans-serif !important;text-autospace:none;}</style><![endif]-->`;
+// Outlook(Windows) 은 글자 단위 요소의 안쪽 여백을 무시하므로, 표시·단추 안에 Outlook 에서만 보이는 빈칸을 둔다
+const MSO_PAD = '<!--[if mso]>&nbsp;<![endif]-->';
+
+function a(url, text, style = '', cls = 'acc') {
   const href = safeUrl(url);
-  return href ? `<a href="${h(href)}" style="color:${C.accent};${style}">${text}</a>` : text;
+  return href ? `<a href="${h(href)}" class="${cls}" style="color:${C.accent};${style}">${text}</a>` : text;
 }
 
-function sectionTitle(text, sub = '') {
-  return `<h2 style="margin:26px 0 10px;padding-top:16px;border-top:1px solid ${C.rule};font-size:17px;color:${C.ink};">${h(text)}${sub ? ` <span style="font-size:12.5px;font-weight:normal;color:${C.muted};">${h(sub)}</span>` : ''}</h2>`;
+/** 'MM.DD HH:mm' (한국 시간) */
+function when(iso) {
+  const t = Date.parse(iso || '');
+  return Number.isNaN(t) ? '' : kstStamp(new Date(t)).slice(5).replace('-', '.');
 }
 
-function newsList(list, b) {
-  if (!list.length) return `<p style="margin:0;color:${C.muted};font-size:14px;">${h(emptyNote(b, 'news'))}</p>`;
-  return `<ol style="margin:0;padding-left:20px;">${list
-    .map((n) => {
-      const others = n.outlets.length > 1 ? ` 외 ${n.outlets.length - 1}곳` : '';
-      const orig = n.title_ko && n.title_ko !== n.title ? `<div style="font-size:12.5px;color:${C.faint};">${h(n.title)}</div>` : '';
-      const sum = n.summary_ko || truncate(n.snippet || '', 120);
-      return `<li style="margin:0 0 12px;">
-<div style="font-size:15px;font-weight:bold;line-height:1.45;">${a(n.url, h(n.title_ko || n.title), `color:${C.ink};text-decoration:none;`)}</div>
-${orig}<div style="font-size:12.5px;color:${C.faint};">${h(n.source)}${h(others)}</div>
-${sum ? `<div style="font-size:14px;color:${C.ink2};margin-top:2px;">${h(sum)}</div>` : ''}
-</li>`;
+const PILL = { hot: [C.hot, C.hotSoft], warn: [C.warn, C.warnSoft], note: [C.note, C.noteSoft], acc: [C.accent, C.accentSoft], neu: [C.muted, C.soft] };
+
+function pill(text, kind = 'neu') {
+  const [fg, bg] = PILL[kind];
+  return `<span class="p-${kind}" style="display:inline-block;margin:0 2px 4px 0;padding:0 8px;border-radius:10px;background:${bg};color:${fg};font-size:12px;line-height:20px;font-weight:bold;white-space:nowrap;">${MSO_PAD}${h(text)}${MSO_PAD}</span>`;
+}
+
+/** 취약점 표시(vulnBadges)의 색: 악용·KEV·CVSS 9 이상은 빨강, 기한·PoC·CVSS 7 이상은 주황, KISA 권고는 파랑 */
+function badgeKind(text) {
+  if (text === 'KEV' || text.startsWith('랜섬웨어') || text.startsWith('악용 확인')) return 'hot';
+  const cvss = /^CVSS (\d+(?:\.\d+)?)/.exec(text);
+  if (cvss) return Number(cvss[1]) >= 9 ? 'hot' : Number(cvss[1]) >= 7 ? 'warn' : 'neu';
+  if (text.startsWith('기한') || text === '공개 PoC') return 'warn';
+  if (text === 'KISA 권고') return 'note';
+  if (text === '뉴스 보도' || text.startsWith('관심')) return 'acc';
+  return 'neu';
+}
+
+/** 메일의 표시 순서: 실제 악용 → 점수 → 기한·PoC → 권고·보도·관심 → EPSS(참고) */
+const BADGE_ORDER = [/^(KEV|랜섬웨어|악용 확인)/, /^CVSS/, /^(기한|공개 PoC)/, /^KISA 권고/, /^뉴스 보도/, /^관심/, /^EPSS/];
+function badgeRank(text) {
+  const i = BADGE_ORDER.findIndex((re) => re.test(text));
+  return i < 0 ? BADGE_ORDER.length : i;
+}
+
+function button(url, text) {
+  const href = safeUrl(url);
+  return href
+    ? `<a href="${h(href)}" class="acc" style="display:inline-block;margin:0 2px 0 0;padding:3px 10px;border:1px solid ${C.rule};border-radius:6px;color:${C.accent};font-size:12.5px;line-height:18px;font-weight:bold;text-decoration:none;">${MSO_PAD}${h(text)}${MSO_PAD}</a>`
+    : '';
+}
+
+function sectionHead(title, { color = C.accent, count = null, sub = '' } = {}) {
+  const n = count === null || count === undefined
+    ? ''
+    : ` <span class="p-neu" style="display:inline-block;margin-left:4px;padding:0 8px;border-radius:10px;background:${C.soft};color:${C.muted};font-size:12.5px;line-height:20px;font-weight:bold;vertical-align:2px;">${h(count)}</span>`;
+  return `<tr><td style="padding:30px 0 10px;">
+<table ${TBL}><tr><td style="border-left:4px solid ${color};padding:1px 0 1px 10px;">
+<h2 class="ink" style="margin:0;font-size:18px;line-height:25px;color:${C.ink};">${h(title)}${n}</h2>
+${sub ? `<p class="faint" style="margin:2px 0 0;font-size:12.5px;line-height:18px;color:${C.faint};">${h(sub)}</p>` : ''}
+</td></tr></table></td></tr>`;
+}
+
+function noteRow(text) {
+  return `<tr><td class="muted" style="padding:2px 0 4px;font-size:14px;line-height:21px;color:${C.muted};">${h(text)}</td></tr>`;
+}
+
+function moreRow(html) {
+  return `<tr><td class="muted" style="padding:2px 0 4px;font-size:13px;line-height:20px;color:${C.muted};">${html}</td></tr>`;
+}
+
+/** 번호 붙은 기사 한 줄(브리핑 뉴스·관심 키워드 뉴스 공통) */
+function newsItem(i, { url, title, orig = '', meta = '', summary = '' }) {
+  return `<tr><td class="line" style="padding:${i ? 12 : 2}px 0 12px;${i ? `border-top:1px solid ${C.rule};` : ''}">
+<table ${TBL}><tr>
+<td class="acc" valign="top" width="26" style="width:26px;font-size:15px;line-height:24px;font-weight:bold;color:${C.accent};">${i + 1}</td>
+<td valign="top">
+<p style="margin:0;font-size:16px;line-height:24px;font-weight:bold;">${a(url, h(title), `color:${C.ink};text-decoration:none;`, 'ink')}</p>
+${orig ? `<p class="faint" style="margin:2px 0 0;font-size:12.5px;line-height:18px;color:${C.faint};">${h(orig)}</p>` : ''}
+${meta ? `<p class="faint" style="margin:3px 0 0;font-size:12.5px;line-height:18px;color:${C.faint};">${h(meta)}</p>` : ''}
+${summary ? `<p class="ink2" style="margin:6px 0 0;font-size:14.5px;line-height:23px;color:${C.ink2};">${h(summary)}</p>` : ''}
+</td></tr></table></td></tr>`;
+}
+
+function newsRows(list, b) {
+  if (!list.length) return noteRow(emptyNote(b, 'news'));
+  return list
+    .map((n, i) => {
+      const others = n.outlets?.length > 1 ? ` 외 ${n.outlets.length - 1}곳` : '';
+      const at = when(n.published);
+      return newsItem(i, {
+        url: n.url,
+        title: n.title_ko || n.title,
+        // 원문 제목은 번역한 기사만(국내 기사는 거의 같은 제목이 두 번 나와 군더더기)
+        orig: n.lang !== 'ko' && n.title_ko && n.title_ko !== n.title ? n.title : '',
+        meta: `${n.source || ''}${others}${at ? ` · ${at}` : ''}`,
+        summary: n.summary_ko || truncate(n.snippet || '', 120),
+      });
     })
-    .join('')}</ol>`;
+    .join('');
 }
 
-function vulnItem(v, color) {
+function kisaRows(adv, b) {
+  if (!adv.length) return noteRow(emptyNote(b, 'kisa'));
+  return adv
+    .map((x, i) => {
+      // 출처가 보안공지면 표시를 생략하고, 취약점 정보·경보단계만 작은 표시로
+      const kind = String(x.source || '').replace(/^KISA\s*/, '');
+      const tag = kind && kind !== '보안공지' ? ` ${pill(kind, 'note')}` : '';
+      const style = x.alert ? `color:${C.warn};font-weight:bold;text-decoration:none;` : `color:${C.ink2};text-decoration:none;`;
+      const day = /^\d{4}-\d{2}-\d{2}$/.test(x.date || '') ? `${x.date.slice(5, 7)}.${x.date.slice(8, 10)}` : x.date || '';
+      return `<tr><td class="line" style="padding:8px 0;${i ? `border-top:1px solid ${C.rule};` : ''}">
+<table ${TBL}><tr>
+<td valign="top" style="font-size:14.5px;line-height:22px;">${a(x.url, h(x.title), style, x.alert ? 'warn' : 'ink2')}${tag}</td>
+<td class="faint" valign="top" align="right" width="44" style="width:44px;padding-left:10px;font-size:12.5px;line-height:22px;color:${C.faint};white-space:nowrap;">${h(day)}</td>
+</tr></table></td></tr>`;
+    })
+    .join('');
+}
+
+function vulnCard(v, color) {
   const ids = v.ids && v.ids.length > 1 ? ` 외 ${v.ids.length - 1}건` : '';
-  const links = [...(v.links || []).slice(0, 1).map((u) => a(u, '벤더 공지')), a(v.nvd, 'NVD')].join(' · ');
-  const row = (k, val) => `<tr><td style="padding:1px 8px 1px 0;color:${C.muted};font-size:13px;white-space:nowrap;vertical-align:top;">${k}</td><td style="padding:1px 0;font-size:14px;">${h(val || '-')}</td></tr>`;
-  return `<div style="margin:0 0 12px;padding:10px 12px;border:1px solid ${C.rule};border-left:4px solid ${color};border-radius:6px;">
-<div style="font-family:Consolas,monospace;font-size:12.5px;color:${C.ink2};">${h(v.id)}${h(ids)} <span style="font-family:inherit;color:${C.muted};">· ${h(vulnBadges(v).join(' · '))}</span></div>
-<div style="font-size:15px;font-weight:bold;margin:4px 0 6px;">${h(v.ko?.title || v.id)}</div>
-<table role="presentation" style="border-collapse:collapse;">${row('대상', v.ko?.target)}${row('영향', v.ko?.impact)}${row('조치', v.ko?.action)}</table>
-<div style="font-size:13px;margin-top:6px;">${links}</div>
-</div>`;
+  const row = (k, val, strong = false) => `<tr>
+<td class="faint" valign="top" width="38" style="width:38px;padding:3px 10px 3px 0;font-size:13px;line-height:21px;color:${C.faint};white-space:nowrap;">${k}</td>
+<td class="${strong ? 'ink' : 'ink2'}" valign="top" style="padding:3px 0;font-size:14.5px;line-height:21px;color:${strong ? C.ink : C.ink2};${strong ? 'font-weight:bold;' : ''}">${h(val || '-')}</td></tr>`;
+  // 표시·단추 사이의 빈칸은 Outlook 에서 서로 붙지 않게 하는 몫
+  const links = [...(v.links || []).slice(0, 1).map((u) => button(u, '벤더 공지')), button(v.nvd, 'NVD')].filter(Boolean).join(' ');
+  return `<tr><td style="padding:0 0 12px;">
+<table ${TBL} class="vcard" style="border:1px solid ${C.rule};border-left:4px solid ${color};border-radius:8px;background:${C.card};"><tr><td style="padding:12px 14px;">
+<div>${[...vulnBadges(v)].sort((x, y) => badgeRank(x) - badgeRank(y)).map((t) => pill(t, badgeKind(t))).join(' ')}</div>
+<p class="ink" style="margin:2px 0 0;font-size:16px;line-height:24px;font-weight:bold;color:${C.ink};">${h(v.ko?.title || v.id)}</p>
+<p class="faint" style="margin:2px 0 0;font-family:${MONO};font-size:12.5px;line-height:18px;color:${C.faint};">${h(v.id)}${h(ids)}</p>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:8px;">${row('대상', v.ko?.target)}${row('영향', v.ko?.impact)}${row('조치', v.ko?.action, true)}</table>
+${links ? `<p style="margin:10px 0 0;">${links}</p>` : ''}
+</td></tr></table></td></tr>`;
 }
 
 /** 글자 메일(SMTP 의 text 부분)에 붙는 같은 내용 */
@@ -98,23 +226,16 @@ function keywordNewsText(extra) {
 
 /** (선택) 메일에만 붙는 '○○ 관련 뉴스' (src/mail-news.mjs) */
 function keywordNews(extra) {
-  const head = sectionTitle(`${extra.keyword} 관련 뉴스`, 'Google 뉴스 · 지난 브리핑 이후');
-  const note = (text) => `<p style="margin:0;color:${C.muted};font-size:14px;">${h(text)}</p>`;
-  if (extra.error) return head + note(extra.error);
-  if (!extra.items.length) return head + note('새 기사가 없습니다.');
-  const more = extra.total > extra.items.length
-    ? `<p style="font-size:13px;color:${C.muted};">그 밖의 ${extra.total - extra.items.length}건은 ${a(mailNewsSearchUrl(extra.keyword), 'Google 뉴스')}에서 볼 수 있습니다.</p>`
-    : '';
-  return `${head}<ol style="margin:0;padding-left:20px;">${extra.items
-    .map((n) => {
-      const others = n.outlets > 1 ? ` 외 ${n.outlets - 1}곳` : '';
-      const when = kstStamp(new Date(n.published)).slice(5).replace('-', '.');
-      return `<li style="margin:0 0 10px;">
-<div style="font-size:15px;font-weight:bold;line-height:1.45;">${a(n.url, h(n.title), `color:${C.ink};text-decoration:none;`)}</div>
-<div style="font-size:12.5px;color:${C.faint};">${h(n.outlet)}${h(others)} · ${h(when)}</div>
-</li>`;
-    })
-    .join('')}</ol>${more}`;
+  const rows = [sectionHead(`${extra.keyword} 관련 뉴스`, { sub: 'Google 뉴스 · 지난 브리핑 이후' })];
+  if (extra.error) rows.push(noteRow(extra.error));
+  else if (!extra.items.length) rows.push(noteRow('새 기사가 없습니다.'));
+  else {
+    rows.push(...extra.items.map((n, i) => newsItem(i, { url: n.url, title: n.title, meta: `${n.outlet}${n.outlets > 1 ? ` 외 ${n.outlets - 1}곳` : ''} · ${when(n.published)}` })));
+    if (extra.total > extra.items.length) {
+      rows.push(moreRow(`그 밖의 ${extra.total - extra.items.length}건은 ${a(mailNewsSearchUrl(extra.keyword), 'Google 뉴스')}에서 볼 수 있습니다.`));
+    }
+  }
+  return rows.join('');
 }
 
 /** 웹 페이지와 같은 순서: 국내 뉴스 → 해외 뉴스 → KISA 공지 → 악용 확인 → 신규 고위험 (→ 메일에만 관심 키워드 뉴스) */
@@ -124,60 +245,96 @@ export function renderEmailHtml(b, { siteUrl = '', title = '일일 보안 브리
   const ex = b.exploited || [];
   const cr = b.critical || [];
   const adv = b.advisories || [];
+  const dom = b.news?.domestic || [];
+  const intl = b.news?.international || [];
   const alert = alertOf(b);
   const exTotal = ex.length + (b.exploited_more?.length || 0);
   const since = sinceNote(b);
   const date = `${Number(b.date.slice(0, 4))}년 ${Number(b.date.slice(5, 7))}월 ${Number(b.date.slice(8, 10))}일 (${weekdayKo(b.date)})`;
+
+  // 받은편지함 목록에서 제목 옆에 보이는 미리 보기 글(본문에는 보이지 않음)
+  const preheader = b.overview
+    ? `<div style="display:none;max-height:0;max-width:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;opacity:0;color:${C.page};">${h(truncate(b.overview, 110))}${'&#847;&zwnj;&nbsp;'.repeat(30)}</div>`
+    : '';
+
+  // 글자 사이를 벌리면(letter-spacing) 영문 약어가 'G OC' 처럼 떨어져 보여 간격은 두지 않는다
+  const header = `<p style="margin:0;font-size:13px;line-height:18px;font-weight:bold;color:${C.bandSub};">${h(title)}</p>
+<h1 style="margin:6px 0 4px;font-size:24px;line-height:32px;color:${C.bandInk};">${date}</h1>
+<p style="margin:0;font-size:13px;line-height:20px;color:${C.bandSub};">${h(b.generated_at?.slice(11, 16) || '')} KST 생성${since ? ` · ${h(since)}` : ''}${dayUrl ? ` · <a href="${h(dayUrl)}" style="color:${C.bandInk};text-decoration:underline;">웹에서 보기</a>` : ''}</p>`;
+
+  // 건수 칸: 휴대폰에서도 한 줄에 들어가게 이름은 짧게, 줄바꿈 없이
   const tiles = [
-    ['news-domestic', b.news?.domestic?.length || 0, '국내 뉴스', C.ink],
-    ['news-international', b.news?.international?.length || 0, '해외 뉴스', C.ink],
-    ['kisa', adv.length, 'KISA 공지', alert ? C.warn : C.ink],
-    ['exploited', b.failed?.kev ? '–' : exTotal, '악용 확인', exTotal ? C.hot : C.ink],
-    ['critical', b.critical_total ?? '–', `고위험 ${Number(b.cvss_min ?? 9).toFixed(1)}+`, C.ink],
+    ['news-domestic', dom.length, '국내 뉴스', C.ink, 'ink'],
+    ['news-international', intl.length, '해외 뉴스', C.ink, 'ink'],
+    ['kisa', adv.length, 'KISA 공지', alert ? C.warn : C.ink, alert ? 'warn' : 'ink'],
+    ['exploited', b.failed?.kev ? '–' : exTotal, '악용 확인', exTotal ? C.hot : C.ink, exTotal ? 'hot' : 'ink'],
+    ['critical', b.critical_total ?? '–', '고위험', C.ink, 'ink'],
   ];
   const tileCells = tiles
-    .map(([id, n, label, color]) => `<td style="width:20%;padding:3px;"><div style="background:${C.bg};border:1px solid ${C.rule};border-radius:6px;padding:8px 2px;text-align:center;">
-${a(anchor(id), `<span style="display:block;font-size:20px;font-weight:bold;color:${color};">${h(n)}</span><span style="display:block;font-size:11.5px;color:${C.muted};">${h(label)}</span>`, 'text-decoration:none;')}</div></td>`)
+    .map(([id, n, label, color, cls]) => `<td width="20%" valign="top" style="width:20%;padding:0 3px;">
+<table ${TBL}><tr><td class="soft" align="center" bgcolor="${C.soft}" style="background:${C.soft};border:1px solid ${C.rule};border-radius:8px;padding:10px 2px 8px;">
+${a(anchor(id), `<span class="${cls}" style="font-size:22px;line-height:26px;font-weight:bold;color:${color};">${h(n)}</span><br><span class="tile-label muted" style="font-size:11.5px;line-height:16px;color:${C.muted};white-space:nowrap;">${h(label)}</span>`, 'text-decoration:none;', '')}
+</td></tr></table></td>`)
     .join('');
-  const parts = [];
-  // 글자 사이를 벌리면(letter-spacing) 영문 약어가 'G OC' 처럼 떨어져 보여 간격은 두지 않는다
-  parts.push(`<p style="margin:0;font-size:13px;color:${C.accent};font-weight:bold;">${h(title)}</p>
-<h1 style="margin:4px 0 2px;font-size:22px;color:${C.ink};">${date}</h1>
-<p style="margin:0;font-size:13px;color:${C.muted};">${h(b.generated_at?.slice(11, 16) || '')} KST 생성${since ? ` · ${h(since)}` : ''}${dayUrl ? ` · ${a(dayUrl, '웹에서 보기')}` : ''}</p>
-<table role="presentation" style="width:100%;border-collapse:collapse;margin-top:12px;"><tr>${tileCells}</tr></table>`);
+
+  const rows = [`<tr><td style="padding:0;"><table ${TBL}><tr>${tileCells}</tr></table></td></tr>`];
   if (alert) {
-    parts.push(`<div style="margin-top:14px;padding:10px 12px;background:${C.warnSoft};border:1px solid ${C.warn};border-radius:6px;font-size:14px;"><b style="color:${C.warn};">경보</b> ${a(alert.url, h(alert.title), `color:${C.ink};font-weight:bold;`)} <span style="color:${C.faint};font-size:12.5px;">${h(alert.source)} · ${h(alert.date)}</span></div>`);
+    rows.push(`<tr><td style="padding:14px 0 0;">
+<table ${TBL}><tr><td class="warnbox" bgcolor="${C.warnSoft}" style="background:${C.warnSoft};border:1px solid ${C.warnLine};border-radius:8px;padding:10px 12px;font-size:14.5px;line-height:22px;">
+${pill('사이버위기 경보', 'warn')} ${a(alert.url, h(alert.title), `color:${C.ink};font-weight:bold;text-decoration:none;`, 'ink')}<span class="faint" style="font-size:12.5px;color:${C.faint};"> · ${h(alert.source)} · ${h(alert.date)}</span>
+</td></tr></table></td></tr>`);
   }
-  if (b.overview) parts.push(`<div style="margin-top:14px;padding:12px 14px;background:${C.accentSoft};border-radius:6px;font-size:14.5px;">${h(b.overview)}</div>`);
+  if (b.overview) {
+    rows.push(`<tr><td style="padding:14px 0 0;">
+<table ${TBL}><tr><td class="ov" bgcolor="${C.accentSoft}" style="background:${C.accentSoft};border-left:4px solid ${C.accent};border-radius:0 8px 8px 0;padding:12px 14px;">
+<p class="acc" style="margin:0 0 4px;font-size:12.5px;line-height:18px;font-weight:bold;color:${C.accent};">오늘의 요약</p>
+<p class="ink2" style="margin:0;font-size:15px;line-height:24px;color:${C.ink2};">${h(b.overview)}</p>
+</td></tr></table></td></tr>`);
+  }
 
-  parts.push(sectionTitle('국내 보안 뉴스'), newsList(b.news?.domestic || [], b));
-  parts.push(sectionTitle('해외 보안 뉴스'), newsList(b.news?.international || [], b));
+  rows.push(sectionHead('국내 보안 뉴스', { count: dom.length }), newsRows(dom, b));
+  rows.push(sectionHead('해외 보안 뉴스', { count: intl.length }), newsRows(intl, b));
+  rows.push(sectionHead('KISA 공지', { color: C.note, count: adv.length, sub: '보호나라·KrCERT' }), kisaRows(adv, b));
 
-  parts.push(sectionTitle('KISA 공지', '보호나라·KrCERT'));
-  parts.push(adv.length
-    ? `<ul style="margin:0;padding-left:20px;">${adv.map((x) => `<li style="margin:0 0 6px;font-size:14px;">${a(x.url, h(x.title), x.alert ? `color:${C.warn};font-weight:bold;` : '')} <span style="color:${C.faint};font-size:12.5px;">${h(x.source)} · ${h(x.date)}</span></li>`).join('')}</ul>`
-    : `<p style="margin:0;color:${C.muted};font-size:14px;">${h(emptyNote(b, 'kisa'))}</p>`);
-
-  parts.push(sectionTitle('악용 확인 취약점', `CISA KEV 신규 ${b.failed?.kev ? '— 수집 실패' : `${exTotal}건`}`));
-  parts.push(ex.length ? ex.map((v) => vulnItem(v, C.hot)).join('') : `<p style="margin:0;color:${C.muted};font-size:14px;">${h(emptyNote(b, 'exploited'))}</p>`);
-  if (b.exploited_more?.length) parts.push(`<p style="font-size:13px;color:${C.muted};">그 밖의 신규 등재 ${b.exploited_more.length}건: ${h(b.exploited_more.map((v) => v.id).join(', '))}</p>`);
+  rows.push(sectionHead('악용 확인 취약점', { color: C.hot, count: b.failed?.kev ? null : exTotal, sub: b.failed?.kev ? 'CISA KEV — 수집 실패' : 'CISA KEV 신규 등재' }));
+  rows.push(ex.length ? ex.map((v) => vulnCard(v, C.hot)).join('') : noteRow(emptyNote(b, 'exploited')));
+  if (b.exploited_more?.length) rows.push(moreRow(`그 밖의 신규 등재 ${b.exploited_more.length}건: ${h(b.exploited_more.map((v) => v.id).join(', '))}`));
 
   const crSub = b.critical_total === null || b.critical_total === undefined ? '— 수집 실패' : `CVSS ${Number(b.cvss_min ?? 9).toFixed(1)} 이상 ${b.critical_total}건 중 주요 ${cr.length}묶음`;
-  parts.push(sectionTitle('신규 고위험 취약점', crSub));
-  parts.push(cr.length ? cr.map((g) => vulnItem(g, C.warn)).join('') : `<p style="margin:0;color:${C.muted};font-size:14px;">${h(emptyNote(b, 'critical'))}</p>`);
-  if (b.critical_more?.length) parts.push(`<p style="font-size:13px;color:${C.muted};">그 밖의 고위험 ${b.critical_more.length}묶음은 ${dayUrl ? a(anchor('critical'), '웹 페이지') : '웹 페이지'}에서 볼 수 있습니다.</p>`);
-  if (extraNews) parts.push(keywordNews(extraNews));
+  rows.push(sectionHead('신규 고위험 취약점', { color: C.warn, sub: crSub }));
+  rows.push(cr.length ? cr.map((g) => vulnCard(g, C.warn)).join('') : noteRow(emptyNote(b, 'critical')));
+  if (b.critical_more?.length) rows.push(moreRow(`그 밖의 고위험 ${b.critical_more.length}묶음은 ${dayUrl ? a(anchor('critical'), '웹 페이지') : '웹 페이지'}에서 볼 수 있습니다.`));
+  if (extraNews) rows.push(keywordNews(extraNews));
 
   const ok = (b.sources || []).filter((s) => s.ok).length;
-  parts.push(`<p style="margin:24px 0 0;padding-top:12px;border-top:1px solid ${C.rule};font-size:12.5px;color:${C.faint};">수집 ${ok}/${(b.sources || []).length}곳 정상${siteUrl ? ` · ${a(`${siteUrl}/archive.html`, '지난 브리핑')}` : ''} · 자동 발송</p>`);
+  const foot = `수집 ${ok}/${(b.sources || []).length}곳 정상${dayUrl ? ` · ${a(dayUrl, '웹에서 보기')}` : ''}${siteUrl ? ` · ${a(`${siteUrl}/archive.html`, '지난 브리핑')}` : ''} · 자동 발송`;
 
   return `<!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${h(mailSubject(b, title))}</title></head>
-<body style="margin:0;padding:0;background:${C.bg};">
-<div style="max-width:680px;margin:0 auto;padding:12px;font-family:'Malgun Gothic','Apple SD Gothic Neo','Noto Sans KR',sans-serif;color:${C.ink};line-height:1.6;word-break:keep-all;overflow-wrap:anywhere;">
-<div style="background:#ffffff;border:1px solid ${C.rule};border-radius:10px;padding:18px 16px;">
-${parts.join('\n')}
-</div></div></body></html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark"><meta name="supported-color-schemes" content="light dark">
+<meta name="x-apple-disable-message-reformatting">
+<title>${h(mailSubject(b, title))}</title>
+<style>${DARK_CSS}</style>
+${MSO_CSS}
+</head>
+<body class="bg" bgcolor="${C.page}" style="margin:0;padding:0;background:${C.page};">
+${preheader}
+<table ${TBL} class="bg" bgcolor="${C.page}" style="background:${C.page};"><tr><td align="center" style="padding:16px 8px 20px;">
+<!--[if mso]><table role="presentation" width="680" align="center" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:680px;width:100%;font-family:${FONT};color:${C.ink};word-break:keep-all;overflow-wrap:anywhere;">
+<tr><td bgcolor="${C.band}" style="background:${C.band};border-radius:12px 12px 0 0;padding:20px 22px 18px;">
+${header}
+</td></tr>
+<tr><td class="card" bgcolor="${C.card}" style="background:${C.card};border:1px solid ${C.rule};border-top:0;border-radius:0 0 12px 12px;padding:16px 18px 24px;">
+<table ${TBL}>
+${rows.join('\n')}
+</table>
+</td></tr>
+<tr><td class="faint" align="center" style="padding:14px 10px 4px;font-size:12.5px;line-height:19px;color:${C.faint};text-align:center;">${foot}</td></tr>
+</table>
+<!--[if mso]></td></tr></table><![endif]-->
+</td></tr></table>
+</body></html>
 `;
 }
 

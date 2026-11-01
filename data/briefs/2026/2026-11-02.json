@@ -1,0 +1,1253 @@
+{
+  "version": 2,
+  "date": "2026-11-02",
+  "generated_at": "2026-11-02T06:00:52+09:00",
+  "window": {
+    "hours": 73,
+    "from": "2026-10-29T20:00:52.874Z",
+    "to": "2026-11-01T21:00:52.874Z",
+    "since_brief": "2026-10-30",
+    "since_at": "2026-10-29T21:00:54.590Z"
+  },
+  "engine": "claude-haiku-5-5",
+  "overview": "더존비즈온 백업서버 침해로 협력사 개인정보 유출 우려가 커서 거래처 정보 유출 여부 점검이 가장 시급합니다. Ivanti Connect Secure 취약점 2건은 실제 악용이 확인되어 즉시 패치가 필요합니다. 이어서 Chrome 원격코드실행 취약점도 업데이트해야 합니다.",
+  "cvss_min": 9,
+  "critical_total": 78,
+  "failed": {
+    "kev": false,
+    "nvd": false,
+    "kisa": false,
+    "news": false
+  },
+  "exploited": [
+    {
+      "id": "CVE-2026-111357",
+      "section": "exploited",
+      "vendor": "Ivanti",
+      "product": "Connect Secure",
+      "name": "Ivanti Connect Secure Missing Authentication for Critical Function Vulnerability",
+      "dateAdded": "2026-10-30",
+      "due": "2026-11-02",
+      "ransomware": false,
+      "description": "Ivanti Connect Secure contains a missing authentication for critical function vulnerability that could allow a local authenticated attacker to escalate their privileges. This vulnerability can be chained with CVE-2026-104935 and CVE-2026-118527.",
+      "cwes": [
+        "CWE-306",
+        "CWE-862",
+        "CWE-345"
+      ],
+      "cvss": {
+        "score": 7,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "active",
+        "automatable": "no",
+        "technicalImpact": "total"
+      },
+      "epss": 0.00533,
+      "epssPct": 0.45024,
+      "published": "2026-10-15T21:17:13.190",
+      "links": [
+        "https://hub.ivanti.com/s/article/Security-Advisory-Ivanti-Connect-Secure-CVE-2026-104935?language=en_US",
+        "https://hub.ivanti.com/s/article/Security-Advisory-Ivanti-Connect-Secure-CVE-2026-104935",
+        "https://www.volexity.com/blog/2026/10/13/a-series-of-unauthenticated-events-chained-exploitation-of-ivanti-connect-secure-zero-days/"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-111357",
+      "ko": {
+        "title": "Ivanti Connect Secure 권한 상승 취약점(인증 누락)",
+        "target": "Ivanti Connect Secure, 영향 버전 벤더 공지 확인 필요",
+        "impact": "로컬 인증 사용자가 권한 상승 가능, 악용 확인되어 KEV 등재. CVE-2026-104935 등과 연계 가능",
+        "action": "벤더 패치 즉시 적용, CISA 조치 기한 2026-11-02 준수, 연계 취약점도 함께 점검"
+      }
+    },
+    {
+      "id": "CVE-2026-118527",
+      "section": "exploited",
+      "vendor": "Ivanti",
+      "product": "Connect Secure",
+      "name": "Ivanti Connect Secure Generation of Predictable Numbers or Identifiers Vulnerability",
+      "dateAdded": "2026-10-30",
+      "due": "2026-11-13",
+      "ransomware": false,
+      "description": "Ivanti Connect Secure contains a generation of predictable numbers or identifiers vulnerability that allows a remote authenticated attacker to upload files with attacker-controlled content to a known location on disk. This vulnerability can be chained with CVE-2026-104935 and CVE-2026-111357.",
+      "cwes": [
+        "CWE-340"
+      ],
+      "cvss": null,
+      "ssvc": null,
+      "epss": null,
+      "epssPct": null,
+      "published": "",
+      "links": [
+        "https://hub.ivanti.com/s/article/Security-Advisory-Ivanti-Connect-Secure-CVE-2026-104935?language=en_US"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-118527",
+      "ko": {
+        "title": "Ivanti Connect Secure 예측 가능 식별자 생성 취약점",
+        "target": "Ivanti Connect Secure, 영향 버전 벤더 공지 확인 필요",
+        "impact": "원격 인증 공격자가 임의 내용 파일을 디스크 특정 위치에 업로드 가능, 연계 공격 우려",
+        "action": "벤더 패치 적용, CISA 조치 기한 2026-11-13 이내 완료, 파일 업로드 흔적 점검"
+      }
+    }
+  ],
+  "exploited_more": [],
+  "critical": [
+    {
+      "id": "CVE-2026-118636",
+      "ids": [
+        "CVE-2026-118636"
+      ],
+      "section": "critical",
+      "label": "Apache",
+      "vendor": "Apache",
+      "cna": "security@apache.org",
+      "status": "Received",
+      "published": "2026-10-31T21:16:53.203",
+      "description": "**UNSUPPORTED WHEN ASSIGNED** JavaNativeMessageDecoder in the MINA 3.0 codec module calls ObjectInputStream.readObject() on frame bytes with no class filter, so an application that puts it in front of an untrusted peer is open to gadget-chain RCE. As the 3.0.0 branch is inactive, we do not plan to release a version that fixes this issue. Users are recommended to use the latest Apache MINA 2.2.X branch.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-118636",
+          "text": "**UNSUPPORTED WHEN ASSIGNED** JavaNativeMessageDecoder in the MINA 3.0 codec module calls ObjectInputStream.readObject() on frame bytes with no class filter, so an application that puts it in front of an untrusted peer is open to gadget-chain RCE. As the 3.0.0 branch is inactive, we do not plan to…"
+        }
+      ],
+      "cwes": [
+        "CWE-502"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": null,
+      "epss": 0.00575,
+      "links": [
+        "https://lists.apache.org/thread.html/h76nwcrkvsffhsk2kq6cjzc6srtnty7x",
+        "https://www.cve.org/CVERecord?id=CVE-2026-118636",
+        "http://www.openwall.com/lists/oss-security/2026/10/31/3"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-118636",
+      "flags": {
+        "watch": "Apache",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 12.33,
+      "ko": {
+        "title": "Apache MINA 3.0 객체 역직렬화 원격코드실행 취약점",
+        "target": "Apache MINA 3.0 codec 모듈(3.0.0 브랜치)",
+        "impact": "비신뢰 피어 대상 노출 시 가젯 체인 기반 원격코드실행 가능, CVSS 9.8, 패치 계획 없음",
+        "action": "3.0.0 브랜치 사용 여부 확인, 신뢰되지 않은 입력 차단, 대체 버전 이전 검토"
+      }
+    },
+    {
+      "id": "CVE-2026-63377",
+      "ids": [
+        "CVE-2026-63377"
+      ],
+      "section": "critical",
+      "label": "TAKO AI Agent for Okta",
+      "vendor": "",
+      "cna": "security-advisories@github.com",
+      "status": "Received",
+      "published": "2026-10-30T23:17:14.267",
+      "description": "TAKO AI Agent for Okta is a local-first AI agent that helps Okta administrators query tenant data using natural language. Prior to 3.0.1-beta, `POST /api/auth/setup` in `src/api/routers/auth.py` allows an unauthenticated network attacker to create the first administrator account before the legitimate owner completes initial setup. The `initial_setup` function checks only the `is_setup` completion flag and requires no authentication, one-time bootstrap token, or network restriction. The default `docker-compose.yml` publishes port 8001 on all interfaces, the `Dockerfile` starts the listener on 0.0.0.0, and `src/api/main.py` mounts the authentication router without a global authentication guard. The endpoint invokes `create_auth_user` with `UserRole.ADMIN` and `set_auth_cookie`, issuing a valid `fctr_session` JWT cookie. Localhost-only CORS rules do not restrict non-browser HTTP clients, and the setup operation does not require access to a real Okta tenant. The attacker becomes the sole administrator and prevents legitimate first-run setup, can read Okta-synced user data, API tokens, chat history, and application configuration, modify users and Okta integration credentials, and lock out administrators or disable the service. Already completed setup is rejected. This issue is fixed in version 3.0.1-beta.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-63377",
+          "text": "TAKO AI Agent for Okta is a local-first AI agent that helps Okta administrators query tenant data using natural language. Prior to 3.0.1-beta, `POST /api/auth/setup` in `src/api/routers/auth.py` allows an unauthenticated network attacker to create the first administrator account before the legitima…"
+        }
+      ],
+      "cwes": [
+        "CWE-306"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": null,
+      "epss": 0.00397,
+      "links": [
+        "https://github.com/fctr-id/okta-ai-agent/commit/3b5ccaff8423cdfa6d26f5e133c01b8b71148df4",
+        "https://github.com/fctr-id/okta-ai-agent/releases/tag/v3.0.1-beta",
+        "https://github.com/fctr-id/okta-ai-agent/security/advisories/GHSA-536w-42p8-3qv9"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-63377",
+      "flags": {
+        "watch": "Okta",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 12.32,
+      "ko": {
+        "title": "TAKO AI Agent for Okta 최초 관리자 계정 생성 인증 우회",
+        "target": "TAKO AI Agent for Okta 3.0.1-beta 미만",
+        "impact": "미인증 네트워크 공격자가 최초 관리자 계정 생성 가능, Okta 테넌트 데이터 접근 우려",
+        "action": "3.0.1-beta 이상 업데이트, 관리자 계정 생성 이력과 setup API 외부 노출 여부 점검"
+      }
+    },
+    {
+      "id": "CVE-2026-119261",
+      "ids": [
+        "CVE-2026-119261",
+        "CVE-2026-119263"
+      ],
+      "section": "critical",
+      "label": "Google Chrome",
+      "vendor": "Google",
+      "cna": "chrome-cve-admin@google.com",
+      "status": "Analyzed",
+      "published": "2026-10-30T01:16:44.797",
+      "description": "Improper input validation in Skia in Google Chrome prior to 156.0.8078.79 allowed a remote attacker to potentially execute arbitrary code outside the sandbox via a crafted HTML page. (Chromium security severity: High)",
+      "descriptions": [
+        {
+          "id": "CVE-2026-119261",
+          "text": "Improper input validation in Skia in Google Chrome prior to 156.0.8078.79 allowed a remote attacker to potentially execute arbitrary code outside the sandbox via a crafted HTML page. (Chromium security severity: High)"
+        },
+        {
+          "id": "CVE-2026-119263",
+          "text": "Memory corruption in GarbageCollection in Google Chrome prior to 156.0.8078.79 allowed a remote attacker to potentially execute arbitrary code outside the sandbox via a crafted HTML page. (Chromium security severity: High)"
+        }
+      ],
+      "cwes": [
+        "CWE-20",
+        "CWE-119"
+      ],
+      "cvss": {
+        "score": 9.6,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "no",
+        "technicalImpact": "total"
+      },
+      "epss": 0.00282,
+      "links": [
+        "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02107719452.html",
+        "https://issues.chromium.org/issues/574213633"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-119261",
+      "flags": {
+        "watch": "Chrome",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 12.31,
+      "ko": {
+        "title": "Google Chrome Skia 및 GC 메모리 손상 원격코드실행 취약점",
+        "target": "Google Chrome 156.0.8078.79 미만",
+        "impact": "악성 HTML 페이지 방문 시 샌드박스 밖 임의 코드 실행 가능, CVSS 9.6, 악용 미확인",
+        "action": "Chrome 156.0.8078.79 이상으로 업데이트, 브라우저 자동 업데이트 설정 확인"
+      }
+    }
+  ],
+  "critical_more": [
+    {
+      "id": "CVE-2026-110799",
+      "ids": [
+        "CVE-2026-110799",
+        "CVE-2026-112905"
+      ],
+      "label": "Vvveb",
+      "cvss": 9.8,
+      "title": "Vvveb 인증 부적절 등 2건"
+    },
+    {
+      "id": "CVE-2026-119706",
+      "ids": [
+        "CVE-2026-119706"
+      ],
+      "label": "InternLM LMDeploy",
+      "cvss": 9.8,
+      "title": "InternLM LMDeploy 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-120195",
+      "ids": [
+        "CVE-2026-120195",
+        "CVE-2026-120198",
+        "CVE-2026-120196",
+        "CVE-2026-120197",
+        "CVE-2026-120227",
+        "CVE-2026-120230"
+      ],
+      "label": "WAVLINK WL-WN530BE1-A V251117",
+      "cvss": 10,
+      "title": "WAVLINK WL-WN530BE1-A V251117 명령 삽입 등 6건"
+    },
+    {
+      "id": "CVE-2026-118235",
+      "ids": [
+        "CVE-2026-118235"
+      ],
+      "label": "CVE-2026-118235",
+      "cvss": 9.8,
+      "title": "CVE-2026-118235 위험한 형식 파일 업로드"
+    },
+    {
+      "id": "CVE-2026-78403",
+      "ids": [
+        "CVE-2026-78403"
+      ],
+      "label": "CVE-2026-78403",
+      "cvss": 9.8,
+      "title": "CVE-2026-78403 스택 버퍼 오버플로"
+    },
+    {
+      "id": "CVE-2026-107249",
+      "ids": [
+        "CVE-2026-107249"
+      ],
+      "label": "Drupal Block AJAX",
+      "cvss": 9.8,
+      "title": "Drupal Block AJAX 객체 속성 수정 통제 부적절"
+    },
+    {
+      "id": "CVE-2026-61620",
+      "ids": [
+        "CVE-2026-61620"
+      ],
+      "label": "CVE-2026-61620",
+      "cvss": 9.8,
+      "title": "CVE-2026-61620 SQL 삽입"
+    },
+    {
+      "id": "CVE-2026-61738",
+      "ids": [
+        "CVE-2026-61738",
+        "CVE-2026-61728",
+        "CVE-2026-61729",
+        "CVE-2026-61730",
+        "CVE-2026-61707"
+      ],
+      "label": "CVE-2026-61738",
+      "cvss": 10,
+      "title": "CVE-2026-61738 경로 조작 등 5건"
+    },
+    {
+      "id": "CVE-2026-55598",
+      "ids": [
+        "CVE-2026-55598"
+      ],
+      "label": "PinePods",
+      "cvss": 9.1,
+      "title": "PinePods 서버 측 요청 위조(SSRF)"
+    },
+    {
+      "id": "CVE-2026-120189",
+      "ids": [
+        "CVE-2026-120189"
+      ],
+      "label": "D-Link DIR-505",
+      "cvss": 10,
+      "title": "D-Link DIR-505 메모리 경계 오류"
+    },
+    {
+      "id": "CVE-2026-112816",
+      "ids": [
+        "CVE-2026-112816"
+      ],
+      "label": "Canonical",
+      "cvss": 10,
+      "title": "Canonical 인증서 검증 부적절"
+    },
+    {
+      "id": "CVE-2026-120338",
+      "ids": [
+        "CVE-2026-120338"
+      ],
+      "label": "CVE-2026-120338",
+      "cvss": 10,
+      "title": "CVE-2026-120338 코드 삽입"
+    },
+    {
+      "id": "CVE-2026-120231",
+      "ids": [
+        "CVE-2026-120231",
+        "CVE-2026-120238",
+        "CVE-2026-120239",
+        "CVE-2026-120240"
+      ],
+      "label": "WAVLINK WN553X1-B V260403_2.0.0",
+      "cvss": 9.9,
+      "title": "WAVLINK WN553X1-B V260403_2.0.0 명령 삽입 등 4건"
+    },
+    {
+      "id": "CVE-2025-31704",
+      "ids": [
+        "CVE-2025-31704"
+      ],
+      "label": "CVE-2025-31704",
+      "cvss": 9.8,
+      "title": "CVE-2025-31704 OS 명령 삽입"
+    },
+    {
+      "id": "CVE-2026-61737",
+      "ids": [
+        "CVE-2026-61737"
+      ],
+      "label": "ng-antd-admin",
+      "cvss": 9.8,
+      "title": "ng-antd-admin 하드코딩 암호 키"
+    },
+    {
+      "id": "CVE-2026-120209",
+      "ids": [
+        "CVE-2026-120209"
+      ],
+      "label": "AJ-Report",
+      "cvss": 9.8,
+      "title": "AJ-Report 하드코딩 암호 키"
+    },
+    {
+      "id": "CVE-2026-120306",
+      "ids": [
+        "CVE-2026-120306",
+        "CVE-2026-120307",
+        "CVE-2026-120308"
+      ],
+      "label": "CVE-2026-120306",
+      "cvss": 9.9,
+      "title": "CVE-2026-120306 권한 관리 부적절 등 3건"
+    },
+    {
+      "id": "CVE-2026-116241",
+      "ids": [
+        "CVE-2026-116241",
+        "CVE-2026-116238"
+      ],
+      "label": "pgAdmin",
+      "cvss": 9.9,
+      "title": "pgAdmin OS 명령 삽입 등 2건"
+    },
+    {
+      "id": "CVE-2026-62853",
+      "ids": [
+        "CVE-2026-62853",
+        "CVE-2026-62849"
+      ],
+      "label": "ThingLinks",
+      "cvss": 9.9,
+      "title": "ThingLinks OS 명령 삽입 등 2건"
+    },
+    {
+      "id": "CVE-2026-62863",
+      "ids": [
+        "CVE-2026-62863"
+      ],
+      "label": "MoLing",
+      "cvss": 9.6,
+      "title": "MoLing 중요 기능 인증 누락"
+    },
+    {
+      "id": "CVE-2026-120228",
+      "ids": [
+        "CVE-2026-120228",
+        "CVE-2026-120229"
+      ],
+      "label": "WAVLINK WN553X1-B V260403_2.0.0",
+      "cvss": 9.9,
+      "title": "WAVLINK WN553X1-B V260403_2.0.0 명령 삽입 등 2건"
+    },
+    {
+      "id": "CVE-2026-116366",
+      "ids": [
+        "CVE-2026-116366"
+      ],
+      "label": "CVE-2026-116366",
+      "cvss": 9.5,
+      "title": "CVE-2026-116366 정수 오버플로"
+    },
+    {
+      "id": "CVE-2026-61826",
+      "ids": [
+        "CVE-2026-61826"
+      ],
+      "label": "Bazarr",
+      "cvss": 10,
+      "title": "Bazarr 사이트 간 요청 위조(CSRF)"
+    },
+    {
+      "id": "CVE-2026-120224",
+      "ids": [
+        "CVE-2026-120224"
+      ],
+      "label": "Oray Pugongying X5 Pro",
+      "cvss": 9.9,
+      "title": "Oray Pugongying X5 Pro 권한 검사 부적절"
+    },
+    {
+      "id": "CVE-2026-119660",
+      "ids": [
+        "CVE-2026-119660"
+      ],
+      "label": "MuseBot",
+      "cvss": 9.8,
+      "title": "MuseBot 인증 우회"
+    },
+    {
+      "id": "CVE-2026-120201",
+      "ids": [
+        "CVE-2026-120201"
+      ],
+      "label": "Jpom",
+      "cvss": 9.8,
+      "title": "Jpom 인증 우회"
+    },
+    {
+      "id": "CVE-2026-119597",
+      "ids": [
+        "CVE-2026-119597"
+      ],
+      "label": "OpenDeepWiki",
+      "cvss": 9.8,
+      "title": "OpenDeepWiki 하드코딩 암호 키"
+    },
+    {
+      "id": "CVE-2026-117656",
+      "ids": [
+        "CVE-2026-117656"
+      ],
+      "label": "CVE-2026-117656",
+      "cvss": 9.3,
+      "title": "CVE-2026-117656 스푸핑 인증 우회"
+    },
+    {
+      "id": "CVE-2026-119568",
+      "ids": [
+        "CVE-2026-119568"
+      ],
+      "label": "vsftpd",
+      "cvss": 9.1,
+      "title": "vsftpd 인증 우회"
+    },
+    {
+      "id": "CVE-2026-117666",
+      "ids": [
+        "CVE-2026-117666"
+      ],
+      "label": "CVE-2026-117666",
+      "cvss": 9.1,
+      "title": "CVE-2026-117666 취약점"
+    },
+    {
+      "id": "CVE-2026-118697",
+      "ids": [
+        "CVE-2026-118697"
+      ],
+      "label": "In JetBrains Toolbox App",
+      "cvss": 9,
+      "title": "In JetBrains Toolbox App 인증서 검증 부적절"
+    },
+    {
+      "id": "CVE-2026-119716",
+      "ids": [
+        "CVE-2026-119716",
+        "CVE-2026-119717"
+      ],
+      "label": "pybars3",
+      "cvss": 9.2,
+      "title": "pybars3 코드 삽입 등 2건"
+    },
+    {
+      "id": "CVE-2026-82104",
+      "ids": [
+        "CVE-2026-82104"
+      ],
+      "label": "CVE-2026-82104",
+      "cvss": 9.4,
+      "title": "CVE-2026-82104 중요 기능 인증 누락"
+    },
+    {
+      "id": "CVE-2026-93327",
+      "ids": [
+        "CVE-2026-93327"
+      ],
+      "label": "Google Cloud Application Integration",
+      "cvss": 9.4,
+      "title": "Google Cloud Application Integration 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-119418",
+      "ids": [
+        "CVE-2026-119418",
+        "CVE-2026-119419"
+      ],
+      "label": "CakePHP",
+      "cvss": 9.2,
+      "title": "CakePHP SQL 삽입 등 2건"
+    },
+    {
+      "id": "CVE-2026-120225",
+      "ids": [
+        "CVE-2026-120225"
+      ],
+      "label": "Oray Pugongying X5 Pro",
+      "cvss": 9.1,
+      "title": "Oray Pugongying X5 Pro 경로 조작"
+    },
+    {
+      "id": "CVE-2026-103039",
+      "ids": [
+        "CVE-2026-103039"
+      ],
+      "label": "CVE-2026-103039",
+      "cvss": 9.8,
+      "title": "CVE-2026-103039 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-109220",
+      "ids": [
+        "CVE-2026-109220"
+      ],
+      "label": "CVE-2026-109220",
+      "cvss": 9.8,
+      "title": "CVE-2026-109220 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-116512",
+      "ids": [
+        "CVE-2026-116512"
+      ],
+      "label": "CVE-2026-116512",
+      "cvss": 9.8,
+      "title": "CVE-2026-116512 위험한 형식 파일 업로드"
+    },
+    {
+      "id": "CVE-2026-116386",
+      "ids": [
+        "CVE-2026-116386"
+      ],
+      "label": "CVE-2026-116386",
+      "cvss": 9.8,
+      "title": "CVE-2026-116386 권한 상승"
+    },
+    {
+      "id": "CVE-2026-119526",
+      "ids": [
+        "CVE-2026-119526"
+      ],
+      "label": "ThemeREX Royal Event",
+      "cvss": 9.8,
+      "title": "ThemeREX Royal Event 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-39738",
+      "ids": [
+        "CVE-2026-39738"
+      ],
+      "label": "Aman FunnelKit Automations",
+      "cvss": 9.8,
+      "title": "Aman FunnelKit Automations 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-90888",
+      "ids": [
+        "CVE-2026-90888"
+      ],
+      "label": "CVE-2026-90888",
+      "cvss": 9.8,
+      "title": "CVE-2026-90888 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-119096",
+      "ids": [
+        "CVE-2026-119096"
+      ],
+      "label": "CVE-2026-119096",
+      "cvss": 9.8,
+      "title": "CVE-2026-119096 인증 부적절"
+    },
+    {
+      "id": "CVE-2026-61850",
+      "ids": [
+        "CVE-2026-61850"
+      ],
+      "label": "CVE-2026-61850",
+      "cvss": 9.3,
+      "title": "CVE-2026-61850 권한 관리 부적절"
+    },
+    {
+      "id": "CVE-2026-62048",
+      "ids": [
+        "CVE-2026-62048"
+      ],
+      "label": "CVE-2026-62048",
+      "cvss": 9.3,
+      "title": "CVE-2026-62048 SQL 삽입"
+    },
+    {
+      "id": "CVE-2026-61645",
+      "ids": [
+        "CVE-2026-61645"
+      ],
+      "label": "Docat",
+      "cvss": 9.1,
+      "title": "Docat 위험한 형식 파일 업로드"
+    },
+    {
+      "id": "CVE-2026-119978",
+      "ids": [
+        "CVE-2026-119978"
+      ],
+      "label": "Flowise",
+      "cvss": 9,
+      "title": "Flowise 위험한 메서드 노출"
+    },
+    {
+      "id": "CVE-2026-39732",
+      "ids": [
+        "CVE-2026-39732"
+      ],
+      "label": "CVE-2026-39732",
+      "cvss": 9.3,
+      "title": "CVE-2026-39732 SQL 삽입"
+    },
+    {
+      "id": "CVE-2026-103882",
+      "ids": [
+        "CVE-2026-103882"
+      ],
+      "label": "CVE-2026-103882",
+      "cvss": 9.1,
+      "title": "CVE-2026-103882 경로 조작"
+    },
+    {
+      "id": "CVE-2026-116557",
+      "ids": [
+        "CVE-2026-116557"
+      ],
+      "label": "CVE-2026-116557",
+      "cvss": 9.1,
+      "title": "CVE-2026-116557 권한 검사 누락"
+    },
+    {
+      "id": "CVE-2026-89270",
+      "ids": [
+        "CVE-2026-89270"
+      ],
+      "label": "CVE-2026-89270",
+      "cvss": 9.1,
+      "title": "CVE-2026-89270 권한 검사 누락"
+    },
+    {
+      "id": "CVE-2023-22793",
+      "ids": [
+        "CVE-2023-22793"
+      ],
+      "label": "CVE-2023-22793",
+      "cvss": 9.3,
+      "title": "CVE-2023-22793 신뢰할 수 없는 데이터 역직렬화"
+    },
+    {
+      "id": "CVE-2026-116852",
+      "ids": [
+        "CVE-2026-116852"
+      ],
+      "label": "CVE-2026-116852",
+      "cvss": 9.1,
+      "title": "CVE-2026-116852 코드 삽입"
+    }
+  ],
+  "advisories": [
+    {
+      "id": "a-ac01994b",
+      "source": "KISA 보안공지",
+      "title": "다우기술 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72261",
+      "date": "2026-10-30"
+    },
+    {
+      "id": "a-11afb6f3",
+      "source": "KISA 보안공지",
+      "title": "Sophos 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72260",
+      "date": "2026-10-30"
+    },
+    {
+      "id": "a-37e2f0ca",
+      "source": "KISA 보안공지",
+      "title": "Atlassian 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72259",
+      "date": "2026-10-30"
+    },
+    {
+      "id": "a-f87dbc90",
+      "source": "KISA 보안공지",
+      "title": "Oracle 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72258",
+      "date": "2026-10-30"
+    },
+    {
+      "id": "a-b4bc0e71",
+      "source": "KISA 보안공지",
+      "title": "VMware 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72257",
+      "date": "2026-10-30"
+    },
+    {
+      "id": "a-74c63b83",
+      "source": "KISA 보안공지",
+      "title": "Linux 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72256",
+      "date": "2026-10-30"
+    },
+    {
+      "id": "a-49554ba2",
+      "source": "KISA 보안공지",
+      "title": "Cisco 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72255",
+      "date": "2026-10-30"
+    },
+    {
+      "id": "a-277c850c",
+      "source": "KISA 보안공지",
+      "title": "Synology 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72254",
+      "date": "2026-10-30"
+    }
+  ],
+  "news": {
+    "domestic": [
+      {
+        "id": "n-45172aa2",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "더존비즈온 해킹 여파, 에스티유니타스도 개인정보 유출 우려…주민번호·계좌정보 포함",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209237",
+        "source": "데일리시큐",
+        "published": "2026-11-01T16:14:59.000Z",
+        "snippet": "온라인 강의와 오프라인 학원을 통해 공무원·자격시험, 어학교육 등의 서비스를 제공하는 에스티유니타스가 더존비즈온의 백업서버 해킹 사고와 관련해 거래 상대방의 개인정보가 유출됐을 가능성이 있다고 밝혔다. 회사는 10월 31일 공식 공지를 통해 회계시스템의 외부 백업을 맡긴 더존비즈온으로부터 백업서버에 외부 침입 흔적이 발견됐다는 통보를 받았다고 안내했다. 유출 가능성이 있는 정보는 회계자료에…",
+        "outlets": [
+          "데일리시큐",
+          "디일렉"
+        ],
+        "related": [
+          {
+            "title": "더존비즈온 해킹, 고객사로 확산 '일파만파'...10곳 유출 우려 긴급 공지",
+            "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE9OM0FGbU9ya1hiUkZRTzdQZmZTaWRhOFdmYnhXTFNqYUQyNGdOVERlS0MyVkJyTFE3c0laRHp0WjU4UkxGZU1qV0JHYlhqNzBCNUVMbjRuZHhxM3dwRDk2ZEZ0dGROUQ?oc=5",
+            "source": "디일렉"
+          }
+        ],
+        "cves": [],
+        "score": 13.2,
+        "title_ko": "더존비즈온 백업서버 해킹 여파, 고객사 개인정보 유출 우려 확산",
+        "summary_ko": "더존비즈온 APO 백업서버 침입으로 고객사 개인정보 유출 우려 확산. 에스티유니타스 등 다수 기업이 주민번호·계좌정보 유출 가능성을 공지함. 협력사 점검 필요."
+      },
+      {
+        "id": "n-7c046927",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "해외송금 핀테크 모인 해킹, 고객 신분증·주민등록번호·계좌정보 등 개인정보 유출",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209225",
+        "source": "데일리시큐",
+        "published": "2026-11-01T07:28:43.000Z",
+        "snippet": "해외송금 서비스를 제공하는 핀테크 기업 모인(㈜모인)이 외부 해킹 공격으로 고객들의 신분증 사본과 주민등록번호, 금융계좌 정보 등이 포함된 개인정보 유출 사고를 당했다. 유출된 자료에는 고객 본인뿐 아니라 가족과 기업 주주, 거래상대방의 개인정보까지 포함될 수 있어 2차 피해 우려가 제기된다. 모인은 10월 30일 공식 홈페이지에 ‘개인정보 유출 사고 안내 및 사과드립니다’라는 공지를 게시…",
+        "outlets": [
+          "데일리시큐",
+          "Chosunbiz",
+          "YTN",
+          "연합뉴스TV"
+        ],
+        "related": [
+          {
+            "title": "해외송금 핀테크 ‘모인’, 개인정보 유출… 주민등록증·통장 사본도 포함",
+            "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxQdTlkQ213SUs5WVh3dllPblNENV9DTUtQNDhCV0ZWclF2VmtIRjBMalA0b25CUUpnX1NJdDJqdEpVZUtSUU13dkFCRWpwVEhVVWg1eFZ2QUdYdjk4TERtNlNxLUtxR2kxVU9waW45Sk9XQmtHMEhRbkdqODlNYlQzaNIBlAFBVV95cUxOamFUWjhfWGhmeXNWNUdMUlJpeVZKZkpWN0ZTVVR4VndZV25CLUZmeUZTa2ZxUWlGUWJkZGh4aG5vZEpkaGNMSXZmblVsRWVrdDBMajBWREhydkt3aFBZek9rQ1NUQVYzVTdsZ1BXTktidjRCblUzN0tyQWszVFdBVXUyNEs4UElacENGSFhyQ2c0Y2l0?oc=5",
+            "source": "Chosunbiz"
+          },
+          {
+            "title": "해외송금 서비스 업체서도 정보 유출...당국, 점검 강화",
+            "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE5vRnF2bFI2RjlXQzRUeGFmWXlRNkVWUlF1Z1R6eWNFelhHaDdYM0ljaWJuZ1Q0N2loQnNPaXVCNlZBanpKVTcwcmh6cFM4UmRPRV85ZlVjeW5lQldLYUE?oc=5",
+            "source": "YTN"
+          },
+          {
+            "title": "[단독] 해외송금 핀테크서 개인정보 유출…회원 아닌 사람도",
+            "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE8wYk94djkxc1lTSHFtUmh3MFNlbFVBdm1Dak1pSWNpUDhZMWFNOE54R0J5SzFyQ2g0LVJhcUtQdDdSbHJwQVdqWnZBd00tWGprZEpmd2NOYllnN0szTzZReHVEVzcxdjQ?oc=5",
+            "source": "연합뉴스TV"
+          }
+        ],
+        "cves": [],
+        "score": 15.4,
+        "title_ko": "해외송금 핀테크 모인, 신분증·주민번호 등 개인정보 유출",
+        "summary_ko": "해외송금 핀테크 모인이 외부 해킹으로 신분증 사본, 주민번호, 계좌정보 유출 사고 발생함. 가족·주주·거래상대방 정보까지 포함될 수 있어 2차 피해 우려함."
+      },
+      {
+        "id": "n-117a6009",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "340만명 사용 복지포인트 쇼핑몰 ‘현대이지웰’, 해킹으로 개인정보 유출",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=146907",
+        "source": "보안뉴스",
+        "published": "2026-10-31T00:59:47.000Z",
+        "snippet": "복지포인트 쇼핑몰로 잘 알려진 현대이지웰이 해킹으로 회원정보가 유출됐다. 유출된 항목은 △이름 △생년월일 △성별 △휴대폰번호 △이메일 △주소 등이다. 현대이지웰은 10월 29일 21시경 회원정보 조회 API에 외부의 비정상적인 접근이 발생했으며, 이를 인지한 즉시 공격 IP를 차단하고 해당 시스템에 대한 외부 접근을 전면 차단했다. 또한 금융감독원과 한국인터넷진흥원에 신고를 마쳤으며, 현재…",
+        "outlets": [
+          "보안뉴스"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 9,
+        "title_ko": "현대이지웰 복지몰 해킹, 회원 개인정보 유출",
+        "summary_ko": "회원정보 조회 API에 외부 비정상 접근이 발생해 이름·생년월일·휴대폰·이메일·주소 유출됨. 공격 IP 차단과 외부 접근 전면 차단 조치함. 회원 대상 피싱 주의 필요."
+      },
+      {
+        "id": "n-f29d7742",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "머니투데이, 9월 해킹으로 개인정보 1367건 유출 확인",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=146908",
+        "source": "보안뉴스",
+        "published": "2026-10-31T03:02:27.000Z",
+        "snippet": "머니투데이가 지난 9월 25일 발생한 해킹으로 1367건의 개인정보가 유출됐다고 공지했다. 최초로 외부 불법 접근이 확인된 것은 지난 9월 25일 13시경이다. 당시 머니투데이는 외부로부터의 불법 접근 시도로 인해 개인정보 유출을 확인하고, 즉시 해당 접근 경로를 차단하는 한편, 한국인터넷진흥원에 개인정보 유출 사실을 신고했다. 이후 10월 27일 후속 점검 과정에서 개인정보 1367건이…",
+        "outlets": [
+          "보안뉴스",
+          "데일리시큐",
+          "머니투데이"
+        ],
+        "related": [
+          {
+            "title": "머니투데이 해킹 불똥, 다른 언론사로 확산…동행미디어 시대 개인정보 526건 유출",
+            "url": "https://www.dailysecu.com/news/articleView.html?idxno=209196",
+            "source": "데일리시큐"
+          },
+          {
+            "title": "[사설]\"8.4조 해킹\"北 사이버안보 위협 직시해야 - 머니투데이",
+            "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE5acHRHWHpVNV9IUDc5VWU4MEJWNmhtbUo5OE9OUW5iRnlNVGRYdkxUS0EtdVE3dEx0YVRVV1RLR21PTExFclpSd3BBc0FsS0p6MkR1cTFGellxVC1jS2ktbWQ4akJJUXhEZXAxOW9vSWzSAXBBVV95cUxOWnB0R1h6VTVfSFA3OVVlODBCVjZobW1KOThPTlFuYkZ5TVRkWHZMVEtBLXVRN3RMdGFUVVdUS0dtT0xMRXJaUndwQXNBbEtKejJEdXExRnpZcVQtY0tpLW1kOGpCSVF4RGVwMTlvb0ls?oc=5",
+            "source": "머니투데이"
+          }
+        ],
+        "cves": [],
+        "score": 15.1,
+        "title_ko": "머니투데이 9월 해킹, 개인정보 1367건 유출 확인",
+        "summary_ko": "9월 25일 외부 불법 접근으로 개인정보 1367건 유출 확인, 10월 27일 후속 공지함. KISA 신고 완료. 동행미디어 등 타 언론사 연쇄 피해도 보도되어 유사 경로 점검 필요."
+      },
+      {
+        "id": "n-78f7a4aa",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "北 해킹조직 라자루스, 국내 웹사이트 통신 거점 악용 정황",
+        "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxOeHZZUmNXdGhQSkh1SlBUZkVENThTUDZuemdRQmRaV2hlUHNFcEhRcGh0bjB0alpvYkZ4SjFsdWtmSXJhQ0hYUlROOXBELWFXVGxKU21fVW1RNWo0S1Bzd0VPOHhrRC12LS04MVNUclMyUUYtaDRXSmdtTElhdG9hNXJR0gGWAUFVX3lxTE5UWnNadmFaNHUwUlk0Z1ZVbE1yNUhfZUFaR0JwMGN0LXQyRVNPYzNVQjBUQ0NHYl8zRUQ1Sjh0dlFyb3BsdWlzSEZxV1c2UjZqdk5FMFdhOHhyenJHaFBQUmd0N2FwQkh0M2lfNGNUa3Zkc25OSklGbHNFUUVCMEs4WlQ1NWtldlllWDc3UjAxMjZJcWNvZw?oc=5",
+        "source": "Chosunbiz",
+        "published": "2026-11-01T08:45:00.000Z",
+        "snippet": "",
+        "outlets": [
+          "Chosunbiz",
+          "연합뉴스"
+        ],
+        "related": [
+          {
+            "title": "北해킹조직, 국내 웹사이트 거점으로 악용 정황",
+            "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBlcjFzSlpKWGljWmpZZFZyNm5zRGZ4YU5HZFZYTnhKRTRFTzhCLVdUVS13cDJZSFltY25aVVRKYkxEWFZOUTlsSC1vMVFwa3kyZG1YdWtvY2tCSTjSAWBBVV95cUxNQmlVLXZxd2lIMGRQd2dDZ3g1QXN5TjI2a1c5Y3Y3Q0R5ZzhMRlJzQzlra255SzlJVnozZVNOMEFwVi1GdV9ib0dkZFhWcWZPa0xnalZBMmVWODd3Q3lfTjE?oc=5",
+            "source": "연합뉴스"
+          }
+        ],
+        "cves": [],
+        "score": 12.2,
+        "title_ko": "북한 라자루스, 국내 웹사이트를 통신 거점으로 악용 정황",
+        "summary_ko": "북한 해킹조직 라자루스가 국내 웹사이트를 통신 거점으로 악용한 정황 보도됨. 대상 사이트와 피해 범위는 자료에 없음. 웹서버 비정상 외부 통신 점검 필요."
+      }
+    ],
+    "international": [
+      {
+        "id": "n-e1dc1203",
+        "region": "international",
+        "lang": "en",
+        "title": "FBI Links North Korea's TraderTraitor to Record $6.43 Billion Binance Crypto Heist",
+        "url": "https://thehackernews.com/2026/11/fbi-links-north-koreas-tradertraitor-to.html",
+        "source": "The Hacker News",
+        "published": "2026-11-01T07:03:00.000Z",
+        "snippet": "The U. S. Federal Bureau of Investigation (FBI) has officially attributed the theft of more than $6 billion in virtual assets to TraderTraitor, a North Korea-aligned elite hacking group also tracked as Jade Sleet, Press…",
+        "outlets": [
+          "The Hacker News",
+          "BleepingComputer"
+        ],
+        "related": [
+          {
+            "title": "FBI links $6.3 billion Binance crypto heist to North Korean hackers",
+            "url": "https://www.bleepingcomputer.com/news/security/fbi-links-63-billion-binance-crypto-heist-to-north-korean-hackers/",
+            "source": "BleepingComputer"
+          }
+        ],
+        "cves": [],
+        "score": 13.2,
+        "title_ko": "FBI, 64억 달러 바이낸스 해킹을 북한 TraderTraitor 소행 지목",
+        "summary_ko": "FBI가 바이낸스 약 64억 달러 가상자산 탈취를 북한 연계 TraderTraitor 소행으로 공식 지목함. 가상자산 취급 기관은 북한 연계 자금 흐름 모니터링과 출금 통제 강화 필요."
+      },
+      {
+        "id": "n-8927f234",
+        "region": "international",
+        "lang": "en",
+        "title": "CISA Adds Actively Exploited GitLab RCE and Cisco Firewall DoS Flaws to KEV",
+        "url": "https://thehackernews.com/2026/10/cisa-adds-actively-exploited-gitlab-rce.html",
+        "source": "The Hacker News",
+        "published": "2026-10-30T07:27:05.000Z",
+        "snippet": "The U. S. Cybersecurity and Infrastructure Security Agency (CISA) on Thursday added two security flaws impacting Cisco and GitLab software to its Known Exploited Vulnerabilities (KEV), citing evidence of active exploita…",
+        "outlets": [
+          "The Hacker News",
+          "SecurityWeek",
+          "BleepingComputer"
+        ],
+        "related": [
+          {
+            "title": "Max-Severity GitLab Vulnerability Exploited Against Alpine Linux",
+            "url": "https://www.securityweek.com/max-severity-gitlab-vulnerability-exploited-against-alpine-linux/",
+            "source": "SecurityWeek"
+          },
+          {
+            "title": "CISA says max severity GitLab flaw now exploited in the wild",
+            "url": "https://www.bleepingcomputer.com/news/security/hackers-now-exploiting-max-severity-gitlab-flaw-in-attacks/",
+            "source": "BleepingComputer"
+          }
+        ],
+        "cves": [
+          "CVE-2026-97229"
+        ],
+        "score": 15.1,
+        "title_ko": "CISA, GitLab RCE·Cisco 방화벽 취약점 KEV 등재",
+        "summary_ko": "CISA가 실제 악용을 근거로 GitLab 원격코드실행과 Cisco 방화벽 서비스거부 취약점 2건을 KEV에 추가함. GitLab 취약점은 Alpine Linux 대상 악용도 보도됨. 패치 우선 적용 필요."
+      },
+      {
+        "id": "n-bc4258f9",
+        "region": "international",
+        "lang": "en",
+        "title": "Hackers Actively Exploit Highly Critical Drupal Commerce Core Authorization Bypass Flaw",
+        "url": "https://thehackernews.com/2026/10/hackers-actively-exploit-highly.html",
+        "source": "The Hacker News",
+        "published": "2026-10-30T07:45:30.000Z",
+        "snippet": "Drupal has warned that threat actors are exploiting a \"highly critical\" security flaw in its Commerce Core component. The vulnerability, tracked as CVE-2026-118539 (CVSS score: N/A), is a case of missing authorization a…",
+        "outlets": [
+          "The Hacker News",
+          "SecurityWeek",
+          "BleepingComputer"
+        ],
+        "related": [
+          {
+            "title": "Drupal Commerce Core Vulnerability Exploited Against Online Stores",
+            "url": "https://www.securityweek.com/drupal-commerce-core-vulnerability-exploited-against-online-stores/",
+            "source": "SecurityWeek"
+          },
+          {
+            "title": "Drupal warns of critical Commerce Core flaw exploited in attacks",
+            "url": "https://www.bleepingcomputer.com/news/security/drupal-warns-of-critical-commerce-core-flaw-exploited-in-attacks/",
+            "source": "BleepingComputer"
+          }
+        ],
+        "cves": [
+          "CVE-2026-118539"
+        ],
+        "score": 15.1,
+        "title_ko": "Drupal Commerce Core 인증 우회 취약점 악용 확인",
+        "summary_ko": "Drupal이 Commerce Core 구성요소의 고위험 인증 우회 취약점(CVE-2026-118539)이 공격에 악용 중이라고 경고함. 온라인 쇼핑몰 대상 공격이 보도됨. 해당 모듈 사용 사이트 즉시 점검 필요."
+      },
+      {
+        "id": "n-dc7bb920",
+        "region": "international",
+        "lang": "ko",
+        "title": "레일웨이, 고객 API 키 유출 가능성…해커 최종 목표는 'AI 추론 서비스'",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=146688",
+        "source": "보안뉴스",
+        "published": "2026-10-31T01:11:00.000Z",
+        "snippet": "클라우드 애플리케이션 배포 플랫폼 레일웨이(Railway)에서 고객의 중요 인증정보가 외부에 노출됐을 가능성이 확인됐다. 공격자가 암호화된 환경 변수에 무단 접근하고 일부 정보를 복호화했을 가능성이 제기된 가운데 레일웨이는 이번 침해가 인공지능(AI) 추론 서비스 업체를 겨냥한 연쇄 공격의 일부로 보고 있다. 다른 클라우드 환경에서도 탈취한 계정을 이용해 AI 서비스 비용을 피해자에게 전가…",
+        "outlets": [
+          "보안뉴스"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 9,
+        "title_ko": "레일웨이, 고객 API 키 유출 가능성",
+        "summary_ko": "클라우드 배포 플랫폼 레일웨이에서 공격자가 암호화된 환경 변수에 접근해 일부 복호화했을 가능성 제기됨. AI 추론 서비스 업체 대상 연쇄 공격의 일부로 봄. API 키 교체 필요."
+      },
+      {
+        "id": "n-8fc971e5",
+        "region": "international",
+        "lang": "en",
+        "title": "WordPress RCE Flaw Draws Nearly 63,000 Attack Attempts in Just 24 Hours",
+        "url": "https://thehackernews.com/2026/10/wordpress-rce-flaw-draws-nearly-63000.html",
+        "source": "The Hacker News",
+        "published": "2026-10-30T14:08:14.000Z",
+        "snippet": "Threat actors have been observed attempting to exploit a high-severity security flaw in WordPress Core shortly after patches were released. The vulnerability, which does not have a CVE identifier, relates to a case of r…",
+        "outlets": [
+          "The Hacker News",
+          "SecurityWeek"
+        ],
+        "related": [
+          {
+            "title": "PHP2Shell Attacks Root Palo Alto Firewalls but Fail Against WordPress",
+            "url": "https://www.securityweek.com/php2shell-attacks-root-palo-alto-firewalls-but-fail-against-wordpress/",
+            "source": "SecurityWeek"
+          }
+        ],
+        "cves": [],
+        "score": 10.7,
+        "title_ko": "워드프레스 코어 RCE 취약점, 24시간 내 6.3만 공격 시도",
+        "summary_ko": "패치 공개 직후 워드프레스 코어 고위험 원격코드실행 취약점을 노린 공격 시도가 24시간 내 약 6만3000건 관측됨. CVE 미부여 상태. 최신 버전 업데이트 필요."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "kev",
+      "name": "CISA KEV",
+      "ok": true,
+      "count": 2,
+      "ms": 276
+    },
+    {
+      "id": "bleepingcomputer",
+      "name": "BleepingComputer",
+      "ok": true,
+      "count": 15,
+      "ms": 475
+    },
+    {
+      "id": "zdnetkr",
+      "name": "지디넷코리아",
+      "ok": true,
+      "count": 30,
+      "ms": 496
+    },
+    {
+      "id": "securityweek",
+      "name": "SecurityWeek",
+      "ok": true,
+      "count": 10,
+      "ms": 530
+    },
+    {
+      "id": "thehackernews",
+      "name": "The Hacker News",
+      "ok": true,
+      "count": 50,
+      "ms": 537
+    },
+    {
+      "id": "therecord",
+      "name": "The Record",
+      "ok": true,
+      "count": 5,
+      "ms": 568
+    },
+    {
+      "id": "krebs",
+      "name": "Krebs on Security",
+      "ok": true,
+      "count": 10,
+      "ms": 692
+    },
+    {
+      "id": "gnews-kr",
+      "name": "Google 뉴스",
+      "ok": true,
+      "count": 100,
+      "ms": 791
+    },
+    {
+      "id": "darkreading",
+      "name": "Dark Reading",
+      "ok": true,
+      "count": 50,
+      "ms": 918
+    },
+    {
+      "id": "boannews",
+      "name": "보안뉴스",
+      "ok": true,
+      "count": 50,
+      "ms": 959
+    },
+    {
+      "id": "dailysecu",
+      "name": "데일리시큐",
+      "ok": true,
+      "count": 50,
+      "ms": 1013
+    },
+    {
+      "id": "datanet",
+      "name": "데이터넷",
+      "ok": true,
+      "count": 50,
+      "ms": 1602
+    },
+    {
+      "id": "nvd-kev",
+      "name": "NVD (KEV 상세)",
+      "ok": true,
+      "count": 1,
+      "ms": 1607
+    },
+    {
+      "id": "kisa-vuln",
+      "name": "KISA 취약점 정보",
+      "ok": true,
+      "count": 10,
+      "ms": 1762
+    },
+    {
+      "id": "kisa-notice",
+      "name": "KISA 보안공지",
+      "ok": true,
+      "count": 10,
+      "ms": 1902
+    },
+    {
+      "id": "kisa-alert",
+      "name": "KISA 경보단계",
+      "ok": true,
+      "count": 10,
+      "ms": 1988
+    },
+    {
+      "id": "nvd",
+      "name": "NVD (신규 CVE)",
+      "ok": true,
+      "count": 912,
+      "ms": 805
+    },
+    {
+      "id": "epss",
+      "name": "FIRST EPSS",
+      "ok": true,
+      "count": 64,
+      "ms": 434
+    }
+  ],
+  "summarizer": {
+    "engine": "claude-haiku-5-5",
+    "ok": true,
+    "ms": 36291,
+    "applied": {
+      "news": 10,
+      "vulns": 5,
+      "overview": true
+    },
+    "rejected": [],
+    "input_tokens": 12735,
+    "output_tokens": 8750
+  },
+  "stats": {
+    "news": {
+      "items": 420,
+      "fresh": 235,
+      "clusters": 157,
+      "eligible": 119
+    },
+    "nvd_published": 912,
+    "kev_catalog": "2026.10.30",
+    "kev_recent": 2
+  }
+}

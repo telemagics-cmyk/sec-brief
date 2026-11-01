@@ -18,7 +18,7 @@ export const SCOPES = 'offline_access https://graph.microsoft.com/Mail.Send http
 const GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const RELOGIN = '로컬에서 `node src/cli.mjs mail-login` 을 다시 실행해 새 값을 OUTLOOK_REFRESH_TOKEN 에 넣으세요.';
 // 계정 정지·서비스 남용 모드는 토큰이 아니라 계정 문제라 사람이 직접 풀어야 한다
-const LOCKED = `Microsoft 가 스팸 의심으로 이 계정을 묶었습니다(토큰 문제 아님). account.microsoft.com 에 로그인해 안내대로(휴대폰 보안 코드 등) 계정을 푼 뒤, ${RELOGIN}`;
+const LOCKED = `Microsoft 가 스팸 의심으로 이 계정을 묶었습니다(토큰 문제 아님). account.microsoft.com 에 로그인해 안내대로(휴대폰 보안 코드 등) 계정을 푼 뒤, ${RELOGIN} 무료 계정은 자동 발송으로 되풀이해 묶일 수 있으니 SMTP(Gmail) 예비를 설정해 두세요(README 메일로도 받기).`;
 
 const HINTS = {
   invalid_grant: `리프레시 토큰이 만료됐거나 무효입니다(오래 쓰지 않았거나 비밀번호를 바꿨거나 권한을 취소함). ${RELOGIN}`,

@@ -9,10 +9,13 @@ import { after, before, test } from 'node:test';
 import { pathToFileURL } from 'node:url';
 import { ROOT } from '../src/config.mjs';
 import { saveBrief } from '../src/store.mjs';
+import { startFakeSmtp } from './fake-smtp.mjs';
 import { sampleBrief } from './fixtures.mjs';
 
 const DATE = '2026-10-29';
 const mails = [];
+let graphError = null;
+let authError = null;
 let server;
 let base;
 
@@ -23,9 +26,11 @@ before(async () => {
     req.on('end', () => {
       const json = (status, obj) => res.writeHead(status, { 'content-type': 'application/json' }).end(JSON.stringify(obj));
       if (req.url === '/auth/token') {
+        if (authError) return json(400, authError);
         return json(200, { access_token: 'acc', refresh_token: 'rt-next', scope: 'https://graph.microsoft.com/Mail.Send https://graph.microsoft.com/User.Read', expires_in: 3600 });
       }
       if (req.url.startsWith('/graph/me/sendMail')) {
+        if (graphError) return json(graphError.status, graphError.body);
         mails.push(JSON.parse(body).message.subject);
         return res.writeHead(202).end();
       }
@@ -55,7 +60,6 @@ function cli(dir, { date = DATE, kstTime = '07:00:00', event = 'workflow_dispatc
   const env = {
     ...process.env,
     GITHUB_OUTPUT: '', // 이 시험이 GitHub Actions 에서 돌 때 바깥 작업의 출력 파일에 쓰지 않게
-    ...extraEnv,
     FAKE_NOW: `${date}T${kstTime}+09:00`,
     GITHUB_ACTIONS: 'true',
     GITHUB_EVENT_NAME: event,
@@ -72,6 +76,7 @@ function cli(dir, { date = DATE, kstTime = '07:00:00', event = 'workflow_dispatc
     SMTP_HOST: ' ',
     MAIL_TITLE: ' ',
     MAIL_NEWS_KEYWORD: ' ',
+    ...extraEnv,
   };
   const clock = pathToFileURL(join(ROOT, 'test', 'fake-clock.mjs')).href;
   const started = Date.now();
@@ -167,4 +172,77 @@ test('workday: 워크플로가 읽는 proceed 값 — 정시·예약 실행은 �
   assert.equal(unknown.run, 'proceed=true');
   assert.match(unknown.out, /::warning::2030년 공휴일 자료가 없어/);
   rmSync(dir, { recursive: true, force: true });
+});
+
+// 2026-11-02 Microsoft 가 실제로 돌려준 응답: 발송에서 정지, 다음 실행부터는 토큰 갱신부터 막힘
+const SUSPENDED = {
+  status: 403,
+  body: { error: { code: 'ErrorAccountSuspend', message: 'Account suspended. Follow the instructions in your Inbox to verify your account., WASCL UserAction verdict is not None. Actual verdict is Suspend, ShowTierUpgrade.' } },
+};
+const ABUSE_MODE = { error: 'invalid_grant', error_description: 'AADSTS70000: User account is found to be in service abuse mode. Trace ID: 1', error_codes: [70000] };
+
+function smtpEnv(port) {
+  return { SMTP_HOST: '127.0.0.1', SMTP_PORT: String(port), SMTP_SECURITY: 'none', SMTP_USER: 'backup@example.com', SMTP_PASS: 'app-pass', MAIL_TO: 'a@example.org,b@example.net' };
+}
+
+test('Outlook 계정 정지: 예비가 없으면 실패로 끝난다(2026-11-02 그대로)', async () => {
+  graphError = SUSPENDED;
+  const dir = dataDir();
+  try {
+    const r = await send(dir, '07:00:00');
+    assert.equal(r.code, 1, r.out);
+    assert.match(r.out, /메일 발송 실패: Outlook ErrorAccountSuspend: Account suspended/);
+  } finally {
+    graphError = null;
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('Outlook 계정 정지: SMTP 가 설정돼 있으면 예비로 보내 메일이 끊기지 않고, 같은 날 다시 보내지 않는다', async () => {
+  const got = [];
+  const smtp = await startFakeSmtp({ mails: got });
+  graphError = SUSPENDED;
+  const dir = dataDir();
+  try {
+    const r = await cli(dir, { extraEnv: smtpEnv(smtp.port) });
+    assert.equal(r.code, 0, r.out);
+    assert.match(r.out, /::warning::메일을 Outlook 으로 보내지 못해 예비\(SMTP\)로 보냈습니다: Outlook ErrorAccountSuspend/);
+    assert.match(r.out, /메일 발송 완료 \(SMTP, 받는 사람 2명\): 2026-10-29/);
+    assert.equal(got.length, 1, '메일이 한 통 나감');
+    assert.ok(got[0].to.includes('<a@example.org>') && got[0].to.includes('<b@example.net>'), got[0].to.join());
+    assert.equal(JSON.parse(readFileSync(join(dir, 'mail-state.json'), 'utf8')).last_sent, DATE, '발송 기록');
+
+    const again = await cli(dir, { kstTime: '08:30:00', extraEnv: smtpEnv(smtp.port) });
+    assert.equal(again.code, 0, again.out);
+    assert.match(again.out, /2026-10-29 브리핑 메일은 이미 보냈습니다/);
+    assert.equal(got.length, 1, '같은 날 두 번 보내지 않음');
+  } finally {
+    graphError = null;
+    smtp.close();
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('Outlook 토큰 갱신이 막혀도(서비스 남용 모드) 예비로 보내고, 예비까지 실패하면 두 이유를 모두 알린다', async () => {
+  const got = [];
+  const smtp = await startFakeSmtp({ mails: got });
+  authError = ABUSE_MODE;
+  const dir = dataDir();
+  try {
+    const r = await cli(dir, { extraEnv: smtpEnv(smtp.port) });
+    assert.equal(r.code, 0, r.out);
+    assert.match(r.out, /예비\(SMTP\)로 보냈습니다: Outlook invalid_grant AADSTS70000/);
+    assert.equal(got.length, 1);
+    smtp.close();
+
+    const dir2 = dataDir();
+    // 닫힌 포트: 예비도 실패
+    const bad = await cli(dir2, { extraEnv: smtpEnv(smtp.port) });
+    assert.equal(bad.code, 1, bad.out);
+    assert.match(bad.out, /메일 발송 실패: Outlook invalid_grant AADSTS70000.*예비\(SMTP\)도 실패/);
+    rmSync(dir2, { recursive: true, force: true });
+  } finally {
+    authError = null;
+    rmSync(dir, { recursive: true, force: true });
+  }
 });

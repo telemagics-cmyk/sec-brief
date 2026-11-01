@@ -1,13 +1,13 @@
 // 가짜 SMTP 서버로 메일 발송 흐름을 시험한다 (실제 메일 서버는 부르지 않는다).
 import assert from 'node:assert/strict';
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
-import { createServer } from 'node:net';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { after, before, test } from 'node:test';
 import { renderMarkdown, sinceNote } from '../src/brief.mjs';
 import { explainMailError, mailSettings, mailSubject, mailTitle, renderEmailHtml, sendBriefMail } from '../src/mail.mjs';
 import { msUntilKst } from '../src/util.mjs';
+import { startFakeSmtp } from './fake-smtp.mjs';
 import { sampleBrief } from './fixtures.mjs';
 
 let server;
@@ -16,55 +16,8 @@ let failAuth = false;
 const mails = [];
 
 before(async () => {
-  server = createServer((sock) => {
-    sock.setEncoding('utf8');
-    sock.on('error', () => {});
-    let buf = '';
-    let inData = false;
-    let data = '';
-    let mail = { from: '', to: [], auth: '' };
-    const send = (l) => sock.write(`${l}\r\n`);
-    send('220 fake.smtp ESMTP');
-    sock.on('data', (chunk) => {
-      buf += chunk;
-      let i;
-      while ((i = buf.indexOf('\r\n')) >= 0) {
-        const line = buf.slice(0, i);
-        buf = buf.slice(i + 2);
-        if (inData) {
-          if (line === '.') {
-            inData = false;
-            mails.push({ ...mail, data });
-            data = '';
-            mail = { from: '', to: [], auth: mail.auth };
-            send('250 2.0.0 OK queued');
-          } else data += `${line.startsWith('..') ? line.slice(1) : line}\n`;
-          continue;
-        }
-        const cmd = line.toUpperCase();
-        if (cmd.startsWith('EHLO')) sock.write('250-fake.smtp\r\n250-AUTH PLAIN\r\n250 8BITMIME\r\n');
-        else if (cmd.startsWith('HELO')) send('250 fake');
-        else if (cmd.startsWith('AUTH')) {
-          mail.auth = Buffer.from(line.split(' ')[2] || '', 'base64').toString('utf8').split('\0').slice(1).join(':');
-          send(failAuth ? '535 5.7.8 Username and Password not accepted' : '235 2.7.0 Accepted');
-        } else if (cmd.startsWith('MAIL FROM')) {
-          mail.from = line.slice(10);
-          send('250 OK');
-        } else if (cmd.startsWith('RCPT TO')) {
-          mail.to.push(line.slice(8));
-          send('250 OK');
-        } else if (cmd === 'DATA') {
-          inData = true;
-          send('354 go ahead');
-        } else if (cmd === 'QUIT') {
-          send('221 bye');
-          sock.end();
-        } else send('250 OK');
-      }
-    });
-  });
-  await new Promise((r) => server.listen(0, '127.0.0.1', r));
-  port = server.address().port;
+  server = await startFakeSmtp({ mails, failAuth: () => failAuth });
+  port = server.port;
 });
 
 after(() => server.close());
@@ -198,7 +151,18 @@ test('메일 이름: Secret MAIL_TITLE 이 있으면 그것, 없으면 site.titl
   assert.equal(mailTitle(cfg, { MAIL_TITLE: ' ' }), '일일 보안 브리핑', '공백만 있으면 없는 것으로');
 });
 
-test('메일 디자인: Outlook 용 표 뼈대, 받은편지함 미리 보기 글, 어두운 화면 선언', () => {
+test('메일에 숨김 글·보이지 않는 문자를 넣지 않는다(스팸 메일의 흔한 특징, 넣은 뒤 첫 발송에서 계정 정지: 2026-11-02)', () => {
+  const b = sampleBrief();
+  b.overview = '오늘의 요약 문장입니다.';
+  const html = renderEmailHtml(b, { siteUrl: 'https://u.github.io/sec-brief', title: 'OO팀 일일 보안 브리핑' });
+  const hidden = html.match(/display:\s*none|visibility:\s*hidden|opacity:\s*0|font-size:\s*[01]px|max-height:\s*0|mso-hide/gi);
+  assert.equal(hidden, null, `숨기는 서식: ${hidden}`);
+  const invisible = html.match(/&#847;|&zwnj;|&zwj;|&#8203;|&#8199;|[͏​-‍⁠﻿]/g);
+  assert.equal(invisible, null, `보이지 않는 문자 ${invisible?.length}개`);
+  assert.equal(html.split('오늘의 요약 문장입니다.').length - 1, 1, '요약은 보이는 곳에 한 번만');
+});
+
+test('메일 디자인: Outlook 용 표 뼈대, 어두운 화면 선언', () => {
   const b = sampleBrief();
   b.overview = '오늘의 요약 문장입니다. 패치가 시급합니다.';
   const html = renderEmailHtml(b, { siteUrl: 'https://u.github.io/sec-brief', title: 'OO팀 일일 보안 브리핑' });
@@ -206,8 +170,6 @@ test('메일 디자인: Outlook 용 표 뼈대, 받은편지함 미리 보기 �
   assert.match(html, /<!--\[if mso\]><table role="presentation" width="680"/);
   assert.match(html, /max-width:680px/);
   assert.ok(!/<div style="max-width/.test(html), '폭을 div 로 정하지 않음');
-  // 미리 보기 글: 요약 문장(본문에는 숨김)
-  assert.match(html, /<div style="display:none;[^"]*mso-hide:all;[^"]*">오늘의 요약 문장입니다\. 패치가 시급합니다\./);
   assert.match(html, /<meta name="color-scheme" content="light dark">/);
   assert.match(html, /@media \(prefers-color-scheme: dark\)/);
   assert.match(html, /<p [^>]*>오늘의 요약<\/p>/, '요약 상자에 이름표');

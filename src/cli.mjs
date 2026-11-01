@@ -222,6 +222,7 @@ async function cmdSend(cfg, args, brief) {
         if (r.skipped) notice(r.reason);
         else {
           delivered += 1;
+          if (r.fallback) warn(`메일을 Outlook 으로 보내지 못해 예비(SMTP)로 보냈습니다: ${publicError(r.fallback, 600)}`);
           console.log(`메일 발송 완료 (${r.via}, 받는 사람 ${r.accepted}명${r.rejected ? `, 거부 ${r.rejected}명` : ''}): ${what}`);
         }
       }

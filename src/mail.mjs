@@ -1,4 +1,5 @@
-// 메일 발송(선택): 브리핑을 HTML 메일로 보낸다. 보내는 길은 둘 중 하나(둘 다 있으면 Outlook).
+// 메일 발송(선택): 브리핑을 HTML 메일로 보낸다. 보내는 길은 둘 중 하나.
+// 둘 다 있으면 Outlook 으로 보내고, Outlook 이 실패한 날(무료 계정 정지 등)은 SMTP 로 보낸다.
 //   Outlook.com(개인 Microsoft 계정): OUTLOOK_CLIENT_ID, OUTLOOK_REFRESH_TOKEN — Graph 메일 API (outlook.mjs)
 //   SMTP(Gmail 앱 비밀번호 등)     : SMTP_HOST, SMTP_PORT(기본 465), SMTP_USER, SMTP_PASS, MAIL_FROM(선택)
 //   받는 주소: MAIL_TO(쉼표로 여러 개). Outlook 은 비우면 보내는 계정 자신에게.
@@ -10,16 +11,23 @@ import { secret } from './config.mjs';
 import { getAccount, mask, obtainAccessToken, outlookConfigured, sendGraphMail } from './outlook.mjs';
 import { writeAtomic } from './store.mjs';
 import { fetchMailNews, mailNewsSearchUrl } from './mail-news.mjs';
-import { escapeHtml as h, kstIso, kstStamp, safeUrl, shortDay, truncate, weekdayKo } from './util.mjs';
+import { escapeHtml as h, kstIso, kstStamp, publicError, safeUrl, shortDay, truncate, weekdayKo } from './util.mjs';
 
 const EMAIL_RE = /^[^\s@<>(),;:"]+@[^\s@<>(),;:"]+\.[^\s@<>(),;:"]+$/;
 
-/** 비밀값에서 메일 설정을 읽는다. 보낼 길(Outlook, 또는 SMTP+받는 주소)이 없으면 null(메일 끔). */
+/**
+ * 비밀값에서 메일 설정을 읽는다. 보낼 길(Outlook, 또는 SMTP+받는 주소)이 없으면 null(메일 끔).
+ * Outlook 과 SMTP 가 다 있으면 Outlook 으로 보내고 SMTP(smtp)는 예비로 둔다.
+ */
 export function mailSettings(env = process.env) {
   const to = secret('MAIL_TO', env).split(/[,;\s]+/).filter(Boolean);
   const bad = to.filter((a) => !EMAIL_RE.test(a));
   if (bad.length) throw new Error(`MAIL_TO 에 메일 주소가 아닌 값이 있습니다(${bad.length}개). 쉼표로 구분해 넣으세요.`);
-  if (outlookConfigured(env)) return { kind: 'outlook', to };
+  const smtp = smtpSettings(to, env);
+  return outlookConfigured(env) ? { kind: 'outlook', to, smtp } : smtp;
+}
+
+function smtpSettings(to, env) {
   const host = secret('SMTP_HOST', env);
   if (!host || !to.length) return null;
   const port = Number(secret('SMTP_PORT', env) || 465);
@@ -252,11 +260,6 @@ export function renderEmailHtml(b, { siteUrl = '', title = '일일 보안 브리
   const since = sinceNote(b);
   const date = `${Number(b.date.slice(0, 4))}년 ${Number(b.date.slice(5, 7))}월 ${Number(b.date.slice(8, 10))}일 (${weekdayKo(b.date)})`;
 
-  // 받은편지함 목록에서 제목 옆에 보이는 미리 보기 글(본문에는 보이지 않음)
-  const preheader = b.overview
-    ? `<div style="display:none;max-height:0;max-width:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;opacity:0;color:${C.page};">${h(truncate(b.overview, 110))}${'&#847;&zwnj;&nbsp;'.repeat(30)}</div>`
-    : '';
-
   // 글자 사이를 벌리면(letter-spacing) 영문 약어가 'G OC' 처럼 떨어져 보여 간격은 두지 않는다
   const header = `<p style="margin:0;font-size:13px;line-height:18px;font-weight:bold;color:${C.bandSub};">${h(title)}</p>
 <h1 style="margin:6px 0 4px;font-size:24px;line-height:32px;color:${C.bandInk};">${date}</h1>
@@ -318,7 +321,6 @@ ${pill('사이버위기 경보', 'warn')} ${a(alert.url, h(alert.title), `color:
 ${MSO_CSS}
 </head>
 <body class="bg" bgcolor="${C.page}" style="margin:0;padding:0;background:${C.page};">
-${preheader}
 <table ${TBL} class="bg" bgcolor="${C.page}" style="background:${C.page};"><tr><td align="center" style="padding:16px 8px 20px;">
 <!--[if mso]><table role="presentation" width="680" align="center" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:680px;width:100%;font-family:${FONT};color:${C.ink};word-break:keep-all;overflow-wrap:anywhere;">
@@ -447,10 +449,26 @@ async function sendViaSmtp(s, msg, { transportOverride }) {
   return { via: 'SMTP', accepted, rejected };
 }
 
+/** Outlook 으로 보내고, 막히면(계정 정지 등) SMTP 예비로. 무료 계정이 묶여도 그날 메일이 끊기지 않게 한다. */
+async function sendOutlookOrBackup(path, s, msg, { env, log, transportOverride }) {
+  try {
+    return await sendViaOutlook(path, s, msg, { env, log });
+  } catch (err) {
+    if (!s.smtp) throw err;
+    log(`Outlook 으로 보내지 못해 예비(SMTP)로 보냅니다: ${publicError(err)}`);
+    try {
+      return { ...(await sendViaSmtp(s.smtp, msg, { transportOverride })), fallback: err.message };
+    } catch (backupErr) {
+      throw new Error(`${err.message} / 예비(SMTP)도 실패: ${backupErr.message}`);
+    }
+  }
+}
+
 /**
  * 브리핑 메일 발송. 같은 날짜는 한 번만 보낸다(--force 로 다시).
  * 받는 사람이 여럿이면 서로의 주소가 보이지 않게 숨은 참조로 보낸다.
- * @returns {Promise<{sent:boolean, skipped?:boolean, reason?:string, via?:string, accepted?:number, rejected?:number}>}
+ * Outlook 이 실패하면 SMTP 예비로 보낸다(fallback 에 Outlook 실패 이유). 예비가 없거나 예비도 실패하면 오류.
+ * @returns {Promise<{sent:boolean, skipped?:boolean, reason?:string, via?:string, accepted?:number, rejected?:number, fallback?:string}>}
  */
 export async function sendBriefMail(cfg, brief, { test = false, force = false, env = process.env, transportOverride, feedOverride, log = console.log } = {}) {
   const s = mailSettings(env);
@@ -471,7 +489,7 @@ export async function sendBriefMail(cfg, brief, { test = false, force = false, e
         html: renderEmailHtml(brief, { siteUrl: cfg.site.url, title, extraNews }),
         text: `${title}\n\n${renderMarkdown(brief, { siteUrl: cfg.site.url })}${keywordNewsText(extraNews)}`,
       };
-  const r = s.kind === 'outlook' ? await sendViaOutlook(path, s, msg, { env, log }) : await sendViaSmtp(s, msg, { transportOverride });
+  const r = s.kind === 'outlook' ? await sendOutlookOrBackup(path, s, msg, { env, log, transportOverride }) : await sendViaSmtp(s, msg, { transportOverride });
   if (!test && brief) {
     // 공개 저장소에 남으므로 주소는 적지 않는다(건수만). Outlook 토큰 상태는 그대로 둔다.
     const next = { ...loadMailState(path), version: 1, last_sent: brief.date, last_sent_at: kstIso(), recipients: r.accepted };

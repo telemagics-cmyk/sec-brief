@@ -101,8 +101,11 @@ function setup(extra = {}) {
 const quiet = () => {};
 
 test('메일 설정: Outlook 비밀값이 있으면 Outlook(SMTP 보다 먼저), 받는 주소는 비워도 됨', () => {
-  assert.deepEqual(mailSettings({ OUTLOOK_CLIENT_ID: CLIENT, OUTLOOK_REFRESH_TOKEN: 'x' }), { kind: 'outlook', to: [] });
-  assert.equal(mailSettings({ OUTLOOK_CLIENT_ID: CLIENT, OUTLOOK_REFRESH_TOKEN: 'x', SMTP_HOST: 'smtp.gmail.com', MAIL_TO: 'a@x.com' }).kind, 'outlook');
+  assert.deepEqual(mailSettings({ OUTLOOK_CLIENT_ID: CLIENT, OUTLOOK_REFRESH_TOKEN: 'x' }), { kind: 'outlook', to: [], smtp: null });
+  const both = mailSettings({ OUTLOOK_CLIENT_ID: CLIENT, OUTLOOK_REFRESH_TOKEN: 'x', SMTP_HOST: 'smtp.gmail.com', MAIL_TO: 'a@x.com' });
+  assert.equal(both.kind, 'outlook');
+  assert.equal(both.smtp.kind, 'smtp', 'SMTP 는 Outlook 이 실패했을 때의 예비');
+  assert.equal(mailSettings({ OUTLOOK_CLIENT_ID: CLIENT, OUTLOOK_REFRESH_TOKEN: 'x', SMTP_HOST: 'smtp.gmail.com' }).smtp, null, '받는 주소가 없으면 예비도 없음');
   assert.equal(mailSettings({ SMTP_HOST: 'smtp.gmail.com', MAIL_TO: 'a@x.com' }).kind, 'smtp');
   assert.equal(mailSettings({ OUTLOOK_CLIENT_ID: CLIENT }), null, '리프레시 토큰이 없으면 끔');
 });

@@ -163,7 +163,11 @@ cron-job.org 는 매일 부르게 두어도 됩니다 — 주말·공휴일이�
 | Gmail | SMTP | 2단계 인증 + 앱 비밀번호 |
 
 Outlook.com 은 비밀번호 방식 SMTP 를 막았고(OAuth 만 허용), 새 계정은 SMTP 자체가 꺼진 경우가 많아 메일 API 로 보냅니다.
-둘 다 설정하면 Outlook 으로 보냅니다. 네이버 메일은 해외(GitHub 서버) 접속을 기본으로 막아 권하지 않습니다.
+둘 다 설정하면 Outlook 으로 보내고, Outlook 이 실패한 날(계정 정지 등)은 SMTP 로 보냅니다(예비). 네이버 메일은 해외(GitHub 서버) 접속을 기본으로 막아 권하지 않습니다.
+
+**자동 발송에는 Gmail 을 권합니다.** 무료 Outlook.com 계정은 신뢰가 쌓이기 전까지 발송 한도가 낮고 숫자도 공개되지 않으며
+([Microsoft 발송 한도 안내](https://support.microsoft.com/office/sending-limits-in-outlook-com-279ee200-594c-40f0-9ec8-bb6af7735c2e)),
+이 도구에서도 2026-10-28·11-02 두 번 계정이 정지됐습니다. Outlook 으로 보내려면 Gmail 을 예비로 함께 설정하세요.
 
 #### Outlook.com 계정으로 보내기
 
@@ -202,11 +206,12 @@ Outlook.com 은 비밀번호 방식 SMTP 를 막았고(OAuth 만 허용), 새 �
 `OUTLOOK_REFRESH_TOKEN` 을 바꾸세요: 실행이 두세 달 멈췄을 때, 계정 비밀번호를 바꿨을 때,
 [계정의 앱 권한](https://account.live.com/consent/Manage)에서 sec-brief 를 지웠을 때(오류에 `invalid_grant` 가 보입니다).
 새로 만든 Outlook 계정은 처음 보낼 때 outlook.com 에서 휴대폰 확인을 요구할 수 있습니다(`ErrorMessageSubmissionBlocked`).
-GitHub(해외 서버)에서 처음 보낼 때 Microsoft 가 스팸 의심으로 계정을 묶기도 합니다(2026-10-28 실제로 `ErrorAccountSuspend` →
+무료 계정을 자동 발송에 쓰면 Microsoft 가 스팸 의심으로 계정을 묶기도 합니다(2026-10-28·11-02 실제로 `ErrorAccountSuspend` →
 다음 실행은 `service abuse mode`). 그때는 account.microsoft.com 에 로그인해 안내대로(휴대폰 보안 코드 등) 계정을 풀고
 (그 선택지가 없으면 화면의 aka.ms/ 링크로 복구 요청 — Microsoft [잠긴 계정 안내](https://support.microsoft.com/help/13956)),
 `mail-login` 을 다시 해 `OUTLOOK_REFRESH_TOKEN` 을 바꾼 뒤
-**연결 확인 메시지만** 으로 확인합니다. 풀고 나서도 다시 묶이면 Gmail 로 바꾸세요(Outlook Secrets 를 지우면 SMTP 로 보냄).
+**연결 확인 메시지만** 으로 확인합니다. SMTP 예비를 설정해 두면 묶인 날에도 메일은 예비로 나갑니다(그 실행에 경고가 붙습니다).
+풀고 나서도 되풀이되면 Outlook Secrets 를 지워 SMTP 로만 보내세요.
 
 #### 메일 이름 바꾸기 (선택)
 
@@ -254,8 +259,9 @@ Secret `MAIL_NEWS_KEYWORD` 에 검색어(예: 회사 이름)를 넣으면, 메�
 
 **메일** (설정했을 때) — 제목 `[일일 보안 브리핑] 10.23(금)`, 날짜까지만
 (경보 단계가 바뀐 날은 맨 앞에 `[경보]`). 본문은 웹 페이지와 같은 순서의 전문이고, 건수는 본문 위쪽 칸에 있으며 누르면 웹 페이지의 해당 섹션으로 갑니다.
-받은편지함 목록의 미리 보기 글은 '오늘의 요약' 첫머리입니다. 기사는 번호·매체·시각과 요약, 취약점은 색 있는 표시(KEV·CVSS·기한)와 대상·영향·**조치** 순서입니다.
+기사는 번호·매체·시각과 요약, 취약점은 색 있는 표시(KEV·CVSS·기한)와 대상·영향·**조치** 순서입니다.
 Outlook(Windows) 이 쓰는 Word 그리기 방식에서도 깨지지 않게 표로 짰고, 어두운 화면을 지원하는 메일 앱에서는 어두운 색으로 바뀝니다.
+스팸 메일로 오해받지 않도록 숨김 글·보이지 않는 문자는 넣지 않습니다(시험이 지킵니다).
 `MAIL_NEWS_KEYWORD` 를 넣었으면 맨 아래에 그 검색어의 관련 뉴스가 붙습니다(메일에만).
 
 **웹 이력**
@@ -461,7 +467,7 @@ sec-brief/
 | Outlook `AADSTS700016`·`unauthorized_client` | 애플리케이션 ID 값, 지원되는 계정 유형이 '개인 Microsoft 계정만'인지 |
 | Outlook `ErrorAccessDenied` | API 사용 권한에 `Mail.Send` 추가 후 `mail-login` 다시 |
 | Outlook `ErrorMessageSubmissionBlocked` | outlook.com 에 로그인해 계정 확인(휴대폰 등) 안내를 따름 |
-| Outlook `ErrorAccountSuspend`, `service abuse mode` | Microsoft 가 스팸 의심으로 계정을 묶음(토큰 문제 아님) → account.microsoft.com 로그인·휴대폰 보안 코드로 풀기 → `mail-login` 다시, `OUTLOOK_REFRESH_TOKEN` 교체. 되풀이되면 Gmail 로 |
+| Outlook `ErrorAccountSuspend`, `service abuse mode` | Microsoft 가 스팸 의심으로 계정을 묶음(토큰 문제 아님) → account.microsoft.com 로그인·휴대폰 보안 코드로 풀기 → `mail-login` 다시, `OUTLOOK_REFRESH_TOKEN` 교체. SMTP 예비가 있으면 묶인 날에도 메일은 나감. 되풀이되면 Gmail 로만 |
 | 메일 `SMTP 로그인 실패` | Gmail 은 계정 비밀번호가 아니라 **앱 비밀번호**를 `SMTP_PASS` 에. 2단계 인증을 끄면 앱 비밀번호도 무효 |
 | 메일 `연결하지 못했습니다` | `SMTP_HOST`·`SMTP_PORT` 값. 네이버는 해외 접속 차단 설정 |
 | 메일이 안 보임 | 받는 쪽 스팸(정크) 메일함. Actions 로그에 '메일 발송 완료'가 있으면 보낸 것입니다 |

@@ -1,0 +1,833 @@
+{
+  "version": 2,
+  "date": "2026-11-03",
+  "generated_at": "2026-11-03T06:00:56+09:00",
+  "window": {
+    "hours": 30,
+    "from": "2026-11-01T15:00:56.363Z",
+    "to": "2026-11-02T21:00:56.363Z",
+    "since_brief": "2026-11-02",
+    "since_at": "2026-11-01T21:00:52.874Z"
+  },
+  "engine": "claude-haiku-5-5",
+  "overview": "WAVLINK 공유기 취약점 3건(CVSS 10)은 PoC가 공개돼 원격 명령 실행 위험이 있으므로 외부 노출을 즉시 차단하고 펌웨어를 점검해야 합니다. 더존비즈온 백업서버 침해로 국내 다수 기관의 개인정보 유출 가능성이 제기됐고, Ivanti Connect Secure 제로데이 연쇄 공격도 확인됐습니다. FBI는 바이낸스 탈취를 북한 TraderTraitor 소행으로 공식 지목했습니다.",
+  "cvss_min": 9,
+  "critical_total": 36,
+  "failed": {
+    "kev": false,
+    "nvd": false,
+    "kisa": false,
+    "news": false
+  },
+  "exploited": [],
+  "exploited_more": [],
+  "critical": [
+    {
+      "id": "CVE-2026-120276",
+      "ids": [
+        "CVE-2026-120276",
+        "CVE-2026-120277",
+        "CVE-2026-120344",
+        "CVE-2026-120345"
+      ],
+      "section": "critical",
+      "label": "WAVLINK WN536AX6-A V260507_2.0.0",
+      "vendor": "",
+      "cna": "cna@vuldb.com",
+      "status": "Deferred",
+      "published": "2026-11-02T00:18:09.897",
+      "description": "A weakness has been identified in WAVLINK WN536AX6-A V260507_2.0.0. This vulnerability affects the function sub_416760 of the file /bin/ioos of the component Web Management Interface. This manipulation of the argument group_name causes os command injection. It is possible to initiate the attack remotely. The exploit has been made available to the public and could be used for attacks. The vendor was contacted early about this disclosure.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-120276",
+          "text": "A weakness has been identified in WAVLINK WN536AX6-A V260507_2.0.0. This vulnerability affects the function sub_416760 of the file /bin/ioos of the component Web Management Interface. This manipulation of the argument group_name causes os command injection. It is possible to initiate the attack rem…"
+        },
+        {
+          "id": "CVE-2026-120277",
+          "text": "A security vulnerability has been detected in WAVLINK WN536AX6-A V260507_2.0.0. This issue affects the function sub_41a1d8 of the file /bin/ioos of the component WireGuard CLI Group Handler. Such manipulation of the argument group_name leads to os command injection. It is possible to launch the att…"
+        },
+        {
+          "id": "CVE-2026-120344",
+          "text": "A vulnerability has been found in WAVLINK WN551X3-A M51X3_V251020-WO-182e965. This affects the function system of the file /bin/ioos of the component WireGuard CLI Group Handler. Such manipulation of the argument group_name leads to os command injection. The attack may be performed from remote. The…"
+        },
+        {
+          "id": "CVE-2026-120345",
+          "text": "A vulnerability was found in WAVLINK WN551X3-A M51X3_V251020-WO-182e965. This impacts the function sub_41a430 of the file /bin/ioos of the component DNS Resolution Handler. Performing a manipulation of the argument data results in os command injection. It is possible to initiate the attack remotely…"
+        }
+      ],
+      "cwes": [
+        "CWE-77",
+        "CWE-78"
+      ],
+      "cvss": {
+        "score": 10,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "poc",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://github.com/senxitoyshuyi-ui/HACKALL/blob/main/WAVLINK_WN536AX6-A%20Router/WAVLINK_WN536AX6-A_openvpn_cli_group_command_injection.md",
+        "https://vuldb.com/cve/CVE-2026-120276",
+        "https://vuldb.com/submit/919502"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-120276",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 12.6,
+      "ko": {
+        "title": "WAVLINK 공유기 명령어 주입 (웹 관리·WireGuard 핸들러)",
+        "target": "WAVLINK WN536AX6-A V260507_2.0.0, WN551X3-A M51X3_V251020 등",
+        "impact": "무인증 원격에서 group_name 인자 조작으로 OS 명령 실행 가능, CVSS 10, PoC 공개됨",
+        "action": "관리 페이지 외부 노출 즉시 차단, 벤더 펌웨어 업데이트 공지 확인"
+      }
+    },
+    {
+      "id": "CVE-2026-120279",
+      "ids": [
+        "CVE-2026-120279",
+        "CVE-2026-120280",
+        "CVE-2026-120282"
+      ],
+      "section": "critical",
+      "label": "WAVLINK WN536AX6-A V260507",
+      "vendor": "",
+      "cna": "cna@vuldb.com",
+      "status": "Deferred",
+      "published": "2026-11-02T01:17:26.677",
+      "description": "A flaw has been found in WAVLINK WN536AX6-A V260507. The affected element is an unknown function of the file /protocol.csp of the component openvpn_cli Handler. Executing a manipulation of the argument file_id can lead to os command injection. The attack can be launched remotely. The exploit has been published and may be used. The vendor was contacted early about this disclosure.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-120279",
+          "text": "A flaw has been found in WAVLINK WN536AX6-A V260507. The affected element is an unknown function of the file /protocol.csp of the component openvpn_cli Handler. Executing a manipulation of the argument file_id can lead to os command injection. The attack can be launched remotely. The exploit has be…"
+        },
+        {
+          "id": "CVE-2026-120280",
+          "text": "A vulnerability has been found in WAVLINK WN536AX6-A V260507. The impacted element is the function wireguard_cli_group handler of the file /protocol.csp of the component WireGuard. The manipulation of the argument group_id/group_name leads to os command injection. The attack may be initiated remote…"
+        },
+        {
+          "id": "CVE-2026-120282",
+          "text": "A vulnerability was determined in WAVLINK WN536AX6-A V260507. This impacts the function host_black of the file /protocol.csp. This manipulation of the argument mac causes os command injection. Remote exploitation of the attack is possible. The exploit has been publicly disclosed and may be utilized…"
+        }
+      ],
+      "cwes": [
+        "CWE-77",
+        "CWE-78"
+      ],
+      "cvss": {
+        "score": 10,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "poc",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://github.com/pipiyyb/cve/blob/main/WAVLINK%20WN536AX6-A/WN536AX6-A_file_id.md",
+        "https://vuldb.com/cve/CVE-2026-120279",
+        "https://vuldb.com/submit/919788"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-120279",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 12.4,
+      "ko": {
+        "title": "WAVLINK 공유기 protocol.csp 명령어 주입 (3건)",
+        "target": "WAVLINK WN536AX6-A V260507 (protocol.csp의 openvpn_cli, WireGuard, host_black)",
+        "impact": "file_id, group_id, mac 인자 조작으로 원격 OS 명령 실행 가능, CVSS 10, PoC 공개됨",
+        "action": "외부 노출 차단, 펌웨어 최신화 및 벤더 패치 여부 즉시 확인"
+      }
+    },
+    {
+      "id": "CVE-2025-11969",
+      "ids": [
+        "CVE-2025-11969"
+      ],
+      "section": "critical",
+      "label": "CVE-2025-11969",
+      "vendor": "",
+      "cna": "ed10eef1-636d-4fbe-9993-6890dfa878f8",
+      "status": "Awaiting Analysis",
+      "published": "2026-11-02T06:17:42.087",
+      "description": "The System REST APIs do not correctly enforce access control mechanisms, allowing users with lower privilege roles to execute administrative actions that should be restricted. This weakness permits unauthorized operations on the affected product. Successful exploitation could enable a malicious actor to perform unauthorized administrative operations, including executing administrative functions. APIs exposed through the WSO2 API Manager's API Gateway are not affected by this vulnerability.",
+      "descriptions": [
+        {
+          "id": "CVE-2025-11969",
+          "text": "The System REST APIs do not correctly enforce access control mechanisms, allowing users with lower privilege roles to execute administrative actions that should be restricted. This weakness permits unauthorized operations on the affected product. Successful exploitation could enable a malicious act…"
+        }
+      ],
+      "cwes": [
+        "CWE-285"
+      ],
+      "cvss": {
+        "score": 9.4,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:L"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://security.docs.wso2.com/en/latest/security-announcements/security-advisories/2026/WSO2-2025-4733/"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2025-11969",
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 10.4,
+      "ko": {
+        "title": "System REST API 접근통제 누락으로 권한 상승",
+        "target": "제품 미상(System REST APIs), 벤더 공지 확인 필요",
+        "impact": "하위 권한 사용자가 관리 작업 수행 가능, CVSS 9.4, 악용 확인되지 않음",
+        "action": "영향 제품 식별 후 벤더 패치 적용, 관리 API 접근 권한 점검"
+      }
+    }
+  ],
+  "critical_more": [
+    {
+      "id": "CVE-2026-120322",
+      "ids": [
+        "CVE-2026-120322"
+      ],
+      "label": "Termix-SSH Termix",
+      "cvss": 9.9,
+      "title": "Termix-SSH Termix 경로 조작"
+    },
+    {
+      "id": "CVE-2026-120283",
+      "ids": [
+        "CVE-2026-120283"
+      ],
+      "label": "Linksys E8450",
+      "cvss": 10,
+      "title": "Linksys E8450 메모리 경계 오류"
+    },
+    {
+      "id": "CVE-2026-116606",
+      "ids": [
+        "CVE-2026-116606"
+      ],
+      "label": "Barracuda Email Security Gateway",
+      "cvss": 9.3,
+      "title": "Barracuda Email Security Gateway 대체 경로 인증 우회"
+    },
+    {
+      "id": "CVE-2026-120213",
+      "ids": [
+        "CVE-2026-120213"
+      ],
+      "label": "CVE-2026-120213",
+      "cvss": 9.1,
+      "title": "CVE-2026-120213 경로 조작"
+    },
+    {
+      "id": "CVE-2026-88811",
+      "ids": [
+        "CVE-2026-88811"
+      ],
+      "label": "CVE-2026-88811",
+      "cvss": 9.1,
+      "title": "CVE-2026-88811 취약점"
+    },
+    {
+      "id": "CVE-2026-120281",
+      "ids": [
+        "CVE-2026-120281"
+      ],
+      "label": "WAVLINK WN536AX6-A V260507",
+      "cvss": 10,
+      "title": "WAVLINK WN536AX6-A V260507 메모리 경계 오류"
+    },
+    {
+      "id": "CVE-2026-77876",
+      "ids": [
+        "CVE-2026-77876",
+        "CVE-2026-73696"
+      ],
+      "label": "Control Web Panel",
+      "cvss": 9.8,
+      "title": "Control Web Panel OS 명령 삽입 등 2건"
+    },
+    {
+      "id": "CVE-2026-105606",
+      "ids": [
+        "CVE-2026-105606"
+      ],
+      "label": "Joomla",
+      "cvss": 9.5,
+      "title": "Joomla 위험한 형식 파일 업로드"
+    },
+    {
+      "id": "CVE-2026-97718",
+      "ids": [
+        "CVE-2026-97718"
+      ],
+      "label": "CVE-2026-97718",
+      "cvss": 9.4,
+      "title": "CVE-2026-97718 사이트 간 요청 위조(CSRF)"
+    },
+    {
+      "id": "CVE-2026-120442",
+      "ids": [
+        "CVE-2026-120442"
+      ],
+      "label": "ape-volo-admin",
+      "cvss": 9.8,
+      "title": "ape-volo-admin 인증 우회"
+    },
+    {
+      "id": "CVE-2026-105769",
+      "ids": [
+        "CVE-2026-105769"
+      ],
+      "label": "kaniko",
+      "cvss": 9.3,
+      "title": "kaniko 출처 검증 오류"
+    },
+    {
+      "id": "CVE-2026-116769",
+      "ids": [
+        "CVE-2026-116769"
+      ],
+      "label": "CVE-2026-116769",
+      "cvss": 9.3,
+      "title": "CVE-2026-116769 인증 우회"
+    },
+    {
+      "id": "CVE-2026-120459",
+      "ids": [
+        "CVE-2026-120459"
+      ],
+      "label": "python-jose",
+      "cvss": 9.1,
+      "title": "python-jose 전자서명 검증 부적절"
+    },
+    {
+      "id": "CVE-2026-120446",
+      "ids": [
+        "CVE-2026-120446"
+      ],
+      "label": "madong-admin-saas",
+      "cvss": 9.4,
+      "title": "madong-admin-saas 중요 기능 인증 누락"
+    },
+    {
+      "id": "CVE-2026-119085",
+      "ids": [
+        "CVE-2026-119085"
+      ],
+      "label": "CVE-2026-119085",
+      "cvss": 9.4,
+      "title": "CVE-2026-119085 템플릿 삽입"
+    },
+    {
+      "id": "CVE-2026-120447",
+      "ids": [
+        "CVE-2026-120447"
+      ],
+      "label": "HotGo",
+      "cvss": 9.2,
+      "title": "HotGo 인증 부적절"
+    },
+    {
+      "id": "CVE-2026-105603",
+      "ids": [
+        "CVE-2026-105603",
+        "CVE-2026-105604"
+      ],
+      "label": "Joomla",
+      "cvss": 9.4,
+      "title": "Joomla 위험한 형식 파일 업로드 등 2건"
+    },
+    {
+      "id": "CVE-2026-94290",
+      "ids": [
+        "CVE-2026-94290"
+      ],
+      "label": "CVE-2026-94290",
+      "cvss": 9.1,
+      "title": "CVE-2026-94290 과도한 권한 실행"
+    },
+    {
+      "id": "CVE-2026-102435",
+      "ids": [
+        "CVE-2026-102435"
+      ],
+      "label": "Ultra Addons for Contact Form",
+      "cvss": 9.8,
+      "title": "Ultra Addons for Contact Form 신뢰할 수 없는 데이터 역직렬화"
+    }
+  ],
+  "advisories": [
+    {
+      "id": "a-d5843606",
+      "source": "KISA 보안공지",
+      "title": "TeamViewer 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72264",
+      "date": "2026-11-02"
+    },
+    {
+      "id": "a-4f51dc7e",
+      "source": "KISA 보안공지",
+      "title": "Ivanti 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72263",
+      "date": "2026-11-02"
+    },
+    {
+      "id": "a-fc00c6e3",
+      "source": "KISA 보안공지",
+      "title": "WordPress 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72262",
+      "date": "2026-11-02"
+    }
+  ],
+  "news": {
+    "domestic": [
+      {
+        "id": "n-6fe816c6",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "[더존비즈온 사태] 국기원, 개인정보 유출 가능성…더존비즈온 해킹 여파",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=146936",
+        "source": "보안뉴스",
+        "published": "2026-11-02T05:16:44.000Z",
+        "snippet": "더존비즈온 침해사고 여파로 국기원도 개인정보 유출 가능성이 제기됐다. 국기원은 지난달 30일 공지사항을 통해 “행정업무 처리를 위해 이용 중인 외부 시스템(더존비즈온 ERP)의 백업 서비스에서 보안 사고가 발생해 국기원 데이터의 일부 개인정보가 유출됐을 가능성이 있다고 통보받았다”며 “국기원의 자료가 실제 반출 대상에 포함됐는지는 아직 확인되지 않았으며 현재 관련 조사가 진행 중”이라고 밝…",
+        "outlets": [
+          "보안뉴스",
+          "데일리시큐"
+        ],
+        "related": [
+          {
+            "title": "국기원, 더존비즈온 해킹으로 개인정보 유출 가능성 공지…주민번호·계좌정보 포함 우려",
+            "url": "https://www.dailysecu.com/news/articleView.html?idxno=209269",
+            "source": "데일리시큐"
+          }
+        ],
+        "cves": [],
+        "score": 13.2,
+        "title_ko": "더존비즈온 백업서버 해킹, 국내 기관 개인정보 유출 연쇄",
+        "summary_ko": "더존비즈온 APO 백업서버 침해로 국기원, 더본코리아, 전북문화관광재단 등 다수 기관의 임직원·거래처 주민번호·계좌 정보 유출 가능성이 공지됨. 실제 반출 여부는 조사 중임."
+      },
+      {
+        "id": "n-9c3114da",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "하이브, 전자결재·비용처리시스템 해킹…주민번호·의료정보 등 개인정보 유출",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209268",
+        "source": "데일리시큐",
+        "published": "2026-11-02T12:11:45.000Z",
+        "snippet": "하이브가 전자결재시스템과 비용처리시스템에 대한 외부의 비정상적인 접근으로 내부 문서와 개인정보가 유출됐다고 밝혔다. 유출 정보에는 협력사 관계자와 전·현직 구성원 일부의 주민등록번호, 여권번호, 금융정보, 의료정보 등이 포함됐다. 하이브가 공개한 ‘개인정보 유출 관련 사과의 말씀 및 안내’에 따르면, 회사는 최근 사내 보안 점검 과정에서 전자결재시스템에 연동된 외부 업체의 문서 미리보기 솔…",
+        "outlets": [
+          "데일리시큐",
+          "지디넷코리아",
+          "연합뉴스TV",
+          "MBC 뉴스"
+        ],
+        "related": [
+          {
+            "title": "하이브, 내부 시스템서 전·현직 직원 개인정보 유출",
+            "url": "https://zdnet.co.kr/view/?no=20261102175121",
+            "source": "지디넷코리아"
+          },
+          {
+            "title": "하이브, 전·현직 임직원 계좌 등 개인정보 유출",
+            "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTFBxM2N1RHpDM2t0QVhoWE9vOVJjN1Y4UVU1OXlaY3VnYWFuNkVHS2ozNk96MHFqQ2JkRTE3Z0lMbzBLRV9pd09WSmllU0pOM2lEUTcyS3VuNUt2NEt3VDdVSThNS09GWm8?oc=5",
+            "source": "연합뉴스TV"
+          },
+          {
+            "title": "하이브, 사원 여권·카드번호 등 개인정보 유출‥\"깊이 사과\"",
+            "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE8zQVNDZXdFMkNyem5oYThQMzQ4YnN4cWZTdEhPdjdVdFprQWdjTlhjM2FDbk5lX3F5cTVmUENZX2NiWURkbHdwRWlsZF9UWEliTjF6Wk1oai14VVFoanBtMWZGM1lRSW10bmZaTTBDM25Ib2530gF0QVVfeXFMTU1LY01jOTBWQTFvbUJhZFhKMnVYVUxUN1JCeEUzdElrZjdjX21Ua3BCSUZRX003cG5Jclc3dzZmUDRUYzFDeW1KQ25tMjVWRXNaVWxaMHBTRDhIcFNFQWtmanQ4TG5OQjIwU3pCMG5HS3JzUXk?oc=5",
+            "source": "MBC 뉴스"
+          }
+        ],
+        "cves": [],
+        "score": 16.4,
+        "title_ko": "하이브, 전자결재·비용처리 시스템 해킹으로 개인정보 유출",
+        "summary_ko": "전자결재·비용처리시스템에 외부 비정상 접근이 발생해 협력사 관계자와 전·현직 구성원의 주민번호, 여권번호, 금융·의료정보가 유출됨. 2차 피해 우려."
+      },
+      {
+        "id": "n-b827027d",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "李대통령 부부 등 ‘1호기 탑승’ 168명 개인정보 유출…靑 “대응조치 취해”",
+        "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1ZWkl0Y0Zla2tOdHN4cnpZdW5rRFpGVUtpY1pITDAxeWFHdW1rNlB0N1REOF9kV0JxcUNrVzlfRFpTVjI3WDFuSnNOd00wYUhONUZuVElGN09YZzNVZTdvQ2E4Q1Z5MkNwOUxFX0dn?oc=5",
+        "source": "아시아투데이",
+        "published": "2026-11-02T20:34:01.000Z",
+        "snippet": "",
+        "outlets": [
+          "아시아투데이",
+          "조선일보",
+          "주간조선",
+          "뉴데일리",
+          "문화일보",
+          "동아일보",
+          "중앙일보"
+        ],
+        "related": [
+          {
+            "title": "대통령까지… ‘1호기’ 탑승자 168명 정보 유출",
+            "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxOeUNILUdMVkFPUjU2RzNHekVfRXZWM2hEX2RZN0Y2NktvM3MtTHVqTFRFWEVUS21nM3dnWFhBdllKbzQydDJQTkxVZDI3Wnh0ZU45cmRialBpbkdpcHBpcjJ3ZlN2STU5TjNJMEdhSjNXM3oySmhWNV9NTEN5dTN0UGJaMEp2TkZhZUZUTFN5bVE?oc=5",
+            "source": "조선일보"
+          },
+          {
+            "title": "대통령부터 경호관까지, ‘1호기’ 탑승자 168명 정보 유출…5개월간 노출",
+            "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTFBaTVFqTURiVzJLZ2JKYUp1Tkw1UGtyYnpqRTE3Vm5MQTRTRVkyUGxkTng3N2ZxRjg2clA2ZzRnXzBaRE9lSEZsb3piWmJBSnd3dDU4RDhENDBwVVFYdnBQVnJOYV9CMU10WHfSAW5BVV95cUxPVWJCMzdsQnZlaHlVU0txSFJkT2NVY0dwZHRuNlBiN3pNdXR4VlBrbXpyVExoTGhSWmVFQ3c0akd4ZDhIYmY4dnBhcXE3VGUtclhuM3NGOXZESEZLNVdaYXdTQlI3dzFrOW1Tc3hwUQ?oc=5",
+            "source": "주간조선"
+          },
+          {
+            "title": "李 대통령 부부 여권번호까지 … '1호기 탑승자' 168명 정보 유출",
+            "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTFBsbUlMYVdHVzV6YlZuVHdLOVN2bi1ISzBJdndvb2laRHJHZkZPcmZBVF9RU0p2ZVVLUm1nWUMzVzM1MDJ1aDY5Q2JUdWEzUHk1MU5tZGZRQTlUUnJaQkdQM1lBdUhSdVpsR25Ib01RMC1uNDl1NU9Pakk5a9IBgAFBVV95cUxOeHpwbHFvbVBaWlQ4cVBnRVFFVWZhV1A4QW9aeE1sRkMzS1hqV2ZtQVZwQk9WZ0JUUVM4aDdzeTlZTHRWamZuYXBUdEJWOHloNzUwdU1VRDZ0dVo1NGh2NzBRTFJtRm9pNF9Jdy16Vkp6b1Z3Sm9NRTQ3NGt4R2lVcQ?oc=5",
+            "source": "뉴데일리"
+          },
+          {
+            "title": "李대통령 부부 등 ‘1호기 탑승자’ 168명 정보 유출",
+            "url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5FaUljUTlGa196MDVCS0JacUF5MkdBR1B4MFBHMWV3V29HMlhNUG8tbUJLTFByVHU2WDRxOFQ1RDZTcnUtejREcHNUQ2FwVUJj?oc=5",
+            "source": "문화일보"
+          },
+          {
+            "title": "李대통령 부부 여권번호까지 털렸다…‘1호기 탑승’ 168명 정보 유출",
+            "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE5DNklsRmVEb3dERnlMdGFmR1h4MjFpT1pOcmNvdzZuZTk2M0ljOEItd1F4Rm55MHU0NGlvUnYyZnhfM1I4UXhGRHp1eHBBZGtqUHZFNVZENlpFSnZqbW85ejNqYlB1a2lIWFdScGNuT0lZRWFnSXRj0gFmQVVfeXFMUDkteXEwTWJEQXRnTnV0SGx0S084c19yMWRDNndndVFJR1I5R1dOQVBoVG9VbTFZeExiYm9PMXdtdmRIRzhVbXotbWZVczVWd1ZfY2FrX0o1dnNYelRubEpRQ3VZdGJR?oc=5",
+            "source": "동아일보"
+          }
+        ],
+        "cves": [],
+        "score": 17.5,
+        "title_ko": "대통령 전용기 1호기 탑승자 168명 개인정보 유출",
+        "summary_ko": "대통령 부부와 경호관 등 1호기 탑승자 168명의 개인정보(여권번호 포함)가 약 5개월간 노출된 것으로 보도됨. 청와대는 대응 조치를 밝혔고 경호 정보 노출 우려가 제기됨."
+      },
+      {
+        "id": "n-3e8b5258",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "G마켓, 고객 개인정보 유출 정황 공식 인정…“피해 금액 전액 선제 보상”",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209243",
+        "source": "데일리시큐",
+        "published": "2026-11-02T00:01:27.000Z",
+        "snippet": "국내 대형 온라인 쇼핑몰 G마켓이 일부 고객의 개인정보 유출 정황을 공식 확인하고 피해 고객에 대한 금전적 보상을 완료했다고 밝혔다. 정확한 개인정보 유출 규모와 사고 원인은 아직 조사 중이다. G마켓은 11월 1일 공식 홈페이지에 ‘개인정보 유출 관련 고객분들께 사과 및 안내 말씀드립니다’라는 제목의 공지를 게시하고, 최근 자사 서비스에서 일부 고객의 개인정보가 유출된 정황을 확인했다고…",
+        "outlets": [
+          "데일리시큐",
+          "한겨레",
+          "MBC 뉴스"
+        ],
+        "related": [
+          {
+            "title": "G마켓, 개인정보 유출 고객에 1만원 지급…e쿠폰 피해 는 전액 보상",
+            "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9qZ0Q3YTV6VGpvLVV5STZhRzNVRkF6cFBXXzNQWVZxSXZiaDhTbnJzVVVXd3EzV2x5SEtXQXVoUjlZU3RRT05QeDB1T0I5SE9Td1J6MmFyendVb0U0UEdNT21Jc2dDc3JU?oc=5",
+            "source": "한겨레"
+          },
+          {
+            "title": "G마켓, 개인정보 유출 고객에 1만 원 캐시 보상‥90만 명 피해 신고",
+            "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE5HbllJNzdUc1V0SVdNejhPQnBXNUpaZmlOVTlUaUV2aWl1WGFuOHNXZFoxNEk3SVgwUEpyMy0ycTJkWjZhOEN4VDlqek1xUm1LcnNvaVBBaFQ0TG1XREFYTFpYbmotVk1xMXBIeGtKUTV1a2VK0gF0QVVfeXFMTlV5Yzd3QzItdHczLWppaEo5bnE3WWxoX3NXUUNQMFBucUhGMFRSanBEY2lqZHQ3emhTeFRyc2lCLURpNUdVWnEzR0N5R1hwNnE3OVpLTzVYSUNVbEhITm1mZFFETDNjdzMxcldhV3NaM0pCdDU?oc=5",
+            "source": "MBC 뉴스"
+          }
+        ],
+        "cves": [],
+        "score": 13.6,
+        "title_ko": "G마켓, 고객 개인정보 유출 정황 인정 후 피해 보상",
+        "summary_ko": "G마켓이 일부 고객의 개인정보 유출 정황을 공식 확인하고 피해 고객에게 금전 보상을 완료함. 유출 규모와 원인은 조사 중이며 추가 피해 점검 필요."
+      },
+      {
+        "id": "n-eeac5d14",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "림스연구소 해킹 확인, 회원 개인정보·검사 이용정보 유출 우려",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209242",
+        "source": "데일리시큐",
+        "published": "2026-11-01T17:05:06.000Z",
+        "snippet": "성격검사와 직업심리검사, 조직·팀 진단 및 관련 교육프로그램을 제공하는 림스연구소(LCSI)가 홈페이지 해킹에 따른 개인정보 유출 가능성을 안내했다. 실제 정보 반출 흔적은 확인되지 않았으며, 피해 범위는 조사 중이다. 연구소는 지난 10월 25일 공지를 통해 지난 23일 홈페이지의 불법 침입을 확인하고 즉시 차단했다고 밝혔다. 조사 결과 10월 21일부터 23일 사이 홈페이지 보안 취약점…",
+        "outlets": [
+          "데일리시큐"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 9,
+        "title_ko": "림스연구소 홈페이지 해킹, 회원 개인정보 유출 우려",
+        "summary_ko": "심리검사 서비스 업체 림스연구소가 홈페이지 불법 침입을 확인하고 차단함. 회원 개인정보와 검사 이용정보 유출 가능성이 있으나 실제 반출 흔적은 확인되지 않아 조사 중임."
+      }
+    ],
+    "international": [
+      {
+        "id": "n-af88cc87",
+        "region": "international",
+        "lang": "en",
+        "title": "Ivanti Patches Two More Zero-Days Exploited in Connect Secure Attack Chain",
+        "url": "https://www.securityweek.com/ivanti-patches-two-more-zero-days-exploited-in-connect-secure-attack-chain/",
+        "source": "SecurityWeek",
+        "published": "2026-11-02T07:57:49.000Z",
+        "snippet": "CISA has added CVE-2026-111357 and CVE-2026-118527 to its KEV catalog after the Ivanti VPN flaws were chained in zero-day attacks. The post Ivanti Patches Two More Zero-Days Exploited in Connect Secure Attack Chain appe…",
+        "outlets": [
+          "SecurityWeek",
+          "BleepingComputer"
+        ],
+        "related": [
+          {
+            "title": "Ivanti patches two more Connect Secure zero-days chained in attacks",
+            "url": "https://www.bleepingcomputer.com/news/security/ivanti-patches-two-more-connect-secure-zero-days-chained-in-attacks/",
+            "source": "BleepingComputer"
+          }
+        ],
+        "cves": [
+          "CVE-2026-111357",
+          "CVE-2026-118527"
+        ],
+        "score": 14.2,
+        "title_ko": "Ivanti, Connect Secure 제로데이 2건 추가 패치",
+        "summary_ko": "CVE-2026-111357, CVE-2026-118527이 VPN 취약점 연쇄 공격에 악용되어 CISA KEV에 등재됨. 기존 패치 적용 기업도 설치 버전을 재확인하고 업데이트해야 함."
+      },
+      {
+        "id": "n-fb900c05",
+        "region": "international",
+        "lang": "en",
+        "title": "FBI Flags Over 600 Addresses Tied to North Korea’s Binance Heist",
+        "url": "https://www.securityweek.com/fbi-flags-over-600-addresses-tied-to-north-koreas-binance-heist/",
+        "source": "SecurityWeek",
+        "published": "2026-11-02T08:40:36.000Z",
+        "snippet": "The FBI has officially pinned the $6 billion Binance hack on North Korea’s TraderTraitor as the attackers launder the stolen crypto. The post FBI Flags Over 600 Addresses Tied to North Korea’s Binance Heist appeared fir…",
+        "outlets": [
+          "SecurityWeek"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 8.5,
+        "title_ko": "FBI, 바이낸스 탈취를 북한 TraderTraitor 소행으로 지목",
+        "summary_ko": "FBI가 약 60억 달러 규모 바이낸스 해킹을 TraderTraitor 소행으로 공식 지목하고 600여 개 연관 주소를 공개함. 탈취 자금 세탁 경로 모니터링 필요."
+      },
+      {
+        "id": "n-05048a94",
+        "region": "international",
+        "lang": "en",
+        "title": "Russian and Ukrainian hackers hijack emergency apps to spread fake nuclear attack warnings",
+        "url": "https://therecord.media/ukraine-hackers-russia-alert-system",
+        "source": "The Record",
+        "published": "2026-11-02T14:30:00.000Z",
+        "snippet": "A popular Ukrainian air raid alert system was hacked over the weekend, prompting a cyber group to breach a similar Russian system in retaliation.",
+        "outlets": [
+          "The Record"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 10,
+        "title_ko": "러·우크라 경보 앱 해킹, 가짜 핵공격 경고 발송",
+        "summary_ko": "우크라이나 공습 경보 시스템이 해킹된 데 이어 러시아 유사 시스템도 보복 침해됨. 허위 핵공격 경고가 발송되어 공공 경보 체계의 무결성 위험이 드러남."
+      },
+      {
+        "id": "n-7d44eab8",
+        "region": "international",
+        "lang": "en",
+        "title": "Synology warns of C3RB3R ransomware attacks targeting NAS devices",
+        "url": "https://www.bleepingcomputer.com/news/security/synology-warns-customers-of-ongoing-c3rb3r-ransomware-attacks/",
+        "source": "BleepingComputer",
+        "published": "2026-11-02T11:28:42.000Z",
+        "snippet": "Taiwanese network-attached storage (NAS) appliance maker Synology warned customers to update their devices immediately due to a surge in C3RB3r ransomware attacks. [...]",
+        "outlets": [
+          "BleepingComputer"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 9.5,
+        "title_ko": "Synology, C3RB3R 랜섬웨어 급증에 NAS 즉시 업데이트 경고",
+        "summary_ko": "NAS 제조사 Synology가 C3RB3R 랜섬웨어 공격이 급증했다며 고객에게 기기 즉시 업데이트를 권고함. NAS 백업 데이터 암호화 피해 우려, 외부 노출 점검 필요."
+      },
+      {
+        "id": "n-5e55a4d0",
+        "region": "international",
+        "lang": "ko",
+        "title": "일본 @코스메 해킹, 300만명 개인정보 유출…피부·모발 유형까지 노출",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209273",
+        "source": "데일리시큐",
+        "published": "2026-11-02T14:52:56.000Z",
+        "snippet": "일본 뷰티 플랫폼 앳코스메(@cosme)에서 약 300만명의 회원 개인정보가 유출됐다. 이름과 주소 등 신원정보뿐 아니라 피부·모발 유형 등 개인 특성 정보까지 포함된 것으로 확인됐다. 운영사 아이스타일(istyle)은 11월 2일 공식 공지를 통해 지난 10월 28일 제3자의 비인가 접근으로 ‘앳코스메 공통 ID’에 등록된 회원정보 일부가 외부로 유출된 사실을 확인했다고 밝혔다. 앳코스메…",
+        "outlets": [
+          "데일리시큐"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 10,
+        "title_ko": "일본 @코스메 해킹, 회원 300만명 개인정보 유출",
+        "summary_ko": "일본 뷰티 플랫폼 앳코스메 공통 ID 회원 정보 일부가 10월 28일 제3자 비인가 접근으로 유출됨. 이름·주소와 피부·모발 유형 등 개인 특성 정보 포함, 피싱 위험 우려."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "kev",
+      "name": "CISA KEV",
+      "ok": true,
+      "count": 0,
+      "ms": 223
+    },
+    {
+      "id": "bleepingcomputer",
+      "name": "BleepingComputer",
+      "ok": true,
+      "count": 15,
+      "ms": 481
+    },
+    {
+      "id": "securityweek",
+      "name": "SecurityWeek",
+      "ok": true,
+      "count": 10,
+      "ms": 498
+    },
+    {
+      "id": "thehackernews",
+      "name": "The Hacker News",
+      "ok": true,
+      "count": 50,
+      "ms": 514
+    },
+    {
+      "id": "therecord",
+      "name": "The Record",
+      "ok": true,
+      "count": 5,
+      "ms": 545
+    },
+    {
+      "id": "zdnetkr",
+      "name": "지디넷코리아",
+      "ok": true,
+      "count": 30,
+      "ms": 617
+    },
+    {
+      "id": "gnews-kr",
+      "name": "Google 뉴스",
+      "ok": true,
+      "count": 100,
+      "ms": 749
+    },
+    {
+      "id": "krebs",
+      "name": "Krebs on Security",
+      "ok": true,
+      "count": 10,
+      "ms": 750
+    },
+    {
+      "id": "darkreading",
+      "name": "Dark Reading",
+      "ok": true,
+      "count": 50,
+      "ms": 922
+    },
+    {
+      "id": "nvd-kev",
+      "name": "NVD (KEV 상세)",
+      "ok": true,
+      "count": 0,
+      "ms": 1293
+    },
+    {
+      "id": "dailysecu",
+      "name": "데일리시큐",
+      "ok": true,
+      "count": 50,
+      "ms": 1326
+    },
+    {
+      "id": "boannews",
+      "name": "보안뉴스",
+      "ok": true,
+      "count": 50,
+      "ms": 1513
+    },
+    {
+      "id": "kisa-vuln",
+      "name": "KISA 취약점 정보",
+      "ok": true,
+      "count": 10,
+      "ms": 1574
+    },
+    {
+      "id": "kisa-notice",
+      "name": "KISA 보안공지",
+      "ok": true,
+      "count": 10,
+      "ms": 1652
+    },
+    {
+      "id": "datanet",
+      "name": "데이터넷",
+      "ok": true,
+      "count": 50,
+      "ms": 1779
+    },
+    {
+      "id": "kisa-alert",
+      "name": "KISA 경보단계",
+      "ok": true,
+      "count": 10,
+      "ms": 1777
+    },
+    {
+      "id": "nvd",
+      "name": "NVD (신규 CVE)",
+      "ok": true,
+      "count": 489,
+      "ms": 1272
+    },
+    {
+      "id": "epss",
+      "name": "FIRST EPSS",
+      "ok": true,
+      "count": 7,
+      "ms": 329
+    }
+  ],
+  "summarizer": {
+    "engine": "claude-haiku-5-5",
+    "ok": true,
+    "ms": 32326,
+    "applied": {
+      "news": 10,
+      "vulns": 3,
+      "overview": true
+    },
+    "rejected": [],
+    "input_tokens": 12069,
+    "output_tokens": 7009
+  },
+  "stats": {
+    "news": {
+      "items": 420,
+      "fresh": 190,
+      "clusters": 124,
+      "eligible": 86
+    },
+    "nvd_published": 489,
+    "kev_catalog": "2026.10.30",
+    "kev_recent": 0
+  }
+}

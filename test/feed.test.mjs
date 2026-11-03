@@ -52,10 +52,12 @@ const CVE = {
 
 test('NVD: 취약한 CPE 를 제품마다 버전 구간으로(같은 구간은 한 번, 취약하지 않은 플랫폼은 뺌, 이스케이프 풀기)', () => {
   assert.deepEqual(affectedOf(CVE), [
-    { vendor: 'apache', product: 'tomcat', ranges: [{ si: '9.0.0', ee: '9.0.98' }, { si: '10.1.0', ee: '10.1.34' }, { exact: '11.0.0' }] },
+    { vendor: 'apache', product: 'tomcat', ranges: [{ si: '9.0.0', ee: '9.0.98' }, { si: '10.1.0', ee: '10.1.34' }, { exact: '11.0.0-m1' }] },
     { vendor: 'acme', product: 'web:portal', ranges: [{ exact: '2.0' }] },
   ]);
   assert.deepEqual(affectedOf({ configurations: [] }), []);
+  // update 칸: Ivanti 22.7:r2.3 → 22.7r2.3 (자산 대장의 22.7R2.3 과 맞게)
+  assert.deepEqual(affectedOf({ configurations: [{ nodes: [{ cpeMatch: [{ vulnerable: true, criteria: 'cpe:2.3:a:ivanti:connect_secure:22.7:r2.3:*:*:*:*:*:*' }, { vulnerable: true, criteria: 'cpe:2.3:a:oracle:jdk:1.8.0:update_381:*:*:*:*:*:*' }] }] }] }).map((a) => a.ranges[0].exact), ['22.7r2.3', '1.8.0.381']);
   const many = { configurations: [{ nodes: [{ cpeMatch: Array.from({ length: 300 }, (_, i) => ({ vulnerable: true, criteria: `cpe:2.3:a:v${i % 20}:p:${i}:*:*:*:*:*:*:*` })) }] }] };
   const capped = affectedOf(many);
   assert.equal(capped.length, 10, '제품 10개까지');

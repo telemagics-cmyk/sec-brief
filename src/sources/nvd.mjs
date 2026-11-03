@@ -71,6 +71,17 @@ export function cpeTarget(cve) {
   return null;
 }
 
+/** CPE 의 update 칸을 버전에 붙인다: 22.7 + r2.3 → 22.7r2.3(Ivanti), 1.8.0 + update_381 → 1.8.0.381, 11.0.0 + milestone1 → 11.0.0-m1 */
+export function withUpdate(version, update) {
+  const u = String(update ?? '').toLowerCase();
+  if (!u || u === '*' || u === '-' || version === '*' || version === '-') return version;
+  let m;
+  if ((m = /^(?:update_?|u)(\d+)$/.exec(u))) return `${version}.${m[1]}`;
+  if ((m = /^milestone_?(\d+)$/.exec(u))) return `${version}-m${m[1]}`;
+  if (/^(alpha|beta|rc)_?\d*$/.test(u)) return `${version}-${u.replace('_', '')}`;
+  return `${version}${u}`;
+}
+
 /**
  * configurations 의 취약한 CPE 전부 → [{ vendor, product, ranges: [{ si 이상, se 초과, ei 이하, ee 미만, exact 같음 }] }].
  * feed(정보자산 관리 프로그램 같은 내부 도구가 자기 자산과 비교하는 목록)에 싣는다. 공개 정보(NVD)이고, 크기를 위해 개수를 자른다.
@@ -93,7 +104,7 @@ export function affectedOf(cve, { maxMatches = 200, maxProducts = 10, maxRanges 
         if (m.versionStartExcluding) r.se = m.versionStartExcluding;
         if (m.versionEndIncluding) r.ei = m.versionEndIncluding;
         if (m.versionEndExcluding) r.ee = m.versionEndExcluding;
-        if (!Object.keys(r).length && parts[5] && parts[5] !== '*' && parts[5] !== '-') r.exact = unescape(parts[5]);
+        if (!Object.keys(r).length && parts[5] && parts[5] !== '*' && parts[5] !== '-') r.exact = withUpdate(unescape(parts[5]), unescape(parts[6]));
         const key = `${vendor}|${product}`;
         if (!map.has(key)) {
           if (map.size >= maxProducts) continue;

@@ -243,19 +243,39 @@ export function selectExploited({ kevItems, nvdById = new Map(), epss = new Map(
   return { shown: rows.slice(0, limit), more: rows.slice(limit) };
 }
 
-/** 묶음 안 CVE 들의 영향 제품·버전 구간(NVD)을 제품마다 합친다(feed 용, 제품 10개·구간 40개까지) */
+/**
+ * 묶음 안 CVE 들의 영향 제품·버전 구간을 제품마다 합친다(feed 용, 제품 20개·구간 200개까지).
+ * all(모든 버전)·truncated(일부만) 표시는 하나라도 있으면 남기고, 자르면 truncated 를 켠다
+ */
 export function mergeAffected(list) {
   const map = new Map();
+  let cut = false;
   for (const a of list) {
     const key = `${a.vendor}|${a.product}`;
     if (!map.has(key)) {
-      if (map.size >= 10) continue;
-      map.set(key, { vendor: a.vendor, product: a.product, ranges: [] });
+      if (map.size >= 20) {
+        cut = true;
+        continue;
+      }
+      map.set(key, { vendor: a.vendor, product: a.product, ranges: [], keys: new Set() });
     }
     const cur = map.get(key);
-    for (const r of a.ranges || []) if (cur.ranges.length < 40 && !cur.ranges.some((x) => JSON.stringify(x) === JSON.stringify(r))) cur.ranges.push(r);
+    if (a.all) cur.all = true;
+    if (a.truncated) cur.truncated = true;
+    for (const r of a.ranges || []) {
+      const k = JSON.stringify(r);
+      if (cur.keys.has(k)) continue;
+      if (cur.ranges.length >= 200) {
+        cur.truncated = true;
+        break;
+      }
+      cur.keys.add(k);
+      cur.ranges.push(r);
+    }
   }
-  return [...map.values()];
+  const out = [...map.values()].map(({ keys, ...a }) => a);
+  if (cut && out.length) out[out.length - 1].truncated = true;
+  return out;
 }
 
 function escapeRe(s) {

@@ -24,7 +24,7 @@ test('CVE.org(제조사 기록): 영향 버전 구간·정확한 버전·"3.0.*"
   assert.deepEqual(affectedFromRecord(rec), [
     { vendor: 'Apache Software Foundation', product: 'Apache MINA', ranges: [{ si: '3.0.0', ee: '3.1' }, { si: '2.2.0', ee: '2.2.5' }] },
     { vendor: 'Fortinet', product: 'FortiOS', ranges: [{ si: '7.4.0', ei: '7.4.8' }, { exact: '7.2.11' }] },
-    { vendor: 'Acme', product: 'Widget', ranges: [] },
+    { vendor: 'Acme', product: 'Widget', ranges: [], all: true },
   ]);
   const asked = [];
   const got = await fetchCnaAffected(['CVE-2026-1001', 'CVE-2026-1002', 'CVE-2026-1001', 'bad'], {
@@ -36,6 +36,17 @@ test('CVE.org(제조사 기록): 영향 버전 구간·정확한 버전·"3.0.*"
   });
   assert.deepEqual(asked, ['https://cveawg.mitre.org/api/cve/CVE-2026-1001', 'https://cveawg.mitre.org/api/cve/CVE-2026-1002']);
   assert.deepEqual([...got.keys()], ['CVE-2026-1001']);
+  // 리눅스 커널 기록의 커밋 번호는 버전이 아니다(truncated), GitHub 꼴 조건은 구간으로, 0 ~ * 는 모든 버전
+  const more = affectedFromRecord({ containers: { cna: { affected: [
+    { vendor: 'Linux', product: 'Linux', versions: [{ version: '1da177e4c3f41524e886b7f1b8a0c1fc7321cac2', lessThan: '9e2a7ca5b1d34e2bdcd1d5f1f8a1c36b6c34f1b2', status: 'affected', versionType: 'git' }, { version: '5.10', status: 'affected', versionType: 'semver' }] },
+    { vendor: 'acme', product: 'widgetd', versions: [{ version: '>= 3.0, < 3.5', status: 'affected' }] },
+    { vendor: 'acme', product: 'gizmo', versions: [{ version: '0', lessThanOrEqual: '*', status: 'affected' }] },
+  ] } } });
+  assert.deepEqual(more, [
+    { vendor: 'Linux', product: 'Linux', ranges: [{ exact: '5.10' }], truncated: true },
+    { vendor: 'acme', product: 'widgetd', ranges: [{ si: '3.0', ee: '3.5' }] },
+    { vendor: 'acme', product: 'gizmo', ranges: [], all: true },
+  ]);
 });
 
 const CVE = {
@@ -58,10 +69,15 @@ test('NVD: 취약한 CPE 를 제품마다 버전 구간으로(같은 구간은 �
   assert.deepEqual(affectedOf({ configurations: [] }), []);
   // update 칸: Ivanti 22.7:r2.3 → 22.7r2.3 (자산 대장의 22.7R2.3 과 맞게)
   assert.deepEqual(affectedOf({ configurations: [{ nodes: [{ cpeMatch: [{ vulnerable: true, criteria: 'cpe:2.3:a:ivanti:connect_secure:22.7:r2.3:*:*:*:*:*:*' }, { vulnerable: true, criteria: 'cpe:2.3:a:oracle:jdk:1.8.0:update_381:*:*:*:*:*:*' }] }] }] }).map((a) => a.ranges[0].exact), ['22.7r2.3', '1.8.0.381']);
-  const many = { configurations: [{ nodes: [{ cpeMatch: Array.from({ length: 300 }, (_, i) => ({ vulnerable: true, criteria: `cpe:2.3:a:v${i % 20}:p:${i}:*:*:*:*:*:*:*` })) }] }] };
+  // 개수를 넘겨 자르면 truncated 로 알린다(받는 쪽은 '범위 밖'이라 하지 않음), 버전이 * 인 CPE 는 all(모든 버전)
+  const many = { configurations: [{ nodes: [{ cpeMatch: Array.from({ length: 300 }, (_, i) => ({ vulnerable: true, criteria: `cpe:2.3:a:v${i % 30}:p:${i}:*:*:*:*:*:*:*` })) }] }] };
   const capped = affectedOf(many);
-  assert.equal(capped.length, 10, '제품 10개까지');
-  assert.ok(capped.every((a) => a.ranges.length <= 40));
+  assert.equal(capped.length, 20, '제품 20개까지');
+  assert.equal(capped.at(-1).truncated, true);
+  const long = affectedOf({ configurations: [{ nodes: [{ cpeMatch: Array.from({ length: 250 }, (_, i) => ({ vulnerable: true, criteria: `cpe:2.3:o:cisco:ios_xe:17.${i}.1:*:*:*:*:*:*:*` })) }] }] });
+  assert.equal(long[0].ranges.length, 200);
+  assert.equal(long[0].truncated, true);
+  assert.deepEqual(affectedOf({ configurations: [{ nodes: [{ cpeMatch: [{ vulnerable: true, criteria: 'cpe:2.3:a:acme:widgetd:*:*:*:*:*:*:*:*' }, { vulnerable: true, criteria: 'cpe:2.3:a:acme:widgetd:*:*:*:*:*:*:*:*', versionEndExcluding: '2.0' }] }] }] }), [{ vendor: 'acme', product: 'widgetd', ranges: [{ ee: '2.0' }], all: true }]);
   assert.deepEqual(parseNvdCve({ ...CVE, descriptions: [], metrics: {} }).affected, affectedOf(CVE));
   assert.deepEqual(mergeAffected([{ vendor: 'a', product: 'b', ranges: [{ ee: '1' }] }, { vendor: 'a', product: 'b', ranges: [{ ee: '1' }, { ee: '2' }] }]), [{ vendor: 'a', product: 'b', ranges: [{ ee: '1' }, { ee: '2' }] }]);
 });

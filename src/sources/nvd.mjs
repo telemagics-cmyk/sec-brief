@@ -83,17 +83,23 @@ export function withUpdate(version, update) {
 }
 
 /**
- * configurations 의 취약한 CPE 전부 → [{ vendor, product, ranges: [{ si 이상, se 초과, ei 이하, ee 미만, exact 같음 }] }].
+ * configurations 의 취약한 CPE 전부 → [{ vendor, product, ranges: [{ si 이상, se 초과, ei 이하, ee 미만, exact 같음 }], all?, truncated? }].
  * feed(정보자산 관리 프로그램 같은 내부 도구가 자기 자산과 비교하는 목록)에 싣는다. 공개 정보(NVD)이고, 크기를 위해 개수를 자른다.
+ * 버린 것은 표시한다: 버전이 * · - 인 CPE 는 all(모든 버전), 개수를 넘겨 자르면 truncated — 받는 쪽은 이때 '범위 밖'이라 하지 않는다.
  */
-export function affectedOf(cve, { maxMatches = 200, maxProducts = 10, maxRanges = 40 } = {}) {
+export function affectedOf(cve, { maxMatches = 2000, maxProducts = 20, maxRanges = 200 } = {}) {
   const map = new Map();
   let seen = 0;
+  let cut = false;
   const unescape = (s) => String(s ?? '').replace(/\\(.)/g, '$1');
   for (const conf of cve.configurations || []) {
     for (const node of conf.nodes || []) {
       for (const m of node.cpeMatch || []) {
-        if (m.vulnerable === false || seen++ >= maxMatches) continue;
+        if (m.vulnerable === false) continue;
+        if (seen++ >= maxMatches) {
+          cut = true;
+          continue;
+        }
         const parts = String(m.criteria || '').split(/(?<!\\):/);
         if (parts.length < 6 || parts[0] !== 'cpe') continue;
         const vendor = unescape(parts[3]);
@@ -104,18 +110,35 @@ export function affectedOf(cve, { maxMatches = 200, maxProducts = 10, maxRanges 
         if (m.versionStartExcluding) r.se = m.versionStartExcluding;
         if (m.versionEndIncluding) r.ei = m.versionEndIncluding;
         if (m.versionEndExcluding) r.ee = m.versionEndExcluding;
-        if (!Object.keys(r).length && parts[5] && parts[5] !== '*' && parts[5] !== '-') r.exact = withUpdate(unescape(parts[5]), unescape(parts[6]));
+        const any = !Object.keys(r).length && (!parts[5] || parts[5] === '*' || parts[5] === '-');
+        if (!Object.keys(r).length && !any) r.exact = withUpdate(unescape(parts[5]), unescape(parts[6]));
         const key = `${vendor}|${product}`;
         if (!map.has(key)) {
-          if (map.size >= maxProducts) continue;
-          map.set(key, { vendor, product, ranges: [] });
+          if (map.size >= maxProducts) {
+            cut = true;
+            continue;
+          }
+          map.set(key, { vendor, product, ranges: [], keys: new Set() });
         }
         const a = map.get(key);
-        if (Object.keys(r).length && a.ranges.length < maxRanges && !a.ranges.some((x) => JSON.stringify(x) === JSON.stringify(r))) a.ranges.push(r);
+        if (any) {
+          a.all = true;
+          continue;
+        }
+        const k = JSON.stringify(r);
+        if (a.keys.has(k)) continue;
+        if (a.ranges.length >= maxRanges) {
+          a.truncated = true;
+          continue;
+        }
+        a.keys.add(k);
+        a.ranges.push(r);
       }
     }
   }
-  return [...map.values()];
+  const out = [...map.values()].map(({ keys, ...a }) => a);
+  if (cut && out.length) out[out.length - 1].truncated = true;
+  return out;
 }
 
 export function parseNvdCve(cve) {

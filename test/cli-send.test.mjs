@@ -76,6 +76,7 @@ function cli(dir, { date = DATE, kstTime = '07:00:00', event = 'workflow_dispatc
     SMTP_HOST: ' ',
     MAIL_TITLE: ' ',
     MAIL_NEWS_KEYWORD: ' ',
+    ASSET_URL: ' ',
     ...extraEnv,
   };
   const clock = pathToFileURL(join(ROOT, 'test', 'fake-clock.mjs')).href;

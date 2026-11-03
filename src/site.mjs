@@ -2,6 +2,7 @@
 //   index.html            최신 브리핑
 //   b/YYYY-MM-DD.html     날짜별 고정 주소 (카카오톡 버튼이 여기로 연결)
 //   b/YYYY-MM-DD.json     원본 데이터
+//   feed/YYYY-MM-DD.json  취약점 목록(기계용: 영향 제품·버전 구간) · feed/latest.json 은 최신 브리핑 — src/feed.mjs
 //   archive.html          지난 브리핑 목록
 //   cves.html             지금까지 실린 취약점 색인 (cves.json 을 읽어 그림)
 //   search.html           전체 검색 (search.json)
@@ -10,6 +11,7 @@ import { createHash } from 'node:crypto';
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { alertOf, allNews, emptyNote, sinceNote, vulnBadges } from './brief.mjs';
+import { feedOf } from './feed.mjs';
 import { SITE_CSS, SITE_JS } from './site-assets.mjs';
 import { loadAllBriefs } from './store.mjs';
 import { escapeHtml as h, fmtPercent, kstStamp, safeUrl, shortDay, truncate, weekdayKo } from './util.mjs';
@@ -411,6 +413,7 @@ export function buildSite(cfg, { log = console.log } = {}) {
   rmSync(out, { recursive: true, force: true });
   mkdirSync(join(out, 'b'), { recursive: true });
   mkdirSync(join(out, 'assets'), { recursive: true });
+  mkdirSync(join(out, 'feed'), { recursive: true });
   writeFileSync(join(out, 'assets', 'site.css'), SITE_CSS);
   writeFileSync(join(out, 'assets', 'site.js'), SITE_JS);
   writeFileSync(join(out, '.nojekyll'), '');
@@ -420,6 +423,9 @@ export function buildSite(cfg, { log = console.log } = {}) {
     const html = briefPage(b, { prev: briefs[i + 1], next: briefs[i - 1], briefs, site, base: '../', current: '' });
     writeFileSync(join(out, 'b', `${b.date}.html`), html);
     writeFileSync(join(out, 'b', `${b.date}.json`), `${JSON.stringify(b, null, 2)}\n`);
+    // 기계가 읽는 취약점 목록(사내 자산 관리 프로그램이 가져가 비교) — src/feed.mjs
+    writeFileSync(join(out, 'feed', `${b.date}.json`), JSON.stringify(feedOf(b, site)));
+    if (i === 0) writeFileSync(join(out, 'feed', 'latest.json'), JSON.stringify(feedOf(b, site)));
     pages++;
   });
   if (briefs.length) {

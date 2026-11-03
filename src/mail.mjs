@@ -208,13 +208,34 @@ function kisaRows(adv, b) {
     .join('');
 }
 
-function vulnCard(v, color) {
+/**
+ * (선택) Secret ASSET_URL: 사내 정보자산 관리 프로그램의 주소(예: https://자산서버:4800). 있으면 취약점마다 '우리 자산 영향' 단추가
+ * 그 프로그램의 취약점 영향 자산 화면(#/vuln?brief=날짜&cve=번호)을 연다. 자산 정보는 메일·저장소에 들어가지 않는다
+ * (그 프로그램이 이 사이트의 feed 를 가져가 자기 자산과 비교한다). 주소가 아니면 무시한다.
+ */
+export function assetUrlOf(env = process.env) {
+  const raw = secret('ASSET_URL', env);
+  if (!raw) return '';
+  try {
+    const u = new URL(raw);
+    if (u.protocol !== 'https:' && u.protocol !== 'http:') return '';
+    return `${u.origin}${u.pathname.replace(/\/+$/, '')}`;
+  } catch {
+    return '';
+  }
+}
+export function assetLink(base, date, id = '') {
+  if (!base) return '';
+  return `${base}/#/vuln?${new URLSearchParams({ brief: date, ...(id ? { cve: id } : {}) })}`;
+}
+
+function vulnCard(v, color, assetHref = '') {
   const ids = v.ids && v.ids.length > 1 ? ` 외 ${v.ids.length - 1}건` : '';
   const row = (k, val, strong = false) => `<tr>
 <td class="faint" valign="top" width="38" style="width:38px;padding:3px 10px 3px 0;font-size:13px;line-height:21px;color:${C.faint};white-space:nowrap;">${k}</td>
 <td class="${strong ? 'ink' : 'ink2'}" valign="top" style="padding:3px 0;font-size:14.5px;line-height:21px;color:${strong ? C.ink : C.ink2};${strong ? 'font-weight:bold;' : ''}">${h(val || '-')}</td></tr>`;
   // 표시·단추 사이의 빈칸은 Outlook 에서 서로 붙지 않게 하는 몫
-  const links = [...(v.links || []).slice(0, 1).map((u) => button(u, '벤더 공지')), button(v.nvd, 'NVD')].filter(Boolean).join(' ');
+  const links = [...(v.links || []).slice(0, 1).map((u) => button(u, '벤더 공지')), button(v.nvd, 'NVD'), button(assetHref, '우리 자산 영향')].filter(Boolean).join(' ');
   return `<tr><td style="padding:0 0 12px;">
 <table ${TBL} class="vcard" style="border:1px solid ${C.rule};border-left:4px solid ${color};border-radius:8px;background:${C.card};"><tr><td style="padding:12px 14px;">
 <div>${[...vulnBadges(v)].sort((x, y) => badgeRank(x) - badgeRank(y)).map((t) => pill(t, badgeKind(t))).join(' ')}</div>
@@ -247,7 +268,8 @@ function keywordNews(extra) {
 }
 
 /** 웹 페이지와 같은 순서: 국내 뉴스 → 해외 뉴스 → KISA 공지 → 악용 확인 → 신규 고위험 (→ 메일에만 관심 키워드 뉴스) */
-export function renderEmailHtml(b, { siteUrl = '', title = '일일 보안 브리핑', extraNews = null } = {}) {
+export function renderEmailHtml(b, { siteUrl = '', title = '일일 보안 브리핑', extraNews = null, assetUrl = '' } = {}) {
+  const assetHref = (id) => assetLink(assetUrl, b.date, id);
   const dayUrl = briefUrl(siteUrl, b.date);
   const anchor = (id) => (dayUrl ? `${dayUrl}#${id}` : '');
   const ex = b.exploited || [];
@@ -300,12 +322,13 @@ ${pill('사이버위기 경보', 'warn')} ${a(alert.url, h(alert.title), `color:
   rows.push(sectionHead('KISA 공지', { color: C.note, count: adv.length, sub: '보호나라·KrCERT' }), kisaRows(adv, b));
 
   rows.push(sectionHead('악용 확인 취약점', { color: C.hot, count: b.failed?.kev ? null : exTotal, sub: b.failed?.kev ? 'CISA KEV — 수집 실패' : 'CISA KEV 신규 등재' }));
-  rows.push(ex.length ? ex.map((v) => vulnCard(v, C.hot)).join('') : noteRow(emptyNote(b, 'exploited')));
+  if (assetUrl && (ex.length || cr.length)) rows.push(moreRow(`${a(assetHref(), '우리 자산 영향 한눈에 보기')} — 오늘 브리핑의 취약점을 자산 대장과 비교합니다(사내망에서 열림)`));
+  rows.push(ex.length ? ex.map((v) => vulnCard(v, C.hot, assetHref(v.id))).join('') : noteRow(emptyNote(b, 'exploited')));
   if (b.exploited_more?.length) rows.push(moreRow(`그 밖의 신규 등재 ${b.exploited_more.length}건: ${h(b.exploited_more.map((v) => v.id).join(', '))}`));
 
   const crSub = b.critical_total === null || b.critical_total === undefined ? '— 수집 실패' : `CVSS ${Number(b.cvss_min ?? 9).toFixed(1)} 이상 ${b.critical_total}건 중 주요 ${cr.length}묶음`;
   rows.push(sectionHead('신규 고위험 취약점', { color: C.warn, sub: crSub }));
-  rows.push(cr.length ? cr.map((g) => vulnCard(g, C.warn)).join('') : noteRow(emptyNote(b, 'critical')));
+  rows.push(cr.length ? cr.map((g) => vulnCard(g, C.warn, assetHref(g.id))).join('') : noteRow(emptyNote(b, 'critical')));
   if (b.critical_more?.length) rows.push(moreRow(`그 밖의 고위험 ${b.critical_more.length}묶음은 ${dayUrl ? a(anchor('critical'), '웹 페이지') : '웹 페이지'}에서 볼 수 있습니다.`));
   if (extraNews) rows.push(keywordNews(extraNews));
 
@@ -486,8 +509,8 @@ export async function sendBriefMail(cfg, brief, { test = false, force = false, e
     ? testMail(cfg, env)
     : {
         subject: mailSubject(brief, title),
-        html: renderEmailHtml(brief, { siteUrl: cfg.site.url, title, extraNews }),
-        text: `${title}\n\n${renderMarkdown(brief, { siteUrl: cfg.site.url })}${keywordNewsText(extraNews)}`,
+        html: renderEmailHtml(brief, { siteUrl: cfg.site.url, title, extraNews, assetUrl: assetUrlOf(env) }),
+        text: `${title}\n\n${renderMarkdown(brief, { siteUrl: cfg.site.url })}${assetUrlOf(env) ? `\n\n우리 자산 영향 확인(사내망): ${assetLink(assetUrlOf(env), brief.date)}\n` : ''}${keywordNewsText(extraNews)}`,
       };
   const r = s.kind === 'outlook' ? await sendOutlookOrBackup(path, s, msg, { env, log, transportOverride }) : await sendViaSmtp(s, msg, { transportOverride });
   if (!test && brief) {

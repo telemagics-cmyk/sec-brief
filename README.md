@@ -92,6 +92,7 @@ REST API 키와 클라이언트 시크릿을 물으면 붙여 넣습니다. 브�
 | `OUTLOOK_CLIENT_ID`, `OUTLOOK_REFRESH_TOKEN`, `MAIL_TO` | 아래 [메일로도 받기](#메일로도-받기-선택) — Outlook.com 계정 | 선택: 메일 |
 | `MAIL_TITLE` | 메일 제목·본문의 이름 (예: `OO팀 일일 보안 브리핑`). 비우면 `site.title` | 선택: 메일 |
 | `MAIL_NEWS_KEYWORD` | 메일 맨 아래 '○○ 관련 뉴스' 칸의 검색어 (예: 회사 이름). 비우면 칸 없음 | 선택: 메일 |
+| `ASSET_URL` | 사내 정보자산 관리 프로그램 주소 (예: `https://자산서버:4800`). 아래 [사내 자산 관리 프로그램과 연결](#사내-자산-관리-프로그램과-연결-선택) | 선택: 메일 |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_TO` (`MAIL_FROM`) | 아래 [메일로도 받기](#메일로도-받기-선택) — Gmail 등 | 선택: 메일 |
 | `ANTHROPIC_API_KEY` | Claude API 키 | 선택: 한국어 요약·선별 |
 | `NVD_API_KEY` | [NVD API 키](https://nvd.nist.gov/developers/request-an-api-key) (무료) | 선택: NVD 요청 한도 완화 |
@@ -227,6 +228,18 @@ Secret `MAIL_NEWS_KEYWORD` 에 검색어(예: 회사 이름)를 넣으면, 메�
 - 여러 이름을 함께 찾으려면 `이름1 OR 이름2` 처럼 씁니다(Google 뉴스 검색 문법).
 - 미리 보기: `$env:MAIL_NEWS_KEYWORD='검색어'; node src/cli.mjs preview --mail` (PowerShell, 그 창에서만 적용)
 - 가져오지 못한 날은 칸에 '기사를 가져오지 못했습니다'만 적고 나머지 메일은 그대로 보냅니다.
+
+#### 사내 자산 관리 프로그램과 연결 (선택)
+
+브리핑에 실린 취약점이 **우리 자산**에 영향을 주는지는 사내의 자산 관리 프로그램(정보자산 관리시스템 등)이 직접 비교합니다.
+자산 정보는 이 공개 저장소·Actions·메일 어디에도 들어가지 않습니다. 연결은 두 방향 모두 '공개 정보 가져가기'와 '링크'뿐입니다.
+
+- **취약점 목록(feed)**: 웹 사이트가 브리핑마다 `feed/YYYY-MM-DD.json` 과 최신 `feed/latest.json` 을 함께 게시합니다.
+  악용 확인(KEV)·신규 고위험·그 밖의 고위험 취약점마다 CVE 번호, 제목, CVSS, KEV 조치 기한, **영향 제품·버전 구간**(NVD 의 CPE)이 들어 있습니다(형식 `sec-brief-vulns/1`, src/feed.mjs).
+  자산 관리 프로그램의 설정에 이 사이트 주소(예: `https://아이디.github.io/sec-brief/`)를 넣으면 한 시간마다 가져가 자산 대장의 제품·버전과 비교합니다.
+- **메일의 '우리 자산 영향' 단추**: Secret `ASSET_URL` 에 자산 관리 프로그램 주소를 넣으면, 메일의 취약점마다 그 프로그램의 '취약점 영향 자산' 화면(`#/vuln?brief=날짜&cve=번호`)을 여는 단추가 붙습니다.
+  사내망에서만 열리는 주소여도 됩니다(메일을 받는 사람이 사내 PC 에서 누름). Secret 이라 공개 저장소·웹 페이지·카카오톡에는 나타나지 않습니다. 비우면 단추가 없습니다.
+- 미리 보기: `$env:ASSET_URL='https://자산서버:4800'; node src/cli.mjs preview --mail` (PowerShell, 그 창에서만 적용)
 
 #### Gmail 로 보내기
 
@@ -442,6 +455,7 @@ sec-brief/
 │   ├── outlook.mjs             (선택) Outlook.com 메일 API 발송·토큰 갱신·로그인 도우미
 │   ├── holidays.mjs            대한민국 공휴일(월력요항)·쉬는 날 판단
 │   ├── site.mjs, site-assets.mjs  웹 이력
+│   ├── feed.mjs                기계가 읽는 취약점 목록(feed/*.json — 사내 자산 관리 프로그램이 가져가 비교)
 │   ├── store.mjs               이력 저장·중복 방지(최근 브리핑에서 읽음)
 │   └── legacy.mjs              이전 브리핑 옮기기
 ├── data/

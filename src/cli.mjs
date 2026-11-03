@@ -25,7 +25,7 @@ import { dayOff, holidaysKnown, holidaysOf } from './holidays.mjs';
 import { kakaoConfigured, kakaoLogin, sendBrief } from './kakao.mjs';
 import { importLegacy } from './legacy.mjs';
 import { fetchMailNews } from './mail-news.mjs';
-import { mailConfigured, mailSubject, mailTitle, renderEmailHtml, sendBriefMail, testMail } from './mail.mjs';
+import { assetUrlOf, mailConfigured, mailSubject, mailTitle, renderEmailHtml, sendBriefMail, testMail } from './mail.mjs';
 import { outlookLogin } from './outlook.mjs';
 import { buildSite } from './site.mjs';
 import { listBriefDates, loadBrief, writeAtomic } from './store.mjs';
@@ -242,7 +242,7 @@ async function cmdPreview(cfg, args) {
     const out = join(cfg.siteDir, 'mail-preview.html');
     const title = mailTitle(cfg);
     const extraNews = await fetchMailNews(b);
-    writeAtomic(out, renderEmailHtml(b, { siteUrl: cfg.site.url, title, extraNews }));
+    writeAtomic(out, renderEmailHtml(b, { siteUrl: cfg.site.url, title, extraNews, assetUrl: assetUrlOf() }));
     console.log(`제목: ${mailSubject(b, title)}\n본문: ${out}`);
     if (extraNews) console.log(`맨 아래 관심 뉴스: ${extraNews.error || `${extraNews.items.length}건(전체 ${extraNews.total}묶음)`}`);
     return;

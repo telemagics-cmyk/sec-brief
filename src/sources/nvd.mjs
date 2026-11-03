@@ -71,6 +71,42 @@ export function cpeTarget(cve) {
   return null;
 }
 
+/**
+ * configurations 의 취약한 CPE 전부 → [{ vendor, product, ranges: [{ si 이상, se 초과, ei 이하, ee 미만, exact 같음 }] }].
+ * feed(정보자산 관리 프로그램 같은 내부 도구가 자기 자산과 비교하는 목록)에 싣는다. 공개 정보(NVD)이고, 크기를 위해 개수를 자른다.
+ */
+export function affectedOf(cve, { maxMatches = 200, maxProducts = 10, maxRanges = 40 } = {}) {
+  const map = new Map();
+  let seen = 0;
+  const unescape = (s) => String(s ?? '').replace(/\\(.)/g, '$1');
+  for (const conf of cve.configurations || []) {
+    for (const node of conf.nodes || []) {
+      for (const m of node.cpeMatch || []) {
+        if (m.vulnerable === false || seen++ >= maxMatches) continue;
+        const parts = String(m.criteria || '').split(/(?<!\\):/);
+        if (parts.length < 6 || parts[0] !== 'cpe') continue;
+        const vendor = unescape(parts[3]);
+        const product = unescape(parts[4]).replace(/_/g, ' ');
+        if (!product || product === '*') continue;
+        const r = {};
+        if (m.versionStartIncluding) r.si = m.versionStartIncluding;
+        if (m.versionStartExcluding) r.se = m.versionStartExcluding;
+        if (m.versionEndIncluding) r.ei = m.versionEndIncluding;
+        if (m.versionEndExcluding) r.ee = m.versionEndExcluding;
+        if (!Object.keys(r).length && parts[5] && parts[5] !== '*' && parts[5] !== '-') r.exact = unescape(parts[5]);
+        const key = `${vendor}|${product}`;
+        if (!map.has(key)) {
+          if (map.size >= maxProducts) continue;
+          map.set(key, { vendor, product, ranges: [] });
+        }
+        const a = map.get(key);
+        if (Object.keys(r).length && a.ranges.length < maxRanges && !a.ranges.some((x) => JSON.stringify(x) === JSON.stringify(r))) a.ranges.push(r);
+      }
+    }
+  }
+  return [...map.values()];
+}
+
 export function parseNvdCve(cve) {
   const metrics = cve.metrics || {};
   const description = (cve.descriptions || []).find((d) => d.lang === 'en')?.value || '';
@@ -91,6 +127,7 @@ export function parseNvdCve(cve) {
     cwes,
     refs: (cve.references || []).slice(0, 12).map((r) => ({ url: r.url, tags: r.tags || [] })),
     cpe: cpeTarget(cve),
+    affected: affectedOf(cve),
     kev: cve.cisaExploitAdd
       ? { added: cve.cisaExploitAdd, due: cve.cisaActionDue || '', name: cve.cisaVulnerabilityName || '' }
       : null,

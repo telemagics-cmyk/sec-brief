@@ -8,11 +8,12 @@ import { fetchEpss } from './sources/epss.mjs';
 import { fetchKev } from './sources/kev.mjs';
 import { fetchNaverNews } from './sources/naver.mjs';
 import { fetchNvdKevAdded, fetchNvdPublished } from './sources/nvd.mjs';
+import { fetchCnaAffected } from './sources/cveorg.mjs';
 import { fetchFeed, splitAggregatorTitle } from './sources/rss.mjs';
 import { listBriefDates, loadBrief, recentHistory, saveBrief } from './store.mjs';
 import { applySummary, callClaude } from './summarize.mjs';
 import { addDays, canonicalUrl, kstDate, kstIso, publicError, shortHash } from './util.mjs';
-import { newsTextOf, selectCritical, selectExploited } from './vulns.mjs';
+import { mergeAffected, newsTextOf, selectCritical, selectExploited } from './vulns.mjs';
 
 function countOf(r) {
   if (!r) return 0;
@@ -216,6 +217,19 @@ export async function collectBrief(cfg, { now = new Date(), date = kstDate(now),
     today: date,
   });
 
+  // 영향 버전 구간(feed 용): NVD 가 아직 분석하지 않은 새 CVE 는 CVE.org 의 제조사 기록으로 채운다.
+  // 수집 출처로 세지 않는다(실패해도 브리핑·수집 상태는 그대로, 그 항목은 제품 이름만으로 비교된다)
+  const needRanges = [...exploited.shown, ...exploited.more, ...critical.shown, ...critical.more].filter((v) => !(v.affected || []).some((a) => a.ranges?.length));
+  if (needRanges.length) {
+    const t0 = Date.now();
+    const cna = await fetchCnaAffected(needRanges.flatMap((v) => (v.ids || [v.id]).slice(0, 3))).catch(() => new Map());
+    for (const v of needRanges) {
+      const more = (v.ids || [v.id]).flatMap((id) => cna.get(id) || []);
+      if (more.length) v.affected = mergeAffected([...(v.affected || []), ...more]);
+    }
+    log(`  CVE.org 영향 버전: ${needRanges.filter((v) => (v.affected || []).some((a) => a.ranges?.length)).length}/${needRanges.length}건 (${Date.now() - t0}ms)`);
+  }
+
   const draft = {
     date,
     exploited: exploited.shown,
@@ -281,9 +295,9 @@ export async function collectBrief(cfg, { now = new Date(), date = kstDate(now),
     critical_total: failed.nvd ? null : critical.total,
     failed,
     exploited: draft.exploited,
-    exploited_more: exploited.more.map((v) => ({ id: v.id, title: v.ko.title })),
+    exploited_more: exploited.more.map((v) => ({ id: v.id, title: v.ko.title, vendor: v.vendor, product: v.product, due: v.due, affected: v.affected })),
     critical: draft.critical,
-    critical_more: critical.more.map((g) => ({ id: g.id, ids: g.ids, label: g.label, cvss: g.cvss.score, title: g.ko.title })),
+    critical_more: critical.more.map((g) => ({ id: g.id, ids: g.ids, label: g.label, vendor: g.vendor, cvss: g.cvss.score, title: g.ko.title, affected: g.affected })),
     advisories,
     news: { domestic: draft.news.domestic.map(newsForBrief), international: draft.news.international.map(newsForBrief) },
     sources,

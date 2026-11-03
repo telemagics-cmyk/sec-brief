@@ -230,6 +230,7 @@ export function selectExploited({ kevItems, nvdById = new Map(), epss = new Map(
         published: n?.published ?? '',
         links,
         nvd: nvdUrl(k.id),
+        affected: n?.affected ?? [],
         ko: {
           title: truncate(kevTitleKo(k, cwes), 60),
           target: `${k.vendor} ${k.product}`.trim(),
@@ -240,6 +241,21 @@ export function selectExploited({ kevItems, nvdById = new Map(), epss = new Map(
     })
     .sort((a, b) => b.dateAdded.localeCompare(a.dateAdded) || Number(b.ransomware) - Number(a.ransomware) || (b.cvss?.score ?? 0) - (a.cvss?.score ?? 0));
   return { shown: rows.slice(0, limit), more: rows.slice(limit) };
+}
+
+/** 묶음 안 CVE 들의 영향 제품·버전 구간(NVD)을 제품마다 합친다(feed 용, 제품 10개·구간 40개까지) */
+export function mergeAffected(list) {
+  const map = new Map();
+  for (const a of list) {
+    const key = `${a.vendor}|${a.product}`;
+    if (!map.has(key)) {
+      if (map.size >= 10) continue;
+      map.set(key, { vendor: a.vendor, product: a.product, ranges: [] });
+    }
+    const cur = map.get(key);
+    for (const r of a.ranges || []) if (cur.ranges.length < 40 && !cur.ranges.some((x) => JSON.stringify(x) === JSON.stringify(r))) cur.ranges.push(r);
+  }
+  return [...map.values()];
 }
 
 function escapeRe(s) {
@@ -333,6 +349,7 @@ export function selectCritical({ nvdRows, epss = new Map(), seenIds = new Set(),
       epss: epssMax || null,
       links,
       nvd: nvdUrl(top.id),
+      affected: mergeAffected(rows.flatMap((r) => r.affected || [])),
       flags: {
         watch: watchHit,
         kisa: kisa ? kisa.title : '',

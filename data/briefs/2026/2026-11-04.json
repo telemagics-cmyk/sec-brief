@@ -1,0 +1,1188 @@
+{
+  "version": 2,
+  "date": "2026-11-04",
+  "generated_at": "2026-11-04T06:01:01+09:00",
+  "window": {
+    "hours": 30,
+    "from": "2026-11-02T15:01:01.887Z",
+    "to": "2026-11-03T21:01:01.887Z",
+    "since_brief": "2026-11-03",
+    "since_at": "2026-11-02T21:00:56.363Z"
+  },
+  "engine": "claude-haiku-5-5",
+  "overview": "가장 시급한 조치는 WordPress Core TOCTOU 경쟁 상태 취약점(CVE-2026-119977)의 CISA KEV 등재에 따른 즉시 점검입니다. 국내에서는 공군 1호기 탑승자 개인정보 유출과 더존비즈온 백업서버 해킹 파급이 이어지고 있어 관련 기관 점검이 필요합니다. 해외에서는 바이낸스 대규모 해킹과 유럽 슈퍼마켓 냉장설비 공격이 계속되고 있습니다.",
+  "cvss_min": 9,
+  "critical_total": 35,
+  "failed": {
+    "kev": false,
+    "nvd": false,
+    "kisa": false,
+    "news": false
+  },
+  "exploited": [
+    {
+      "id": "CVE-2026-119977",
+      "section": "exploited",
+      "vendor": "WordPress",
+      "product": "WordPress Core",
+      "name": "WordPress WordPress Core Time-of-check Time-of-use (TOCTOU) Race Condition Vulnerability",
+      "dateAdded": "2026-11-03",
+      "due": "2026-11-06",
+      "ransomware": false,
+      "description": "WordPress WordPress Core contains a time-of-check time-of-use (TOCTOU) race condition vulnerability that could allow unauthenticated attackers to execute code on the server during the upgrade window. This is due to predictable, web-accessible staging paths used during full-package core upgrades.",
+      "cwes": [
+        "CWE-367"
+      ],
+      "cvss": null,
+      "ssvc": null,
+      "epss": 0.006,
+      "epssPct": 0.48751,
+      "published": "",
+      "links": [
+        "https://wordpress.org/news/2026/10/wordpress-7-1-4",
+        "https://www.wordfence.com/threat-intel/vulnerabilities/wordpress-core/wordpress-core-470-713-unauthenticated-upgrade-window-staged-installer-remote-code-execution"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-119977",
+      "affected": [
+        {
+          "vendor": "WordPress Foundation",
+          "product": "WordPress",
+          "ranges": [
+            {
+              "si": "4.7.0",
+              "ei": "4.7.38"
+            },
+            {
+              "si": "4.8.0",
+              "ei": "4.8.33"
+            },
+            {
+              "si": "4.9.0",
+              "ei": "4.9.34"
+            },
+            {
+              "si": "5.0.0",
+              "ei": "5.0.30"
+            },
+            {
+              "si": "5.1.0",
+              "ei": "5.1.27"
+            },
+            {
+              "si": "5.2.0",
+              "ei": "5.2.29"
+            },
+            {
+              "si": "5.3.0",
+              "ei": "5.3.26"
+            },
+            {
+              "si": "5.4.0",
+              "ei": "5.4.24"
+            },
+            {
+              "si": "5.5.0",
+              "ei": "5.5.23"
+            },
+            {
+              "si": "5.6.0",
+              "ei": "5.6.22"
+            },
+            {
+              "si": "5.7.0",
+              "ei": "5.7.20"
+            },
+            {
+              "si": "5.8.0",
+              "ei": "5.8.18"
+            },
+            {
+              "si": "5.9.0",
+              "ei": "5.9.19"
+            },
+            {
+              "si": "6.0.0",
+              "ei": "6.0.17"
+            },
+            {
+              "si": "6.1.0",
+              "ei": "6.1.15"
+            },
+            {
+              "si": "6.2.0",
+              "ei": "6.2.14"
+            },
+            {
+              "si": "6.3.0",
+              "ei": "6.3.13"
+            },
+            {
+              "si": "6.4.0",
+              "ei": "6.4.13"
+            },
+            {
+              "si": "6.5.0",
+              "ei": "6.5.13"
+            },
+            {
+              "si": "6.6.0",
+              "ei": "6.6.10"
+            },
+            {
+              "si": "6.7.0",
+              "ei": "6.7.10"
+            },
+            {
+              "si": "6.8.0",
+              "ei": "6.8.11"
+            },
+            {
+              "si": "6.9.0",
+              "ei": "6.9.10"
+            },
+            {
+              "si": "7.0.0",
+              "ei": "7.0.7"
+            },
+            {
+              "si": "7.1.0",
+              "ei": "7.1.3"
+            }
+          ]
+        }
+      ],
+      "ko": {
+        "title": "WordPress Core 업그레이드 경쟁 상태 취약점",
+        "target": "WordPress Core, 전체 패키지 업그레이드 과정. 정확한 버전은 벤더 공지 확인 필요",
+        "impact": "미인증 공격자가 업그레이드 중 예측 가능한 스테이징 경로를 이용해 서버에서 코드 실행 가능. CISA KEV 등재, EPSS 0.006",
+        "action": "WordPress 최신 버전 업데이트 및 업그레이드 중 경로 노출 여부 점검. CISA 기한 2026-11-06 준수"
+      }
+    }
+  ],
+  "exploited_more": [],
+  "critical": [
+    {
+      "id": "CVE-2026-95731",
+      "ids": [
+        "CVE-2026-95731",
+        "CVE-2026-95732",
+        "CVE-2026-95733"
+      ],
+      "section": "critical",
+      "label": "HPE 공지 hpesbnw05172",
+      "vendor": "HPE",
+      "cna": "security-alert@hpe.com",
+      "status": "Awaiting Analysis",
+      "published": "2026-11-03T20:18:21.197",
+      "description": "Hardcoded password vulnerabilities in the command-line interface of HPE Networking Fabric Composer could allow an unauthenticated remote attacker to access the affected system using hardcoded credentials. Successful exploitation could allow an attacker to gain unauthorized administrative access to the affected system with elevated privileges.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-95731",
+          "text": "Hardcoded password vulnerabilities in the command-line interface of HPE Networking Fabric Composer could allow an unauthenticated remote attacker to access the affected system using hardcoded credentials. Successful exploitation could allow an attacker to gain unauthorized administrative access to…"
+        },
+        {
+          "id": "CVE-2026-95732",
+          "text": "An authentication bypass vulnerability exists in the underlying operating system of HPE Networking Fabric Composer. Successful exploitation could allow an unauthenticated adjacent attacker to execute arbitrary code on the affected system."
+        },
+        {
+          "id": "CVE-2026-95733",
+          "text": "A vulnerability exists in a component of HPE Networking Fabric Composer. Successful exploitation could allow an unauthenticated adjacent attacker to execute arbitrary code on the affected system."
+        }
+      ],
+      "cwes": [],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": null,
+      "epss": null,
+      "links": [
+        "https://support.hpe.com/hpesc/public/docDisplay?docId=hpesbnw05172en_us&docLocale=en_US"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-95731",
+      "affected": [
+        {
+          "vendor": "Hewlett Packard Enterprise (HPE)",
+          "product": "Fabric Composer",
+          "ranges": [
+            {
+              "si": "7.4.0",
+              "ei": "7.4.0"
+            },
+            {
+              "si": "7.0.0",
+              "ei": "7.3.4"
+            }
+          ],
+          "all": true
+        }
+      ],
+      "flags": {
+        "watch": "HPE",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 12.7,
+      "ko": {
+        "title": "HPE Networking Fabric Composer 하드코딩 비밀번호",
+        "target": "HPE Networking Fabric Composer CLI, 영향 버전은 HPE 공지 hpesbnw05172 확인 필요",
+        "impact": "미인증 원격 공격자가 하드코딩된 자격증명으로 접속해 관리자 권한 획득 가능. CVSS 9.8",
+        "action": "HPE 공지 hpesbnw05172 확인 후 패치 적용, 관리 인터페이스 외부 노출 차단"
+      }
+    },
+    {
+      "id": "CVE-2026-44266",
+      "ids": [
+        "CVE-2026-44266",
+        "CVE-2026-44267"
+      ],
+      "section": "critical",
+      "label": "Elo",
+      "vendor": "",
+      "cna": "security-advisories@github.com",
+      "status": "Received",
+      "published": "2026-11-03T18:18:02.957",
+      "description": "Elo is a purely functional expression language for no-code tools. Prior to 1.0.1, the Ruby backend in src/compilers/ruby.ts embeds attacker-controlled text in Ruby double-quoted strings without escaping #, so Ruby interpolation forms in the string-literal emitter or the labelled subtype-constraint branch become executable Ruby. The affected entry points include the /try playground with the Ruby target, bin/eloc -t ruby -x, and defaultFormats.elo.parse() followed by Ruby emission. A failing labelled subtype constraint evaluates its message, while an ordinary string literal is evaluated when the compiled Ruby runs, allowing Ruby code and shell command execution through backticks. JavaScript, Python, and SQL emission are not affected by this Ruby-specific path. This issue is fixed in version 1.0.1.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-44266",
+          "text": "Elo is a purely functional expression language for no-code tools. Prior to 1.0.1, the Ruby backend in src/compilers/ruby.ts embeds attacker-controlled text in Ruby double-quoted strings without escaping #, so Ruby interpolation forms in the string-literal emitter or the labelled subtype-constraint…"
+        },
+        {
+          "id": "CVE-2026-44267",
+          "text": "Elo is a purely functional expression language for no-code tools. Prior to 1.0.1, plain Elo strings supplied to defaultFormats.elo.parse(), bin/elo, or elo-lang.org/try can use .constructor.constructor to reach JavaScript Function because the member_access handler in src/transform.ts does not rejec…"
+        }
+      ],
+      "cwes": [
+        "CWE-94",
+        "CWE-116",
+        "CWE-1336",
+        "CWE-79",
+        "CWE-693"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "poc",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://github.com/enspirit/elo/commit/51b869963fbe445c18328714a7ccfbd76b21ba38",
+        "https://github.com/enspirit/elo/commit/d2a89a8db76a244eb740687524a7e8529b7554b5",
+        "https://github.com/enspirit/elo/security/advisories/GHSA-7w38-ggh5-v542"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-44266",
+      "affected": [
+        {
+          "vendor": "enspirit",
+          "product": "elo",
+          "ranges": [
+            {
+              "ee": "1.0.1"
+            }
+          ]
+        }
+      ],
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 12.5,
+      "ko": {
+        "title": "Elo 표현식 언어 Ruby 백엔드 코드 주입",
+        "target": "Elo 1.0.1 이전 버전, Ruby 백엔드 컴파일러 src/compilers/ruby.ts",
+        "impact": "공격자가 제어하는 문자열의 Ruby 보간으로 코드 실행 가능. 악용 가능성 PoC 단계. CVSS 9.8",
+        "action": "Elo 1.0.1 이상으로 업데이트, 사용자 입력 기반 Elo 처리 기능 점검"
+      }
+    },
+    {
+      "id": "CVE-2026-106803",
+      "ids": [
+        "CVE-2026-106803"
+      ],
+      "section": "critical",
+      "label": "CVE-2026-106803",
+      "vendor": "",
+      "cna": "cve@mitre.org",
+      "status": "Awaiting Analysis",
+      "published": "2026-11-02T17:17:33.270",
+      "description": "A stack-based buffer overflow exists in Kamailio v6.1.3 and v6.1.4 in the ims_registrar_pcscf module. When processing a crafted application/reginfo+xml NOTIFY message, process_contact() copies an attacker-controlled port value from the alias parameter into a fixed 5-byte stack buffer without validating its length. An unauthenticated remote attacker can trigger stack corruption and terminate the P-CSCF process, resulting in denial of service.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-106803",
+          "text": "A stack-based buffer overflow exists in Kamailio v6.1.3 and v6.1.4 in the ims_registrar_pcscf module. When processing a crafted application/reginfo+xml NOTIFY message, process_contact() copies an attacker-controlled port value from the alias parameter into a fixed 5-byte stack buffer without valida…"
+        }
+      ],
+      "cwes": [
+        "CWE-121"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "poc",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": 0.00285,
+      "links": [
+        "https://gist.github.com/hackeryounow/7d7ccc9ec501a5d8c9143b2e1bcc11cb",
+        "https://github.com/kamailio/kamailio/commit/21261436492f0014930e804e20586e3833bb91b9",
+        "https://github.com/kamailio/kamailio/issues/4954"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-106803",
+      "affected": [],
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 12.31,
+      "ko": {
+        "title": "Kamailio IMS registrar 스택 버퍼 오버플로",
+        "target": "Kamailio v6.1.3, v6.1.4 ims_registrar_pcscf 모듈",
+        "impact": "조작된 reginfo+xml NOTIFY 메시지로 고정 5바이트 스택 버퍼 overflow 발생, 원격 코드 실행 가능. CVSS 9.8",
+        "action": "Kamailio 패치 버전 적용 여부 확인 및 IMS 모듈 사용 시스템 우선 점검"
+      }
+    }
+  ],
+  "critical_more": [
+    {
+      "id": "CVE-2026-63469",
+      "ids": [
+        "CVE-2026-63469",
+        "CVE-2026-63470",
+        "CVE-2026-63471"
+      ],
+      "label": "CVE-2026-63469",
+      "vendor": "",
+      "cvss": 9.3,
+      "title": "CVE-2026-63469 코드 삽입 등 3건",
+      "affected": [
+        {
+          "vendor": "koxudaxi",
+          "product": "fastapi-code-generator",
+          "ranges": [
+            {
+              "ee": "0.8.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-4052",
+      "ids": [
+        "CVE-2026-4052"
+      ],
+      "label": "CVE-2026-4052",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "CVE-2026-4052 권한 검사 누락",
+      "affected": [
+        {
+          "vendor": "WSO2",
+          "product": "WSO2 API Manager",
+          "ranges": [
+            {
+              "exact": "4.1.0"
+            },
+            {
+              "exact": "4.2.0"
+            },
+            {
+              "exact": "4.3.0"
+            },
+            {
+              "exact": "4.4.0"
+            },
+            {
+              "exact": "4.5.0"
+            },
+            {
+              "exact": "4.6.0"
+            }
+          ]
+        },
+        {
+          "vendor": "WSO2",
+          "product": "WSO2 API Control Plane",
+          "ranges": [
+            {
+              "exact": "4.5.0"
+            },
+            {
+              "exact": "4.6.0"
+            }
+          ]
+        },
+        {
+          "vendor": "WSO2",
+          "product": "WSO2 Identity Server Key Manager Connector (apim-km-wso2is)",
+          "ranges": [
+            {
+              "ee": "1.8.8"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-13594",
+      "ids": [
+        "CVE-2026-13594"
+      ],
+      "label": "CVE-2026-13594",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "CVE-2026-13594 접근 통제 부적절",
+      "affected": [
+        {
+          "vendor": "Zohocorp",
+          "product": "Log360",
+          "ranges": [
+            {
+              "ee": "13062"
+            }
+          ]
+        },
+        {
+          "vendor": "Zohocorp",
+          "product": "EventLog Analyzer",
+          "ranges": [
+            {
+              "ee": "13062"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121260",
+      "ids": [
+        "CVE-2026-121260"
+      ],
+      "label": "Ziroom ZHOME A0101",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "Ziroom ZHOME A0101 삽입",
+      "affected": [
+        {
+          "vendor": "Ziroom",
+          "product": "ZHOME A0101",
+          "ranges": [],
+          "truncated": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-109593",
+      "ids": [
+        "CVE-2026-109593"
+      ],
+      "label": "CVE-2026-109593",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "CVE-2026-109593 취약점",
+      "affected": [
+        {
+          "vendor": "SonicWall",
+          "product": "Global Management System (GMS)",
+          "ranges": [],
+          "truncated": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-28336",
+      "ids": [
+        "CVE-2026-28336"
+      ],
+      "label": "CVE-2026-28336",
+      "vendor": "",
+      "cvss": 9.9,
+      "title": "CVE-2026-28336 입력값 검증 부적절",
+      "affected": [
+        {
+          "vendor": "SolarWinds",
+          "product": "Dameware",
+          "ranges": [
+            {
+              "ei": "2026.3"
+            }
+          ],
+          "all": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121392",
+      "ids": [
+        "CVE-2026-121392"
+      ],
+      "label": "FreeRDP",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "FreeRDP 인증서 검증 부적절",
+      "affected": [
+        {
+          "vendor": "FreeRDP",
+          "product": "FreeRDP",
+          "ranges": [
+            {
+              "ee": "3.32.2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121022",
+      "ids": [
+        "CVE-2026-121022"
+      ],
+      "label": "AxxonSoft Axxon One",
+      "vendor": "",
+      "cvss": 9.2,
+      "title": "AxxonSoft Axxon One 취약점",
+      "affected": [
+        {
+          "vendor": "AxxonSoft",
+          "product": "Axxon One",
+          "ranges": [
+            {
+              "ee": "3.0.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-89292",
+      "ids": [
+        "CVE-2026-89292"
+      ],
+      "label": "In Eclipse Mnestix Browser",
+      "vendor": "",
+      "cvss": 9.2,
+      "title": "In Eclipse Mnestix Browser 인증정보 보호 부족",
+      "affected": [
+        {
+          "vendor": "Eclipse Foundation",
+          "product": "Eclipse Mnestix",
+          "ranges": [
+            {
+              "si": "1.6.0",
+              "ee": "2.3.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-112917",
+      "ids": [
+        "CVE-2026-112917"
+      ],
+      "label": "CVE-2026-112917",
+      "vendor": "",
+      "cvss": 9.2,
+      "title": "CVE-2026-112917 취약점",
+      "affected": [
+        {
+          "vendor": "Docker",
+          "product": "Docker Desktop",
+          "ranges": [],
+          "all": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-120534",
+      "ids": [
+        "CVE-2026-120534"
+      ],
+      "label": "CVE-2026-120534",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "CVE-2026-120534 위험한 형식 파일 업로드",
+      "affected": [
+        {
+          "vendor": "ACF Extended",
+          "product": "Advanced Custom Fields: Extended PRO",
+          "ranges": [
+            {
+              "ei": "0.9.2.6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-86596",
+      "ids": [
+        "CVE-2026-86596"
+      ],
+      "label": "CVE-2026-86596",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "CVE-2026-86596 코드 삽입",
+      "affected": [
+        {
+          "vendor": "clavaque",
+          "product": "s2Member – Excellent for All Kinds of Memberships, Content Restriction Paywalls & Member Access Subscriptions",
+          "ranges": [
+            {
+              "ei": "260927"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-120518",
+      "ids": [
+        "CVE-2026-120518"
+      ],
+      "label": "CVE-2026-120518",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "CVE-2026-120518 경로 조작",
+      "affected": [
+        {
+          "vendor": "kalengi",
+          "product": "BuddyPress XProfile Custom Image Field",
+          "ranges": [
+            {
+              "ei": "3.1.0"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "advisories": [
+    {
+      "id": "a-ae388e00",
+      "source": "KISA 보안공지",
+      "title": "Apache 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72270",
+      "date": "2026-11-03"
+    },
+    {
+      "id": "a-a9fb117f",
+      "source": "KISA 보안공지",
+      "title": "지란지교소프트 제품 보안 조치 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72269",
+      "date": "2026-11-03"
+    },
+    {
+      "id": "a-5266e20a",
+      "source": "KISA 보안공지",
+      "title": "Linux 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72268",
+      "date": "2026-11-03"
+    },
+    {
+      "id": "a-0779138b",
+      "source": "KISA 보안공지",
+      "title": "Synology NAS 대상 랜섬웨어 공격 주의 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72267",
+      "date": "2026-11-03"
+    },
+    {
+      "id": "a-8adf2a66",
+      "source": "KISA 보안공지",
+      "title": "Termix 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72266",
+      "date": "2026-11-03"
+    }
+  ],
+  "news": {
+    "domestic": [
+      {
+        "id": "n-9b57db46",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "1호기 탑승자 정보, 해킹 아닌 유출에 무게… 경찰 수사 착수",
+        "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxPdnpRR3FEVVExNC1uTmItMW1pZmItY0g5cW85LWNPRGlUMkxFQWdOVm1peTNuLUh1cFM4VThJMnRhUWp5elEtUjVDYTFkbXAwUElXS1VDZWxHNHo2MnpJb253aWE2aVpSM3lIYmd5YlZWX0RSczBxRWdTeDNlQlN0cVYxUkZKYWVkc3hWQ3V5aVU?oc=5",
+        "source": "조선일보",
+        "published": "2026-11-03T15:54:00.000Z",
+        "snippet": "",
+        "outlets": [
+          "조선일보",
+          "MBC 뉴스",
+          "연합뉴스TV",
+          "YTN",
+          "경향신문",
+          "KBS 뉴스",
+          "경북일보"
+        ],
+        "related": [
+          {
+            "title": "'1호기' 탄 168명 정보 유출‥\"중대 사안\"",
+            "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTE9DUnVQSVhLY1JjV09aNzRHcXlXUHdSUTEza1daVFNqYjdQdGRUTDFsZUtETHQ3djNXRGxZOV9RWEJ3WWY1b1VWekZxZUVwRHBwOHg5bXM5b1NhdFJRR1MyVzlvSmo0SURDT21PMUphMEk4MV9oX2F5OdIBeEFVX3lxTE5SVF9GU1pZV2MzX050aHk0RG1lVk9qYVBTNzVPU1VicW9td3NLMkZnN3d5RzNGY01yT2FKNnB4SDJzYkVaVVJDRWk2eThBcXJyYlI4NWpSTUVFNko5MENXTnRWS2llOEg2YTAySzQ1N1MtOXloRXVsSg?oc=5",
+            "source": "MBC 뉴스"
+          },
+          {
+            "title": "1호기 명단 유출 전말은…외교부 \"해킹 아냐\"",
+            "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE95QVI1NlFwM0RSaEwza2x1Ry1xNGhSVEhVRmc3ZmUzcHNVNXNEajJzSEVTX0FwOEtfU2dfUFlaZzcwRERMVDVHWTdwNERWUkhfLXl6dnZBam42TXBJLWhfTGNJdU53MlU?oc=5",
+            "source": "연합뉴스TV"
+          },
+          {
+            "title": "'1호기 명단' 정보 유출...경찰, 정식 수사 착수",
+            "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE9Sd2hYTWx6bzZkRWZ6US02ckpacEpCSDcwMlpqODVTY0pSRnNKbnJpSVFILTFaeWczVmNodGc5aWU0a2x3bWlsemxHazF4b0gtVjQwVU1vM0wtRm1sU0E?oc=5",
+            "source": "YTN"
+          },
+          {
+            "title": "외교부 “1호기 탑승자 명단 내부 유출…해킹 아냐”",
+            "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5md1JZSDNnQ1VlQWZwVUlBQTYxRkpoQWlLWldXaHQ0STRrWUtmSF81V25xUDRTdl8xUFZjYl83Z0FFb2VOdndMdUxXaVJnNGlyVk9lNjhJUjZKUdIBX0FVX3lxTE9qVnllV000X0VlWng0d1d2aE5pZ0RWZDhkV29ZOGY2N3UxNHJRc1VhUWpDM2NoREY0ZW4taElyakR2amZXLW1DX3lSVXAzTGhYNmt1Q1NqNXlPS2dldXJB?oc=5",
+            "source": "경향신문"
+          },
+          {
+            "title": "경찰, ‘공군 1호기’ 개인정보유출 수사 착수",
+            "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBBNEF2OWQ0TllsZHh4Z0ZUN2dIZ1RpU2I3V1VaTzBXbXlOVzlPSFBLNU9nOHFtQ0kydUJJU2VJMGhIR1RiMHNrUWxPb2xjN1FfUG9GRGdIbENtcTVVangxbE83MlV2UQ?oc=5",
+            "source": "KBS 뉴스"
+          }
+        ],
+        "cves": [],
+        "score": 20,
+        "title_ko": "공군 1호기 탑승자 정보 유출, 경찰 수사 착수",
+        "summary_ko": "1호기 탑승자 168명의 이름·생년월일·여권번호가 담긴 명단이 외부 사이트에 게시됨. 외교부는 해킹이 아닌 유출에 무게를 둠. 경찰 정식 수사 착수, 대통령 여권 재발급 등 파장 확산."
+      },
+      {
+        "id": "n-fd6d6621",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "한양증권 개인정보 유출…‘다우오피스’ 그룹웨어가 원인",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=146970",
+        "source": "보안뉴스",
+        "published": "2026-11-03T05:15:00.000Z",
+        "snippet": "한양증권이 사용하는 그룹웨어 솔루션이 해킹 공격을 받으면서 한양증권 고객 및 임직원 정보가 일부 유출되는 사고가 발생했다. 3일 한양증권에 따르면, 지난달 29일 외부에 의한 해킹으로 고객과 임직원 정보 일부가 유출된 정황이 포착됐다. 유출된 정보는 고객정보 15건과 임직원 관련 정보 2건, 일반 개인정보 14건이다. 유출 항목은 △이름 △주민등록번호 △운전면허번호 △계좌번호 △연락처 △주…",
+        "outlets": [
+          "보안뉴스",
+          "데일리시큐",
+          "주간한국",
+          "연합뉴스TV"
+        ],
+        "related": [
+          {
+            "title": "한양증권, 외부 그룹웨어 해킹으로 개인정보 유출…주민번호·계좌번호 포함",
+            "url": "https://www.dailysecu.com/news/articleView.html?idxno=209277",
+            "source": "데일리시큐"
+          },
+          {
+            "title": "한양증권도 해킹 피해…고객 등 개인정보 31건 새 나가",
+            "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE91N2RuQ1hiV3FBZkNyblREbm1WUEhCUHVUZWUxX2lCZHJVNXdMcEs5aXBPTzF0Z2thRmtrMURoSWpOQVhVUUt6Y0puQmJRcmxWOHNpc0xwZmdjZG9tM3p2aHRfVE5pT2VEVVJ5cGNmZ1V0dHg00gF0QVVfeXFMT3U3ZG5DWGJXcUFmQ3JuVERubVZQSEJQdVRlZTFfaUJkclU1d0xwSzlpcE9PMXRna2FGa2sxRGhJak5BWFVRS3pjSm5CYlFybFY4c2lzTHBmZ2Nkb20zenZodF9UTmlPZURVUnlwY2ZnVXR0eDQ?oc=5",
+            "source": "주간한국"
+          },
+          {
+            "title": "[퇴근길머니] 한양증권도 해킹…수입 전기차 수리센터 태부족",
+            "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE1paVh3WGRyNkVKQnN2WXlTQnBia01tVU9NalRSeDlUUUJZU1BHblkzOVlsS1h6YlZKSnpFOFZUVmplc0xFQWJwckNFdGNUSFFZaUVWckRpcU5QODY2Z18tMWNoOEtzV3c?oc=5",
+            "source": "연합뉴스TV"
+          }
+        ],
+        "cves": [],
+        "score": 16.4,
+        "title_ko": "한양증권 개인정보 유출, 그룹웨어 해킹이 원인",
+        "summary_ko": "외부 해킹으로 그룹웨어 솔루션이 공격받아 고객·임직원 개인정보 31건 유출 정황 확인. 주민등록번호·계좌번호 포함. 금융사 그룹웨어 보안 점검 필요함."
+      },
+      {
+        "id": "n-d2c6c980",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "금감원 “금융사 해킹, CEO 책임 엄중히 묻겠다”",
+        "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBkSDFyeklzUjRUNFNsdVNXaHpJY3JhU2hPY2dPQ0RGaEJaMEthUWluTWtjaXFRc0E3ZUFFTzV1eVAtS3hRbkJHYklmcTA5dG5EMTZGSGdyVEljTlpTRFJwRG5nLUFLQdIBZkFVX3lxTFBkSDFyeklzUjRUNFNsdVNXaHpJY3JhU2hPY2dPQ0RGaEJaMEthUWluTWtjaXFRc0E3ZUFFTzV1eVAtS3hRbkJHYklmcTA5dG5EMTZGSGdyVEljTlpTRFJwRG5nLUFLQQ?oc=5",
+        "source": "동아일보",
+        "published": "2026-11-03T15:30:00.000Z",
+        "snippet": "",
+        "outlets": [
+          "동아일보",
+          "연합뉴스TV",
+          "경향신문",
+          "한국경제",
+          "비즈워치",
+          "연합인포맥스",
+          "연합뉴스"
+        ],
+        "related": [
+          {
+            "title": "이찬진 \"해킹사고 대응 미흡…CEO 책임 물을 것\"",
+            "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5mMk04cGxQNHFDU3NsdF9taVZZNEN5Q1lYQThjWUFjUVZYa0ctWFlibGZEQTRmZHhjY0xscUQzd3BCWW45UkEyVDh5MDZIdzE1QldLaHVKdi1RR1lVTDhzRjQ0bG9mNG8?oc=5",
+            "source": "연합뉴스TV"
+          },
+          {
+            "title": "“해킹사고 CEO까지 책임 묻겠다”…이찬진 금감원장 금융사에 경고",
+            "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE0zZ2sxODBvTTZDRTdqSF9JTmdkOS1MN2U4WWt0OTB0V2Y1Q2ZLeVR6U1FuNUJSTmdESXVyei00NGQwRW5Wb3NqZmtzYVg0bGdIVHVsZ3dZU19Cd9IBX0FVX3lxTE45SXdTX2JuYXZLcG5rZXBzdk1nWGlqMG1mUUJ1QnRwQmI1VmNYaE4zendCRTBrd3ZzdnJsdmdFSTNubkdaSFZqS05lNjhQV0tEaGlpTUlGYy1QYWpzLTRF?oc=5",
+            "source": "경향신문"
+          },
+          {
+            "title": "\"해킹 책임 CEO에 물을 것\"…경고 날린 이찬진 금감원장",
+            "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE95YlBRZjBoR1JnU19RbDdQdVN0ZEQ5MTFEQ3U5aUtUZFYzYW1NUnVNRDhYc1dib2UwbnJ1RkJQclc5Q0x4aGQwd1A4akFfMFNLLW1CVW1OSFJxZw?oc=5",
+            "source": "한국경제"
+          },
+          {
+            "title": "이찬진 \"증권·보험 해킹, CEO 책임 묻겠다…GA·가상자산업도 전수점검\"",
+            "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE90QmZ6VlJtaXYyVTNHdTlDX21ZazNMZ1RtZWtJVXY4WUJCUjdlVnBpd0tuUTE2cnRqRDlKcWo4OEgwSkJSbjhsZTRPVG1icWg5Y0tnMzJxQkV1X3pza3pKN0toemdCN2VRcWF3?oc=5",
+            "source": "비즈워치"
+          },
+          {
+            "title": "이찬진 \"해킹 사고, CEO에 책임…감독 분담금 차등 부과\"",
+            "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE9Ca1BYUUo2MGdVU0dWMld1clF2NHNfU3RZUjRFTkpoSURPRzl3ZmtBcVVTZTFBRlZsYWFFQjNPZnFtS0tpYW5rT3A2V1U4X3F3ZW55cTlRUzFWRGVSeDQwc0pwQnpZQ3VZejNoYmFJTUw?oc=5",
+            "source": "연합인포맥스"
+          }
+        ],
+        "cves": [],
+        "score": 16,
+        "title_ko": "금감원, 금융사 해킹 사고 CEO 책임 강경 경고",
+        "summary_ko": "이찬진 금감원장이 금융사 해킹사고 대응 미흡을 지적하고 CEO 책임을 묻겠다고 경고. 금융권 보안 거버넌스 점검과 사고 대응 체계 재검토 필요."
+      },
+      {
+        "id": "n-ad2dbba3",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "李 대통령, “민관 아우를 강력한 ‘사이버 보안 차르’ 검토하라”",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=146966",
+        "source": "보안뉴스",
+        "published": "2026-11-03T02:43:40.000Z",
+        "snippet": "이재명 대통령이 흩어진 보안 기능을 총괄 조정할 ‘사이버 보안 차르’ 기구 구성을 적극 검토하라고 지시했다. 이 대통령은 3일 청와대 국무회의에서 “공공과 민간 영역을 아우르는 범정부 차원의 대책기구 설치 논의도 필요하다”며 “강력하고 실효적인” 사이버 보안 차르(Czar) 기구 구성을 주문했다. ‘차르’는 러시아 황제를 뜻하며, 정책 분야에선 특정 분야 현안을 총괄하는 사람을 말한다. 최…",
+        "outlets": [
+          "보안뉴스",
+          "데일리시큐"
+        ],
+        "related": [
+          {
+            "title": "이 대통령, ‘사이버 보안 차르’ 검토 지시…공군 1호기 168명 개인정보 유출 수사",
+            "url": "https://www.dailysecu.com/news/articleView.html?idxno=209298",
+            "source": "데일리시큐"
+          }
+        ],
+        "cves": [],
+        "score": 12.2,
+        "title_ko": "대통령, 범정부 사이버 보안 차르 기구 검토 지시",
+        "summary_ko": "이재명 대통령이 흩어진 보안 기능을 총괄 조정할 범정부 사이버 보안 기구 구성을 검토하라고 지시. 공공·민간 통합 대응 체계 변화 가능성 있음."
+      },
+      {
+        "id": "n-ed8fe114",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "한국전력 출자기업 켑코이에스, 주민등록번호 등 개인정보 유출 가능성 공지",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209299",
+        "source": "데일리시큐",
+        "published": "2026-11-03T11:43:54.000Z",
+        "snippet": "한국전력공사 등이 출자한 에너지효율화 전문기업 켑코이에스(KEPCO ES)가 더존비즈온 해킹 사고로 주민등록번호와 연락처 등 개인정보가 유출됐을 가능성이 있다고 공식 공지했다. 더존비즈온 해킹 사고 여파가 에너지 분야 기업으로도 확산되고 있다. 켑코이에스는 11월 2일 홈페이지에 개인정보 유출 가능성 안내문을 게시하고, 더존비즈온으로부터 APO 백업서비스 관련 서버에 저장된 일부 암호화 데…",
+        "outlets": [
+          "데일리시큐"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 10,
+        "title_ko": "켑코이에스, 더존비즈온 해킹 개인정보 유출 가능성 공지",
+        "summary_ko": "한국전력 출자 켑코이에스가 더존비즈온 해킹으로 주민등록번호·연락처 유출 가능성을 공지. 더존비즈온 백업서비스 피해가 에너지 분야로 확산됨. 이용 기관 확인 필요."
+      }
+    ],
+    "international": [
+      {
+        "id": "n-cdcba13e",
+        "region": "international",
+        "lang": "en",
+        "title": "Hackers Exploit BTCPay Server Flaw to Steal Bitcoin and Litecoin From Hot Wallets",
+        "url": "https://thehackernews.com/2026/11/hackers-exploit-btcpay-server-flaw-to.html",
+        "source": "The Hacker News",
+        "published": "2026-11-03T08:31:48.000Z",
+        "snippet": "BTCPay Server, a self-hosted, open-source cryptocurrency payment processor, has urged users to install the latest version of its software in response to reports of Bitcoin and Litecoin being stolen from hot wallets on i…",
+        "outlets": [
+          "The Hacker News",
+          "BleepingComputer"
+        ],
+        "related": [
+          {
+            "title": "BTCPay Server warns of hot wallet crypto thefts on outdated instances",
+            "url": "https://www.bleepingcomputer.com/news/security/btcpay-server-warns-of-hot-wallet-thefts-targeting-outdated-instances/",
+            "source": "BleepingComputer"
+          }
+        ],
+        "cves": [],
+        "score": 11.2,
+        "title_ko": "BTCPay Server 취약점 악용, 핫월렛 BTC·LTC 탈취",
+        "summary_ko": "자체 호스팅 암호화폐 결제 서버 BTCPay Server의 취약점을 악용해 핫월렛의 비트코인과 라이트코인이 탈취됨. 최신 버전 업데이트 권고."
+      },
+      {
+        "id": "n-9b1f0323",
+        "region": "international",
+        "lang": "en",
+        "title": "Over 100 European Stores Hit as Supermarket Fridge Attacks Return",
+        "url": "https://www.securityweek.com/over-100-european-stores-hit-as-supermarket-fridge-attacks-resume/",
+        "source": "SecurityWeek",
+        "published": "2026-11-03T07:43:24.000Z",
+        "snippet": "Attackers again tampered with internet-exposed refrigeration controllers, this time at stores in Belgium, Sweden, Ireland and beyond. The post Over 100 European Stores Hit as Supermarket Fridge Attacks Return appeared f…",
+        "outlets": [
+          "SecurityWeek",
+          "The Record"
+        ],
+        "related": [
+          {
+            "title": "British businesses caught in Europe-wide supermarket fridge attacks",
+            "url": "https://therecord.media/british-businesses-caught-in-europe-wide-supermarket-fridge-attacks",
+            "source": "The Record"
+          }
+        ],
+        "cves": [],
+        "score": 8.7,
+        "title_ko": "유럽 100여 개 슈퍼마켓 냉장설비 공격 재발",
+        "summary_ko": "인터넷에 노출된 냉장설비 컨트롤러가 벨기에·스웨덴·아일랜드 등에서 변조됨. 온도가 50도까지 조작되어 식품 폐기 발생. 제어 장비 노출 점검 필요."
+      },
+      {
+        "id": "n-16664917",
+        "region": "international",
+        "lang": "ko",
+        "title": "미, ‘해킹 배후 북한’ 지목에…김여정 “엄중한 도발” 이례적 담화",
+        "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9nSnhFOGRMdnp2LUh3c3g3aU9UZEdLVzBrN3VGZFZVWUxnVmpERVZOaURYUWpEWTdmZDhvemZyMzAyUjZBT0JCc0JaeXJDcUFuMWZBSWNpLVFsZ9IBX0FVX3lxTE5ZTW56Z2VkTzgxa2ppOXFvQjBZQnRZSF9UTmE1SzhKOHdOalh3U1lEUy0xXzJrOHc5dVRYRzNzWDNGZGtkZUxjS0RiRjdBYm8wZXNpQUwyc1MyLVYzdHdj?oc=5",
+        "source": "경향신문",
+        "published": "2026-11-03T12:24:00.000Z",
+        "snippet": "",
+        "outlets": [
+          "경향신문",
+          "KBS 뉴스",
+          "동아일보",
+          "MBC 뉴스",
+          "연합뉴스TV"
+        ],
+        "related": [
+          {
+            "title": "김여정, 북한 해킹 배후 지목에 “미 정치적 도발…‘재고할 문제’ 있어”",
+            "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE1kTTJLOWlWNjh6LThkelY0YnZLSnkzM2JHcXZwOW9WS2FjMEExWU1TOGEwNkFWTzVrSmU2VjNXRXpiMmlUSHZhaC1jU3h2N0VNUEVOWU1mZk5iRWJvbmpmNnlrVmV1UQ?oc=5",
+            "source": "KBS 뉴스"
+          },
+          {
+            "title": "김여정, 바이낸스 해킹 北배후 지목에 “美 정치적 도발”",
+            "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE85SklRcnppTTE4VzF0SGF0eDV2ZS0waXlVcVNXWFpDdFgtMEpLZWxHQ3F3ZjRWYUFxM0w5V256Qjl5dUhVRHBGbXZzeTlEbkxMS2dRRm10eV9jVGNCVDlGYjJfTTVzWFV2QU5HZU5aUXVjX2xjd3Fn0gFmQVVfeXFMT2lwLUZlNGlydC1nalJYOHhGV21ZV3dkc0kwNHFGeWJSYTFqelFXX185NXJTZkFqQ3ZmMmJDenVMUHEtYlQxbFU1Z2UtUC1oSkRDUFUyY1BBMVRpZmszNGVRbW10c193?oc=5",
+            "source": "동아일보"
+          },
+          {
+            "title": "김여정, '해킹' 관련 첫 담화‥'대화의 끈' 유지 전략?",
+            "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTFBBeHN5bGtfSzl3Wkg5REpreFpKRTRHcFlCUWlSSlpMbndWWm90VFpTa3h0V1ZMamlfdXZMb1pZRTY5amN4YzdRUGs0QlJKTWtONDd5b2VFZk5hSTQwNXRiMkZDaF9sNDNkX2MxLTZDdUJSa2xmQ29JSNIBeEFVX3lxTE1fdm84Sng4YnF1bXg5UzFpamRuTHV0cFRxMlhBNEhBcGExRldhX090dzkzRjZWYlIxaS05LU9HeGo5dkx4blZwaVNtUVpZVDg1a25nV3FKenkwR2FoMUVmakYwWDZNcHBNbzlWU1Z3UTJpWTRkbnFHeA?oc=5",
+            "source": "MBC 뉴스"
+          },
+          {
+            "title": "北, 바이낸스 해킹 배후 지목에 발끈…\"美 정치적 도발\"",
+            "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5mdVFKOUdySlJpbTFhNFpRTHFmUHlvZFdYXzhYWnROWHcxOTJHWEJ5OUtpcEhYV3dSSzZjSGx6MGIwbHpwVkZKdE1TWjFrY3hna3M5Sm94bWkwRDJ2NElTRlRDOERqZVU?oc=5",
+            "source": "연합뉴스TV"
+          }
+        ],
+        "cves": [],
+        "score": 17.4,
+        "title_ko": "미국, 북한 해킹 배후 지목에 김여정 이례적 담화",
+        "summary_ko": "미국이 바이낸스 해킹 배후로 북한을 지목하자 김여정이 정치적 도발이라며 반발. 북한 배후 공격 흐름과 외교 긴장 지속 가능성 있음."
+      },
+      {
+        "id": "n-0c7258e0",
+        "region": "international",
+        "lang": "ko",
+        "title": "\"北 해커, 바이낸스 가짜 면접 통해 해킹 시도\"",
+        "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTFByWnRWbzFhb20weWpXS1VjTlJpSHBpVUY4V2dLSWlhaTVxdjI4ak5DRFpuTThFX2RtbFYyLWdwUWNJV0NQaFoxOXJzVXNqSURlRXpCaGd5YWFZVnpOR083U2VibGdTajg?oc=5",
+        "source": "연합뉴스TV",
+        "published": "2026-11-03T20:25:00.000Z",
+        "snippet": "",
+        "outlets": [
+          "연합뉴스TV",
+          "MBC 뉴스",
+          "연합뉴스"
+        ],
+        "related": [
+          {
+            "title": "북한 해커, 바이낸스 직원 가짜면접해 컴퓨터에 악성코드 심었다",
+            "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE5xZC1ka3k3Mkx6bU5lajhQcHZmdWEwcUxOaU12UlJTdlliQmJzSGdHYloyNUE1a2JaWlVMeWktanBheEh5RHpHSlJ2dllPMFBud2lIbXJqRGhhVU5TaUJqbDREQUw5TTItcXUtZHBBdlZnQ2RO0gF0QVVfeXFMTUg4cnNJcXZQSkF4Tm40MmowWUhSWHlKX3lBMXhNYTNTMG0wck02Vl84LXZCbWdOcTZmeXFkQzhXWGdfU2llS3FBV010a1dUYlh6ZjFYa252cEFNSkNfQkNrZzZlZnE1U1RGRVkycUhvUEdRZzI?oc=5",
+            "source": "MBC 뉴스"
+          },
+          {
+            "title": "北해커, 바이낸스 직원 가짜면접해 컴퓨터에 악성코드 심었다",
+            "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBGN0swTTlScW54TmxOOVdRX3BGR1Z6TzNES2M3Y2VCXzRVSlFvR2lyenNjWlhETXYxM25MV29RQlg0QTRCYTRTbEFNb09kTVpDbEJuS0Z1OUlkQzDSAWBBVV95cUxOa212WllzNkxEU3hjbVo1bTNjaTFIdUZ5WFZweDhXZHlYQzVUaHk1WFJVampsWEtidU9Gd2FjcTVoRVRyWEwtSzdhYWlJcV8wUVEwNUw5Z3U2bEFqd25LZ3M?oc=5",
+            "source": "연합뉴스"
+          }
+        ],
+        "cves": [],
+        "score": 15.1,
+        "title_ko": "북한 해커, 바이낸스 가짜 면접으로 악성코드 설치 시도",
+        "summary_ko": "북한 해커가 바이낸스 직원을 상대로 가짜 면접을 진행해 컴퓨터에 악성코드를 심으려 함. 채용 절차를 노린 사회공학 공격에 대한 경계 필요함."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "kev",
+      "name": "CISA KEV",
+      "ok": true,
+      "count": 1,
+      "ms": 396
+    },
+    {
+      "id": "bleepingcomputer",
+      "name": "BleepingComputer",
+      "ok": true,
+      "count": 15,
+      "ms": 677
+    },
+    {
+      "id": "zdnetkr",
+      "name": "지디넷코리아",
+      "ok": true,
+      "count": 30,
+      "ms": 682
+    },
+    {
+      "id": "thehackernews",
+      "name": "The Hacker News",
+      "ok": true,
+      "count": 50,
+      "ms": 777
+    },
+    {
+      "id": "securityweek",
+      "name": "SecurityWeek",
+      "ok": true,
+      "count": 10,
+      "ms": 790
+    },
+    {
+      "id": "therecord",
+      "name": "The Record",
+      "ok": true,
+      "count": 5,
+      "ms": 890
+    },
+    {
+      "id": "krebs",
+      "name": "Krebs on Security",
+      "ok": true,
+      "count": 10,
+      "ms": 967
+    },
+    {
+      "id": "darkreading",
+      "name": "Dark Reading",
+      "ok": true,
+      "count": 50,
+      "ms": 1302
+    },
+    {
+      "id": "boannews",
+      "name": "보안뉴스",
+      "ok": true,
+      "count": 50,
+      "ms": 1336
+    },
+    {
+      "id": "dailysecu",
+      "name": "데일리시큐",
+      "ok": true,
+      "count": 50,
+      "ms": 1339
+    },
+    {
+      "id": "datanet",
+      "name": "데이터넷",
+      "ok": true,
+      "count": 50,
+      "ms": 1595
+    },
+    {
+      "id": "nvd-kev",
+      "name": "NVD (KEV 상세)",
+      "ok": true,
+      "count": 0,
+      "ms": 1735
+    },
+    {
+      "id": "kisa-vuln",
+      "name": "KISA 취약점 정보",
+      "ok": true,
+      "count": 10,
+      "ms": 1957
+    },
+    {
+      "id": "kisa-notice",
+      "name": "KISA 보안공지",
+      "ok": true,
+      "count": 10,
+      "ms": 1976
+    },
+    {
+      "id": "kisa-alert",
+      "name": "KISA 경보단계",
+      "ok": true,
+      "count": 10,
+      "ms": 2052
+    },
+    {
+      "id": "gnews-kr",
+      "name": "Google 뉴스",
+      "ok": true,
+      "count": 100,
+      "ms": 2841
+    },
+    {
+      "id": "nvd",
+      "name": "NVD (신규 CVE)",
+      "ok": true,
+      "count": 748,
+      "ms": 3781
+    },
+    {
+      "id": "epss",
+      "name": "FIRST EPSS",
+      "ok": true,
+      "count": 23,
+      "ms": 244
+    }
+  ],
+  "summarizer": {
+    "engine": "claude-haiku-5-5",
+    "ok": true,
+    "ms": 14582,
+    "applied": {
+      "news": 9,
+      "vulns": 4,
+      "overview": true
+    },
+    "rejected": [
+      "vuln:CVE-2026-95732",
+      "vuln:CVE-2026-95733",
+      "vuln:CVE-2026-44267"
+    ],
+    "input_tokens": 12031,
+    "output_tokens": 2989
+  },
+  "stats": {
+    "news": {
+      "items": 420,
+      "fresh": 194,
+      "clusters": 125,
+      "eligible": 85
+    },
+    "nvd_published": 748,
+    "kev_catalog": "2026.11.03",
+    "kev_recent": 1
+  }
+}

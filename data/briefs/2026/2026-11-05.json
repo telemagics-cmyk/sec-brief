@@ -1,0 +1,1934 @@
+{
+  "version": 2,
+  "date": "2026-11-05",
+  "generated_at": "2026-11-05T06:01:01+09:00",
+  "window": {
+    "hours": 30,
+    "from": "2026-11-03T15:01:01.094Z",
+    "to": "2026-11-04T21:01:01.094Z",
+    "since_brief": "2026-11-04",
+    "since_at": "2026-11-03T21:01:01.887Z"
+  },
+  "engine": "claude-haiku-5-5",
+  "overview": "니케 PC 런처 공급망 공격으로 악성코드와 계정·가상자산 탈취 우려가 있어 해당 PC 설치 여부를 우선 확인해야 합니다. 더존비즈온 백업서버 침해로 국내 기업과 기관의 개인정보 유출 가능성이 확산 중입니다. 해외에서는 Chrome, FreeRDP, Apple 등 악용 가능한 취약점의 패치 적용이 필요합니다.",
+  "cvss_min": 9,
+  "critical_total": 87,
+  "failed": {
+    "kev": false,
+    "nvd": false,
+    "kisa": false,
+    "news": false
+  },
+  "exploited": [
+    {
+      "id": "CVE-2024-27834",
+      "section": "exploited",
+      "vendor": "Apple",
+      "product": "Multiple Products",
+      "name": "Apple Multiple Products Improper Authentication Vulnerability",
+      "dateAdded": "2026-11-04",
+      "due": "2026-11-18",
+      "ransomware": false,
+      "description": "Apple iOS, iPadOS, macOS, Safari, tvOS and watchOS 10.5 contain an improper authentication vulnerability which could allow an attacker with arbitrary read and write capability to bypass pointer authentication.",
+      "cwes": [
+        "CWE-287"
+      ],
+      "cvss": null,
+      "ssvc": null,
+      "epss": 0.00598,
+      "epssPct": 0.4875,
+      "published": "",
+      "links": [
+        "https://support.apple.com/en-us/120896",
+        "https://support.apple.com/en-us/120898",
+        "https://support.apple.com/en-us/120901"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2024-27834",
+      "affected": [
+        {
+          "vendor": "Apple",
+          "product": "Safari",
+          "ranges": [
+            {
+              "ee": "17.5"
+            }
+          ]
+        },
+        {
+          "vendor": "Apple",
+          "product": "iOS and iPadOS",
+          "ranges": [
+            {
+              "ee": "16.7.8"
+            },
+            {
+              "ee": "17.5"
+            }
+          ]
+        },
+        {
+          "vendor": "Apple",
+          "product": "macOS",
+          "ranges": [
+            {
+              "ee": "14.5"
+            }
+          ]
+        },
+        {
+          "vendor": "Apple",
+          "product": "tvOS",
+          "ranges": [
+            {
+              "ee": "17.5"
+            }
+          ]
+        },
+        {
+          "vendor": "Apple",
+          "product": "watchOS",
+          "ranges": [
+            {
+              "ee": "10.5"
+            }
+          ]
+        }
+      ],
+      "ko": {
+        "title": "Apple 다수 제품 포인터 인증 우회 취약점",
+        "target": "Apple iOS, iPadOS, macOS, Safari, tvOS, watchOS (정확한 버전은 벤더 공지 확인 필요)",
+        "impact": "임의 읽기·쓰기 능력을 가진 공격자가 포인터 인증을 우회함. CISA KEV 등재, 조치 기한 2026-11-18",
+        "action": "Apple 보안 업데이트 즉시 적용, KEV 기한 내 조치 완료 확인"
+      }
+    }
+  ],
+  "exploited_more": [],
+  "critical": [
+    {
+      "id": "CVE-2026-121030",
+      "ids": [
+        "CVE-2026-121030",
+        "CVE-2026-121034",
+        "CVE-2026-121035",
+        "CVE-2026-121037",
+        "CVE-2026-121060",
+        "CVE-2026-121071",
+        "CVE-2026-121073",
+        "CVE-2026-121074",
+        "CVE-2026-121076",
+        "CVE-2026-121077",
+        "CVE-2026-121086",
+        "CVE-2026-121089",
+        "CVE-2026-121104",
+        "CVE-2026-121114",
+        "CVE-2026-121126",
+        "CVE-2026-121131",
+        "CVE-2026-121148",
+        "CVE-2026-121156",
+        "CVE-2026-121185",
+        "CVE-2026-121189",
+        "CVE-2026-121200",
+        "CVE-2026-121202",
+        "CVE-2026-121214",
+        "CVE-2026-121229",
+        "CVE-2026-121234",
+        "CVE-2026-121241",
+        "CVE-2026-121246",
+        "CVE-2026-121247",
+        "CVE-2026-121249",
+        "CVE-2026-121250",
+        "CVE-2026-121257"
+      ],
+      "section": "critical",
+      "label": "Google Chrome",
+      "vendor": "Google",
+      "cna": "chrome-cve-admin@google.com",
+      "status": "Analyzed",
+      "published": "2026-11-03T21:17:06.013",
+      "description": "Incorrect authorization in DevTools in Google Chrome prior to 157.0.8103.38 allowed a remote attacker leveraging social engineering to potentially execute arbitrary code outside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
+      "descriptions": [
+        {
+          "id": "CVE-2026-121030",
+          "text": "Incorrect authorization in DevTools in Google Chrome prior to 157.0.8103.38 allowed a remote attacker leveraging social engineering to potentially execute arbitrary code outside the sandbox via a crafted HTML page. (Chromium security severity: Medium)"
+        },
+        {
+          "id": "CVE-2026-121034",
+          "text": "Use after free in Views in Google Chrome on on Windows prior to 157.0.8103.38 allowed a remote attacker leveraging social engineering to execute arbitrary code outside the sandbox via a crafted HTML page. (Chromium security severity: High)"
+        },
+        {
+          "id": "CVE-2026-121035",
+          "text": "Use after free in Prerender in Google Chrome prior to 157.0.8103.38 allowed a remote attacker to execute arbitrary code outside the sandbox via a crafted HTML page. (Chromium security severity: Critical)"
+        },
+        {
+          "id": "CVE-2026-121037",
+          "text": "Out of bounds write in ANGLE in Google Chrome on on Windows prior to 157.0.8103.38 allowed a remote attacker to potentially execute arbitrary code outside the sandbox via a crafted HTML page. (Chromium security severity: High)"
+        },
+        {
+          "id": "CVE-2026-121060",
+          "text": "Incorrect authorization in FileSystem in Google Chrome prior to 157.0.8103.38 allowed a remote attacker leveraging social engineering to potentially execute arbitrary code outside the sandbox via a crafted HTML page. (Chromium security severity: High)"
+        }
+      ],
+      "cwes": [
+        "CWE-863",
+        "CWE-416",
+        "CWE-787",
+        "CWE-119",
+        "CWE-122",
+        "CWE-706",
+        "CWE-250",
+        "CWE-121"
+      ],
+      "cvss": {
+        "score": 9.6,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "no",
+        "technicalImpact": "total"
+      },
+      "epss": 0.00426,
+      "links": [
+        "https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop.html",
+        "https://issues.chromium.org/issues/553152519"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-121030",
+      "affected": [
+        {
+          "vendor": "google",
+          "product": "chrome",
+          "ranges": [
+            {
+              "ee": "157.0.8103.38"
+            }
+          ]
+        }
+      ],
+      "flags": {
+        "watch": "Chrome",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 12.72,
+      "ko": {
+        "title": "Google Chrome 샌드박스 밖 코드 실행 등 다수 취약점",
+        "target": "Google Chrome 157.0.8103.38 미만 (Windows 포함)",
+        "impact": "악성 HTML 페이지 방문 시 사회공학과 결합해 샌드박스 밖 임의 코드 실행 가능. CVSS 9.6",
+        "action": "Chrome 157.0.8103.38 이상으로 업데이트, 자동 업데이트 상태 점검"
+      }
+    },
+    {
+      "id": "CVE-2026-121952",
+      "ids": [
+        "CVE-2026-121952",
+        "CVE-2026-121953"
+      ],
+      "section": "critical",
+      "label": "FreeRDP",
+      "vendor": "",
+      "cna": "disclosure@vulncheck.com",
+      "status": "Undergoing Analysis",
+      "published": "2026-11-04T16:17:47.530",
+      "description": "FreeRDP before 3.32.2 has an out-of-bounds write in the proxy because rdp_read_bitmap_cache_v2_capability_set rejects only numCellCaches values above 5, yet the bitmap cache v2 cell array is later accessed at fixed indices 0 through 4. A client connecting to the proxy can declare fewer than five cell caches in its Confirm Active, causing heap corruption, heap data leakage to the backend, or a crash.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-121952",
+          "text": "FreeRDP before 3.32.2 has an out-of-bounds write in the proxy because rdp_read_bitmap_cache_v2_capability_set rejects only numCellCaches values above 5, yet the bitmap cache v2 cell array is later accessed at fixed indices 0 through 4. A client connecting to the proxy can declare fewer than five ce…"
+        },
+        {
+          "id": "CVE-2026-121953",
+          "text": "FreeRDP before 3.32.2 has a use-after-free in the client's rdpgfx dynamic virtual channel: a duplicate-name channel with a new ChannelId overwrites the listener's single callback slot, which rdpgfx_on_close frees without clearing. A malicious RDP server can open and close such a channel, then send…"
+        }
+      ],
+      "cwes": [
+        "CWE-787",
+        "CWE-416"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "poc",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-xc85-4mqc-xgcx",
+        "https://www.vulncheck.com/advisories/freerdp-before-3.32.2-proxy-out-of-bounds-write-via-bitmap-cache-v2-capability"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-121952",
+      "affected": [
+        {
+          "vendor": "FreeRDP",
+          "product": "FreeRDP",
+          "ranges": [
+            {
+              "ee": "3.32.2"
+            }
+          ]
+        }
+      ],
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 12.5,
+      "ko": {
+        "title": "FreeRDP 프록시 범위 밖 쓰기 및 해제 후 사용 취약점",
+        "target": "FreeRDP 3.32.2 미만 (프록시 및 클라이언트)",
+        "impact": "악의적 RDP 클라이언트나 서버 연결 시 메모리 손상으로 코드 실행 가능. PoC 존재, 자동화 가능. CVSS 9.8",
+        "action": "FreeRDP 3.32.2 이상으로 업데이트, RDP 프록시와 클라이언트 점검"
+      }
+    },
+    {
+      "id": "CVE-2026-38600",
+      "ids": [
+        "CVE-2026-38600"
+      ],
+      "section": "critical",
+      "label": "CVE-2026-38600",
+      "vendor": "",
+      "cna": "cve@mitre.org",
+      "status": "Received",
+      "published": "2026-11-03T17:18:13.070",
+      "description": "A Zip Slip vulnerability in the /upload endpoint of codeskyblue gohttpserver through v1.3.0 allows attackers to write arbitrary files via uploading a crafted Zip archive.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-38600",
+          "text": "A Zip Slip vulnerability in the /upload endpoint of codeskyblue gohttpserver through v1.3.0 allows attackers to write arbitrary files via uploading a crafted Zip archive."
+        }
+      ],
+      "cwes": [
+        "CWE-22"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "poc",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": 0.0064,
+      "links": [
+        "https://github.com/Den-Sec/security-research/blob/master/advisories/gohttpserver/VDR-001-zipslip.md",
+        "https://github.com/codeskyblue/gohttpserver",
+        "https://github.com/codeskyblue/gohttpserver/issues/232"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-38600",
+      "affected": [],
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 12.33,
+      "ko": {
+        "title": "gohttpserver /upload Zip Slip 임의 파일 쓰기",
+        "target": "codeskyblue gohttpserver v1.3.0 이하",
+        "impact": "/upload 엔드포인트에 조작된 ZIP 업로드로 임의 파일 쓰기 가능. 인증 없이 공격 가능, PoC 존재. CVSS 9.8",
+        "action": "사용 여부 확인, 외부 노출 차단, 패치 버전은 벤더 공지 확인 필요"
+      }
+    }
+  ],
+  "critical_more": [
+    {
+      "id": "CVE-2026-120931",
+      "ids": [
+        "CVE-2026-120931"
+      ],
+      "label": "Google Chrome",
+      "vendor": "Google",
+      "cvss": 9.6,
+      "title": "Google Chrome 범위 밖 쓰기",
+      "affected": [
+        {
+          "vendor": "google",
+          "product": "chrome",
+          "ranges": [
+            {
+              "ee": "156.0.8078.47"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-82158",
+      "ids": [
+        "CVE-2026-82158"
+      ],
+      "label": "Dell",
+      "vendor": "Dell",
+      "cvss": 9,
+      "title": "Dell 크로스사이트 스크립팅(XSS)",
+      "affected": [
+        {
+          "vendor": "Dell",
+          "product": "Wyse Management Suite",
+          "ranges": [
+            {
+              "ee": "2609.0.0.155"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121598",
+      "ids": [
+        "CVE-2026-121598"
+      ],
+      "label": "CVE-2026-121598",
+      "vendor": "",
+      "cvss": 9.9,
+      "title": "CVE-2026-121598 메모리 경계 오류",
+      "affected": [
+        {
+          "vendor": "TOTOLINK",
+          "product": "A950RG",
+          "ranges": [
+            {
+              "exact": "4.1.2cu.5268_B20221104"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121939",
+      "ids": [
+        "CVE-2026-121939"
+      ],
+      "label": "Databasement",
+      "vendor": "",
+      "cvss": 9.2,
+      "title": "Databasement 스푸핑 인증 우회",
+      "affected": [
+        {
+          "vendor": "David-Crty",
+          "product": "Databasement",
+          "ranges": [
+            {
+              "ee": "1.10.9"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-112354",
+      "ids": [
+        "CVE-2026-112354"
+      ],
+      "label": "CVE-2026-112354",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "CVE-2026-112354 취약점",
+      "affected": [
+        {
+          "vendor": "Etrel d.o.o.",
+          "product": "Etrel INCH",
+          "ranges": [
+            {
+              "ee": "7.1.2"
+            },
+            {
+              "si": "8.0.0",
+              "ee": "8.0.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-114549",
+      "ids": [
+        "CVE-2026-114549"
+      ],
+      "label": "CVE-2026-114549",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "CVE-2026-114549 힙 버퍼 오버플로",
+      "affected": [
+        {
+          "vendor": "NoMachine",
+          "product": "NoMachine",
+          "ranges": [
+            {
+              "exact": "9.7.3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-92188",
+      "ids": [
+        "CVE-2026-92188"
+      ],
+      "label": "CVE-2026-92188",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "CVE-2026-92188 중요 기능 인증 누락",
+      "affected": [
+        {
+          "vendor": "Quest",
+          "product": "Foglight for Databases",
+          "ranges": [
+            {
+              "exact": "8.2.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-92189",
+      "ids": [
+        "CVE-2026-92189"
+      ],
+      "label": "CVE-2026-92189",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "CVE-2026-92189 원격 코드 실행",
+      "affected": [
+        {
+          "vendor": "Quest",
+          "product": "Foglight for Databases",
+          "ranges": [
+            {
+              "exact": "8.2.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-92190",
+      "ids": [
+        "CVE-2026-92190"
+      ],
+      "label": "CVE-2026-92190",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "CVE-2026-92190 신뢰할 수 없는 데이터 역직렬화",
+      "affected": [
+        {
+          "vendor": "Quest",
+          "product": "Foglight for Databases",
+          "ranges": [
+            {
+              "exact": "8.2.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-122006",
+      "ids": [
+        "CVE-2026-122006"
+      ],
+      "label": "CVE-2026-122006",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "CVE-2026-122006 안전하지 않은 기본값",
+      "affected": [
+        {
+          "vendor": "rubyonrails",
+          "product": "Active Storage",
+          "ranges": [
+            {
+              "ee": "8.0.5.2"
+            },
+            {
+              "si": "8.1",
+              "ee": "8.1.4.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121932",
+      "ids": [
+        "CVE-2026-121932",
+        "CVE-2026-121933"
+      ],
+      "label": "Linksys E5350",
+      "vendor": "",
+      "cvss": 10,
+      "title": "Linksys E5350 명령 삽입 등 2건",
+      "affected": [
+        {
+          "vendor": "Linksys",
+          "product": "E5350",
+          "ranges": [
+            {
+              "exact": "1.0.00.037"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121639",
+      "ids": [
+        "CVE-2026-121639"
+      ],
+      "label": "WatchGuard AuthPoint Gateway",
+      "vendor": "",
+      "cvss": 9.2,
+      "title": "WatchGuard AuthPoint Gateway 인증 부적절",
+      "affected": [
+        {
+          "vendor": "WatchGuard",
+          "product": "AuthPoint Authentication Gateway",
+          "ranges": [
+            {
+              "si": "1.0",
+              "ee": "7.6.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121607",
+      "ids": [
+        "CVE-2026-121607"
+      ],
+      "label": "Qihoo",
+      "vendor": "",
+      "cvss": 10,
+      "title": "Qihoo 명령 삽입",
+      "affected": [
+        {
+          "vendor": "Qihoo 360",
+          "product": "D603-2",
+          "ranges": [
+            {
+              "exact": "6.4.0"
+            },
+            {
+              "exact": "6.4.1"
+            },
+            {
+              "exact": "6.4.2"
+            },
+            {
+              "exact": "6.4.3"
+            },
+            {
+              "exact": "6.4.4"
+            },
+            {
+              "exact": "6.4.5"
+            },
+            {
+              "exact": "6.4.6"
+            },
+            {
+              "exact": "6.4.7"
+            },
+            {
+              "exact": "6.4.8"
+            },
+            {
+              "exact": "6.4.9"
+            }
+          ]
+        },
+        {
+          "vendor": "Qihoo 360",
+          "product": "D600-2",
+          "ranges": [
+            {
+              "exact": "6.4.0"
+            },
+            {
+              "exact": "6.4.1"
+            },
+            {
+              "exact": "6.4.2"
+            },
+            {
+              "exact": "6.4.3"
+            },
+            {
+              "exact": "6.4.4"
+            },
+            {
+              "exact": "6.4.5"
+            },
+            {
+              "exact": "6.4.6"
+            },
+            {
+              "exact": "6.4.7"
+            },
+            {
+              "exact": "6.4.8"
+            },
+            {
+              "exact": "6.4.9"
+            }
+          ]
+        },
+        {
+          "vendor": "Qihoo 360",
+          "product": "D606-6",
+          "ranges": [
+            {
+              "exact": "6.4.0"
+            },
+            {
+              "exact": "6.4.1"
+            },
+            {
+              "exact": "6.4.2"
+            },
+            {
+              "exact": "6.4.3"
+            },
+            {
+              "exact": "6.4.4"
+            },
+            {
+              "exact": "6.4.5"
+            },
+            {
+              "exact": "6.4.6"
+            },
+            {
+              "exact": "6.4.7"
+            },
+            {
+              "exact": "6.4.8"
+            },
+            {
+              "exact": "6.4.9"
+            }
+          ]
+        },
+        {
+          "vendor": "Qihoo 360",
+          "product": "D706",
+          "ranges": [
+            {
+              "exact": "6.4.0"
+            },
+            {
+              "exact": "6.4.1"
+            },
+            {
+              "exact": "6.4.2"
+            },
+            {
+              "exact": "6.4.3"
+            },
+            {
+              "exact": "6.4.4"
+            },
+            {
+              "exact": "6.4.5"
+            },
+            {
+              "exact": "6.4.6"
+            },
+            {
+              "exact": "6.4.7"
+            },
+            {
+              "exact": "6.4.8"
+            },
+            {
+              "exact": "6.4.9"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121615",
+      "ids": [
+        "CVE-2026-121615"
+      ],
+      "label": "Linksys E5600",
+      "vendor": "",
+      "cvss": 10,
+      "title": "Linksys E5600 인증 부적절",
+      "affected": [
+        {
+          "vendor": "Linksys",
+          "product": "E5600",
+          "ranges": [
+            {
+              "exact": "1.1.0.26"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121609",
+      "ids": [
+        "CVE-2026-121609"
+      ],
+      "label": "Qihoo",
+      "vendor": "",
+      "cvss": 10,
+      "title": "Qihoo 하드코딩 비밀번호",
+      "affected": [
+        {
+          "vendor": "Qihoo 360",
+          "product": "Whole Home Router M5",
+          "ranges": [
+            {
+              "exact": "4.0.17.1566"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121606",
+      "ids": [
+        "CVE-2026-121606"
+      ],
+      "label": "Qihoo",
+      "vendor": "",
+      "cvss": 10,
+      "title": "Qihoo 데이터 진위 검증 부족",
+      "affected": [
+        {
+          "vendor": "Qihoo 360",
+          "product": "D621-2",
+          "ranges": [
+            {
+              "exact": "6.4.0"
+            },
+            {
+              "exact": "6.4.1"
+            },
+            {
+              "exact": "6.4.2"
+            },
+            {
+              "exact": "6.4.3"
+            },
+            {
+              "exact": "6.4.4"
+            },
+            {
+              "exact": "6.4.5"
+            },
+            {
+              "exact": "6.4.6"
+            },
+            {
+              "exact": "6.4.7"
+            },
+            {
+              "exact": "6.4.8"
+            },
+            {
+              "exact": "6.4.9"
+            }
+          ]
+        },
+        {
+          "vendor": "Qihoo 360",
+          "product": "D603-2",
+          "ranges": [
+            {
+              "exact": "6.4.0"
+            },
+            {
+              "exact": "6.4.1"
+            },
+            {
+              "exact": "6.4.2"
+            },
+            {
+              "exact": "6.4.3"
+            },
+            {
+              "exact": "6.4.4"
+            },
+            {
+              "exact": "6.4.5"
+            },
+            {
+              "exact": "6.4.6"
+            },
+            {
+              "exact": "6.4.7"
+            },
+            {
+              "exact": "6.4.8"
+            },
+            {
+              "exact": "6.4.9"
+            }
+          ]
+        },
+        {
+          "vendor": "Qihoo 360",
+          "product": "D600-2",
+          "ranges": [
+            {
+              "exact": "6.4.0"
+            },
+            {
+              "exact": "6.4.1"
+            },
+            {
+              "exact": "6.4.2"
+            },
+            {
+              "exact": "6.4.3"
+            },
+            {
+              "exact": "6.4.4"
+            },
+            {
+              "exact": "6.4.5"
+            },
+            {
+              "exact": "6.4.6"
+            },
+            {
+              "exact": "6.4.7"
+            },
+            {
+              "exact": "6.4.8"
+            },
+            {
+              "exact": "6.4.9"
+            }
+          ]
+        },
+        {
+          "vendor": "Qihoo 360",
+          "product": "D619",
+          "ranges": [
+            {
+              "exact": "6.4.0"
+            },
+            {
+              "exact": "6.4.1"
+            },
+            {
+              "exact": "6.4.2"
+            },
+            {
+              "exact": "6.4.3"
+            },
+            {
+              "exact": "6.4.4"
+            },
+            {
+              "exact": "6.4.5"
+            },
+            {
+              "exact": "6.4.6"
+            },
+            {
+              "exact": "6.4.7"
+            },
+            {
+              "exact": "6.4.8"
+            },
+            {
+              "exact": "6.4.9"
+            }
+          ]
+        },
+        {
+          "vendor": "Qihoo 360",
+          "product": "D606-6",
+          "ranges": [
+            {
+              "exact": "6.4.0"
+            },
+            {
+              "exact": "6.4.1"
+            },
+            {
+              "exact": "6.4.2"
+            },
+            {
+              "exact": "6.4.3"
+            },
+            {
+              "exact": "6.4.4"
+            },
+            {
+              "exact": "6.4.5"
+            },
+            {
+              "exact": "6.4.6"
+            },
+            {
+              "exact": "6.4.7"
+            },
+            {
+              "exact": "6.4.8"
+            },
+            {
+              "exact": "6.4.9"
+            }
+          ]
+        },
+        {
+          "vendor": "Qihoo 360",
+          "product": "D706",
+          "ranges": [
+            {
+              "exact": "6.4.0"
+            },
+            {
+              "exact": "6.4.1"
+            },
+            {
+              "exact": "6.4.2"
+            },
+            {
+              "exact": "6.4.3"
+            },
+            {
+              "exact": "6.4.4"
+            },
+            {
+              "exact": "6.4.5"
+            },
+            {
+              "exact": "6.4.6"
+            },
+            {
+              "exact": "6.4.7"
+            },
+            {
+              "exact": "6.4.8"
+            },
+            {
+              "exact": "6.4.9"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-107846",
+      "ids": [
+        "CVE-2026-107846"
+      ],
+      "label": "bitcoinjs-lib",
+      "vendor": "",
+      "cvss": 9.3,
+      "title": "bitcoinjs-lib 취약점",
+      "affected": [
+        {
+          "vendor": "bitcoinjs",
+          "product": "bitcoinjs-lib",
+          "ranges": [
+            {
+              "si": "2.3.0",
+              "ee": "5.2.1"
+            },
+            {
+              "si": "6.0.0",
+              "ee": "6.1.8"
+            },
+            {
+              "si": "7.0.0-rc.0",
+              "ee": "7.0.2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-119084",
+      "ids": [
+        "CVE-2026-119084"
+      ],
+      "label": "CVE-2026-119084",
+      "vendor": "",
+      "cvss": 9.2,
+      "title": "CVE-2026-119084 안전하지 않은 리플렉션",
+      "affected": [
+        {
+          "vendor": "AWS",
+          "product": "amazon-redshift-jdbc-driver",
+          "ranges": [
+            {
+              "ee": "2.3.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-22058",
+      "ids": [
+        "CVE-2026-22058"
+      ],
+      "label": "CVE-2026-22058",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "CVE-2026-22058 취약점",
+      "affected": [
+        {
+          "vendor": "NETAPP",
+          "product": "StorageGRID (formerly StorageGRID Webscale)",
+          "ranges": [],
+          "truncated": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121638",
+      "ids": [
+        "CVE-2026-121638"
+      ],
+      "label": "WatchGuard AuthPoint Gateway",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "WatchGuard AuthPoint Gateway 인증서 검증 부적절",
+      "affected": [
+        {
+          "vendor": "WatchGuard",
+          "product": "AuthPoint Authentication Gateway",
+          "ranges": [
+            {
+              "si": "1.0",
+              "ee": "7.6.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121640",
+      "ids": [
+        "CVE-2026-121640"
+      ],
+      "label": "WatchGuard AuthPoint Gateway",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "WatchGuard AuthPoint Gateway 재전송 인증 우회",
+      "affected": [
+        {
+          "vendor": "WatchGuard",
+          "product": "AuthPoint Authentication Gateway",
+          "ranges": [
+            {
+              "si": "1.0",
+              "ee": "7.6.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-113373",
+      "ids": [
+        "CVE-2026-113373"
+      ],
+      "label": "Sonatype Nexus Repository",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "Sonatype Nexus Repository 취약점",
+      "affected": [
+        {
+          "vendor": "Sonatype",
+          "product": "Nexus Repository 3",
+          "ranges": [
+            {
+              "si": "3.86.0",
+              "ee": "3.98.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-122220",
+      "ids": [
+        "CVE-2026-122220"
+      ],
+      "label": "CVE-2026-122220",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "CVE-2026-122220 재전송 인증 우회",
+      "affected": [
+        {
+          "vendor": "wpo365",
+          "product": "WPO365 | SEAMLESS WORDPRESS + MICROSOFT INTEGRATION (WPO365 | LOGIN)",
+          "ranges": [
+            {
+              "ee": "45.2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-122120",
+      "ids": [
+        "CVE-2026-122120"
+      ],
+      "label": "In Yealink Plug-in Softwares",
+      "vendor": "",
+      "cvss": 9,
+      "title": "In Yealink Plug-in Softwares 위험한 형식 파일 업로드",
+      "affected": [
+        {
+          "vendor": "Yealink",
+          "product": "Plug-in Softwares",
+          "ranges": [
+            {
+              "ee": "2.35.219.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121597",
+      "ids": [
+        "CVE-2026-121597"
+      ],
+      "label": "TOTOLINK A950RG",
+      "vendor": "",
+      "cvss": 9.9,
+      "title": "TOTOLINK A950RG 메모리 경계 오류",
+      "affected": [
+        {
+          "vendor": "TOTOLINK",
+          "product": "A950RG",
+          "ranges": [
+            {
+              "exact": "4.1.2cu.5268_B20221104"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121599",
+      "ids": [
+        "CVE-2026-121599"
+      ],
+      "label": "CVE-2026-121599",
+      "vendor": "",
+      "cvss": 9.9,
+      "title": "CVE-2026-121599 메모리 경계 오류",
+      "affected": [
+        {
+          "vendor": "TOTOLINK",
+          "product": "A950RG",
+          "ranges": [
+            {
+              "exact": "4.1.2cu.5268_B20221104"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121600",
+      "ids": [
+        "CVE-2026-121600"
+      ],
+      "label": "TOTOLINK A950RG",
+      "vendor": "",
+      "cvss": 9.9,
+      "title": "TOTOLINK A950RG 메모리 경계 오류",
+      "affected": [
+        {
+          "vendor": "TOTOLINK",
+          "product": "A950RG",
+          "ranges": [
+            {
+              "exact": "4.1.2cu.5268_B20221104"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-115731",
+      "ids": [
+        "CVE-2026-115731"
+      ],
+      "label": "CVE-2026-115731",
+      "vendor": "",
+      "cvss": 9.4,
+      "title": "CVE-2026-115731 코드 삽입",
+      "affected": [
+        {
+          "vendor": "Perforce",
+          "product": "Puppet Enterprise",
+          "ranges": [
+            {
+              "si": "2023.8.0",
+              "ee": "2023.8.13"
+            },
+            {
+              "si": "2025.0.0",
+              "ee": "2025.12.1"
+            },
+            {
+              "si": "2026.0.0",
+              "ee": "2026.0.1"
+            }
+          ],
+          "all": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-114424",
+      "ids": [
+        "CVE-2026-114424",
+        "CVE-2026-114425"
+      ],
+      "label": "SEPPmail Secure Email Gateway",
+      "vendor": "",
+      "cvss": 9.2,
+      "title": "SEPPmail Secure Email Gateway 동적 코드 삽입 등 2건",
+      "affected": [
+        {
+          "vendor": "SEPPmail AG",
+          "product": "SEPPmail Secure Email Gateway (SEG)",
+          "ranges": [
+            {
+              "ee": "15.1.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-113780",
+      "ids": [
+        "CVE-2026-113780"
+      ],
+      "label": "CVE-2026-113780",
+      "vendor": "",
+      "cvss": 9.3,
+      "title": "CVE-2026-113780 범위 밖 쓰기",
+      "affected": [
+        {
+          "vendor": "espressif",
+          "product": "esp-idf",
+          "ranges": [
+            {
+              "ee": "5.5.6"
+            },
+            {
+              "si": "6.0.0",
+              "ee": "6.0.4"
+            },
+            {
+              "si": "6.1.0",
+              "ee": "6.1.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-95860",
+      "ids": [
+        "CVE-2026-95860"
+      ],
+      "label": "node-opcua",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "node-opcua 권한 검사 부적절",
+      "affected": [
+        {
+          "vendor": "node-opcua",
+          "product": "node-opcua",
+          "ranges": [
+            {
+              "si": "2.42.0",
+              "ee": "2.180.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121802",
+      "ids": [
+        "CVE-2026-121802"
+      ],
+      "label": "CVE-2026-121802",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "CVE-2026-121802 출처 검증 오류",
+      "affected": [
+        {
+          "vendor": "better-auth",
+          "product": "Better Auth",
+          "ranges": [
+            {
+              "ee": "1.7.16"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-115732",
+      "ids": [
+        "CVE-2026-115732"
+      ],
+      "label": "CVE-2026-115732",
+      "vendor": "",
+      "cvss": 9,
+      "title": "CVE-2026-115732 권한 검사 오류",
+      "affected": [
+        {
+          "vendor": "Perforce",
+          "product": "Puppet Enterprise",
+          "ranges": [
+            {
+              "si": "2023.8.0",
+              "ee": "2023.8.13"
+            },
+            {
+              "si": "2025.0.0",
+              "ee": "2025.12.1"
+            },
+            {
+              "si": "2026.0.0",
+              "ee": "2026.0.1"
+            }
+          ],
+          "all": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-119481",
+      "ids": [
+        "CVE-2026-119481"
+      ],
+      "label": "Crocoblock JetFormBuilder",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "Crocoblock JetFormBuilder 권한 상승",
+      "affected": [
+        {
+          "vendor": "Crocoblock",
+          "product": "JetFormBuilder",
+          "ranges": [
+            {
+              "ei": "3.6.7.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-65555",
+      "ids": [
+        "CVE-2026-65555"
+      ],
+      "label": "CVE-2026-65555",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "CVE-2026-65555 권한 상승",
+      "affected": [
+        {
+          "vendor": "Uncanny Owl",
+          "product": "Uncanny Toolkit for LearnDash",
+          "ranges": [
+            {
+              "ei": "3.8.2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121930",
+      "ids": [
+        "CVE-2026-121930",
+        "CVE-2026-121931"
+      ],
+      "label": "Linksys WRT54GL",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "Linksys WRT54GL 명령 삽입 등 2건",
+      "affected": []
+    },
+    {
+      "id": "CVE-2022-29966",
+      "ids": [
+        "CVE-2022-29966"
+      ],
+      "label": "Emerson Ovation",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "Emerson Ovation 중요 기능 인증 누락",
+      "affected": []
+    }
+  ],
+  "advisories": [
+    {
+      "id": "a-fe2b601d",
+      "source": "KISA 취약점 정보",
+      "title": "CVE-2026-76146 | 지니언스 Genian SSL PNS 운영체제 명령어 삽입",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000302&searchWrd=&menuNo=205023&pageIndex=1&categoryCode=&nttId=72276",
+      "date": "2026-11-04"
+    },
+    {
+      "id": "a-b023d765",
+      "source": "KISA 취약점 정보",
+      "title": "CVE-2026-76147 | 지니언스 Genian NAC/ZTNA 원격 코드 실행",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000302&searchWrd=&menuNo=205023&pageIndex=1&categoryCode=&nttId=72275",
+      "date": "2026-11-04"
+    },
+    {
+      "id": "a-3b48013c",
+      "source": "KISA 취약점 정보",
+      "title": "CVE-2026-76142 | 지니언스 Genian NAC/ZTNA 내부 인터페이스 접근통제 미흡",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000302&searchWrd=&menuNo=205023&pageIndex=1&categoryCode=&nttId=72274",
+      "date": "2026-11-04"
+    },
+    {
+      "id": "a-228ef2f4",
+      "source": "KISA 취약점 정보",
+      "title": "CVE-2026-76145 | 지니언스 Genian SSL PNS 권한 관리 미흡",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000302&searchWrd=&menuNo=205023&pageIndex=1&categoryCode=&nttId=72273",
+      "date": "2026-11-04"
+    },
+    {
+      "id": "a-69d0c1bd",
+      "source": "KISA 취약점 정보",
+      "title": "CVE-2026-76144 | 지니언스 Genian SSL PNS 위험한 형식 파일 업로드",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000302&searchWrd=&menuNo=205023&pageIndex=1&categoryCode=&nttId=72272",
+      "date": "2026-11-04"
+    },
+    {
+      "id": "a-40afc5c8",
+      "source": "KISA 취약점 정보",
+      "title": "CVE-2026-76143 | 지니언스 Genian SSL PNS 2차 인증 우회",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000302&searchWrd=&menuNo=205023&pageIndex=1&categoryCode=&nttId=72271",
+      "date": "2026-11-04"
+    }
+  ],
+  "news": {
+    "domestic": [
+      {
+        "id": "n-ecdaf8ec",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "[더존비즈온 사태] 유출 의심 기업 현황",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=146975",
+        "source": "보안뉴스",
+        "published": "2026-11-04T00:36:28.000Z",
+        "snippet": "더존비즈온 해킹 사고 여파가 이어지고 있다. 국내 중소기업과 세무회계사무소 등 대다수가 사용하는 기업용 경영관리(ERP) 솔루션 제조사라는 점에서 더존비즈온에서 벌어진 침해는 곧 중소기업 핵심 정보와 개인정보 유출로 이어질 수 있다. 이번에 침해 당한 시스템은 세무회계용 ERP ‘스마트 A10’과 데이터 백업을 위한 ‘APO백업서비스’ 두 가지다. 모두 중소기업 경영에 핵심 역할을 한다.…",
+        "outlets": [
+          "보안뉴스"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 8.5,
+        "title_ko": "더존비즈온 침해사고, 중소기업 ERP 정보 유출 우려",
+        "summary_ko": "더존비즈온 백업서버 침해로 스마트 A10과 APO백업서비스 이용 기업 정보 유출 우려 확산. 서울시육아종합지원센터, 광주여성가족재단 등도 개인정보 유출 가능성 공지함."
+      },
+      {
+        "id": "n-e0b5fe76",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "“게임만 켰을 뿐인데 PC 원격 제어”... 인기 게임 ‘니케’ 런처 해킹 원인은 공급망 공격",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=147009",
+        "source": "보안뉴스",
+        "published": "2026-11-04T09:03:56.000Z",
+        "snippet": "공식 홈페이지에서 정상적으로 내려받아 설치한 게임 런처를 구동했을 뿐인데, 컴퓨터가 외부 원격 제어 백도어에 감염돼 핵심 자격증명 탈취될 위험에 노출될 수 있는 침해 사고가 발생했다. 국내 게임 개발사 시프트업이 개발하고 중국 텐센트의 글로벌 퍼블리싱 브랜드 레벨 인피니트가 유통하는 ‘승리의 여신: 니케’(이하 니케)의 PC 버전 런처 배포 인프라가 소프트웨어 공급망 공격에 노출된 것으로…",
+        "outlets": [
+          "보안뉴스",
+          "JTBC"
+        ],
+        "related": [
+          {
+            "title": "켰을 뿐인데 ‘계정·코인지갑’ 털릴 수도? 게임 ‘니케’ 해킹 정황",
+            "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5QYlo3bWhDNW00YmkyQUxRVmdpU3cwcEwtSkI1ZE1LZ2ZMZWUteHUycVEyOEhvTWtrcGpSb1JxdFVjTHRMR2ZqNDJQX1VxSjhLeHJjYw?oc=5",
+            "source": "JTBC"
+          }
+        ],
+        "cves": [],
+        "score": 13.2,
+        "title_ko": "'승리의 여신: 니케' 런처 공급망 공격, 백도어 감염",
+        "summary_ko": "공식 홈페이지 PC 런처가 공급망 공격으로 변조되어 원격제어 백도어와 자격증명 탈취 악성코드 배포 정황. 계정·가상자산 피해 우려 있음."
+      },
+      {
+        "id": "n-918a35e4",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "그룹웨어 `다우오피스` 해킹에…금융당국, 긴급 보안조치 당부",
+        "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBGREpwYmpLUkE0UjBYZTRFMDFPaHdGb3VyM1B6NVNBcmRwTWtGTE4ta2JVZlNkRUN6VmVjQ1JIUFI0MldPVTFMZmhyaE5FdmliUlJnTDZLY1RWdC1TREZPcGkycnI?oc=5",
+        "source": "디지털데일리",
+        "published": "2026-11-04T07:20:34.000Z",
+        "snippet": "",
+        "outlets": [
+          "디지털데일리",
+          "연합뉴스"
+        ],
+        "related": [
+          {
+            "title": "금융당국, '해킹 통로' 지목 다우오피스 관련 보안조치 당부",
+            "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9IeWVNcXE4LV83dHRMcmJrWXlmaWFLOGlDWmxNMVoyUG9rV2RiNkZxQnF3a0pLX09uLUpCMWNZU2RBME1ORzVhOTBUa1RMT0xxcUFoXzFhRWZheHIxVUZWU9IBYEFVX3lxTE9IeWVNcXE4LV83dHRMcmJrWXlmaWFLOGlDWmxNMVoyUG9rV2RiNkZxQnF3a0pLX09uLUpCMWNZU2RBME1ORzVhOTBUa1RMT0xxcUFoXzFhRWZheHIxVUZWUw?oc=5",
+            "source": "연합뉴스"
+          }
+        ],
+        "cves": [],
+        "score": 7.2,
+        "title_ko": "다우오피스 해킹, 금융당국 긴급 보안조치 당부",
+        "summary_ko": "그룹웨어 다우오피스가 해킹 통로로 지목되자 금융당국이 금융회사에 긴급 보안조치를 당부함. 연계 침해 여부와 피해 규모 확인 필요."
+      },
+      {
+        "id": "n-08024a7f",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "NH농협여행, 항공예약 개인정보 유출 가능성 공지…아마데우스 시스템 해킹, 최대 3년간 비인가 접근 의혹",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209309",
+        "source": "데일리시큐",
+        "published": "2026-11-04T10:02:03.000Z",
+        "snippet": "국내 여행사 NH 농협여행이 글로벌 항공예약시스템 운영사 아마데우스(Amadeus IT Group, S. A.)의 시스템에서 일부 고객의 항공예약 관련 개인정보가 유출된 정황이 확인됐다며 공식 안내에 나섰다. 사고 발생 시점이 2023년 8월부터 2026년 9월 사이로 추정되면서 장기간에 걸친 비인가 접근 가능성이 제기되고 있다. NH여행은 11월 4일 공식 홈페이지에 ‘일부 고객 항공예약…",
+        "outlets": [
+          "데일리시큐"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 10,
+        "title_ko": "NH농협여행, 아마데우스 시스템 해킹에 항공예약 정보 유출 공지",
+        "summary_ko": "NH농협여행이 항공예약시스템 운영사 아마데우스 침해로 고객 항공예약 개인정보 유출 가능성 공지함. 2023년 8월~2026년 9월 장기간 비인가 접근 의혹 제기."
+      },
+      {
+        "id": "n-b30bc313",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "가짜면접 ‘트로이 목마’에 뚫렸다, 바이낸스 해킹 전말",
+        "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE1VUUUyN19WbE82eVdWZEg0em45cHd1Zy1OZkEtZVBCam5kUDJZY1RycVhrbndLZHVaa09KamNYY1NzLUVrWmNYX2hVTDlKdWdYUWw2eFhR?oc=5",
+        "source": "중앙일보",
+        "published": "2026-11-04T15:01:00.000Z",
+        "snippet": "",
+        "outlets": [
+          "중앙일보",
+          "KBS 뉴스",
+          "한겨레"
+        ],
+        "related": [
+          {
+            "title": "“위장 면접·가짜 CEO에 뚫렸다”…북 해킹 수법은?",
+            "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBUaEtfUk5DM1ViTXJ5c0R2bHNhMDZ4bHRnNFNoQ09lQjlUZGl2MGhsamFMSFR6R0NBZnBHbFhUVm95bkxGXzJ4UUJaUTd1cWNCQ1BJSzFWYjJFYmM?oc=5",
+            "source": "KBS 뉴스"
+          },
+          {
+            "title": "‘가짜 면접’에 내부 AI까지 뚫렸다…바이낸스 8조원 해킹 전말",
+            "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxQaFNsNDdTc3BvcDNQNjBLUWdGRWhRaHRFNXJvR2FiZ3V5ODBKNG9vRXVzWXpneng1V2l3MUxFNmZJRzF2Z0lqR1lOX1g5dGszc3dPTTBRN1QyTXljWHl5clBCYUJvMWl4aG1vUVpHb0d6LVVXRkJ5aXVPYTAwYzEzQlBB?oc=5",
+            "source": "한겨레"
+          }
+        ],
+        "cves": [],
+        "score": 13.6,
+        "title_ko": "바이낸스 해킹, 북한 가짜 면접 수법으로 뚫려",
+        "summary_ko": "북한 해커가 가짜 면접으로 바이낸스 직원 PC에 악성코드를 심어 대규모 탈취함. 금융위는 콜드월렛 보관 비율 상향을 검토하며 국내 거래소 보안 점검 필요."
+      }
+    ],
+    "international": [
+      {
+        "id": "n-f4b7ff86",
+        "region": "international",
+        "lang": "en",
+        "title": "APT29-Linked Hackers Hijack Web Analytics Script to Deliver iOS and Android Exploits",
+        "url": "https://thehackernews.com/2026/11/apt29-linked-hackers-hijack-web.html",
+        "source": "The Hacker News",
+        "published": "2026-11-04T14:27:52.000Z",
+        "snippet": "The Russia-linked threat actor known as APT29 is said to be behind a large-scale watering hole campaign targeting iOS and Android users through compromised websites, fake domains, and a supply chain attack involving a U…",
+        "outlets": [
+          "The Hacker News",
+          "BleepingComputer"
+        ],
+        "related": [
+          {
+            "title": "Hackers use n-day exploits in zero-click attacks on iOS, Android devices",
+            "url": "https://www.bleepingcomputer.com/news/security/hackers-use-n-day-exploits-in-zero-click-attacks-on-ios-android-devices/",
+            "source": "BleepingComputer"
+          }
+        ],
+        "cves": [],
+        "score": 13.2,
+        "title_ko": "APT29, 웹 분석 스크립트 변조로 모바일 익스플로잇 유포",
+        "summary_ko": "러시아 연계 APT29가 침해 웹사이트, 가짜 도메인, 공급망을 통해 iOS·Android 사용자를 노린 워터링홀 공격 수행. 모바일 단말 점검 필요."
+      },
+      {
+        "id": "n-0f2962e6",
+        "region": "international",
+        "lang": "en",
+        "title": "CISA Confirms Hackers Exploiting WordPress Core Flaw During Software Upgrades",
+        "url": "https://thehackernews.com/2026/11/cisa-confirms-hackers-exploiting.html",
+        "source": "The Hacker News",
+        "published": "2026-11-04T05:43:11.000Z",
+        "snippet": "The U. S. Cybersecurity and Infrastructure Security Agency (CISA) has added a security flaw in WordPress Core to the Known Exploited Vulnerabilities (KEV) catalog, citing evidence of active exploitation. The high-severi…",
+        "outlets": [
+          "The Hacker News",
+          "BleepingComputer"
+        ],
+        "related": [
+          {
+            "title": "CISA flags WordPress RCE flaw as actively exploited in attacks",
+            "url": "https://www.bleepingcomputer.com/news/security/cisa-flags-wordpress-rce-flaw-as-actively-exploited-in-attacks/",
+            "source": "BleepingComputer"
+          }
+        ],
+        "cves": [],
+        "score": 13.2,
+        "title_ko": "CISA, WordPress Core 취약점 악용 확인 후 KEV 등재",
+        "summary_ko": "CISA가 WordPress Core 취약점을 KEV 카탈로그에 등재하고 소프트웨어 업그레이드 과정에서 실제 악용되고 있음을 확인함. 운영 사이트 점검 필요."
+      },
+      {
+        "id": "n-ec8adc9c",
+        "region": "international",
+        "lang": "en",
+        "title": "Malicious cPGuard Updates Served in OpsShield Supply Chain Attack",
+        "url": "https://www.securityweek.com/malicious-cpguard-updates-served-in-opsshield-supply-chain-attack/",
+        "source": "SecurityWeek",
+        "published": "2026-11-04T10:54:48.000Z",
+        "snippet": "Using compromised credentials, the attackers accessed OpsShield’s update servers and poisoned multiple cPGuard versions. The post Malicious cPGuard Updates Served in OpsShield Supply Chain Attack appeared first on Secur…",
+        "outlets": [
+          "SecurityWeek",
+          "BleepingComputer"
+        ],
+        "related": [
+          {
+            "title": "Hackers hijack cPGuard autoupdate to deploy backdoor, steal data",
+            "url": "https://www.bleepingcomputer.com/news/security/hackers-hijack-cpguard-autoupdate-to-deploy-backdoor-steal-data/",
+            "source": "BleepingComputer"
+          }
+        ],
+        "cves": [],
+        "score": 13.2,
+        "title_ko": "OpsShield 공급망 공격, cPGuard 악성 업데이트 배포",
+        "summary_ko": "탈취된 자격증명으로 OpsShield 업데이트 서버가 침해되어 cPGuard 여러 버전에 백도어와 데이터 탈취 악성코드가 배포됨. 설치 이력 점검 필요."
+      },
+      {
+        "id": "n-afc36c0c",
+        "region": "international",
+        "lang": "en",
+        "title": "Zyxel fixes zero-day exploited to hack nearly 1,000 network switches",
+        "url": "https://www.bleepingcomputer.com/news/security/zyxel-fixes-zero-day-exploited-to-hack-nearly-1-000-network-switches/",
+        "source": "BleepingComputer",
+        "published": "2026-11-04T20:58:19.000Z",
+        "snippet": "Zyxel has patched a zero-day vulnerability in its GS1900 series network switches that hackers exploited to compromise nearly 1,000 devices worldwide and steal configuration files and credentials. [...]",
+        "outlets": [
+          "BleepingComputer"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 10,
+        "title_ko": "Zyxel GS1900 제로데이 악용, 스위치 약 1,000대 피해",
+        "summary_ko": "Zyxel GS1900 시리즈 제로데이를 악용해 전 세계 약 1,000대 스위치가 장악되고 설정 파일과 자격증명이 탈취됨. 패치와 장비 노출 점검 필요."
+      },
+      {
+        "id": "n-cd1d23b4",
+        "region": "international",
+        "lang": "en",
+        "title": "French bank confirms cyber heist, hackers suspected to have stolen an estimated $133 million",
+        "url": "https://therecord.media/french-bank-confirms-cyber-heist",
+        "source": "The Record",
+        "published": "2026-11-04T18:58:00.000Z",
+        "snippet": "Crédit Mutuel Arkéa said in a press notice that the attackers were able to make transfers using the bank’s own account after compromising an unnamed supplier.",
+        "outlets": [
+          "The Record"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 7.5,
+        "title_ko": "프랑스 Crédit Mutuel Arkéa 사이버 강도 피해 약 1억3천만 달러",
+        "summary_ko": "Crédit Mutuel Arkéa가 공급업체 침해 후 은행 계정으로 송금이 실행된 사이버 강도 피해를 확인함. 피해 추정액은 약 1억3천만 달러. 공급망 접근 통제 점검 필요."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "kev",
+      "name": "CISA KEV",
+      "ok": true,
+      "count": 2,
+      "ms": 331
+    },
+    {
+      "id": "zdnetkr",
+      "name": "지디넷코리아",
+      "ok": true,
+      "count": 30,
+      "ms": 476
+    },
+    {
+      "id": "bleepingcomputer",
+      "name": "BleepingComputer",
+      "ok": true,
+      "count": 15,
+      "ms": 505
+    },
+    {
+      "id": "securityweek",
+      "name": "SecurityWeek",
+      "ok": true,
+      "count": 10,
+      "ms": 548
+    },
+    {
+      "id": "thehackernews",
+      "name": "The Hacker News",
+      "ok": true,
+      "count": 50,
+      "ms": 557
+    },
+    {
+      "id": "therecord",
+      "name": "The Record",
+      "ok": true,
+      "count": 5,
+      "ms": 610
+    },
+    {
+      "id": "gnews-kr",
+      "name": "Google 뉴스",
+      "ok": true,
+      "count": 100,
+      "ms": 726
+    },
+    {
+      "id": "krebs",
+      "name": "Krebs on Security",
+      "ok": true,
+      "count": 10,
+      "ms": 826
+    },
+    {
+      "id": "boannews",
+      "name": "보안뉴스",
+      "ok": true,
+      "count": 50,
+      "ms": 1148
+    },
+    {
+      "id": "dailysecu",
+      "name": "데일리시큐",
+      "ok": true,
+      "count": 50,
+      "ms": 1319
+    },
+    {
+      "id": "kisa-vuln",
+      "name": "KISA 취약점 정보",
+      "ok": true,
+      "count": 10,
+      "ms": 1499
+    },
+    {
+      "id": "darkreading",
+      "name": "Dark Reading",
+      "ok": true,
+      "count": 50,
+      "ms": 1521
+    },
+    {
+      "id": "datanet",
+      "name": "데이터넷",
+      "ok": true,
+      "count": 50,
+      "ms": 1597
+    },
+    {
+      "id": "kisa-notice",
+      "name": "KISA 보안공지",
+      "ok": true,
+      "count": 10,
+      "ms": 1673
+    },
+    {
+      "id": "kisa-alert",
+      "name": "KISA 경보단계",
+      "ok": true,
+      "count": 10,
+      "ms": 1854
+    },
+    {
+      "id": "nvd-kev",
+      "name": "NVD (KEV 상세)",
+      "ok": true,
+      "count": 1,
+      "ms": 2119
+    },
+    {
+      "id": "nvd",
+      "name": "NVD (신규 CVE)",
+      "ok": true,
+      "count": 894,
+      "ms": 3074
+    },
+    {
+      "id": "epss",
+      "name": "FIRST EPSS",
+      "ok": true,
+      "count": 71,
+      "ms": 462
+    }
+  ],
+  "summarizer": {
+    "engine": "claude-haiku-5-5",
+    "ok": true,
+    "ms": 28237,
+    "applied": {
+      "news": 10,
+      "vulns": 4,
+      "overview": true
+    },
+    "rejected": [],
+    "input_tokens": 11867,
+    "output_tokens": 6693
+  },
+  "stats": {
+    "news": {
+      "items": 420,
+      "fresh": 178,
+      "clusters": 125,
+      "eligible": 99
+    },
+    "nvd_published": 894,
+    "kev_catalog": "2026.11.04",
+    "kev_recent": 2
+  }
+}

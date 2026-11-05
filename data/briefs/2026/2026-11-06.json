@@ -1,0 +1,1115 @@
+{
+  "version": 2,
+  "date": "2026-11-06",
+  "generated_at": "2026-11-06T06:01:00+09:00",
+  "window": {
+    "hours": 30,
+    "from": "2026-11-04T15:01:00.648Z",
+    "to": "2026-11-05T21:01:00.648Z",
+    "since_brief": "2026-11-05",
+    "since_at": "2026-11-04T21:01:01.094Z"
+  },
+  "engine": "claude-haiku-5-5",
+  "overview": "국내에서는 금융권 37개사 침해사고와 공공배달앱 대구로 계좌정보 노출, 병원 랜섬웨어 피해가 확인됐습니다. 해외에서는 패치된 Apple 취약점과 Zyxel 제로데이 악용이 보고됐습니다. 가장 시급한 조치는 Apache OFBiz 24.09.08 이상으로의 업데이트입니다.",
+  "cvss_min": 9,
+  "critical_total": 58,
+  "failed": {
+    "kev": false,
+    "nvd": false,
+    "kisa": false,
+    "news": false
+  },
+  "exploited": [],
+  "exploited_more": [],
+  "critical": [
+    {
+      "id": "CVE-2026-82907",
+      "ids": [
+        "CVE-2026-82907",
+        "CVE-2026-83542"
+      ],
+      "section": "critical",
+      "label": "Apache OFBiz 24.09",
+      "vendor": "Apache",
+      "cna": "security@apache.org",
+      "status": "Undergoing Analysis",
+      "published": "2026-11-05T14:17:05.700",
+      "description": "Authentication Bypass by Capture-replay in ExternalLoginKeysManager in Apache OFBiz 24.09 before 24.09.08 on all platforms allows a remote unauthenticated attacker who captures a live externalLoginKey value to obtain a complete, cookie-free, reusable session as the user who issued it, in every webapp that user can reach, because checkExternalLoginKey runs as a global preprocessor ahead of both the CSRF and authentication checks and accepts the key as a bearer credential that is never bound to a client, never expires, and is not invalidated after use, while the framework itself both appends live keys to every cross-webapp link it renders and, via WidgetWorker's unvalidated inter-app link target, lets an authenticated user's key be attached to an attacker-chosen absolute URL and delivered directly to the attacker's own server. Users are recommended to upgrade to version 24.09.08, which fixes this issue.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-82907",
+          "text": "Authentication Bypass by Capture-replay in ExternalLoginKeysManager in Apache OFBiz 24.09 before 24.09.08 on all platforms allows a remote unauthenticated attacker who captures a live externalLoginKey value to obtain a complete, cookie-free, reusable session as the user who issued it, in every weba…"
+        },
+        {
+          "id": "CVE-2026-83542",
+          "text": "Improper Control of Generation of Code ('Code Injection') in Apache OFBiz 24.09 before 24.09.08 on all platforms allows a remote unauthenticated attacker to execute arbitrary code on the server by staging crafted widget XML in a multipart upload and overriding the mainDecoratorLocation used by a ma…"
+        }
+      ],
+      "cwes": [
+        "CWE-294",
+        "CWE-613",
+        "CWE-94"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://lists.apache.org/thread.html/7b2syzksp7klt9fvhdg0olldvs2g83lz"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-82907",
+      "affected": [
+        {
+          "vendor": "Apache Software Foundation",
+          "product": "Apache OFBiz",
+          "ranges": [
+            {
+              "ee": "24.09.08"
+            }
+          ]
+        }
+      ],
+      "flags": {
+        "watch": "Apache",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 13,
+      "ko": {
+        "title": "Apache OFBiz 인증 우회 및 코드 인젝션(CVSS 9.8)",
+        "target": "Apache OFBiz 24.09 (24.09.08 미만, 전 플랫폼)",
+        "impact": "미인증 원격자가 로그인 키를 재사용해 세션 탈취, widget XML로 임의 코드 실행 가능(CVE-2026-83542)",
+        "action": "24.09.08 이상으로 즉시 업데이트하고 외부 노출 여부 점검"
+      }
+    },
+    {
+      "id": "CVE-2026-121489",
+      "ids": [
+        "CVE-2026-121489",
+        "CVE-2026-73098",
+        "CVE-2026-73099",
+        "CVE-2026-73100",
+        "CVE-2026-73101",
+        "CVE-2026-73116",
+        "CVE-2026-73117",
+        "CVE-2026-96677"
+      ],
+      "section": "critical",
+      "label": "Apache",
+      "vendor": "Apache",
+      "cna": "security@apache.org",
+      "status": "Deferred",
+      "published": "2026-11-05T12:17:49.643",
+      "description": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in Apache Juneau. The microservice DirectoryResource does not keep request paths inside its configured root directory. When an application enables the resource's view, upload or delete settings (all off by default), a client can read, write or delete files outside the root, anywhere the server process has access. This issue affects Apache Juneau: through 9.2.0. Users are recommended to upgrade to version 9.2.1, which fixes the issue.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-121489",
+          "text": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in Apache Juneau. The microservice DirectoryResource does not keep request paths inside its configured root directory. When an application enables the resource's view, upload or delete settings (all off by…"
+        },
+        {
+          "id": "CVE-2026-73098",
+          "text": "Improper control of dynamically-loaded code vulnerability in Apache Juneau. When Apache Juneau parses a value into a property of type java.lang.Class (including parameterized forms), the default class swap loaded the named class with initialization enabled, so input naming a class on the applicatio…"
+        },
+        {
+          "id": "CVE-2026-73099",
+          "text": "Cross-Site Request Forgery (CSRF) vulnerability in Apache Juneau. The REST server accepts a \"content\" query parameter that replaces the request body, and this is enabled by default on every HTTP method, including GET. A cross-site link can therefore deliver an attacker-chosen request body to an end…"
+        },
+        {
+          "id": "CVE-2026-73100",
+          "text": "Insertion of Sensitive Information into Log File vulnerability in Apache Juneau. The default REST server call logger records request headers for requests that end in a server error, without redacting them. Any client able to cause a server error gets headers such as Authorization, Cookie, Proxy-Aut…"
+        },
+        {
+          "id": "CVE-2026-73101",
+          "text": "Generation of Error Message Containing Sensitive Information vulnerability in Apache Juneau. The REST server sends the internal exception class and message to clients in a \"Thrown\" response header on every error response, and can include internal exception messages in the error body, even when stac…"
+        }
+      ],
+      "cwes": [
+        "CWE-22",
+        "CWE-470",
+        "CWE-352",
+        "CWE-532",
+        "CWE-209",
+        "CWE-522",
+        "CWE-113",
+        "CWE-79"
+      ],
+      "cvss": {
+        "score": 10,
+        "version": "4.0",
+        "vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X"
+      },
+      "ssvc": null,
+      "epss": null,
+      "links": [
+        "https://lists.apache.org/thread.html/j05q7vw08j48o96tdlzcsd4sozx1lyl6"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-121489",
+      "affected": [
+        {
+          "vendor": "Apache Software Foundation",
+          "product": "Apache Juneau",
+          "ranges": [
+            {
+              "ee": "9.2.1"
+            }
+          ]
+        }
+      ],
+      "flags": {
+        "watch": "Apache",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 12.6,
+      "ko": {
+        "title": "Apache Juneau 경로 순회 외 다수 취약점(CVSS 10.0)",
+        "target": "Apache Juneau 영향 버전은 자료에 없음, 벤더 공지 확인 필요",
+        "impact": "경로 순회, 임의 클래스 로딩, 기본 활성화된 CSRF 등으로 미인증 원격 공격 가능성 있음",
+        "action": "벤더 패치 적용 여부 확인, DirectoryResource 기능 비활성화 점검"
+      }
+    },
+    {
+      "id": "CVE-2025-71457",
+      "ids": [
+        "CVE-2025-71457"
+      ],
+      "section": "critical",
+      "label": "vtenext",
+      "vendor": "",
+      "cna": "disclosure@vulncheck.com",
+      "status": "Received",
+      "published": "2026-11-04T21:17:40.340",
+      "description": "vtenext 25.02 before 25.02.1 contains an authentication bypass vulnerability that allows unauthenticated attackers to change any account password via hub/rpwd.php without token verification. Attackers knowing a valid user_name can send action=change_password to RecoverPwd::displayChangePwd() and log in as administrators lacking two-factor authentication.",
+      "descriptions": [
+        {
+          "id": "CVE-2025-71457",
+          "text": "vtenext 25.02 before 25.02.1 contains an authentication bypass vulnerability that allows unauthenticated attackers to change any account password via hub/rpwd.php without token verification. Attackers knowing a valid user_name can send action=change_password to RecoverPwd::displayChangePwd() and lo…"
+        }
+      ],
+      "cwes": [
+        "CWE-620"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "poc",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": 0.00443,
+      "links": [
+        "https://0xbro.red/posts/vtenext-25-02-a-three-way-path-to-rce/",
+        "https://blog.sicuranext.com/vtenext-25-02-a-three-way-path-to-rce/",
+        "https://usermanual.vtenext.com/books/release-notes-history/page/vtenext-25021-release-note"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2025-71457",
+      "affected": [
+        {
+          "vendor": "vtenext",
+          "product": "vtenext",
+          "ranges": [
+            {
+              "si": "25.02",
+              "ee": "25.02.1"
+            }
+          ]
+        }
+      ],
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 12.32,
+      "ko": {
+        "title": "vtenext 인증 우회로 계정 비밀번호 변경(CVSS 9.8)",
+        "target": "vtenext 25.02 (25.02.1 미만)",
+        "impact": "토큰 검증 없이 hub/rpwd.php로 유효 사용자 계정 비밀번호 변경 가능, PoC 존재",
+        "action": "25.02.1 이상으로 업데이트하고 비밀번호 재설정 이력 점검"
+      }
+    }
+  ],
+  "critical_more": [
+    {
+      "id": "CVE-2026-57566",
+      "ids": [
+        "CVE-2026-57566"
+      ],
+      "label": "Readest",
+      "vendor": "",
+      "cvss": 9.3,
+      "title": "Readest 서버 측 요청 위조(SSRF)",
+      "affected": [
+        {
+          "vendor": "readest",
+          "product": "readest",
+          "ranges": [
+            {
+              "ee": "0.11.10"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-102895",
+      "ids": [
+        "CVE-2026-102895",
+        "CVE-2026-102894"
+      ],
+      "label": "GPUStack",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "GPUStack 인증 부적절 등 2건",
+      "affected": [
+        {
+          "vendor": "gpustack",
+          "product": "gpustack",
+          "ranges": [
+            {
+              "ee": "2.2.0"
+            },
+            {
+              "si": "0.7.1",
+              "ee": "2.2.2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-116779",
+      "ids": [
+        "CVE-2026-116779",
+        "CVE-2026-116785",
+        "CVE-2026-116790"
+      ],
+      "label": "FreeSWITCH",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "FreeSWITCH 명령 삽입 등 3건",
+      "affected": [
+        {
+          "vendor": "signalwire",
+          "product": "freeswitch",
+          "ranges": [
+            {
+              "ee": "1.11.3"
+            },
+            {
+              "ee": "1.11.2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-122303",
+      "ids": [
+        "CVE-2026-122303",
+        "CVE-2026-122304",
+        "CVE-2026-122310",
+        "CVE-2026-122311",
+        "CVE-2026-122313",
+        "CVE-2026-122302",
+        "CVE-2026-122321"
+      ],
+      "label": "Kyverno",
+      "vendor": "",
+      "cvss": 9.9,
+      "title": "Kyverno 권한 검사 누락 등 7건",
+      "affected": [
+        {
+          "vendor": "kyverno",
+          "product": "kyverno",
+          "ranges": [
+            {
+              "si": "1.17.0",
+              "ee": "1.19.2"
+            },
+            {
+              "si": "1.19.1",
+              "ee": "1.19.2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-54143",
+      "ids": [
+        "CVE-2026-54143",
+        "CVE-2026-54141"
+      ],
+      "label": "OpenHuman",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "OpenHuman OS 명령 삽입 등 2건",
+      "affected": [
+        {
+          "vendor": "tinyhumansai",
+          "product": "openhuman",
+          "ranges": [
+            {
+              "ee": "0.57.13"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-82418",
+      "ids": [
+        "CVE-2026-82418"
+      ],
+      "label": "IBM Watson Speech Services Cartridge",
+      "vendor": "IBM",
+      "cvss": 9.8,
+      "title": "IBM Watson Speech Services Cartridge 해제 후 사용(UAF)",
+      "affected": [
+        {
+          "vendor": "IBM",
+          "product": "Watson Speech Services Cartridge",
+          "ranges": [
+            {
+              "si": "4.0.0",
+              "ei": "5.4.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-123198",
+      "ids": [
+        "CVE-2026-123198"
+      ],
+      "label": "LMFDB",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "LMFDB 템플릿 삽입",
+      "affected": [
+        {
+          "vendor": "LMFDB",
+          "product": "LMFDB",
+          "ranges": [],
+          "truncated": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-122051",
+      "ids": [
+        "CVE-2026-122051"
+      ],
+      "label": "Edimax BR-6208AC",
+      "vendor": "",
+      "cvss": 10,
+      "title": "Edimax BR-6208AC 삽입",
+      "affected": [
+        {
+          "vendor": "Edimax",
+          "product": "BR-6208AC",
+          "ranges": [
+            {
+              "exact": "1.32"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-71550",
+      "ids": [
+        "CVE-2026-71550",
+        "CVE-2026-100358"
+      ],
+      "label": "SuiteCRM",
+      "vendor": "",
+      "cvss": 9.9,
+      "title": "SuiteCRM 원격 파일 포함 등 2건",
+      "affected": [
+        {
+          "vendor": "SuiteCRM",
+          "product": "SuiteCRM",
+          "ranges": [
+            {
+              "ee": "7.15.2"
+            },
+            {
+              "si": "8.0.0",
+              "ee": "8.10.2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-117691",
+      "ids": [
+        "CVE-2026-117691"
+      ],
+      "label": "Red Hat",
+      "vendor": "Red Hat",
+      "cvss": 9.1,
+      "title": "Red Hat 전자서명 검증 부적절",
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Build of Keycloak",
+          "ranges": [],
+          "all": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-122013",
+      "ids": [
+        "CVE-2026-122013"
+      ],
+      "label": "CVE-2026-122013",
+      "vendor": "",
+      "cvss": 10,
+      "title": "CVE-2026-122013 경로 조작",
+      "affected": [
+        {
+          "vendor": "Comfast",
+          "product": "CF-WR632AX",
+          "ranges": [
+            {
+              "exact": "2.6.0.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-54384",
+      "ids": [
+        "CVE-2026-54384",
+        "CVE-2026-54378"
+      ],
+      "label": "CVE-2026-54384",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "CVE-2026-54384 스푸핑 인증 우회 등 2건",
+      "affected": [
+        {
+          "vendor": "Shenzhen Shine Industrial Co., Ltd.",
+          "product": "VitaFit",
+          "ranges": [
+            {
+              "ee": "2026-10-30"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-97693",
+      "ids": [
+        "CVE-2026-97693"
+      ],
+      "label": "Yuxi",
+      "vendor": "",
+      "cvss": 9.9,
+      "title": "Yuxi 명령 삽입",
+      "affected": [
+        {
+          "vendor": "xerrors",
+          "product": "Yuxi",
+          "ranges": [
+            {
+              "si": "0.6.0.beta1",
+              "ee": "0.7.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-122992",
+      "ids": [
+        "CVE-2026-122992"
+      ],
+      "label": "CVE-2026-122992",
+      "vendor": "",
+      "cvss": 9.2,
+      "title": "CVE-2026-122992 정수 언더플로",
+      "affected": [
+        {
+          "vendor": "G4KLX",
+          "product": "DStarGateway",
+          "ranges": [],
+          "truncated": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-115770",
+      "ids": [
+        "CVE-2026-115770"
+      ],
+      "label": "Pocket ID",
+      "vendor": "",
+      "cvss": 9.6,
+      "title": "Pocket ID 데이터 진위 검증 부족",
+      "affected": [
+        {
+          "vendor": "pocket-id",
+          "product": "pocket-id",
+          "ranges": [
+            {
+              "si": "2.2.0",
+              "ee": "2.12.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-102940",
+      "ids": [
+        "CVE-2026-102940"
+      ],
+      "label": "OpenEMR",
+      "vendor": "",
+      "cvss": 9.6,
+      "title": "OpenEMR 권한 우회(IDOR)",
+      "affected": [
+        {
+          "vendor": "openemr",
+          "product": "openemr",
+          "ranges": [
+            {
+              "ee": "8.4.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-119344",
+      "ids": [
+        "CVE-2026-119344"
+      ],
+      "label": "Cocos AI",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "Cocos AI 출처 검증 오류",
+      "affected": [
+        {
+          "vendor": "ultravioletrs",
+          "product": "cocos",
+          "ranges": [
+            {
+              "ei": "0.8.2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-123025",
+      "ids": [
+        "CVE-2026-123025"
+      ],
+      "label": "CVE-2026-123025",
+      "vendor": "",
+      "cvss": 9.4,
+      "title": "CVE-2026-123025 OS 명령 삽입",
+      "affected": [
+        {
+          "vendor": "OPNsense",
+          "product": "os-acme-client",
+          "ranges": [
+            {
+              "ei": "4.17.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-52848",
+      "ids": [
+        "CVE-2026-52848"
+      ],
+      "label": "GLPI",
+      "vendor": "",
+      "cvss": 9.2,
+      "title": "GLPI 대체 경로 인증 우회",
+      "affected": [
+        {
+          "vendor": "glpi-project",
+          "product": "glpi",
+          "ranges": [
+            {
+              "si": "11.0.0",
+              "ee": "11.0.8"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-100109",
+      "ids": [
+        "CVE-2026-100109"
+      ],
+      "label": "CVE-2026-100109",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "CVE-2026-100109 권한 검사 누락",
+      "affected": [
+        {
+          "vendor": "Unknown",
+          "product": "Security For WooCommerce",
+          "ranges": [
+            {
+              "si": "1.0.10",
+              "ei": "1.0.16"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "advisories": [
+    {
+      "id": "a-d7992454",
+      "source": "KISA 보안공지",
+      "title": "Debian 및 Ubuntu 패키지 매니저 APT 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72283",
+      "date": "2026-11-05"
+    },
+    {
+      "id": "a-50a7adbd",
+      "source": "KISA 보안공지",
+      "title": "Zyxel 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72279",
+      "date": "2026-11-05"
+    }
+  ],
+  "news": {
+    "domestic": [
+      {
+        "id": "n-75ccf050",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "[금융사 해킹 종합] 금융권 37개사 해킹 등 침해사고 40건…개인정보 47만3천건 유출·자금 10억원 탈취",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209324",
+        "source": "데일리시큐",
+        "published": "2026-11-05T07:18:25.000Z",
+        "snippet": "최근 한 달여 동안 국내 금융권 37개 회사에서 40건의 사이버 침해사고가 신고됐으며, 개인정보 약 47만3,000건이 유출된 것으로 확인됐다. 일부 가상자산거래소와 전자금융업체 등에서는 약 10억원의 자금이 탈취되는 사고까지 발생했다. 은행과 증권·보험사 등 전통적인 금융회사뿐 아니라 가상자산거래소, 전자금융업체, 온라인투자연계금융업체 등 금융권 전반에서 침해사고가 잇따르면서 금융당국이…",
+        "outlets": [
+          "데일리시큐",
+          "경향신문",
+          "연합뉴스TV",
+          "YTN"
+        ],
+        "related": [
+          {
+            "title": "한 달 새 금융사 37곳에서 개인정보 유출…자금 탈취도 10억원",
+            "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxOWFhZbTdyUzFZZFdGMmlwakZFdnlMbEJJWk5ldDNVWVlPOTdkQ2NXQzFZNDFRanJDLTZ6ei00RXlmQklHOXhXRVZsMjg4dmJuZXlqX3A1RGc3aTA2TnhXblRWVVJsLUJjRWg5dkMyMjg5c1hUVlF6Szl5N2xiWm1WZGJueUYxdGs1RmdqMUxIMmtES3Ezc2dwQ2ZvcDNzUFpuSU12TFhnSE5iVGwt0gFfQVVfeXFMUGMtci1jWm1HbjdWSFRhOGN2SktYR2trZTZ3b01COXRuMXVhb0RJLUZSSWNrQ1VxRjFZaWJmV2RWVWp2d3lzVndZbmhQSEpwQzdhdVlvcVNhZDlXQzBZUnc?oc=5",
+            "source": "경향신문"
+          },
+          {
+            "title": "금융권 정보유출 47만건…10억 원 자금 탈취도",
+            "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTFBGOVVLWmt5X1lJdnE1UmxoTTFMT19lY3QzclIyTHZKT1puc00yRmhmNUFGdTJHLUNaM2Zfcmx2Uks4ZUsyNkwzVVpmT1ZkWmNGODRIa3VZYnpYdm9lLTFHR0NLejRDRzA?oc=5",
+            "source": "연합뉴스TV"
+          },
+          {
+            "title": "전 금융권 해킹 대책 회의...\"정보 47만 건·자금 10억 유출\"",
+            "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE9hUHUtQmpBSFBDT0h2TDZqUDRMTXdkbllTMnJYeFRYOG55emdjbXFHMjVIdDJwNDFWZmhJRGd6eFlaclNLaGotbzBTaHNkX2dMWGp4dXVEeHU5Vk5ZVzJEeWNTaXY4dVNaU2dtQjhsYw?oc=5",
+            "source": "YTN"
+          }
+        ],
+        "cves": [],
+        "score": 16.4,
+        "title_ko": "금융권 37개사 침해사고 40건…47만3천건 유출",
+        "summary_ko": "최근 한 달여간 국내 금융권 37개사에서 침해사고 40건이 신고됨. 개인정보 약 47만3천건이 유출되었고 가상자산거래소 등에서 약 10억원이 탈취됨. 금융권 전수점검 필요."
+      },
+      {
+        "id": "n-4915c0f4",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "대구공공앱 ‘대구로’ 해킹…가맹점주 계좌 2만5000개 유출",
+        "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE85NHRSUHMwZ29kZmJsV2tlVVFva1FBR3U5eTN1MmFWa2ZGaVYyb3lLY1NKZS1FQlVPemZ5bFVfNFRtaGhfdVFHRDRvdnBzUS1YenhsQlR3?oc=5",
+        "source": "중앙일보",
+        "published": "2026-11-05T07:47:11.000Z",
+        "snippet": "",
+        "outlets": [
+          "중앙일보",
+          "연합뉴스TV",
+          "대구MBC",
+          "연합뉴스"
+        ],
+        "related": [
+          {
+            "title": "’대구로’ 해킹에 점주 계좌번호 노출…나흘 뒤 늑장 통보",
+            "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5ZdUxaQUFjclRoYjc0NE1KVlpla1JPYTZxaHVvV05xbGZMWU1xYlQ4dndNTENVdWxZMHplY2JwU0RoNG9EMkhJdzEzdmozMUxBb1FjYXhKTVdCZVhWVDNwN0g2YVNZUHM?oc=5",
+            "source": "연합뉴스TV"
+          },
+          {
+            "title": "'대구로' 해킹···가맹점주 계좌번호 2만 5,000개 털려",
+            "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE9MXzJZZl92aEEtYkJXaDYtVTlxUjNJajUyRGNJRHZIcWhqV3k0Qjd4U09PN1ExVGFBWDc5Q2lva0dTYlM4eHNxNkVuYkM?oc=5",
+            "source": "대구MBC"
+          },
+          {
+            "title": "'대구로' 해킹에 점주 계좌번호 2만5천여개 노출…늑장 통보 논란(종합2보)",
+            "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5hNmNBN0t0cGpzd1lzZjctMms1a0ZMeGlRbV9WNWUwNk9GeS1CSGNxU3Qwb1d0Y3NTMjc5ZEh1eTkwT3pWU0ZlVjdaQzFjR1Z0NnZZZWs4ZHk0RGvSAWBBVV95cUxOMnd1elVmUFdWemFsc25Mei1zd1JaN2NaTTdBbGZpUWNXVVJHb3drcHpJcUhybmpXMlRKcmdfbm9WMUxEbS0xZ1o5Rm9CVHg3aHZlYndDZ2Vsd00tcTRCX3U?oc=5",
+            "source": "연합뉴스"
+          }
+        ],
+        "cves": [],
+        "score": 16.4,
+        "title_ko": "대구공공앱 '대구로' 해킹, 가맹점주 계좌 2만5천건 노출",
+        "summary_ko": "공공배달앱 대구로 해킹으로 가맹점주 계좌번호 약 2만5천건이 노출됨. 피해 사실을 나흘 뒤에야 통보해 늑장 대응 논란이 있음. 원인과 피해 범위 확인 필요."
+      },
+      {
+        "id": "n-5237403d",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "[단독] \"병원도 뚫렸다\"‥랜섬웨어 해킹에 진료 마비",
+        "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTE1uRkJZM3VTcjFmeTFtUXhvYmJjUm5PbTZ3TnRaTkZ3WFVLZjVPUGF3anRrN3dOSFdhVThHeHFhMXY5QTNMQjFmS0FBM29CZmFLSjV1a0lzSENyZktScmVDb0J5YjdDMHg0ZjdpejFKUm43a283cnRIT9IBeEFVX3lxTFAxUWJ4bm5zaXZybjFFMTBDc3hDM2F2MDM4cTRLRDR1M25DVk54TDg1TVlKc2RYN1hfLXd1SkxKQzBsTUNtbEtxaFJad2xRLVM4TFVWWTJYYXVCdFZRa0NqN3VIR1lRdjl0c2x2ZG8wOFVVV3NkOE9WWA?oc=5",
+        "source": "MBC 뉴스",
+        "published": "2026-11-05T11:13:36.000Z",
+        "snippet": "",
+        "outlets": [
+          "MBC 뉴스"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 10,
+        "title_ko": "병원 랜섬웨어 감염으로 진료 마비",
+        "summary_ko": "국내 병원이 랜섬웨어 공격을 받아 진료가 마비된 것으로 MBC가 단독 보도함. 피해 규모와 공격 경로는 확인되지 않음. 의료기관 백업과 망 격리 점검 필요."
+      },
+      {
+        "id": "n-6a9b7d60",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "[단독] 국내 의료기관 5곳 겨냥한 랜섬웨어 협박 정황…약 90TB 탈취 주장, 실제 피해 확인 필요",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209331",
+        "source": "데일리시큐",
+        "published": "2026-11-05T10:08:47.000Z",
+        "snippet": "새롭게 관측된 랜섬웨어 조직 ‘옵소프트(OBSOFT)’가 한국 대상 5곳을 포함한 총 6곳의 피해 주장 게시물을 올린 정황이 확인됐다. 가려진 도메인을 실제 홈페이지와 대조한 결과, 한국으로 표시된 5개 모두 의료기관 도메인과 일치하는 후보가 발견됐다. 이 조직 명의의 협박문에는 수술 데이터와 환자 영상, 개인정보를 탈취했다는 내용도 담겼다. 다만 도메인 대조는 공개된 철자와 가림 처리 위…",
+        "outlets": [
+          "데일리시큐"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 9.5,
+        "title_ko": "신규 랜섬웨어 OBSOFT, 국내 의료기관 5곳 협박 정황",
+        "summary_ko": "신규 랜섬웨어 조직 OBSOFT가 국내 의료기관 5곳을 포함한 6곳의 피해를 주장함. 수술 데이터와 환자 영상 탈취를 주장하나 실제 피해는 확인 필요. 의료기관 대상 점검 필요."
+      },
+      {
+        "id": "n-2326f63a",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "행안부, ‘정보공개포털’ 원문 다운로드 긴급 차단... “개인정보 전수점검 착수”",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=147035",
+        "source": "보안뉴스",
+        "published": "2026-11-05T06:25:08.000Z",
+        "snippet": "국민의 알 권리와 행정 투명성을 위해 공공기관 결재문서를 공개하는 정부 ‘정보공개포털’에서 주민등록번호, 여권번호, 질병 진단서 등 민감한 개인정보가 노출되는 사고가 발생했다. 행정안전부는 5일 설명자료를 내고 공식 사과했다. 아울러 정보공개포털의 원문정보 다운로드 서비스를 일시 중단하는 한편, 모든 공공기관을 대상으로 공개 문서 내 개인정보 노출 여부를 확인하는 전수점검에 착수했다고 밝혔…",
+        "outlets": [
+          "보안뉴스",
+          "데일리시큐"
+        ],
+        "related": [
+          {
+            "title": "정부 정보공개포털서 주민번호·암 진단서까지 개인정보 노출…행안부, 원문 다운로드 전면 중단",
+            "url": "https://www.dailysecu.com/news/articleView.html?idxno=209329",
+            "source": "데일리시큐"
+          }
+        ],
+        "cves": [],
+        "score": 9.2,
+        "title_ko": "행안부 정보공개포털서 주민번호·진단서 노출",
+        "summary_ko": "정부 정보공개포털 공개 문서에 주민등록번호, 여권번호, 질병 진단서 등 민감 개인정보가 노출됨. 행안부는 원문 다운로드를 일시 중단하고 전수점검에 착수함. 공공기관 공개문서 재점검 필요."
+      }
+    ],
+    "international": [
+      {
+        "id": "n-16bf85bf",
+        "region": "international",
+        "lang": "en",
+        "title": "Hackers Exploit Patched Apple Flaw to Deliver Info-Stealing Malware, CISA Says",
+        "url": "https://thehackernews.com/2026/11/hackers-exploit-patched-apple-flaw-to.html",
+        "source": "The Hacker News",
+        "published": "2026-11-05T05:17:04.000Z",
+        "snippet": "The U. S. Cybersecurity and Infrastructure Security Agency (CISA) on Wednesday added a medium-severity security flaw impacting multiple Apple operating systems to its Known Exploited Vulnerabilities (KEV) catalog, follo…",
+        "outlets": [
+          "The Hacker News"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 9,
+        "title_ko": "패치된 Apple 취약점, 정보 탈취 악성코드 유포에 악용",
+        "summary_ko": "CISA가 여러 Apple 운영체제에 영향을 주는 중간 위험 취약점을 KEV 목록에 추가함. 패치가 나왔음에도 정보 탈취 악성코드 유포에 실제 악용 중임. Apple 기기 OS 업데이트 점검 필요."
+      },
+      {
+        "id": "n-8c497df8",
+        "region": "international",
+        "lang": "en",
+        "title": "Zyxel Switch Hacks Blamed on Patched Flaw Actually Exploited a Zero-Day",
+        "url": "https://www.securityweek.com/zyxel-switch-hacks-blamed-on-patched-flaw-actually-exploited-a-zero-day/",
+        "source": "SecurityWeek",
+        "published": "2026-11-05T10:56:41.000Z",
+        "snippet": "Tracked as CVE-2026-107441, the out-of-bounds write flaw could allow attackers to execute OS commands via crafted HTTP requests. The post Zyxel Switch Hacks Blamed on Patched Flaw Actually Exploited a Zero-Day appeared…",
+        "outlets": [
+          "SecurityWeek"
+        ],
+        "related": [],
+        "cves": [
+          "CVE-2026-107441"
+        ],
+        "score": 11,
+        "title_ko": "Zyxel 스위치 해킹, 패치된 결함이 실제로는 제로데이 악용",
+        "summary_ko": "패치된 것으로 알려진 CVE-2026-107441 결함이 실제로는 제로데이로 악용된 것으로 밝혀짐. 조작된 HTTP 요청으로 OS 명령 실행이 가능함. Zyxel 스위치 펌웨어와 관리 접근 점검 필요."
+      },
+      {
+        "id": "n-900751f0",
+        "region": "international",
+        "lang": "en",
+        "title": "Russia-Linked Hackers Hit iOS, Android Devices With Exploit Chains via Watering Holes",
+        "url": "https://www.securityweek.com/russia-linked-hackers-hit-ios-android-devices-with-exploit-chains-via-watering-holes/",
+        "source": "SecurityWeek",
+        "published": "2026-11-05T10:37:13.000Z",
+        "snippet": "The large-scale watering hole campaign has been targeting entities in the US and Europe, mainly in Ukraine. The post Russia-Linked Hackers Hit iOS, Android Devices With Exploit Chains via Watering Holes appeared first o…",
+        "outlets": [
+          "SecurityWeek",
+          "Dark Reading"
+        ],
+        "related": [
+          {
+            "title": "APT29's Watering Holes Target Thousands of Mobile Users",
+            "url": "https://www.darkreading.com/mobile-security/apt29-watering-holes-target-mobile-users",
+            "source": "Dark Reading"
+          }
+        ],
+        "cves": [],
+        "score": 9.2,
+        "title_ko": "러시아 연계 해커, 워터링홀로 iOS·Android 공격",
+        "summary_ko": "APT29 연계로 추정되는 공격자가 정상 웹사이트에 익스플로잇 체인을 심어 모바일 사용자를 노림. 미국과 유럽, 우크라이나 중심으로 다수 사용자가 노출됨. 모바일 기기 최신화와 의심 사이트 접근 주의 필요."
+      },
+      {
+        "id": "n-2b8858ed",
+        "region": "international",
+        "lang": "ko",
+        "title": "공격 끝나면 흔적까지 지운다... 중국 볼트 타이푼, 일회용 공유기 경로로 제로데이 공격",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=146851",
+        "source": "보안뉴스",
+        "published": "2026-11-05T04:30:00.000Z",
+        "snippet": "중국 정부 지원 해킹 조직 볼트 타이푼(Volt Typhoon)이 해킹한 공유기를 필요할 때마다 엮어 쓰고 버리는 방식으로 공격 출발지를 감춰 왔다. 이 중계 체계로 네트워크 관리 장비 제로데이 공격까지 벌였다. 통신 기업 루멘의 위협 연구 조직 블랙로터스랩스는 이 체계를 ‘사일런트 트레인’(Silent Train)으로 부르며 3년간 추적해 온 결과를 최근 공개했다. 연구진은 볼트 타이푼이…",
+        "outlets": [
+          "보안뉴스"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 9,
+        "title_ko": "중국 볼트 타이푼, 일회용 공유기 경유 제로데이 공격",
+        "summary_ko": "중국 정부 지원 조직 Volt Typhoon이 해킹한 공유기를 번갈아 써서 공격 출발지를 숨김. 중계 체계 Silent Train으로 네트워크 관리 장비 제로데이 공격도 수행함. 네트워크 장비 관리 접근 통제 강화 필요."
+      },
+      {
+        "id": "n-5a2bfef5",
+        "region": "international",
+        "lang": "ko",
+        "title": "프랑스 혈액 보관시설 3곳 해킹…냉동설비 온도·제상 설정 조작",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209327",
+        "source": "데일리시큐",
+        "published": "2026-11-05T07:59:45.000Z",
+        "snippet": "프랑스 혈액관리기관의 혈장 보관시설 3곳에서 사이버공격으로 냉동설비 설정이 변조되는 사고가 발생했다. 수혈과 의약품 제조에 사용하는 혈장의 보관 환경이 위협받았지만, 이상 징후를 조기에 감지해 혈액제제 손실과 환자 피해는 발생하지 않았다고 당국은 밝혔다. 프랑스 혈액관리기관 에타블리스망 프랑세 뒤 상에 따르면 사고는 11월 2일 발생했다. EFS는 3일 성명을 발표했으며, 프랑스 보건당국은…",
+        "outlets": [
+          "데일리시큐",
+          "바이라인네트워크"
+        ],
+        "related": [
+          {
+            "title": "프랑스 국립혈액원도 냉동설비 해킹…협력업체 통해 침입",
+            "url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE15WGYyYTFFUjM5LVVIaWdDSUlQNjctTjR2ZlNMcGpaYWVjM1R4Tjd5UXctbTAwYzRuOVV5MEJJV3RUa3htS1I4TXAxa0RFdw?oc=5",
+            "source": "바이라인네트워크"
+          }
+        ],
+        "cves": [],
+        "score": 8.7,
+        "title_ko": "프랑스 혈액 보관시설 3곳 해킹, 냉동설비 조작",
+        "summary_ko": "프랑스 혈장 보관시설 3곳에서 냉동설비 온도와 제상 설정이 사이버공격으로 변조됨(11월 2일). 조기 감지로 혈액제제 손실과 환자 피해는 없었음. 유럽 냉장설비 해킹 확산 속 OT 장비 점검 필요."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "kev",
+      "name": "CISA KEV",
+      "ok": true,
+      "count": 2,
+      "ms": 187
+    },
+    {
+      "id": "securityweek",
+      "name": "SecurityWeek",
+      "ok": true,
+      "count": 10,
+      "ms": 339
+    },
+    {
+      "id": "bleepingcomputer",
+      "name": "BleepingComputer",
+      "ok": true,
+      "count": 15,
+      "ms": 351
+    },
+    {
+      "id": "therecord",
+      "name": "The Record",
+      "ok": true,
+      "count": 5,
+      "ms": 407
+    },
+    {
+      "id": "krebs",
+      "name": "Krebs on Security",
+      "ok": true,
+      "count": 10,
+      "ms": 442
+    },
+    {
+      "id": "thehackernews",
+      "name": "The Hacker News",
+      "ok": true,
+      "count": 50,
+      "ms": 449
+    },
+    {
+      "id": "zdnetkr",
+      "name": "지디넷코리아",
+      "ok": true,
+      "count": 30,
+      "ms": 462
+    },
+    {
+      "id": "gnews-kr",
+      "name": "Google 뉴스",
+      "ok": true,
+      "count": 100,
+      "ms": 704
+    },
+    {
+      "id": "kisa-vuln",
+      "name": "KISA 취약점 정보",
+      "ok": true,
+      "count": 10,
+      "ms": 825
+    },
+    {
+      "id": "dailysecu",
+      "name": "데일리시큐",
+      "ok": true,
+      "count": 50,
+      "ms": 875
+    },
+    {
+      "id": "kisa-notice",
+      "name": "KISA 보안공지",
+      "ok": true,
+      "count": 10,
+      "ms": 870
+    },
+    {
+      "id": "kisa-alert",
+      "name": "KISA 경보단계",
+      "ok": true,
+      "count": 10,
+      "ms": 978
+    },
+    {
+      "id": "boannews",
+      "name": "보안뉴스",
+      "ok": true,
+      "count": 50,
+      "ms": 1081
+    },
+    {
+      "id": "datanet",
+      "name": "데이터넷",
+      "ok": true,
+      "count": 50,
+      "ms": 1259
+    },
+    {
+      "id": "darkreading",
+      "name": "Dark Reading",
+      "ok": true,
+      "count": 50,
+      "ms": 2199
+    },
+    {
+      "id": "nvd-kev",
+      "name": "NVD (KEV 상세)",
+      "ok": true,
+      "count": 2,
+      "ms": 12440
+    },
+    {
+      "id": "nvd",
+      "name": "NVD (신규 CVE)",
+      "ok": true,
+      "count": 597,
+      "ms": 3987
+    },
+    {
+      "id": "epss",
+      "name": "FIRST EPSS",
+      "ok": true,
+      "count": 39,
+      "ms": 301
+    }
+  ],
+  "summarizer": {
+    "engine": "claude-haiku-5-5",
+    "ok": true,
+    "ms": 30878,
+    "applied": {
+      "news": 10,
+      "vulns": 3,
+      "overview": true
+    },
+    "rejected": [],
+    "input_tokens": 11833,
+    "output_tokens": 7195
+  },
+  "stats": {
+    "news": {
+      "items": 420,
+      "fresh": 174,
+      "clusters": 109,
+      "eligible": 77
+    },
+    "nvd_published": 597,
+    "kev_catalog": "2026.11.04",
+    "kev_recent": 2
+  }
+}

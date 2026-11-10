@@ -1,0 +1,4265 @@
+{
+  "version": 2,
+  "date": "2026-11-11",
+  "generated_at": "2026-11-11T06:01:01+09:00",
+  "window": {
+    "hours": 30,
+    "from": "2026-11-09T15:01:01.906Z",
+    "to": "2026-11-10T21:01:01.906Z",
+    "since_brief": "2026-11-10",
+    "since_at": "2026-11-09T21:00:59.037Z"
+  },
+  "engine": "claude-haiku-5-5",
+  "overview": "금융보안원 해킹으로 금융사 정보가 유출돼 금융권 보안 점검이 가장 시급합니다. Barracuda ESG 취약점이 root 권한 탈취에 악용되고 있어 해당 장비의 긴급 패치와 점검이 필요합니다. 이어서 악용된 Outlook 제로데이와 SAP CVSS 10.0 취약점의 패치도 함께 진행하셔야 합니다.",
+  "cvss_min": 9,
+  "critical_total": 81,
+  "failed": {
+    "kev": false,
+    "nvd": false,
+    "kisa": false,
+    "news": false
+  },
+  "exploited": [
+    {
+      "id": "CVE-2026-116606",
+      "section": "exploited",
+      "vendor": "Barracuda Networks",
+      "product": "Barracuda Email Security Gateway (ESG)",
+      "name": "Barracuda Networks Email Security Gateway (ESG) Authentication Bypass Using an Alternate Path or Channel Vulnerability",
+      "dateAdded": "2026-11-10",
+      "due": "2026-11-13",
+      "ransomware": false,
+      "description": "Barracuda Networks Email Security Gateway (ESG) contains an authentication bypass using an alternate path or channel that could allow an unauthenticated remote attacker to invoke a configuration-import function and restore a crafted, compatible backup archive, resulting in unauthorized modification of the appliance’s global configuration. This vulnerability can be chained with CVE-2026-111560.",
+      "cwes": [
+        "CWE-288"
+      ],
+      "cvss": {
+        "score": 9.3,
+        "version": "4.0",
+        "vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X"
+      },
+      "ssvc": {
+        "exploitation": "active",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": 0.01602,
+      "epssPct": 0.76026,
+      "published": "2026-11-02T13:17:37.017",
+      "links": [
+        "https://trust.barracuda.com/security/pre-authentication-authorization-bypass-command-injection",
+        "https://github.com/mandiant/Vulnerability-Disclosures/blob/master/2026/MNDT-2026-0042.md",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-116606"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-116606",
+      "affected": [
+        {
+          "vendor": "Barracuda Networks",
+          "product": "Barracuda Email Security Gateway (ESG)",
+          "ranges": [
+            {
+              "ee": "9.4.0.030"
+            }
+          ]
+        }
+      ],
+      "ko": {
+        "title": "Barracuda ESG 인증 우회 취약점(악용 확인)",
+        "target": "Barracuda Email Security Gateway (ESG), 패치 버전은 벤더 공지 확인 필요",
+        "impact": "비인증 원격자가 백업 아카이브 복원으로 전역 설정 변경 가능. CVE-2026-111560과 연계 가능",
+        "action": "벤더 패치 즉시 적용, 설정 변경 이력 점검 (CISA 기한 2026-11-13)"
+      }
+    },
+    {
+      "id": "CVE-2026-125350",
+      "section": "exploited",
+      "vendor": "Google",
+      "product": "Chromium",
+      "name": "Google Chromium Use-After-Free Vulnerability",
+      "dateAdded": "2026-11-10",
+      "due": "2026-11-24",
+      "ransomware": false,
+      "description": "Google Chromium contains a use-after-free vulnerability in the XML component that could allow a remote attacker to execute arbitrary code inside the sandbox via a specially crafted webpage. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera.",
+      "cwes": [
+        "CWE-416"
+      ],
+      "cvss": {
+        "score": 8.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "active",
+        "automatable": "no",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "epssPct": null,
+      "published": "2026-11-10T18:17:35.237",
+      "links": [
+        "https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop_018223192.html",
+        "https://issues.chromium.org/issues/582442907",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-125350"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-125350",
+      "affected": [
+        {
+          "vendor": "google",
+          "product": "chrome",
+          "ranges": [
+            {
+              "ee": "157.0.8103.50"
+            }
+          ]
+        }
+      ],
+      "ko": {
+        "title": "Chromium XML 해제 후 사용 취약점(악용 확인)",
+        "target": "Google Chrome, Microsoft Edge, Opera 등 Chromium 기반 브라우저",
+        "impact": "악성 웹페이지 접속 시 샌드박스 내 임의 코드 실행 가능. 사용자 상호작용 필요",
+        "action": "브라우저 최신 버전 업데이트 및 재시작 (CISA 기한 2026-11-24)"
+      }
+    },
+    {
+      "id": "CVE-2026-111560",
+      "section": "exploited",
+      "vendor": "Barracuda Networks",
+      "product": "Multiple Products",
+      "name": "Barracuda Networks Multiple Products OS Command Injection Vulnerability",
+      "dateAdded": "2026-11-10",
+      "due": "2026-11-13",
+      "ransomware": false,
+      "description": "Barracuda Networks Email Security Gateway (ESG), Load Balancer, Application Delivery Controller (ADC), Message Archiver (BMA), WAF Control Center (WCC), Web Application Firewall (WAF), and Web Security Gateway (WSG) contain an OS command injection vulnerability. This vulnerability could allow an authenticated administrator to inject OS commands that execute with root privileges when the crafted timezone value is subsequently processed. This vulnerability can be chained with CVE-2026-116606",
+      "cwes": [
+        "CWE-78"
+      ],
+      "cvss": {
+        "score": 8.6,
+        "version": "4.0",
+        "vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:H/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X"
+      },
+      "ssvc": {
+        "exploitation": "active",
+        "automatable": "no",
+        "technicalImpact": "total"
+      },
+      "epss": 0.0106,
+      "epssPct": 0.6483,
+      "published": "2026-11-02T13:17:35.190",
+      "links": [
+        "https://trust.barracuda.com/security/pre-authentication-authorization-bypass-command-injection",
+        "https://github.com/mandiant/Vulnerability-Disclosures/blob/master/2026/MNDT-2026-0041.md",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-111560"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-111560",
+      "affected": [
+        {
+          "vendor": "Barracuda Networks",
+          "product": "Barracuda Email Security Gateway (ESG)",
+          "ranges": [
+            {
+              "ei": "9.4.0.27"
+            }
+          ]
+        },
+        {
+          "vendor": "Barracuda Networks",
+          "product": "Barracuda Load Balancer Application Delivery Controller (ADC)",
+          "ranges": [
+            {
+              "ei": "6.4.0"
+            }
+          ]
+        },
+        {
+          "vendor": "Barracuda Networks",
+          "product": "Barracuda Web Application Firewall (WAF)",
+          "ranges": [
+            {
+              "ei": "11.0.1"
+            }
+          ]
+        },
+        {
+          "vendor": "Barracuda Networks",
+          "product": "Barracuda Web Security Gateway (WSG)",
+          "ranges": [
+            {
+              "ei": "16.1.100.100"
+            }
+          ]
+        },
+        {
+          "vendor": "Barracuda Networks",
+          "product": "Barracuda Message Archiver (BMA)",
+          "ranges": [
+            {
+              "ei": "5.5.4.0"
+            }
+          ]
+        },
+        {
+          "vendor": "Barracuda Networks",
+          "product": "Barracuda WAF Control Center (WCC)",
+          "ranges": [
+            {
+              "ei": "2.2.1"
+            }
+          ]
+        }
+      ],
+      "ko": {
+        "title": "Barracuda 다수 제품 OS 명령 주입 취약점(악용 확인)",
+        "target": "Barracuda ESG, Load Balancer, ADC, BMA, WCC, WAF, WSG",
+        "impact": "인증된 관리자가 timezone 값으로 명령 주입, root 권한 실행 가능. CVE-2026-116606과 연계",
+        "action": "벤더 패치 적용, 관리자 계정 권한과 접근 기록 점검 (기한 2026-11-13)"
+      }
+    },
+    {
+      "id": "CVE-2026-20320",
+      "section": "exploited",
+      "vendor": "Cisco",
+      "product": "BroadWorks",
+      "name": "Cisco BroadWorks Improper Restriction of XML External Entity Reference Vulnerability",
+      "dateAdded": "2026-11-10",
+      "due": "2026-11-24",
+      "ransomware": false,
+      "description": "Cisco BroadWorks contains an improper restriction of XML external entity reference vulnerability that could allow an unauthenticated, remote attacker to read sensitive configuration information on an affected system.",
+      "cwes": [
+        "CWE-611"
+      ],
+      "cvss": {
+        "score": 7.5,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N"
+      },
+      "ssvc": {
+        "exploitation": "active",
+        "automatable": "yes",
+        "technicalImpact": "partial"
+      },
+      "epss": 0.00385,
+      "epssPct": 0.32917,
+      "published": "2026-08-19T17:18:40.433",
+      "links": [
+        "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-bworks-xxe-uwUd7CEt",
+        "https://malbearlabs.com/posts/operation-snowball-inside-an-autonomous-ai-intrusion-campaign",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-20320"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-20320",
+      "affected": [
+        {
+          "vendor": "Cisco",
+          "product": "Cisco BroadWorks",
+          "ranges": [],
+          "all": true
+        }
+      ],
+      "ko": {
+        "title": "Cisco BroadWorks XXE 취약점(악용 확인)",
+        "target": "Cisco BroadWorks, 영향 버전은 벤더 공지 확인 필요",
+        "impact": "비인증 원격자가 XML 외부 개체 참조로 민감한 설정 정보 열람 가능",
+        "action": "Cisco 보안 권고 확인 후 패치, 외부 노출 여부 점검 (기한 2026-11-24)"
+      }
+    },
+    {
+      "id": "CVE-2026-124194",
+      "section": "exploited",
+      "vendor": "Microsoft",
+      "product": "Office",
+      "name": "Microsoft Office Outlook Missing User Interaction for Potentially Unsafe Action Vulnerability",
+      "dateAdded": "2026-11-10",
+      "due": "2026-11-24",
+      "ransomware": false,
+      "description": "Microsoft Office Outlook contains a missing user interaction for potentially unsafe action vulnerability that allows an unauthorized attacker to perform spoofing over a network.",
+      "cwes": [
+        "CWE-356"
+      ],
+      "cvss": {
+        "score": 6.5,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N"
+      },
+      "ssvc": {
+        "exploitation": "active",
+        "automatable": "no",
+        "technicalImpact": "partial"
+      },
+      "epss": null,
+      "epssPct": null,
+      "published": "2026-11-10T19:20:48.180",
+      "links": [
+        "https://msrc.microsoft.com/update-guide/en-US/vulnerability/CVE-2026-124194",
+        "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-124194",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-124194"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-124194",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft 365 Apps for Enterprise",
+          "ranges": [],
+          "truncated": true
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft Office LTSC 2021",
+          "ranges": [
+            {
+              "si": "16.0.1",
+              "ee": "16.0.14334.21048"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft Office LTSC 2024",
+          "ranges": [
+            {
+              "si": "16.0.0",
+              "ee": "16.0.17932.21140"
+            }
+          ]
+        }
+      ],
+      "ko": {
+        "title": "Microsoft Outlook 스푸핑 취약점(악용 확인)",
+        "target": "Microsoft Office Outlook, 영향 버전은 벤더 공지 확인 필요",
+        "impact": "네트워크 경유로 스푸핑 가능. 비인증 공격이며 사용자 상호작용 필요",
+        "action": "11월 Microsoft 보안 업데이트 즉시 적용 (기한 2026-11-24)"
+      }
+    },
+    {
+      "id": "CVE-2026-111793",
+      "section": "exploited",
+      "vendor": "Openwave Messaging Limited",
+      "product": "Webtop Media Transcoder",
+      "name": "Openwave Messaging Limited Webtop Media Transcoder Incorrect Resource Transfer Between Spheres Vulnerability",
+      "dateAdded": "2026-11-10",
+      "due": "2026-11-24",
+      "ransomware": false,
+      "description": "Openwave Messaging Limited Webtop Media Transcoder contains an incorrect resource transfer between spheres vulnerability that may allow an authenticated user to process and convert unintended document types if bypassing the Webmail experience.",
+      "cwes": [
+        "CWE-669"
+      ],
+      "cvss": {
+        "score": 4.3,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L"
+      },
+      "ssvc": {
+        "exploitation": "active",
+        "automatable": "no",
+        "technicalImpact": "partial"
+      },
+      "epss": 0.00274,
+      "epssPct": 0.19971,
+      "published": "2026-10-16T19:17:05.680",
+      "links": [
+        "https://github.com/GISOpenwave/security-advisories-public/blob/main/CAN-2026-2032674.md",
+        "https://jvn.jp/en/vu/JVNVU93403064/",
+        "https://openwave.ai"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-111793",
+      "affected": [
+        {
+          "vendor": "Openwave Messaging (Ireland) Limited",
+          "product": "Webtop Media Transcoder",
+          "ranges": [
+            {
+              "ee": "1.1.22.0"
+            }
+          ]
+        }
+      ],
+      "ko": {
+        "title": "Openwave Webtop Media Transcoder 리소스 전달 취약점",
+        "target": "Openwave Messaging Limited Webtop Media Transcoder",
+        "impact": "인증 사용자가 웹메일을 우회해 의도하지 않은 문서 유형 변환 가능. CVSS 4.3로 영향 제한적",
+        "action": "벤더 패치 확인 및 적용 (기한 2026-11-24)"
+      }
+    }
+  ],
+  "exploited_more": [],
+  "critical": [
+    {
+      "id": "CVE-2026-120017",
+      "ids": [
+        "CVE-2026-120017",
+        "CVE-2026-76964",
+        "CVE-2026-89103",
+        "CVE-2026-89126",
+        "CVE-2026-109795",
+        "CVE-2026-109803",
+        "CVE-2026-76965",
+        "CVE-2026-89119",
+        "CVE-2026-109798"
+      ],
+      "section": "critical",
+      "label": "SAP",
+      "vendor": "SAP",
+      "cna": "cna@sap.com",
+      "status": "Received",
+      "published": "2026-11-10T01:17:16.803",
+      "description": "SAP NetWeaver AS ABAP and ABAP Platform does not perform sufficient verification of incoming authentication assertions under certain configurations. An unauthenticated attacker could submit specially crafted data to bypass authentication and impersonate arbitrary users, including privileged accounts. Successful exploitation could cause a full system compromise, with the impact potentially extending to connected components and systems beyond the affected system. This results in a high impact on confidentiality, integrity, and availability of the application.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-120017",
+          "text": "SAP NetWeaver AS ABAP and ABAP Platform does not perform sufficient verification of incoming authentication assertions under certain configurations. An unauthenticated attacker could submit specially crafted data to bypass authentication and impersonate arbitrary users, including privileged account…"
+        },
+        {
+          "id": "CVE-2026-76964",
+          "text": "SAP NetWeaver Application Server ABAP does not sufficiently validate certain network input processed by an internal component. An unauthenticated attacker could send specially crafted network traffic to trigger a memory corruption condition in the affected functionality. Successful exploitation cou…"
+        },
+        {
+          "id": "CVE-2026-89103",
+          "text": "SAP Gateway activates the default Access Control List with high privileges allowing categorization of external attacker as internal application server. As a result an unauthenticated attacker with network access to the SAP Gateway could exploit this weakness to potentially perform unauthorized acti…"
+        },
+        {
+          "id": "CVE-2026-89126",
+          "text": "SAP Web Dispatcher does not sufficiently validate certain network input processed by an internal component. An unauthenticated attacker could send specially crafted network traffic to trigger a memory corruption condition in the affected functionality. Successful exploitation could allow the attack…"
+        },
+        {
+          "id": "CVE-2026-109795",
+          "text": "SAP NetWeaver does not perform necessary authorization checks and lacks sufficient input validation in certain remote-enabled functionality. An attacker with low privileges could send specially crafted input through a remote interface to inject and execute arbitrary code within the affected system.…"
+        }
+      ],
+      "cwes": [
+        "CWE-347",
+        "CWE-1287",
+        "CWE-863",
+        "CWE-122",
+        "CWE-94",
+        "CWE-749",
+        "CWE-352",
+        "CWE-611"
+      ],
+      "cvss": {
+        "score": 10,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": 0.00431,
+      "links": [
+        "https://me.sap.com/notes/3849308",
+        "https://url.sap/sapsecuritypatchday",
+        "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72295"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-120017",
+      "affected": [
+        {
+          "vendor": "SAP_SE",
+          "product": "SAP NetWeaver AS ABAP and ABAP Platform (SAML2 Service Provider)",
+          "ranges": [],
+          "truncated": true
+        },
+        {
+          "vendor": "SAP_SE",
+          "product": "SAP NetWeaver AS ABAP (Internet Communication Manager)",
+          "ranges": [
+            {
+              "exact": "7.54"
+            },
+            {
+              "exact": "7.77"
+            },
+            {
+              "exact": "7.93"
+            },
+            {
+              "exact": "9.16"
+            },
+            {
+              "exact": "9.18"
+            },
+            {
+              "exact": "9.20"
+            }
+          ],
+          "truncated": true
+        },
+        {
+          "vendor": "SAP_SE",
+          "product": "SAP Gateway",
+          "ranges": [
+            {
+              "exact": "7.22EXT"
+            },
+            {
+              "exact": "7.53"
+            },
+            {
+              "exact": "8.04"
+            },
+            {
+              "exact": "7.54"
+            },
+            {
+              "exact": "7.77"
+            },
+            {
+              "exact": "7.93"
+            },
+            {
+              "exact": "9.16"
+            },
+            {
+              "exact": "9.20"
+            },
+            {
+              "exact": "9.21"
+            }
+          ],
+          "truncated": true
+        }
+      ],
+      "flags": {
+        "watch": "SAP",
+        "kisa": "SAP 제품 보안 업데이트 권고",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 15.62,
+      "ko": {
+        "title": "SAP NetWeaver ABAP 인증 우회 취약점(CVSS 10.0)",
+        "target": "SAP NetWeaver AS ABAP, ABAP Platform, SAP Gateway 일부 구성",
+        "impact": "비인증 공격자가 인증 검증을 우회해 관리자 등 사용자 사칭 가능. 악용 정보는 없음",
+        "action": "SAP 월간 보안패치 즉시 적용, Gateway 기본 ACL 설정 점검"
+      }
+    },
+    {
+      "id": "CVE-2026-96157",
+      "ids": [
+        "CVE-2026-96157"
+      ],
+      "section": "critical",
+      "label": "Microsoft Windows Media Foundation",
+      "vendor": "Microsoft",
+      "cna": "secure@microsoft.com",
+      "status": "Awaiting Analysis",
+      "published": "2026-11-10T19:22:13.027",
+      "description": "Heap-based buffer overflow in Microsoft Windows Media Foundation allows an unauthorized attacker to execute code over a network.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-96157",
+          "text": "Heap-based buffer overflow in Microsoft Windows Media Foundation allows an unauthorized attacker to execute code over a network."
+        }
+      ],
+      "cwes": [
+        "CWE-122"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-96157"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-96157",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 1607",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 1809",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 21H2",
+          "ranges": [
+            {
+              "si": "10.0.19044.0",
+              "ee": "10.0.19044.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 22H2",
+          "ranges": [
+            {
+              "si": "10.0.19045.0",
+              "ee": "10.0.19045.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 24H2",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 25H2",
+          "ranges": [
+            {
+              "si": "10.0.26200.0",
+              "ee": "10.0.26200.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 26H1",
+          "ranges": [
+            {
+              "si": "10.0.28000.0",
+              "ee": "10.0.28000.3501"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 26H2",
+          "ranges": [
+            {
+              "si": "10.0.26300.0",
+              "ee": "10.0.26300.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2022",
+          "ranges": [
+            {
+              "si": "10.0.20348.0",
+              "ee": "10.0.20348.5870"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        }
+      ],
+      "flags": {
+        "watch": "Microsoft",
+        "kisa": "",
+        "news": true,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 14.8,
+      "ko": {
+        "title": "Windows Media Foundation 힙 버퍼 오버플로(CVSS 9.8)",
+        "target": "Microsoft Windows Media Foundation, 영향 버전은 벤더 공지 확인 필요",
+        "impact": "네트워크 경유 비인증 원격 코드 실행 가능. 악용 확인 정보는 없음",
+        "action": "Microsoft 보안 업데이트 적용, 벤더 공지 확인"
+      }
+    },
+    {
+      "id": "CVE-2026-116928",
+      "ids": [
+        "CVE-2026-116928"
+      ],
+      "section": "critical",
+      "label": "Microsoft Windows Search Component",
+      "vendor": "Microsoft",
+      "cna": "secure@microsoft.com",
+      "status": "Awaiting Analysis",
+      "published": "2026-11-10T19:19:21.287",
+      "description": "Out-of-bounds write in Microsoft Windows Search Component allows an unauthorized attacker to execute code over a network.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-116928",
+          "text": "Out-of-bounds write in Microsoft Windows Search Component allows an unauthorized attacker to execute code over a network."
+        }
+      ],
+      "cwes": [
+        "CWE-787"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-116928"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-116928",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 1607",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 1809",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 21H2",
+          "ranges": [
+            {
+              "si": "10.0.19044.0",
+              "ee": "10.0.19044.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 22H2",
+          "ranges": [
+            {
+              "si": "10.0.19045.0",
+              "ee": "10.0.19045.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 24H2",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 25H2",
+          "ranges": [
+            {
+              "si": "10.0.26200.0",
+              "ee": "10.0.26200.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 26H1",
+          "ranges": [
+            {
+              "si": "10.0.28000.0",
+              "ee": "10.0.28000.3501"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 26H2",
+          "ranges": [
+            {
+              "si": "10.0.26300.0",
+              "ee": "10.0.26300.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2022",
+          "ranges": [
+            {
+              "si": "10.0.20348.0",
+              "ee": "10.0.20348.5870"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        }
+      ],
+      "flags": {
+        "watch": "Microsoft",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 12.8,
+      "ko": {
+        "title": "Windows Search Component 범위 외 쓰기(CVSS 9.8)",
+        "target": "Microsoft Windows Search Component, 영향 버전은 벤더 공지 확인 필요",
+        "impact": "네트워크 경유 비인증 원격 코드 실행 가능. 악용 확인 정보는 없음",
+        "action": "Microsoft 보안 업데이트 적용, 불필요한 네트워크 노출 차단"
+      }
+    }
+  ],
+  "critical_more": [
+    {
+      "id": "CVE-2026-116945",
+      "ids": [
+        "CVE-2026-116945"
+      ],
+      "label": "Microsoft SQL Server",
+      "vendor": "Microsoft",
+      "cvss": 9.8,
+      "title": "Microsoft SQL Server 힙 버퍼 오버플로",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft SQL Server 2017 (GDR)",
+          "ranges": [
+            {
+              "si": "14.0.0",
+              "ee": "14.0.2150.2"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft SQL Server 2017 for x64-based Systems (CU31)",
+          "ranges": [
+            {
+              "si": "14.0.3006.16",
+              "ee": "14.0.3570.2"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft SQL Server 2019 (GDR)",
+          "ranges": [
+            {
+              "si": "15.0.0",
+              "ee": "15.0.2210.4"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft SQL Server 2019 for x64-based Systems (CU32)",
+          "ranges": [
+            {
+              "si": "15.0.4003.23",
+              "ee": "15.0.4510.2"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft SQL Server 2022 (GDR)",
+          "ranges": [
+            {
+              "si": "16.0.0",
+              "ee": "16.0.1220.3"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft SQL Server 2022 for x64-based Systems (CU27)",
+          "ranges": [
+            {
+              "si": "16.0.4003.1",
+              "ee": "16.0.4315.2"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft SQL Server 2025 CU10",
+          "ranges": [
+            {
+              "si": "17.0.4006.0",
+              "ee": "17.0.5045.3"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft SQL Server 2025 for x64-based Systems (GDR)",
+          "ranges": [
+            {
+              "si": "17.0.1050.2",
+              "ee": "17.0.1155.3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-119958",
+      "ids": [
+        "CVE-2026-119958"
+      ],
+      "label": "Microsoft",
+      "vendor": "Microsoft",
+      "cvss": 9.8,
+      "title": "Microsoft 범위 밖 쓰기",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 1607",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 1809",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 21H2",
+          "ranges": [
+            {
+              "si": "10.0.19044.0",
+              "ee": "10.0.19044.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 22H2",
+          "ranges": [
+            {
+              "si": "10.0.19045.0",
+              "ee": "10.0.19045.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 24H2",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 25H2",
+          "ranges": [
+            {
+              "si": "10.0.26200.0",
+              "ee": "10.0.26200.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 26H1",
+          "ranges": [
+            {
+              "si": "10.0.28000.0",
+              "ee": "10.0.28000.3501"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 26H2",
+          "ranges": [
+            {
+              "si": "10.0.26300.0",
+              "ee": "10.0.26300.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2022",
+          "ranges": [
+            {
+              "si": "10.0.20348.0",
+              "ee": "10.0.20348.5870"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-85844",
+      "ids": [
+        "CVE-2026-85844"
+      ],
+      "label": "Microsoft Windows Kerberos",
+      "vendor": "Microsoft",
+      "cvss": 9.8,
+      "title": "Microsoft Windows Kerberos 대체 경로 인증 우회",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 1607",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 1809",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 21H2",
+          "ranges": [
+            {
+              "si": "10.0.19044.0",
+              "ee": "10.0.19044.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 22H2",
+          "ranges": [
+            {
+              "si": "10.0.19045.0",
+              "ee": "10.0.19045.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 24H2",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 25H2",
+          "ranges": [
+            {
+              "si": "10.0.26200.0",
+              "ee": "10.0.26200.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 26H1",
+          "ranges": [
+            {
+              "si": "10.0.28000.0",
+              "ee": "10.0.28000.3501"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 26H2",
+          "ranges": [
+            {
+              "si": "10.0.26300.0",
+              "ee": "10.0.26300.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2012",
+          "ranges": [
+            {
+              "si": "6.2.9200.0",
+              "ee": "6.2.9200.26434"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2012 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "6.2.9200.0",
+              "ee": "6.2.9200.26434"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2012 R2",
+          "ranges": [
+            {
+              "si": "6.3.9600.0",
+              "ee": "6.3.9600.23470"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2012 R2 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "6.3.9600.0",
+              "ee": "6.3.9600.23470"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2022",
+          "ranges": [
+            {
+              "si": "10.0.20348.0",
+              "ee": "10.0.20348.5870"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-88218",
+      "ids": [
+        "CVE-2026-88218"
+      ],
+      "label": "Microsoft Windows DNS",
+      "vendor": "Microsoft",
+      "cvss": 9.8,
+      "title": "Microsoft Windows DNS 이중 해제",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 1607",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 1809",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 21H2",
+          "ranges": [
+            {
+              "si": "10.0.19044.0",
+              "ee": "10.0.19044.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 22H2",
+          "ranges": [
+            {
+              "si": "10.0.19045.0",
+              "ee": "10.0.19045.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 24H2",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 25H2",
+          "ranges": [
+            {
+              "si": "10.0.26200.0",
+              "ee": "10.0.26200.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 26H1",
+          "ranges": [
+            {
+              "si": "10.0.28000.0",
+              "ee": "10.0.28000.3501"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 26H2",
+          "ranges": [
+            {
+              "si": "10.0.26300.0",
+              "ee": "10.0.26300.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2022",
+          "ranges": [
+            {
+              "si": "10.0.20348.0",
+              "ee": "10.0.20348.5870"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-88234",
+      "ids": [
+        "CVE-2026-88234"
+      ],
+      "label": "Microsoft",
+      "vendor": "Microsoft",
+      "cvss": 9.8,
+      "title": "Microsoft 취약점",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2022",
+          "ranges": [
+            {
+              "si": "10.0.20348.0",
+              "ee": "10.0.20348.5870"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-95882",
+      "ids": [
+        "CVE-2026-95882"
+      ],
+      "label": "Windows Microsoft DirectMusic",
+      "vendor": "Microsoft",
+      "cvss": 9.8,
+      "title": "Windows Microsoft DirectMusic 스택 버퍼 오버플로",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 1607",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 1809",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 21H2",
+          "ranges": [
+            {
+              "si": "10.0.19044.0",
+              "ee": "10.0.19044.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 22H2",
+          "ranges": [
+            {
+              "si": "10.0.19045.0",
+              "ee": "10.0.19045.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 24H2",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 25H2",
+          "ranges": [
+            {
+              "si": "10.0.26200.0",
+              "ee": "10.0.26200.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 26H1",
+          "ranges": [
+            {
+              "si": "10.0.28000.0",
+              "ee": "10.0.28000.3501"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 26H2",
+          "ranges": [
+            {
+              "si": "10.0.26300.0",
+              "ee": "10.0.26300.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2022",
+          "ranges": [
+            {
+              "si": "10.0.20348.0",
+              "ee": "10.0.20348.5870"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-95901",
+      "ids": [
+        "CVE-2026-95901"
+      ],
+      "label": "Windows Microsoft DirectMusic",
+      "vendor": "Microsoft",
+      "cvss": 9.8,
+      "title": "Windows Microsoft DirectMusic 이중 해제",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 1607",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 1809",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 21H2",
+          "ranges": [
+            {
+              "si": "10.0.19044.0",
+              "ee": "10.0.19044.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 22H2",
+          "ranges": [
+            {
+              "si": "10.0.19045.0",
+              "ee": "10.0.19045.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 24H2",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 25H2",
+          "ranges": [
+            {
+              "si": "10.0.26200.0",
+              "ee": "10.0.26200.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 26H1",
+          "ranges": [
+            {
+              "si": "10.0.28000.0",
+              "ee": "10.0.28000.3501"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 26H2",
+          "ranges": [
+            {
+              "si": "10.0.26300.0",
+              "ee": "10.0.26300.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2022",
+          "ranges": [
+            {
+              "si": "10.0.20348.0",
+              "ee": "10.0.20348.5870"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-96067",
+      "ids": [
+        "CVE-2026-96067"
+      ],
+      "label": "Microsoft Color Management",
+      "vendor": "Microsoft",
+      "cvss": 9.8,
+      "title": "Microsoft Color Management 정수 오버플로",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 1607",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 1809",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 21H2",
+          "ranges": [
+            {
+              "si": "10.0.19044.0",
+              "ee": "10.0.19044.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 22H2",
+          "ranges": [
+            {
+              "si": "10.0.19045.0",
+              "ee": "10.0.19045.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 24H2",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 25H2",
+          "ranges": [
+            {
+              "si": "10.0.26200.0",
+              "ee": "10.0.26200.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 26H1",
+          "ranges": [
+            {
+              "si": "10.0.28000.0",
+              "ee": "10.0.28000.3501"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 26H2",
+          "ranges": [
+            {
+              "si": "10.0.26300.0",
+              "ee": "10.0.26300.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2022",
+          "ranges": [
+            {
+              "si": "10.0.20348.0",
+              "ee": "10.0.20348.5870"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-96078",
+      "ids": [
+        "CVE-2026-96078"
+      ],
+      "label": "Microsoft Color Management",
+      "vendor": "Microsoft",
+      "cvss": 9.8,
+      "title": "Microsoft Color Management 힙 버퍼 오버플로",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 1607",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 1809",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 21H2",
+          "ranges": [
+            {
+              "si": "10.0.19044.0",
+              "ee": "10.0.19044.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 22H2",
+          "ranges": [
+            {
+              "si": "10.0.19045.0",
+              "ee": "10.0.19045.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 24H2",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 25H2",
+          "ranges": [
+            {
+              "si": "10.0.26200.0",
+              "ee": "10.0.26200.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 26H1",
+          "ranges": [
+            {
+              "si": "10.0.28000.0",
+              "ee": "10.0.28000.3501"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 26H2",
+          "ranges": [
+            {
+              "si": "10.0.26300.0",
+              "ee": "10.0.26300.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2022",
+          "ranges": [
+            {
+              "si": "10.0.20348.0",
+              "ee": "10.0.20348.5870"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-123807",
+      "ids": [
+        "CVE-2026-123807"
+      ],
+      "label": "Signal K Server",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "Signal K Server 경로 조작",
+      "affected": [
+        {
+          "vendor": "SignalK",
+          "product": "signalk-server",
+          "ranges": [
+            {
+              "si": "2.0.0",
+              "ee": "2.34.0"
+            }
+          ]
+        },
+        {
+          "vendor": "@signalk",
+          "product": "resources-provider",
+          "ranges": [
+            {
+              "si": "1.0.0",
+              "ee": "1.5.3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121653",
+      "ids": [
+        "CVE-2026-121653"
+      ],
+      "label": "Core of Ivanti Endpoint Manager",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "Core of Ivanti Endpoint Manager SQL 삽입",
+      "affected": [
+        {
+          "vendor": "ivanti",
+          "product": "Endpoint Manager",
+          "ranges": [],
+          "all": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-112967",
+      "ids": [
+        "CVE-2026-112967"
+      ],
+      "label": "Microsoft Windows Xbox Live Networking Service",
+      "vendor": "Microsoft",
+      "cvss": 9.8,
+      "title": "Microsoft Windows Xbox Live Networking Service 힙 버퍼 오버플로",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 1809",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 21H2",
+          "ranges": [
+            {
+              "si": "10.0.19044.0",
+              "ee": "10.0.19044.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 22H2",
+          "ranges": [
+            {
+              "si": "10.0.19045.0",
+              "ee": "10.0.19045.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 24H2",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 25H2",
+          "ranges": [
+            {
+              "si": "10.0.26200.0",
+              "ee": "10.0.26200.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 26H1",
+          "ranges": [
+            {
+              "si": "10.0.28000.0",
+              "ee": "10.0.28000.3501"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 26H2",
+          "ranges": [
+            {
+              "si": "10.0.26300.0",
+              "ee": "10.0.26300.9974"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-66801",
+      "ids": [
+        "CVE-2026-66801"
+      ],
+      "label": "Microsoft Xbox",
+      "vendor": "Microsoft",
+      "cvss": 9.8,
+      "title": "Microsoft Xbox 힙 버퍼 오버플로",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft GDK",
+          "ranges": [
+            {
+              "si": "1.0.0.0",
+              "ee": "2610"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-88243",
+      "ids": [
+        "CVE-2026-88243"
+      ],
+      "label": "Microsoft Windows DHCP Server",
+      "vendor": "Microsoft",
+      "cvss": 9.8,
+      "title": "Microsoft Windows DHCP Server 범위 밖 읽기",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2022",
+          "ranges": [
+            {
+              "si": "10.0.20348.0",
+              "ee": "10.0.20348.5870"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121289",
+      "ids": [
+        "CVE-2026-121289"
+      ],
+      "label": "Arista",
+      "vendor": "Arista",
+      "cvss": 9.8,
+      "title": "Arista 스택 버퍼 오버플로",
+      "affected": [
+        {
+          "vendor": "Arista Networks",
+          "product": "EOS",
+          "ranges": [
+            {
+              "si": "4.36.0F",
+              "ei": "4.36.2F"
+            },
+            {
+              "si": "4.35.0F",
+              "ei": "4.35.6M"
+            },
+            {
+              "si": "4.34.0F",
+              "ei": "4.34.8M"
+            },
+            {
+              "si": "4.33.0F",
+              "ei": "4.33.10M"
+            },
+            {
+              "si": "4.25.1F",
+              "ee": "4.33.0F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-108186",
+      "ids": [
+        "CVE-2026-108186"
+      ],
+      "label": "Zoom Workplace for Windows",
+      "vendor": "",
+      "cvss": 9.6,
+      "title": "Zoom Workplace for Windows 입력값 검증 부적절",
+      "affected": [
+        {
+          "vendor": "Zoom Communications",
+          "product": "Zoom Workplace",
+          "ranges": [
+            {
+              "si": "7.1",
+              "ee": "7.1.8"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-120779",
+      "ids": [
+        "CVE-2026-120779"
+      ],
+      "label": "Microsoft Visual Studio Code",
+      "vendor": "Microsoft",
+      "cvss": 9.6,
+      "title": "Microsoft Visual Studio Code 코드 삽입",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Visual Studio Code",
+          "ranges": [
+            {
+              "si": "1.0.0",
+              "ee": "1.145.3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121529",
+      "ids": [
+        "CVE-2026-121529"
+      ],
+      "label": "Fortinet FortiClientMac",
+      "vendor": "Fortinet",
+      "cvss": 9.6,
+      "title": "Fortinet FortiClientMac 출처 검증 오류",
+      "affected": [
+        {
+          "vendor": "Fortinet",
+          "product": "FortiClientMac",
+          "ranges": [
+            {
+              "si": "7.4.0",
+              "ei": "7.4.7"
+            }
+          ]
+        },
+        {
+          "vendor": "Fortinet",
+          "product": "FortiClientWindows",
+          "ranges": [
+            {
+              "si": "7.4.0",
+              "ei": "7.4.7"
+            },
+            {
+              "si": "7.2.0",
+              "ei": "7.2.14"
+            }
+          ]
+        },
+        {
+          "vendor": "Fortinet",
+          "product": "FortiClientWindowsPAM",
+          "ranges": [
+            {
+              "exact": "7.4.7"
+            },
+            {
+              "exact": "7.2.14"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-120002",
+      "ids": [
+        "CVE-2026-120002"
+      ],
+      "label": "Microsoft Office SharePoint",
+      "vendor": "Microsoft",
+      "cvss": 9.9,
+      "title": "Microsoft Office SharePoint 권한 검사 오류",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft SharePoint Server Subscription Edition",
+          "ranges": [
+            {
+              "si": "16.0.0",
+              "ee": "16.0.20326.20278"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121683",
+      "ids": [
+        "CVE-2026-121683"
+      ],
+      "label": "Ivanti Cloud Services Application",
+      "vendor": "",
+      "cvss": 9.4,
+      "title": "Ivanti Cloud Services Application 중요 기능 인증 누락",
+      "affected": [
+        {
+          "vendor": "Ivanti",
+          "product": "Cloud Services Application",
+          "ranges": [],
+          "all": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121295",
+      "ids": [
+        "CVE-2026-121295"
+      ],
+      "label": "Arista",
+      "vendor": "Arista",
+      "cvss": 9.2,
+      "title": "Arista 취약점",
+      "affected": [
+        {
+          "vendor": "Arista Networks",
+          "product": "EOS",
+          "ranges": [
+            {
+              "si": "4.36.0F",
+              "ei": "4.36.2F"
+            },
+            {
+              "si": "4.35.0F",
+              "ei": "4.35.6M"
+            },
+            {
+              "si": "4.34.0F",
+              "ei": "4.34.8M"
+            },
+            {
+              "si": "4.33.0F",
+              "ei": "4.33.10M"
+            },
+            {
+              "si": "4.32.0F",
+              "ee": "4.33.0F"
+            },
+            {
+              "si": "1.0.0",
+              "ee": "4.32.0F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121370",
+      "ids": [
+        "CVE-2026-121370"
+      ],
+      "label": "Arista",
+      "vendor": "Arista",
+      "cvss": 9.2,
+      "title": "Arista 자원 할당 제한 없음",
+      "affected": [
+        {
+          "vendor": "Arista Networks",
+          "product": "EOS",
+          "ranges": [
+            {
+              "si": "4.34.0F",
+              "ei": "4.34.1F"
+            },
+            {
+              "si": "4.33.0F",
+              "ei": "4.33.8M"
+            },
+            {
+              "si": "4.32.0F",
+              "ee": "4.33.0F"
+            },
+            {
+              "si": "4.31.0F",
+              "ee": "4.32.0F"
+            },
+            {
+              "si": "4.30.0F",
+              "ee": "4.31.0F"
+            },
+            {
+              "si": "4.29.2F",
+              "ee": "4.30.0F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-121367",
+      "ids": [
+        "CVE-2026-121367"
+      ],
+      "label": "Arista",
+      "vendor": "Arista",
+      "cvss": 9.6,
+      "title": "Arista 취약점",
+      "affected": [
+        {
+          "vendor": "Arista Networks",
+          "product": "EOS",
+          "ranges": [
+            {
+              "si": "1.0.0",
+              "ee": "4.33.0F"
+            },
+            {
+              "si": "4.33.0F",
+              "ei": "4.33.10M"
+            },
+            {
+              "si": "4.34.0F",
+              "ei": "4.34.8M"
+            },
+            {
+              "si": "4.35.0F",
+              "ei": "4.35.6M"
+            },
+            {
+              "si": "4.36.0F",
+              "ei": "4.36.2F"
+            },
+            {
+              "exact": "4.37.0F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-118740",
+      "ids": [
+        "CVE-2026-118740"
+      ],
+      "label": "Microsoft Aspire",
+      "vendor": "Microsoft",
+      "cvss": 9.1,
+      "title": "Microsoft Aspire 권한 검사 누락",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Aspire Dashboard",
+          "ranges": [
+            {
+              "si": "13.6.1",
+              "ee": "13.6.5"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Aspire.Dashboard.Sdk.linux-x64",
+          "ranges": [
+            {
+              "si": "13.6.1",
+              "ee": "13.6.5"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-95962",
+      "ids": [
+        "CVE-2026-95962"
+      ],
+      "label": "Microsoft Windows Virtual Filtering Platform (VFP)",
+      "vendor": "Microsoft",
+      "cvss": 9,
+      "title": "Microsoft Windows Virtual Filtering Platform (VFP) 해제 후 사용(…",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 1809",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 21H2",
+          "ranges": [
+            {
+              "si": "10.0.19044.0",
+              "ee": "10.0.19044.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 10 Version 22H2",
+          "ranges": [
+            {
+              "si": "10.0.19045.0",
+              "ee": "10.0.19045.7846"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 23H2",
+          "ranges": [
+            {
+              "si": "10.0.22631.0",
+              "ee": "10.0.22631.7711"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 24H2",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 25H2",
+          "ranges": [
+            {
+              "si": "10.0.26200.0",
+              "ee": "10.0.26200.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 version 26H1",
+          "ranges": [
+            {
+              "si": "10.0.28000.0",
+              "ee": "10.0.28000.3501"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows 11 Version 26H2",
+          "ranges": [
+            {
+              "si": "10.0.26300.0",
+              "ee": "10.0.26300.9974"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2016 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.14393.0",
+              "ee": "10.0.14393.9688"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2019 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.17763.0",
+              "ee": "10.0.17763.9487"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2022",
+          "ranges": [
+            {
+              "si": "10.0.20348.0",
+              "ee": "10.0.20348.5870"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Windows Server 2025 (Server Core installation)",
+          "ranges": [
+            {
+              "si": "10.0.26100.0",
+              "ee": "10.0.26100.33822"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-102166",
+      "ids": [
+        "CVE-2026-102166"
+      ],
+      "label": "Arista",
+      "vendor": "Arista",
+      "cvss": 9.4,
+      "title": "Arista 하드코딩 인증정보",
+      "affected": [
+        {
+          "vendor": "Arista Networks",
+          "product": "Wi-Fi Access Point",
+          "ranges": [
+            {
+              "si": "1.0.0"
+            }
+          ],
+          "all": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-119990",
+      "ids": [
+        "CVE-2026-119990"
+      ],
+      "label": "Microsoft Azure OpenAI",
+      "vendor": "Microsoft",
+      "cvss": 9.8,
+      "title": "Microsoft Azure OpenAI 중요 기능 인증 누락",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Azure Open AI",
+          "ranges": [],
+          "truncated": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-114162",
+      "ids": [
+        "CVE-2026-114162"
+      ],
+      "label": "Microsoft Graph",
+      "vendor": "Microsoft",
+      "cvss": 9.1,
+      "title": "Microsoft Graph 권한 검사 오류",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Azure Privileged Identity Management (PIM)",
+          "ranges": [
+            {
+              "si": "1.0.0",
+              "ee": "2.0.32.2053"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-109454",
+      "ids": [
+        "CVE-2026-109454"
+      ],
+      "label": "Microsoft Office SharePoint",
+      "vendor": "Microsoft",
+      "cvss": 9,
+      "title": "Microsoft Office SharePoint 크로스사이트 스크립팅(XSS)",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft SharePoint Server Subscription Edition",
+          "ranges": [
+            {
+              "si": "16.0.0",
+              "ee": "16.0.20326.20278"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-114146",
+      "ids": [
+        "CVE-2026-114146"
+      ],
+      "label": "Microsoft ASP.NET Core",
+      "vendor": "Microsoft",
+      "cvss": 9,
+      "title": "Microsoft ASP.NET Core 권한 검사 오류",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": ".NET 10.0 installed on Linux",
+          "ranges": [
+            {
+              "si": "10.0.0",
+              "ee": "10.0.15"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": ".NET 10.0 installed on Mac OS",
+          "ranges": [
+            {
+              "si": "10.0.0",
+              "ee": "10.0.15"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": ".NET 10.0 installed on Windows",
+          "ranges": [
+            {
+              "si": "10.0.0",
+              "ee": "10.0.15"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": ".NET 11.0 installed on Linux",
+          "ranges": [
+            {
+              "si": "11.0.0-preview.1",
+              "ee": "11.0.0"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": ".NET 11.0 installed on Mac OS",
+          "ranges": [
+            {
+              "si": "11.0.0-preview.1",
+              "ee": "11.0.0"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": ".NET 11.0 installed on Windows",
+          "ranges": [
+            {
+              "si": "11.0.0-preview.1",
+              "ee": "11.0.0"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": ".NET 8.0 installed on Linux",
+          "ranges": [
+            {
+              "si": "8.0.0",
+              "ee": "8.0.34"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": ".NET 8.0 installed on Mac OS",
+          "ranges": [
+            {
+              "si": "8.0.0",
+              "ee": "8.0.34"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": ".NET 8.0 installed on Windows",
+          "ranges": [
+            {
+              "si": "8.0.0",
+              "ee": "8.0.34"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": ".NET 9.0 installed on Linux",
+          "ranges": [
+            {
+              "si": "9.0.0",
+              "ee": "9.0.23"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": ".NET 9.0 installed on Mac OS",
+          "ranges": [
+            {
+              "si": "9.0.0",
+              "ee": "9.0.23"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": ".NET 9.0 installed on Windows",
+          "ranges": [
+            {
+              "si": "9.0.0",
+              "ee": "9.0.23"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft Visual Studio 2022 version 17.14",
+          "ranges": [
+            {
+              "si": "17.14.0",
+              "ee": "17.14.45"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft Visual Studio 2026 version 18.11",
+          "ranges": [
+            {
+              "si": "18.11.0",
+              "ee": "18.11.4"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft Visual Studio 2026 version 18.12",
+          "ranges": [
+            {
+              "si": "18.12.0",
+              "ee": "18.12.0"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft.AspNetCore.Http.Connections",
+          "ranges": [
+            {
+              "si": "1.2.0",
+              "ee": "1.2.14"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-80095",
+      "ids": [
+        "CVE-2026-80095"
+      ],
+      "label": "Microsoft Office SharePoint",
+      "vendor": "Microsoft",
+      "cvss": 9,
+      "title": "Microsoft Office SharePoint 크로스사이트 스크립팅(XSS)",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-125757",
+      "ids": [
+        "CVE-2026-125757"
+      ],
+      "label": "CVE-2026-125757",
+      "vendor": "",
+      "cvss": 9.4,
+      "title": "CVE-2026-125757 템플릿 삽입",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-114160",
+      "ids": [
+        "CVE-2026-114160"
+      ],
+      "label": "Microsoft Azure Managed Grafana",
+      "vendor": "Microsoft",
+      "cvss": 9.8,
+      "title": "Microsoft Azure Managed Grafana 서버 측 요청 위조(SSRF)",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-125383",
+      "ids": [
+        "CVE-2026-125383",
+        "CVE-2026-125384"
+      ],
+      "label": "INDOTALENT WHMS",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "INDOTALENT WHMS 하드코딩 암호 키 등 2건",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-124600",
+      "ids": [
+        "CVE-2026-124600"
+      ],
+      "label": "CVE-2026-124600",
+      "vendor": "",
+      "cvss": 10,
+      "title": "CVE-2026-124600 중요 정보 평문 전송",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-109467",
+      "ids": [
+        "CVE-2026-109467"
+      ],
+      "label": "Microsoft Azure DevOps",
+      "vendor": "Microsoft",
+      "cvss": 9.9,
+      "title": "Microsoft Azure DevOps 인증 부적절",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-125120",
+      "ids": [
+        "CVE-2026-125120"
+      ],
+      "label": "Mongoose",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "Mongoose 취약점",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-115934",
+      "ids": [
+        "CVE-2026-115934"
+      ],
+      "label": "CVE-2026-115934",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "CVE-2026-115934 SQL 삽입",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-115646",
+      "ids": [
+        "CVE-2026-115646"
+      ],
+      "label": "CVE-2026-115646",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "CVE-2026-115646 취약점",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-61547",
+      "ids": [
+        "CVE-2026-61547"
+      ],
+      "label": "rabbitmq-c",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "rabbitmq-c 범위 밖 쓰기",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-124853",
+      "ids": [
+        "CVE-2026-124853",
+        "CVE-2026-124859",
+        "CVE-2026-124861",
+        "CVE-2026-124864",
+        "CVE-2026-124900",
+        "CVE-2026-124903",
+        "CVE-2026-124917"
+      ],
+      "label": "Mozilla",
+      "vendor": "Mozilla",
+      "cvss": 9.6,
+      "title": "Mozilla 버퍼 오버플로 등 7건",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-125086",
+      "ids": [
+        "CVE-2026-125086"
+      ],
+      "label": "D-Link M60",
+      "vendor": "",
+      "cvss": 10,
+      "title": "D-Link M60 하드코딩 비밀번호",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-13312",
+      "ids": [
+        "CVE-2026-13312"
+      ],
+      "label": "CVE-2026-13312",
+      "vendor": "",
+      "cvss": 9.9,
+      "title": "CVE-2026-13312 취약점",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-119446",
+      "ids": [
+        "CVE-2026-119446"
+      ],
+      "label": "CVE-2026-119446",
+      "vendor": "",
+      "cvss": 9.4,
+      "title": "CVE-2026-119446 세션 고정",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-125370",
+      "ids": [
+        "CVE-2026-125370"
+      ],
+      "label": "Kubero",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "Kubero 하드코딩 암호 키",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-60043",
+      "ids": [
+        "CVE-2026-60043"
+      ],
+      "label": "CVE-2026-60043",
+      "vendor": "",
+      "cvss": 9.3,
+      "title": "CVE-2026-60043 크로스사이트 스크립팅(XSS)",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-61887",
+      "ids": [
+        "CVE-2026-61887",
+        "CVE-2026-44685",
+        "CVE-2026-61473"
+      ],
+      "label": "Intel",
+      "vendor": "Intel",
+      "cvss": 9.4,
+      "title": "Intel 스푸핑 인증 우회 등 3건",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-107246",
+      "ids": [
+        "CVE-2026-107246"
+      ],
+      "label": "CVE-2026-107246",
+      "vendor": "",
+      "cvss": 9.2,
+      "title": "CVE-2026-107246 경로 조작",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-112136",
+      "ids": [
+        "CVE-2026-112136"
+      ],
+      "label": "Siemens Mendix Studio Pro",
+      "vendor": "Siemens",
+      "cvss": 9.2,
+      "title": "Siemens Mendix Studio Pro 취약점",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-82509",
+      "ids": [
+        "CVE-2026-82509"
+      ],
+      "label": "CVE-2026-82509",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "CVE-2026-82509 인증서 검증 부적절",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-125758",
+      "ids": [
+        "CVE-2026-125758"
+      ],
+      "label": "Aptabase",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "Aptabase 안전하지 않은 기본값",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-125331",
+      "ids": [
+        "CVE-2026-125331"
+      ],
+      "label": "HarnessRouter",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "HarnessRouter 권한 검사 누락",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-120808",
+      "ids": [
+        "CVE-2026-120808"
+      ],
+      "label": "CVE-2026-120808",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "CVE-2026-120808 인증서 검증 부적절",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-63011",
+      "ids": [
+        "CVE-2026-63011"
+      ],
+      "label": "Group-Office",
+      "vendor": "",
+      "cvss": 9.4,
+      "title": "Group-Office 코드 삽입",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-126087",
+      "ids": [
+        "CVE-2026-126087"
+      ],
+      "label": "CVE-2026-126087",
+      "vendor": "",
+      "cvss": 9.4,
+      "title": "CVE-2026-126087 취약점",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-123815",
+      "ids": [
+        "CVE-2026-123815"
+      ],
+      "label": "pyLoad",
+      "vendor": "",
+      "cvss": 9.4,
+      "title": "pyLoad 경로 조작",
+      "affected": []
+    }
+  ],
+  "advisories": [
+    {
+      "id": "a-b9b6bd93",
+      "source": "KISA 보안공지",
+      "title": "SAP 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72295",
+      "date": "2026-11-10"
+    },
+    {
+      "id": "a-d363eea6",
+      "source": "KISA 보안공지",
+      "title": "IBM 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72294",
+      "date": "2026-11-10"
+    },
+    {
+      "id": "a-8b80f875",
+      "source": "KISA 보안공지",
+      "title": "WordPress 플러그인 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72293",
+      "date": "2026-11-10"
+    },
+    {
+      "id": "a-ef16b246",
+      "source": "KISA 보안공지",
+      "title": "SonicWall 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72292",
+      "date": "2026-11-10"
+    },
+    {
+      "id": "a-ae397023",
+      "source": "KISA 보안공지",
+      "title": "OWASP 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72291",
+      "date": "2026-11-10"
+    }
+  ],
+  "news": {
+    "domestic": [
+      {
+        "id": "n-c68f8308",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "금융보안원도 해킹…금융사 직원 개인정보 유출",
+        "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTFBCU1hYVEFCMXZPbGY1THE5MUZMUU1NYmkwS0E1SE1aUFZjMkhORnRYdk1uWTI0R1ZyVlJvYjFZendnMWQzQ1NVRGJaV1hZUEN4SG81OVYyTmMzcTF0WE03MHpqN1ZCZWM?oc=5",
+        "source": "연합뉴스TV",
+        "published": "2026-11-10T20:35:00.000Z",
+        "snippet": "",
+        "outlets": [
+          "연합뉴스TV",
+          "MBC 뉴스",
+          "한겨레",
+          "YTN",
+          "SBS 뉴스",
+          "서울신문",
+          "IT조선",
+          "연합뉴스",
+          "코리아리포트",
+          "조선일보",
+          "비즈워치",
+          "강원도민일보",
+          "동행미디어 시대",
+          "미주중앙일보",
+          "아이뉴스24",
+          "동아일보",
+          "경향신문",
+          "신아일보",
+          "디지털데일리",
+          "Chosunbiz",
+          "채널A",
+          "KBC광주방송",
+          "매일경제",
+          "매일경제 마켓",
+          "천지일보",
+          "중앙일보",
+          "한국경제"
+        ],
+        "related": [
+          {
+            "title": "금융보안원마저 뚫렸다‥\"개인정보 650여 건 유출\"",
+            "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTE41dVQ0d1lYdThjbGk4VGFzWWpuR0g5Y1kxclZFVnRQVWJTbFd5cHZwZ183Qm1JSi11V0phUG9NQXc3Nm5SUVNoanRINU9kb0NDTWx2SllLbjFneUNrZXlpdElHSDgwcllQQXh6ODNDNWNqR0Z2NkNtb9IBeEFVX3lxTE11QlpqNWNnRHEzZmdrTGlVb1pEd19SdVBPNmtBMU82RWFwd3EzUk1adGdMOEhSRjI5NVdHWW93TVozMk9QbDZ4RHNFUDVZU1YwM3hBYWJTVWhNLW5nVl9iVUhLYWQ3SU92amp3ZFhacldJV2V3a2kwNg?oc=5",
+            "source": "MBC 뉴스"
+          },
+          {
+            "title": "금융보안원마저 뚫렸다…해킹에 금융사 정보 유출",
+            "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5ycVI3VjJYQ1VxcDVqT0F1UFRGM2o4c2tZdEhhTGZCVkZxZlNYVVFTQ3NVeG1PTEkwVUVMdWM2YUYyQjI0N2tnQmpMcmJPZWVUYTIyMmlseEw1SC14ZVZOSGJrejR2REk?oc=5",
+            "source": "한겨레"
+          },
+          {
+            "title": "금융보안원도 해킹에 털렸다...금융사 보안정보 유출",
+            "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE5lbzk3WU5UYy1wZ0xNTVgzSFE5M3dRdXVBUWFuV1RtbTZ1dHVla0dXWUhBaFoxTGRMN0J2RjJ5TVdMSkpCaTZhLXdGbkNROGFtUVlZSnpzc1BiUkVKcUE?oc=5",
+            "source": "YTN"
+          },
+          {
+            "title": "금융보안원도 뚫렸다…금융사 직원 개인정보 유출 정황",
+            "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE41T180b2x1dFFtMHdnYlNDb29LZE5scFFmb0dicmZqQVBTVkctU0hDMEMyQTJBaDQ5Z3E3b1NCNjBXTm1IODViZTQydmJsemcyVXZ3N3NLcWVjeXNJekp2R2hMUm9yWlFTc1HSAWZBVV95cUxNNlF6ZnF2Nm1ENDNHQnM2WmhfOUVocmI0MHE3QmM1MTRWYVpFVVlqVzNQZ3FvNXhZeXFSVW5BZWZOZzFoLTNRM2FrT2xQMjZ3VkxCWmx3Y0VEOVpJOE53YWxWRHV4U3c?oc=5",
+            "source": "SBS 뉴스"
+          },
+          {
+            "title": "‘보안문지기’ 금융보안원까지 해킹당했다",
+            "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTE4wZUU2Zk85YzR0dVNTMWdOZjJKZ3NSTENPX2ZLRjZWLWFkQU5KOTdtM3liV0ZMWm1UaGZvU2JZcWlrQTZoZDBKcGhhbW01eHcxdmZOWl9ncjhFQVZ1RFl4N1FfUy15UXRfUDJwQVEwNnJVNjlkQ2J1NTNR?oc=5",
+            "source": "서울신문"
+          }
+        ],
+        "cves": [],
+        "score": 22,
+        "title_ko": "금융보안원 해킹…금융사 직원 개인정보 유출",
+        "summary_ko": "금융보안원 정보보호 상시평가 사이트가 해킹돼 금융사 직원 이름, 연락처 등 개인정보 650여 건이 유출된 것으로 보도됨. 금융당국에 신고 완료, 금융권 보안 점검 필요."
+      },
+      {
+        "id": "n-e99f76b7",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "[더존비즈온 사태] 11월10일 유출 의심 기업 현황... 애자일소다·전남정보문화산업진흥원 유출 가능성",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=147151",
+        "source": "보안뉴스",
+        "published": "2026-11-10T07:18:02.000Z",
+        "snippet": "더존비즈온 APO 백업서비스에서 발생한 침해사고로 NH농협은행 AI 전문 자회사 애자일소다에서도 개인정보 유출 가능성이 제기됐다. 유출 가능성이 있는 항목은 △임직원 인적사항 △연락처 △고유식별정보 △금융정보 △인사·급여·세무정보 등이다. 애자일소다는 사고 이후 보안 강화 조치 및 모니터링을 진행하고 있으며, 관계기관 신고를 마치고 보안 전문업체를 통한 조사를 진행하고 있다. 전남정보문화산…",
+        "outlets": [
+          "보안뉴스"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 7.5,
+        "title_ko": "더존비즈온 APO 백업 침해…애자일소다 등 유출 우려",
+        "summary_ko": "더존비즈온 APO 백업서비스 침해사고로 NH농협은행 AI 자회사 애자일소다 등 유출 가능성 제기됨. 임직원 인사, 급여, 금융정보가 대상이며 조사 중. 백업 서비스 이용 기업 점검 필요."
+      },
+      {
+        "id": "n-9ccaca24",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "한일네트웍스 랜섬웨어 공격받아... “즉시 차단, 유출 피해 없어”",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=147152",
+        "source": "보안뉴스",
+        "published": "2026-11-10T07:47:27.000Z",
+        "snippet": "유베이스 그룹 IT 인프라 자회사 한일네트웍스에서 랜섬웨어 공격이 발생했던 사실이 뒤늦게 알려졌다. 한일네트워크는 공격 확인 즉시 방어 조치를 시행해 외부로 정보가 유출되지는 않았다는 입장이다. 그러나 한일네트웍스가 카드사 등 금융사들을 고객사로 두고 있는 만큼 금융당국은 한일네트웍스 랜섬웨어로 인한 피해가 없는지 점검하고 있다.10일 유베이스 그룹에 따르면 이달 2일 한일네트웍스가 관리하…",
+        "outlets": [
+          "보안뉴스"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 9,
+        "title_ko": "한일네트웍스 랜섬웨어 공격…즉시 차단, 유출 없다고 밝혀",
+        "summary_ko": "유베이스그룹 IT 자회사 한일네트웍스가 랜섬웨어 공격을 받았으나 즉시 차단했고 외부 유출은 없다고 주장함. 카드사 등 금융사가 고객사여서 금융당국이 피해 여부 점검 중."
+      },
+      {
+        "id": "n-49df94c3",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "조달청, 생성형 AI에 평가위원 189명 사진 유출…직원이 개발·시험 과정서 외부 전송",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209442",
+        "source": "데일리시큐",
+        "published": "2026-11-10T12:45:28.000Z",
+        "snippet": "조달청이 내부 인공지능(AI) 시스템을 개발하는 과정에서 온라인 평가위원 189명의 사진을 외부 생성형 AI 서비스에 업로드해 개인정보가 유출되는 사고가 발생했다. 조달청은 외부 해킹에 의한 사고는 아니며, 현재까지 사진 외 다른 개인정보 유출이나 2차 피해는 확인되지 않았다고 밝혔다. 조달청(청장 백승보)은 11월 10일 보도참고자료를 통해 이번 사고의 경위와 피해 최소화 조치, 재발 방…",
+        "outlets": [
+          "데일리시큐"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 8,
+        "title_ko": "조달청, 생성형 AI 업로드로 평가위원 사진 유출",
+        "summary_ko": "조달청이 내부 AI 시스템 개발 중 평가위원 189명의 사진을 외부 생성형 AI 서비스에 업로드해 유출됨. 외부 해킹은 아니며 추가 피해는 확인되지 않았다고 함. 외부 AI 서비스 데이터 반입 통제 필요."
+      },
+      {
+        "id": "n-2617c78d",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "줌줌투어, 해킹·개발 오류로 개인정보 유출…여행 일정·동행자 정보까지 노출",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209422",
+        "source": "데일리시큐",
+        "published": "2026-11-09T21:35:32.000Z",
+        "snippet": "여행 예약 플랫폼 줌줌투어에서 외부 공격과 리뷰 페이지 개발 오류에 따른 두 건의 개인정보 유출 사고가 확인됐다. 일부 고객과 가이드의 정보가 공격자에게 무단 조회됐으며, 별개의 개발 오류로 예약 정보와 동행자 정보 등이 약 2년간 외부에서 접근 가능한 상태였던 것으로 나타났다. 줌줌투어는 11월 6일 조현수 대표이사 명의의 공지를 통해 사고 경위와 대응 현황을 공개하고 사과했다. 회사는…",
+        "outlets": [
+          "데일리시큐"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 9,
+        "title_ko": "줌줌투어, 외부 공격·개발 오류로 개인정보 유출",
+        "summary_ko": "여행 예약 플랫폼 줌줌투어에서 외부 공격과 리뷰 페이지 개발 오류로 두 건의 개인정보 유출이 확인됨. 예약, 동행자 정보가 약 2년간 외부 접근 가능 상태였음. 개발 오류 점검 필요."
+      }
+    ],
+    "international": [
+      {
+        "id": "n-5e013a8f",
+        "region": "international",
+        "lang": "ko",
+        "title": "프랑스, 식료품점 냉장 설비 해킹 배후로 이란 혁명수비대 사이버 부대 지목",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=147124",
+        "source": "보안뉴스",
+        "published": "2026-11-10T01:40:40.000Z",
+        "snippet": "프랑스 당국이 10월 자국 식료품점 약 700곳의 냉장 시스템을 파괴한 사건의 배후로 이란 혁명수비대(IRGC)를 공식 지목했다. 프랑스 당국이 이번 사태의 배후를 지목한 것은 처음이다. 이 공격으로 대규모 식품 손실이 생겼고 화재도 최소 15건 일어났다. 프랑스 사이버위기조정센터는 9일(현지시각) 5쪽 분량 보고서(CERTFR-2026-CTI-009)에서 혁명수비대 사이버 부대 샤히드 카…",
+        "outlets": [
+          "보안뉴스",
+          "연합뉴스TV",
+          "동아일보",
+          "한국일보",
+          "서울신문",
+          "MBC 뉴스",
+          "경향신문",
+          "BBC",
+          "AI타임스"
+        ],
+        "related": [
+          {
+            "title": "\"냉장고도 못 지키면서\"…이란, 해킹 배후설 부인",
+            "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE1KcXczWWx5aVlmSm00aDJyQmNNeEprcDQzZ013NF9QT1hVVU9Ba0VsTnA3LVA4SlZadmVUWFJydHNFVWlHUm90Z0Ixd3ZxQ3Q3VmQwcjBIMkxNcFh1ak1xLUNuZDB0cFU?oc=5",
+            "source": "연합뉴스TV"
+          },
+          {
+            "title": "佛 “이란 혁명수비대가 냉장고 해킹 배후”",
+            "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTFBIdzRMX3V1dWtYdzVUYmFjVkpPQ0xkRGhHMGUwTE8wd2h1Snc2ZnRNZm1Rd3VCTld5cGRaVzlKMTU4dTRLN0NCWXdkMHBGVlRrbnRrZ2d5OElDTmNYVThCdFpYcllXU1NWMmpWMjlJWVlMelHSAWZBVV95cUxPSng4ZGRqUzVnOUtqSUtrSndBWDVEY05zYlNsVlRTUFVTLXJ4ZnI0c2pNbmJ3RFNzbzAwbHhmWndBVWxpV19TQWhEMGtPa2JvZTV4MTc4QzV5bDV0TmZxVnp6R1gxeEE?oc=5",
+            "source": "동아일보"
+          },
+          {
+            "title": "[사설] 프랑스, 냉장고 해킹 배후 이란 지목... 우리도 비상한 경계를",
+            "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1hOHpaVkxQSS1qX0FHM1h2bS1uN0pUa1hsSnRtTHJBbUFOLURnRk9JaXJhU2p0N0dsbUxGVVFBaTdybjhlQnc1bHdxU0RfSVZsRVFxUm0xaDhNcC1XSVh2dENZdnNzQ2NkZTZHMlhB0gFzQVVfeXFMTllxUE5PeVFzd3NmMi14N1NoN2I5TjhrekRYQ25ScVg4MUNOZVlBUEVCN0o0NzA5aTM0cWx6SUw3b3RaeER3bXBka0VlVzF2Szlkdzg4QjJzSEFNSUhQRW5GNEJ2VFVHb1RQaDdsQkxWY2VhQQ?oc=5",
+            "source": "한국일보"
+          },
+          {
+            "title": "프랑스, 냉장고 해킹 배후로 이란 지목",
+            "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOM1dIeHpFVDVpWUt0SzhVVENmT0J0S2JrMWE2ajFPbTV2OGlUNDRReTVobVZ4YjRmOUN6UDZVaHE2M1BuM3lQZGNpRVBCclU4V2RHaVBiaG9DMWMtdHRzLW9Nc0FMbmx4QVplZGV4bnN1QUxna0R0U1J1YjBVMnhNXw?oc=5",
+            "source": "서울신문"
+          },
+          {
+            "title": "\"냉장고 온도도 통제 못 하는 프랑스\"‥이란, 해킹 배후 지목에 반박",
+            "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTFBuQkJodDJBXzQ2Ry1CUTdtNktQd24xNmRlRm5LMlliTjlub19kbFpkYWJLTHJURXU0eGN5YnRjOXJFOENxWm0tUDVoeVJvZnE0bXNmSEF1OE92UHk2T2xZT0ZJUzF2NFRvbGVDVHo0am5qc3ht0gF0QVVfeXFMUG5CQmh0MkFfNDZHLUJRN202S1B3bjE2ZGVGbksyWWJOOW5vX2RsWmRhYktMclRFdTR4Y3lidGM5ckU4Q3FabS1QNWh5Um9mcTRtc2ZIQXU4T3ZQeTZPbFlPRklTMXY0VG9sZUNUejRqbmpzeG0?oc=5",
+            "source": "MBC 뉴스"
+          }
+        ],
+        "cves": [],
+        "score": 17.1,
+        "title_ko": "프랑스, 냉장설비 해킹 배후로 이란 IRGC 지목",
+        "summary_ko": "프랑스 당국이 10월 식료품점 약 700곳 냉장 시스템 파괴 사건의 배후로 이란 혁명수비대(IRGC)를 처음 공식 지목함. 대규모 식품 손실과 화재 최소 15건 발생. 산업제어시스템 공격 위협 점검 필요."
+      },
+      {
+        "id": "n-b5651226",
+        "region": "international",
+        "lang": "en",
+        "title": "Hackers now exploit critical Barracuda ESG flaws to gain root access",
+        "url": "https://www.bleepingcomputer.com/news/security/hackers-exploit-barracuda-email-security-gateway-flaws-to-get-root-access/",
+        "source": "BleepingComputer",
+        "published": "2026-11-10T10:10:20.000Z",
+        "snippet": "Cybersecurity company Barracuda Networks warned that attackers have begun exploiting two recently patched Email Security Gateway (ESG) vulnerabilities that let them run commands with root privileges. [...]",
+        "outlets": [
+          "BleepingComputer"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 8.5,
+        "title_ko": "Barracuda ESG 취약점 악용…root 권한 탈취 시도",
+        "summary_ko": "Barracuda가 최근 패치한 ESG 취약점 2건이 실제 공격에 악용 중이라고 경고함. 명령을 root 권한으로 실행 가능. 이메일 게이트웨이 긴급 패치와 침해 여부 점검 필요."
+      },
+      {
+        "id": "n-e0acd21b",
+        "region": "international",
+        "lang": "en",
+        "title": "Exploited Outlook Zero-Day Among 1,094 Flaws Patched by Microsoft",
+        "url": "https://www.securityweek.com/exploited-outlook-zero-day-among-1094-flaws-patched-by-microsoft/",
+        "source": "SecurityWeek",
+        "published": "2026-11-10T19:19:46.000Z",
+        "snippet": "CVE-2026-124194 is the Outlook zero-day for which Microsoft says it’s aware of active exploitation. The post Exploited Outlook Zero-Day Among 1,094 Flaws Patched by Microsoft appeared first on SecurityWeek .",
+        "outlets": [
+          "SecurityWeek",
+          "BleepingComputer"
+        ],
+        "related": [
+          {
+            "title": "Microsoft November 2026 Patch Tuesday fixes 1,235 flaws, Outlook zero-day",
+            "url": "https://www.bleepingcomputer.com/news/microsoft/microsoft-november-2026-patch-tuesday-fixes-1-235-flaws-outlook-zero-day/",
+            "source": "BleepingComputer"
+          }
+        ],
+        "cves": [
+          "CVE-2026-124194"
+        ],
+        "score": 14.2,
+        "title_ko": "Outlook 악용 제로데이 포함 MS 11월 패치 배포",
+        "summary_ko": "Microsoft 11월 Patch Tuesday에 대규모 취약점 수정이 포함됨. 그중 Outlook 제로데이 CVE-2026-124194는 실제 악용이 확인됨. 기사마다 패치 건수는 차이가 있음. 즉시 업데이트 필요."
+      },
+      {
+        "id": "n-c110ef77",
+        "region": "international",
+        "lang": "en",
+        "title": "SAP Patches Four CVSS 10.0 Flaws, Including Two Enabling Remote Code Execution",
+        "url": "https://thehackernews.com/2026/11/sap-patches-four-cvss-100-flaws.html",
+        "source": "The Hacker News",
+        "published": "2026-11-10T10:02:40.000Z",
+        "snippet": "Four flaws that attackers could exploit without logging in were fixed today as part of SAP's monthly Security Patch Day—the vendor rates all four 10.0, the maximum CVSS score. Three are in the SAP NetWeaver application…",
+        "outlets": [
+          "The Hacker News",
+          "SecurityWeek",
+          "BleepingComputer"
+        ],
+        "related": [
+          {
+            "title": "SAP Patches Critical ICM2SHELL, ProxyGate Vulnerabilities",
+            "url": "https://www.securityweek.com/sap-patches-critical-icm2shell-proxygate-vulnerabilities/",
+            "source": "SecurityWeek"
+          },
+          {
+            "title": "SAP patches ICM2SHELL and PROXYGATE maximum severity flaws",
+            "url": "https://www.bleepingcomputer.com/news/security/sap-patches-four-maximum-severity-security-vulnerabilities/",
+            "source": "BleepingComputer"
+          }
+        ],
+        "cves": [],
+        "score": 12.6,
+        "title_ko": "SAP 보안패치, CVSS 10.0 취약점 4건 수정",
+        "summary_ko": "SAP 월간 보안패치에서 인증 없이 공격 가능한 CVSS 10.0 취약점 4건이 수정됨. 이 중 2건은 원격 코드 실행이 가능함. SAP NetWeaver 사용 기업은 즉시 패치 적용 필요."
+      },
+      {
+        "id": "n-f91af9aa",
+        "region": "international",
+        "lang": "en",
+        "title": "Russian Turla Hackers Use New Cereal Malware to Steal Emails From Government Exchange Servers",
+        "url": "https://thehackernews.com/2026/11/russian-turla-hackers-use-new-cereal.html",
+        "source": "The Hacker News",
+        "published": "2026-11-10T10:07:29.000Z",
+        "snippet": "The Russia-aligned state-sponsored threat actor known as Turla (aka Snake) is wielding a previously undocumented cyber espionage toolset called Cereal that's used to break into victims' Microsoft Exchange servers with a…",
+        "outlets": [
+          "The Hacker News",
+          "BleepingComputer"
+        ],
+        "related": [
+          {
+            "title": "Turla hackers use new Cereal malware to spy on govt Exchange servers",
+            "url": "https://www.bleepingcomputer.com/news/security/turla-hackers-use-new-ceral-malware-to-spy-on-govt-exchange-servers/",
+            "source": "BleepingComputer"
+          }
+        ],
+        "cves": [],
+        "score": 13.2,
+        "title_ko": "러시아 Turla, 신규 악성코드 Cereal로 정부 메일 탈취",
+        "summary_ko": "러시아 연계 국가 배후 조직 Turla가 신규 도구 Cereal로 정부 기관 Microsoft Exchange 서버에 침투해 이메일을 탈취함. 국가 배후 Exchange 공격 가능성이 있어 메일 서버 침해지표 점검 필요."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "kev",
+      "name": "CISA KEV",
+      "ok": true,
+      "count": 10,
+      "ms": 317
+    },
+    {
+      "id": "bleepingcomputer",
+      "name": "BleepingComputer",
+      "ok": true,
+      "count": 15,
+      "ms": 353
+    },
+    {
+      "id": "securityweek",
+      "name": "SecurityWeek",
+      "ok": true,
+      "count": 10,
+      "ms": 401
+    },
+    {
+      "id": "therecord",
+      "name": "The Record",
+      "ok": true,
+      "count": 5,
+      "ms": 410
+    },
+    {
+      "id": "krebs",
+      "name": "Krebs on Security",
+      "ok": true,
+      "count": 10,
+      "ms": 479
+    },
+    {
+      "id": "thehackernews",
+      "name": "The Hacker News",
+      "ok": true,
+      "count": 50,
+      "ms": 488
+    },
+    {
+      "id": "zdnetkr",
+      "name": "지디넷코리아",
+      "ok": true,
+      "count": 30,
+      "ms": 524
+    },
+    {
+      "id": "gnews-kr",
+      "name": "Google 뉴스",
+      "ok": true,
+      "count": 100,
+      "ms": 753
+    },
+    {
+      "id": "darkreading",
+      "name": "Dark Reading",
+      "ok": true,
+      "count": 50,
+      "ms": 939
+    },
+    {
+      "id": "dailysecu",
+      "name": "데일리시큐",
+      "ok": true,
+      "count": 50,
+      "ms": 1095
+    },
+    {
+      "id": "boannews",
+      "name": "보안뉴스",
+      "ok": true,
+      "count": 50,
+      "ms": 1283
+    },
+    {
+      "id": "kisa-vuln",
+      "name": "KISA 취약점 정보",
+      "ok": true,
+      "count": 10,
+      "ms": 1440
+    },
+    {
+      "id": "datanet",
+      "name": "데이터넷",
+      "ok": true,
+      "count": 50,
+      "ms": 1516
+    },
+    {
+      "id": "kisa-notice",
+      "name": "KISA 보안공지",
+      "ok": true,
+      "count": 10,
+      "ms": 1587
+    },
+    {
+      "id": "kisa-alert",
+      "name": "KISA 경보단계",
+      "ok": true,
+      "count": 10,
+      "ms": 1588
+    },
+    {
+      "id": "nvd-kev",
+      "name": "NVD (KEV 상세)",
+      "ok": true,
+      "count": 10,
+      "ms": 1758
+    },
+    {
+      "id": "nvd",
+      "name": "NVD (신규 CVE)",
+      "ok": true,
+      "count": 2184,
+      "ms": 8613
+    },
+    {
+      "id": "epss",
+      "name": "FIRST EPSS",
+      "ok": true,
+      "count": 35,
+      "ms": 363
+    }
+  ],
+  "summarizer": {
+    "engine": "claude-haiku-5-5",
+    "ok": true,
+    "ms": 32534,
+    "applied": {
+      "news": 10,
+      "vulns": 9,
+      "overview": true
+    },
+    "rejected": [],
+    "input_tokens": 13505,
+    "output_tokens": 8323
+  },
+  "stats": {
+    "news": {
+      "items": 420,
+      "fresh": 204,
+      "clusters": 112,
+      "eligible": 72
+    },
+    "nvd_published": 2184,
+    "kev_catalog": "2026.11.10",
+    "kev_recent": 10
+  }
+}

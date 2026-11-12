@@ -19,6 +19,8 @@ const sent = [];
 let valid = new Set();
 let issued = 0;
 let sendError = null;
+let meErrors = []; // GET /me 가 차례로 돌려줄 오류 응답(비면 정상)
+let sendDelayMs = 0; // sendMail 응답을 늦춤(시간 초과 시험)
 let expectChallenge = '';
 let server;
 let base;
@@ -60,9 +62,13 @@ before(async () => {
         return json(res, 401, { error: { code: 'InvalidAuthenticationToken', message: 'Access token is empty.' } });
       }
       if (url.pathname === '/graph/me' && req.method === 'GET') {
+        const e = meErrors.shift();
+        if (e) return json(res, e.status, e.body);
         return json(res, 200, { displayName: 'Sender', mail: null, userPrincipalName: 'sender@outlook.kr' });
       }
       if (url.pathname === '/graph/me/sendMail' && req.method === 'POST') {
+        // 늦은 응답: 받기는 했지만(실제 Microsoft 라면 보냈을 수도 있음) 클라이언트가 먼저 끊는다 — 기록(sent)에는 넣지 않음
+        if (sendDelayMs) return void setTimeout(() => res.destroyed || res.writeHead(202).end(), sendDelayMs);
         if (sendError) return json(res, sendError.status, sendError.body);
         sent.push(JSON.parse(body));
         return res.writeHead(202).end();
@@ -95,6 +101,8 @@ function setup(extra = {}) {
   sent.length = 0;
   calls.length = 0;
   sendError = null;
+  meErrors = [];
+  sendDelayMs = 0;
   return { dir, cfg, env, state: () => JSON.parse(readFileSync(join(dir, 'mail-state.json'), 'utf8')) };
 }
 
@@ -224,6 +232,56 @@ test('Outlook 오류 안내: 계정 정지·서비스 남용 모드는 토큰 �
     assert.ok(!/만료됐거나 무효/.test(err.message), '만료된 토큰으로 잘못 안내하지 않음');
     return true;
   });
+  rmSync(s.dir, { recursive: true, force: true });
+});
+
+const posts = () => calls.filter((c) => c.path === '/graph/me/sendMail').length;
+const BAD_GATEWAY = { status: 502, body: { error: { code: 'UnknownError', message: '' } } };
+
+test('Outlook 서버 오류(2026-11-13 실제 502): 보내기 단계면 "나갔을 수 있음" — 다시 보내지 않고 할 일 안내', async () => {
+  const s = setup();
+  sendError = BAD_GATEWAY;
+  await assert.rejects(sendBriefMail(s.cfg, sampleBrief(), { env: s.env, log: quiet }), (err) => {
+    assert.match(err.message, /^Outlook UnknownError: HTTP 502 \/ /);
+    assert.match(err.message, /나갔을 수 있습니다.*받은 편지함을 먼저 확인/);
+    assert.match(err.message, /'다시 만들기'는 체크하지 않음/);
+    assert.match(err.message, /토큰·계정 문제 아님/);
+    return true;
+  });
+  assert.equal(posts(), 1, '처리 결과를 모르는 502 는 다시 보내지 않는다(중복 방지)');
+  assert.equal(s.state().last_sent, undefined, '발송 기록을 남기지 않아 예비 실행·손 실행이 다시 보낼 수 있다');
+  rmSync(s.dir, { recursive: true, force: true });
+});
+
+test('Outlook 서버 오류: 보내기 전(계정 확인) 단계의 502 는 한 번 다시 묻고, 그래도 안 되면 "나가지 않음"', async () => {
+  const s = setup();
+  meErrors = [BAD_GATEWAY, BAD_GATEWAY];
+  await assert.rejects(sendBriefMail(s.cfg, sampleBrief(), { env: s.env, log: quiet }), /HTTP 502 \/ Microsoft 서버 일시 오류로 메일은 나가지 않았습니다/);
+  assert.equal(calls.filter((c) => c.path === '/graph/me').length, 2);
+  assert.equal(posts(), 0);
+  rmSync(s.dir, { recursive: true, force: true });
+
+  // 한 번 실패 뒤 성공하면 그대로 보낸다
+  const t = setup();
+  meErrors = [BAD_GATEWAY];
+  const r = await sendBriefMail(t.cfg, sampleBrief(), { env: t.env, log: quiet });
+  assert.equal(r.sent, true);
+  assert.equal(posts(), 1);
+  rmSync(t.dir, { recursive: true, force: true });
+});
+
+test('Outlook 보내기: 503(처리 안 함)은 한 번 다시 보내고, 응답 전 시간 초과는 다시 보내지 않는다', async () => {
+  let s = setup();
+  sendError = { status: 503, body: { error: { code: 'ServiceUnavailable', message: 'Service Unavailable' } } };
+  await assert.rejects(sendBriefMail(s.cfg, sampleBrief(), { env: s.env, log: quiet }), /ServiceUnavailable: Service Unavailable \/ Microsoft 서버 일시 오류로 메일은 나가지 않았습니다/);
+  assert.equal(posts(), 2, '503 은 처리하지 않았다는 응답이라 한 번 다시');
+  rmSync(s.dir, { recursive: true, force: true });
+
+  s = setup({ GRAPH_SEND_TIMEOUT_MS: '300' });
+  sendDelayMs = 1200;
+  await assert.rejects(sendBriefMail(s.cfg, sampleBrief(), { env: s.env, log: quiet }), /시간 초과\(0초\) \/ .*나갔을 수 있습니다/);
+  assert.equal(posts(), 1, '시간 초과 뒤 같은 메일을 다시 보내지 않는다');
+  await new Promise((r) => setTimeout(r, 1300)); // 가짜 서버의 늦은 응답이 끝날 때까지
   rmSync(s.dir, { recursive: true, force: true });
 });
 

@@ -9,7 +9,7 @@
 import { createHash, randomBytes } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
 import { secret } from './config.mjs';
-import { HttpError, request } from './http.mjs';
+import { HttpError, request, surelyNotSent } from './http.mjs';
 import { currentRefreshToken, encryptToken, openBrowser, seedId, waitForCode } from './kakao.mjs';
 import { writeAtomic } from './store.mjs';
 import { kstIso } from './util.mjs';
@@ -61,11 +61,11 @@ function bases(env = process.env) {
   };
 }
 
-async function call(url, { method = 'POST', form, json, headers = {}, retries = 0, retryOn = [502, 503, 504] }) {
+async function call(url, { method = 'POST', form, json, headers = {}, retries = 0, retryOn = [502, 503, 504], timeoutMs = 30000, idempotent = true }) {
   const body = form ? new URLSearchParams(form).toString() : json ? JSON.stringify(json) : undefined;
   const type = form ? { 'content-type': 'application/x-www-form-urlencoded' } : json ? { 'content-type': 'application/json' } : {};
   try {
-    const res = await request(url, { method, headers: { ...type, ...headers }, body, timeoutMs: 30000, retries, retryOn });
+    const res = await request(url, { method, headers: { ...type, ...headers }, body, timeoutMs, retries, retryOn, idempotent });
     return res.text ? JSON.parse(res.text) : {};
   } catch (err) {
     if (err instanceof HttpError && err.body) {
@@ -106,7 +106,7 @@ export async function getAccount(accessToken, { env } = {}) {
 
 /**
  * 메일 발송(202 Accepted). 같은 메일이 두 번 가지 않게 처리되지 않았다는 응답(429·503)에만 한 번 다시 보낸다.
- * 보낸 편지함에는 남기지 않는다.
+ * 시간 초과·연결 끊김 뒤에는 다시 보내지 않는다(Microsoft 가 이미 받아 보냈을 수 있음). 보낸 편지함에는 남기지 않는다.
  */
 export async function sendGraphMail(accessToken, { subject, html, to, bcc = [], env }) {
   const list = (xs) => xs.map((address) => ({ emailAddress: { address } }));
@@ -118,7 +118,31 @@ export async function sendGraphMail(accessToken, { subject, html, to, bcc = [], 
     },
     retries: 1,
     retryOn: [429, 503],
+    idempotent: false,
+    // 응답이 늦어도 기다린다: 먼저 끊으면 실제로는 나갔는데 실패로 알고 다시 보내게 된다(GRAPH_SEND_TIMEOUT_MS 는 시험용)
+    timeoutMs: Number(env?.GRAPH_SEND_TIMEOUT_MS) || 100000,
   });
+}
+
+const RESEND = "Actions → daily-brief → Run workflow 의 '보내기'로 다시 보내세요('다시 만들기'는 체크하지 않음 — 체크하면 카카오톡도 다시 감)";
+const NOT_SENT_HINT = `Microsoft 서버 일시 오류로 메일은 나가지 않았습니다(토큰·계정 문제 아님). 잠시 뒤 ${RESEND}. 아직 GitHub 예비 예약 실행 전이면 그 실행이 다시 보냅니다.`;
+const MAYBE_SENT_HINT = `Microsoft 서버가 처리 결과를 돌려주지 못해 메일이 실제로는 나갔을 수 있습니다(토큰·계정 문제 아님). 받은 편지함을 먼저 확인하고, 안 왔을 때만 ${RESEND}. 아직 GitHub 예비 예약 실행 전이면 그 실행이 다시 보내 중복될 수 있습니다.`;
+
+/**
+ * Microsoft 서버 쪽 일시 오류(5xx·429)나 응답을 못 받은 경우에 할 일을 붙인다. 그 밖의 오류(토큰·권한 등)는 그대로.
+ * sending: 보내기(sendMail) 단계였는지 — 그때의 500·502·504·시간 초과·연결 끊김은 Microsoft 가 처리했는지 알 수 없다.
+ * 429·503 은 처리하지 않았다는 응답이고, 보내기 전 단계(계정 확인)의 오류면 메일은 나가지 않았다.
+ */
+export function explainGraphFailure(err, { sending }) {
+  const status = Number(err?.status) || 0;
+  const noResponse = !status && err instanceof HttpError;
+  if (!(status >= 500 || status === 429 || noResponse)) return err;
+  const maybeSent = sending && !(status === 429 || status === 503) && !(noResponse && surelyNotSent(err));
+  const out = new Error(`${err.message} / ${maybeSent ? MAYBE_SENT_HINT : NOT_SENT_HINT}`);
+  out.name = err.name;
+  out.status = status;
+  out.maybeSent = maybeSent;
+  return out;
 }
 
 // ------------------------------------------------------------------ 토큰 상태 (data/mail-state.json, 암호화)

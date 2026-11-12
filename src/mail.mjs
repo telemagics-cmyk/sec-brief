@@ -8,7 +8,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { alertOf, briefUrl, emptyNote, renderMarkdown, sinceNote, vulnBadges } from './brief.mjs';
 import { secret } from './config.mjs';
-import { explainGraphFailure, getAccount, mask, obtainAccessToken, outlookConfigured, sendGraphMail } from './outlook.mjs';
+import { getAccount, mask, obtainAccessToken, outlookConfigured, sendGraphMail } from './outlook.mjs';
 import { writeAtomic } from './store.mjs';
 import { fetchMailNews, mailNewsSearchUrl } from './mail-news.mjs';
 import { escapeHtml as h, kstIso, kstStamp, publicError, safeUrl, shortDay, truncate, weekdayKo } from './util.mjs';
@@ -422,23 +422,13 @@ export function explainMailError(err, s) {
 /** Outlook.com: 토큰 갱신(새 토큰은 바로 저장) → 계정 주소 확인 → Graph 로 발송 */
 async function sendViaOutlook(path, s, msg, { env, log }) {
   const { accessToken, rotated } = await obtainAccessToken(path, { env, log });
-  // Microsoft 서버 오류면 어느 단계였는지에 따라 '나가지 않음' / '나갔을 수 있음'과 할 일을 붙인다
-  let address;
-  try {
-    ({ address } = await getAccount(accessToken, { env }));
-  } catch (err) {
-    throw explainGraphFailure(err, { sending: false });
-  }
+  const { address } = await getAccount(accessToken, { env });
   if (!address) throw new Error('Outlook 계정 주소를 확인하지 못했습니다. mail-login 을 다시 하세요.');
   mask(address, env);
   const to = s.to.length ? s.to : [address];
   // 여럿이면 서로 주소가 보이지 않게: 받는 사람 칸은 보내는 계정, 실제 받는 사람은 숨은 참조
   const envelope = to.length > 1 ? { to: [address], bcc: to } : { to };
-  try {
-    await sendGraphMail(accessToken, { subject: msg.subject, html: msg.html, ...envelope, env });
-  } catch (err) {
-    throw explainGraphFailure(err, { sending: true });
-  }
+  await sendGraphMail(accessToken, { subject: msg.subject, html: msg.html, ...envelope, env });
   return { via: 'Outlook', accepted: to.length, rejected: 0, rotated };
 }
 

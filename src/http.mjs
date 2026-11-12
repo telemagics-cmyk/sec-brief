@@ -11,21 +11,13 @@ export function setBackoffScale(x) {
 const wait = (ms) => sleep(ms * backoffScale);
 
 export class HttpError extends Error {
-  constructor(message, { status = 0, url = '', body = '', code = '' } = {}) {
+  constructor(message, { status = 0, url = '', body = '' } = {}) {
     super(message);
     this.name = 'HttpError';
     this.status = status;
     this.url = url;
     this.body = body;
-    this.code = code; // 응답을 못 받은 경우의 원인(ECONNRESET·TimeoutError 등)
   }
-}
-
-// 요청이 서버에 닿지 않은 것이 확실한 연결 오류: 주소를 못 찾음·연결 거부·연결 맺기 시간 초과
-const NOT_SENT = new Set(['ENOTFOUND', 'EAI_AGAIN', 'ECONNREFUSED', 'UND_ERR_CONNECT_TIMEOUT']);
-/** 응답을 못 받았지만 요청은 나가지 않은 것이 확실한가(다시 보내도 두 번 처리되지 않음) */
-export function surelyNotSent(err) {
-  return NOT_SENT.has(err?.cause?.code || err?.code);
 }
 
 function charsetOf(contentType, head) {
@@ -91,8 +83,6 @@ function retryDelay(res, attempt, base) {
 }
 
 /**
- * idempotent=false(메일·메시지 발송처럼 두 번 처리되면 안 되는 요청): 시간 초과·연결 끊김처럼 서버가 이미 받았을 수 있는
- * 경우에는 다시 보내지 않는다. 연결 전에 실패한 것이 확실할 때(surelyNotSent)와 retryOn 의 응답 코드만 다시 보낸다.
  * @returns {Promise<{status:number, headers:Headers, text:string}>}
  */
 export async function request(url, opts = {}) {
@@ -105,7 +95,6 @@ export async function request(url, opts = {}) {
     retryOn = [429, 500, 502, 503, 504],
     backoffMs = 2000,
     maxBytes = 20 * 1024 * 1024,
-    idempotent = true,
   } = opts;
   for (let attempt = 0; ; attempt++) {
     const ctrl = new AbortController();
@@ -135,12 +124,11 @@ export async function request(url, opts = {}) {
       return { status: res.status, headers: res.headers, text };
     } catch (err) {
       if (err instanceof HttpError) throw err;
-      const reason = ctrl.signal.aborted ? ctrl.signal.reason : err;
-      if (attempt < retries && (idempotent || surelyNotSent(err))) {
+      if (attempt < retries) {
         await wait(backoffMs * (attempt + 1));
         continue;
       }
-      throw new HttpError(describeError(reason), { url, code: reason?.cause?.code || reason?.code || reason?.name || '' });
+      throw new HttpError(describeError(ctrl.signal.aborted ? ctrl.signal.reason : err), { url });
     } finally {
       clearTimeout(timer);
     }

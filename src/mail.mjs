@@ -6,7 +6,7 @@
 // 공개 저장소이므로 주소·계정·토큰은 저장소가 아니라 비밀값(환경 변수)으로만 받고, Actions 기록에서는 가린다.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { alertOf, briefUrl, emptyNote, renderMarkdown, sinceNote, vulnBadges } from './brief.mjs';
+import { alertOf, badgeKind, briefUrl, emptyNote, origTitleOf, renderMarkdown, sinceNote, sortedBadges } from './brief.mjs';
 import { secret } from './config.mjs';
 import { getAccount, mask, obtainAccessToken, outlookConfigured, sendGraphMail } from './outlook.mjs';
 import { writeAtomic } from './store.mjs';
@@ -69,6 +69,24 @@ const C = {
 };
 const TBL = 'role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"';
 
+// 폭: 받는 사람 대부분이 1920×1080 화면의 웹메일로 읽는다(읽기 창 약 1,000~1,500px). 최대 MAIL_W 까지 넓히되
+// 한 단 그대로 넓히면 한 줄이 약 62자로 길어져 읽기 힘들어서, 국내|해외 뉴스만 넓을 때 두 단(한 줄 약 29자)으로 놓는다.
+// Outlook(Windows) 은 MSO_W 한 단 그대로: 그 Word 그리기 방식은 max-width 를 고정 폭처럼 써서(창이 좁아도 줄지 않음 — Word 로
+// 그려 확인) 960 이면 좁은 읽기 창·125% 배율에서 가로로 밀린다 → MSO 표와 함께 MSO_CSS 의 .mailw 로 Outlook 에서만 MSO_W.
+const MAIL_W = 960;
+const MSO_W = 680;
+// 두 단 전환은 화면이 아니라 '들어갈 칸의 폭' 기준: 웹메일의 @media 는 브라우저 창 폭으로 판정돼 좁은 읽기 창에서 깨진다.
+// width = (COL_BREAK − 칸 폭) × 1000 이 칸이 넓으면 음수(→ min-width 49%, 두 단), 좁으면 큰 값(→ max-width 100%, 한 단).
+// calc 의 곱셈·괄호를 지우는 메일 앱이 있어 미리 풀어 쓰고, calc 를 모르는 곳(Outlook.com 등)은 앞의 width:100% 로 한 단.
+// 49% 인 까닭: 보내는 서버가 두 칸 사이에 줄바꿈을 넣어 빈칸이 생겨도 합이 100% 를 넘지 않게(글자 크기 0 으로 지우는 방법은 숨김 글 신호라 쓰지 않음).
+const COL_BREAK = 840; // 칸 폭(px)이 이보다 넓으면 두 단
+const COL_GAP = 24;
+const COL_STYLE = `display:inline-block;vertical-align:top;width:100%;min-width:49%;max-width:100%;width:calc(${COL_BREAK * 1000}px - 100000%);`;
+// 두 칸 사이 간격(COL_GAP)은 왼쪽 칸 안쪽 오른쪽 여백이라, 한 단으로 쌓이면 국내 목록만 오른쪽이 좁아진다.
+// 창 폭이 아래 값 이하이면 칸 폭(창 − 바깥 여백·테두리·카드 여백 54px)이 COL_BREAK 보다 좁아 언제나 한 단이므로 그때만 지운다
+// (두 단을 정하는 데는 쓰지 않음 — @media 를 모르는 곳은 여백이 남을 뿐). Outlook(Windows) 은 늘 한 단이라 MSO_CSS 에서 지운다.
+const LAYOUT_CSS = `@media (max-width: ${COL_BREAK + 40}px) { .colgap { padding-right: 0 !important; } }`;
+
 // 어두운 화면을 지원하는 메일 앱(Apple Mail·Outlook iOS/Mac 등)에서만 쓰이는 덮어쓰기
 const DARK_CSS = `:root { color-scheme: light dark; supported-color-schemes: light dark; }
 @media (prefers-color-scheme: dark) {
@@ -93,7 +111,7 @@ const DARK_CSS = `:root { color-scheme: light dark; supported-color-schemes: lig
 }`;
 // Outlook(Windows) 은 표 안 글자에 글꼴을 물려주지 않아 따로 정한다
 // 한글과 숫자·영문 사이에 Word 가 저절로 띄우는 간격('2026 년')도 끈다
-const MSO_CSS = `<!--[if mso]><style>table,td,p,a,span,h1,h2,div{font-family:'Malgun Gothic',Arial,sans-serif !important;text-autospace:none;}</style><![endif]-->`;
+const MSO_CSS = `<!--[if mso]><style>table,td,p,a,span,h1,h2,div{font-family:'Malgun Gothic',Arial,sans-serif !important;text-autospace:none;}.colgap{padding-right:0 !important;}.mailw{max-width:${MSO_W}px !important;}</style><![endif]-->`;
 // Outlook(Windows) 은 글자 단위 요소의 안쪽 여백을 무시하므로, 표시·단추 안에 Outlook 에서만 보이는 빈칸을 둔다
 const MSO_PAD = '<!--[if mso]>&nbsp;<![endif]-->';
 
@@ -113,24 +131,6 @@ const PILL = { hot: [C.hot, C.hotSoft], warn: [C.warn, C.warnSoft], note: [C.not
 function pill(text, kind = 'neu') {
   const [fg, bg] = PILL[kind];
   return `<span class="p-${kind}" style="display:inline-block;margin:0 2px 4px 0;padding:0 8px;border-radius:10px;background:${bg};color:${fg};font-size:12px;line-height:20px;font-weight:bold;white-space:nowrap;">${MSO_PAD}${h(text)}${MSO_PAD}</span>`;
-}
-
-/** 취약점 표시(vulnBadges)의 색: 악용·KEV·CVSS 9 이상은 빨강, 기한·PoC·CVSS 7 이상은 주황, KISA 권고는 파랑 */
-function badgeKind(text) {
-  if (text === 'KEV' || text.startsWith('랜섬웨어') || text.startsWith('악용 확인')) return 'hot';
-  const cvss = /^CVSS (\d+(?:\.\d+)?)/.exec(text);
-  if (cvss) return Number(cvss[1]) >= 9 ? 'hot' : Number(cvss[1]) >= 7 ? 'warn' : 'neu';
-  if (text.startsWith('기한') || text === '공개 PoC') return 'warn';
-  if (text === 'KISA 권고') return 'note';
-  if (text === '뉴스 보도' || text.startsWith('관심')) return 'acc';
-  return 'neu';
-}
-
-/** 메일의 표시 순서: 실제 악용 → 점수 → 기한·PoC → 권고·보도·관심 → EPSS(참고) */
-const BADGE_ORDER = [/^(KEV|랜섬웨어|악용 확인)/, /^CVSS/, /^(기한|공개 PoC)/, /^KISA 권고/, /^뉴스 보도/, /^관심/, /^EPSS/];
-function badgeRank(text) {
-  const i = BADGE_ORDER.findIndex((re) => re.test(text));
-  return i < 0 ? BADGE_ORDER.length : i;
 }
 
 function button(url, text) {
@@ -181,13 +181,24 @@ function newsRows(list, b) {
       return newsItem(i, {
         url: n.url,
         title: n.title_ko || n.title,
-        // 원문 제목은 번역한 기사만(국내 기사는 거의 같은 제목이 두 번 나와 군더더기)
-        orig: n.lang !== 'ko' && n.title_ko && n.title_ko !== n.title ? n.title : '',
+        orig: origTitleOf(n),
         meta: `${n.source || ''}${others}${at ? ` · ${at}` : ''}`,
         summary: n.summary_ko || truncate(n.snippet || '', 120),
       });
     })
     .join('');
+}
+
+/**
+ * 두 단 묶음: 칸이 넓으면 나란히, 좁으면(좁은 읽기 창·휴대폰·calc 를 모르는 메일 앱) 위아래로 — 순서는 그대로.
+ * Outlook(Windows) 은 div 를 블록으로 쌓아 지금과 같은 한 단이 된다. 두 div 사이에 빈칸·줄바꿈을 두지 않는다.
+ * 틈은 왼쪽 단의 오른쪽에만 둬서 쌓였을 때 왼쪽 끝이 맞는다.
+ * @param {string} left  표 행(<tr>…)들
+ * @param {string} right 표 행(<tr>…)들
+ */
+function twoColumns(left, right) {
+  const col = (rows, pad) => `<div class="col" style="${COL_STYLE}"><table ${TBL}><tr><td${pad ? ' class="colgap"' : ''} style="padding:0 ${pad}px 0 0;"><table ${TBL}>${rows}</table></td></tr></table></div>`;
+  return `<tr><td style="padding:0;">${col(left, COL_GAP)}${col(right, 0)}</td></tr>`;
 }
 
 function kisaRows(adv, b) {
@@ -201,8 +212,7 @@ function kisaRows(adv, b) {
       const day = /^\d{4}-\d{2}-\d{2}$/.test(x.date || '') ? `${x.date.slice(5, 7)}.${x.date.slice(8, 10)}` : x.date || '';
       return `<tr><td class="line" style="padding:8px 0;${i ? `border-top:1px solid ${C.rule};` : ''}">
 <table ${TBL}><tr>
-<td valign="top" style="font-size:14.5px;line-height:22px;">${a(x.url, h(x.title), style, x.alert ? 'warn' : 'ink2')}${tag}</td>
-<td class="faint" valign="top" align="right" width="44" style="width:44px;padding-left:10px;font-size:12.5px;line-height:22px;color:${C.faint};white-space:nowrap;">${h(day)}</td>
+<td valign="top" style="font-size:14.5px;line-height:22px;">${a(x.url, h(x.title), style, x.alert ? 'warn' : 'ink2')}${tag}${day ? ` <span class="faint" style="font-size:12.5px;color:${C.faint};white-space:nowrap;">· ${h(day)}</span>` : ''}</td>
 </tr></table></td></tr>`;
     })
     .join('');
@@ -238,7 +248,7 @@ function vulnCard(v, color, assetHref = '') {
   const links = [...(v.links || []).slice(0, 1).map((u) => button(u, '벤더 공지')), button(v.nvd, 'NVD'), button(assetHref, '우리 자산 영향')].filter(Boolean).join(' ');
   return `<tr><td style="padding:0 0 12px;">
 <table ${TBL} class="vcard" style="border:1px solid ${C.rule};border-left:4px solid ${color};border-radius:8px;background:${C.card};"><tr><td style="padding:12px 14px;">
-<div>${[...vulnBadges(v)].sort((x, y) => badgeRank(x) - badgeRank(y)).map((t) => pill(t, badgeKind(t))).join(' ')}</div>
+<div>${sortedBadges(v).map((t) => pill(t, badgeKind(t))).join(' ')}</div>
 <p class="ink" style="margin:2px 0 0;font-size:16px;line-height:24px;font-weight:bold;color:${C.ink};">${h(v.ko?.title || v.id)}</p>
 <p class="faint" style="margin:2px 0 0;font-family:${MONO};font-size:12.5px;line-height:18px;color:${C.faint};">${h(v.id)}${h(ids)}</p>
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:8px;">${row('대상', v.ko?.target)}${row('영향', v.ko?.impact)}${row('조치', v.ko?.action, true)}</table>
@@ -317,8 +327,8 @@ ${pill('사이버위기 경보', 'warn')} ${a(alert.url, h(alert.title), `color:
 </td></tr></table></td></tr>`);
   }
 
-  rows.push(sectionHead('국내 보안 뉴스', { count: dom.length }), newsRows(dom, b));
-  rows.push(sectionHead('해외 보안 뉴스', { count: intl.length }), newsRows(intl, b));
+  // 넓은 읽기 창에서는 국내|해외를 나란히(첫 화면에 두 목록의 1위가 함께 보이게), 좁으면 국내 → 해외
+  rows.push(twoColumns(sectionHead('국내 보안 뉴스', { count: dom.length }) + newsRows(dom, b), sectionHead('해외 보안 뉴스', { count: intl.length }) + newsRows(intl, b)));
   rows.push(sectionHead('KISA 공지', { color: C.note, count: adv.length, sub: '보호나라·KrCERT' }), kisaRows(adv, b));
 
   rows.push(sectionHead('악용 확인 취약점', { color: C.hot, count: b.failed?.kev ? null : exTotal, sub: b.failed?.kev ? 'CISA KEV — 수집 실패' : 'CISA KEV 신규 등재' }));
@@ -340,13 +350,14 @@ ${pill('사이버위기 경보', 'warn')} ${a(alert.url, h(alert.title), `color:
 <meta name="color-scheme" content="light dark"><meta name="supported-color-schemes" content="light dark">
 <meta name="x-apple-disable-message-reformatting">
 <title>${h(mailSubject(b, title))}</title>
-<style>${DARK_CSS}</style>
+<style>${DARK_CSS}
+${LAYOUT_CSS}</style>
 ${MSO_CSS}
 </head>
 <body class="bg" bgcolor="${C.page}" style="margin:0;padding:0;background:${C.page};">
 <table ${TBL} class="bg" bgcolor="${C.page}" style="background:${C.page};"><tr><td align="center" style="padding:16px 8px 20px;">
-<!--[if mso]><table role="presentation" width="680" align="center" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
-<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:680px;width:100%;font-family:${FONT};color:${C.ink};word-break:keep-all;overflow-wrap:anywhere;">
+<!--[if mso]><table role="presentation" width="${MSO_W}" align="center" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="mailw" style="max-width:${MAIL_W}px;width:100%;font-family:${FONT};color:${C.ink};word-break:keep-all;overflow-wrap:anywhere;">
 <tr><td bgcolor="${C.band}" style="background:${C.band};border-radius:12px 12px 0 0;padding:20px 22px 18px;">
 ${header}
 </td></tr>

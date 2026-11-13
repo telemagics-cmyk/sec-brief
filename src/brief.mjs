@@ -95,6 +95,34 @@ function vulnBadges(v) {
 }
 export { vulnBadges };
 
+/** 표시의 색(메일·웹 공통): 악용·KEV·CVSS 9 이상은 hot(빨강), 기한·PoC·CVSS 7 이상은 warn(주황), KISA 권고는 note(파랑), 보도·관심은 acc */
+export function badgeKind(text) {
+  if (text === 'KEV' || text.startsWith('랜섬웨어') || text.startsWith('악용 확인')) return 'hot';
+  const cvss = /^CVSS (\d+(?:\.\d+)?)/.exec(text);
+  if (cvss) return Number(cvss[1]) >= 9 ? 'hot' : Number(cvss[1]) >= 7 ? 'warn' : 'neu';
+  if (text.startsWith('기한') || text === '공개 PoC') return 'warn';
+  if (text === 'KISA 권고') return 'note';
+  if (text === '뉴스 보도' || text.startsWith('관심')) return 'acc';
+  return 'neu';
+}
+
+/** 표시 순서(메일·웹·Markdown 공통): 실제 악용 → 점수 → 기한·PoC → 권고·보도·관심 → EPSS(참고) */
+const BADGE_ORDER = [/^(KEV|랜섬웨어|악용 확인)/, /^CVSS/, /^(기한|공개 PoC)/, /^KISA 권고/, /^뉴스 보도/, /^관심/, /^EPSS/];
+function badgeRank(text) {
+  const i = BADGE_ORDER.findIndex((re) => re.test(text));
+  return i < 0 ? BADGE_ORDER.length : i;
+}
+
+/** 중요한 것부터 정렬한 표시 목록 */
+export function sortedBadges(v) {
+  return vulnBadges(v).sort((x, y) => badgeRank(x) - badgeRank(y));
+}
+
+/** 함께 보일 원문 제목(메일·웹·Markdown 공통): 번역한 기사만 — 국내 기사는 거의 같은 제목이 두 번 나와 군더더기 */
+export function origTitleOf(n) {
+  return n.lang !== 'ko' && n.title_ko && n.title_ko !== n.title ? n.title : '';
+}
+
 function mdEscape(s) {
   return String(s ?? '').replace(/([\\`*_[\]<>|])/g, '\\$1');
 }
@@ -115,7 +143,7 @@ export function renderMarkdown(b, { siteUrl = '' } = {}) {
 
   const vulnBlock = (v, i, header) => {
     L.push(`### ${i}. ${header}`);
-    L.push(`- ${vulnBadges(v).join(' · ')}`);
+    L.push(`- ${sortedBadges(v).join(' · ')}`);
     L.push(`- 대상: ${mdEscape(v.ko.target)}`);
     L.push(`- 영향: ${mdEscape(v.ko.impact)}`);
     L.push(`- 조치: ${mdEscape(v.ko.action)}`);
@@ -131,7 +159,7 @@ export function renderMarkdown(b, { siteUrl = '' } = {}) {
     list.forEach((n, i) => {
       const extra = n.outlets.length > 1 ? ` 외 ${n.outlets.length - 1}곳` : '';
       L.push(`${i + 1}. ${mdLink(n.title_ko || n.title, n.url)} — ${mdEscape(n.source)}${extra}`);
-      if (n.title_ko && n.title_ko !== n.title) L.push(`   - 원제: ${mdEscape(n.title)}`);
+      if (origTitleOf(n)) L.push(`   - 원제: ${mdEscape(n.title)}`);
       if (n.summary_ko) L.push(`   - ${mdEscape(n.summary_ko)}`);
       for (const r of n.related || []) L.push(`   - 함께 보도: ${mdLink(r.title, r.url)} (${mdEscape(r.source)})`);
     });

@@ -155,7 +155,7 @@ test('메일에 숨김 글·보이지 않는 문자를 넣지 않는다(스팸 �
   const b = sampleBrief();
   b.overview = '오늘의 요약 문장입니다.';
   const html = renderEmailHtml(b, { siteUrl: 'https://u.github.io/sec-brief', title: 'OO팀 일일 보안 브리핑' });
-  const hidden = html.match(/display:\s*none|visibility:\s*hidden|opacity:\s*0|font-size:\s*[01]px|max-height:\s*0|mso-hide/gi);
+  const hidden = html.match(/display:\s*none|visibility:\s*hidden|opacity:\s*0|font-size:\s*(?:0(?:px)?|1px)(?![\d.])|max-height:\s*0|mso-hide/gi);
   assert.equal(hidden, null, `숨기는 서식: ${hidden}`);
   const invisible = html.match(/&#847;|&zwnj;|&zwj;|&#8203;|&#8199;|[͏​-‍⁠﻿]/g);
   assert.equal(invisible, null, `보이지 않는 문자 ${invisible?.length}개`);
@@ -168,7 +168,7 @@ test('메일 디자인: Outlook 용 표 뼈대, 어두운 화면 선언', () => 
   const html = renderEmailHtml(b, { siteUrl: 'https://u.github.io/sec-brief', title: 'OO팀 일일 보안 브리핑' });
   // Outlook(Windows) 은 div 의 최대 폭을 무시하므로 680px 표로 감싼다
   assert.match(html, /<!--\[if mso\]><table role="presentation" width="680"/);
-  assert.match(html, /max-width:680px/);
+  assert.match(html, /max-width:960px/, '1920×1080 웹메일에 맞춘 최대 폭');
   assert.ok(!/<div style="max-width/.test(html), '폭을 div 로 정하지 않음');
   assert.match(html, /<meta name="color-scheme" content="light dark">/);
   assert.match(html, /@media \(prefers-color-scheme: dark\)/);
@@ -183,7 +183,7 @@ test('메일 디자인: 국내 기사는 제목 한 번, 번역한 해외 기사
   assert.ok(html.includes('다듬은 국내 제목') && !html.includes('원래 국내 제목'), '국내 기사 제목은 한 번만');
   assert.ok(html.includes('번역한 제목') && html.includes('Original English Title'), '해외 기사는 원문 제목도');
   assert.match(html, /보안뉴스 외 2곳 · \d\d\.\d\d \d\d:\d\d/, '매체·시각');
-  assert.match(html, />10\.23<\/td>/, 'KISA 날짜는 MM.DD');
+  assert.match(html, /· 10\.23<\/span><\/td>/, 'KISA 날짜는 제목 바로 옆 MM.DD(넓은 폭에서 멀리 떨어지지 않게)');
   assert.ok(!/KISA 보안공지 ·/.test(html), '보안공지 출처는 되풀이하지 않음');
 });
 
@@ -212,9 +212,31 @@ test('메일 크기: 평소 분량이면 Gmail 이 뒷부분을 자르는 크기
   b.news.domestic = Array.from({ length: 5 }, (_, i) => ({ ...b.news.domestic[0], id: `d${i}`, summary_ko: long, outlets: Array.from({ length: 20 }, (_, k) => `매체${k}`) }));
   b.news.international = Array.from({ length: 5 }, (_, i) => ({ ...b.news.international[0], id: `i${i}`, summary_ko: long }));
   b.advisories = Array.from({ length: 10 }, (_, i) => ({ ...b.advisories[1], id: `a${i}`, url: `https://www.boho.or.kr/${i}` }));
-  b.exploited = [b.exploited[0], { ...b.exploited[0], id: 'CVE-2026-2' }];
+  // 최악에 가까운 날: KEV 신규 10건 + 자산 단추
+  b.exploited = Array.from({ length: 10 }, (_, i) => ({ ...b.exploited[0], id: `CVE-2026-${i + 2}` }));
   b.critical = [b.critical[0], { ...b.critical[0], id: 'CVE-2026-3' }, { ...b.critical[0], id: 'CVE-2026-4' }];
   const extraNews = { keyword: '가나다전지', total: 9, items: Array.from({ length: 5 }, (_, i) => ({ title: `가나다전지 소식 ${i}`, url: `https://n.example/${i}`, outlet: '가신문', outlets: 3, published: '2026-10-28T01:00:00Z' })) };
-  const size = Buffer.byteLength(renderEmailHtml(b, { siteUrl: 'https://u.github.io/sec-brief', extraNews }));
+  const size = Buffer.byteLength(renderEmailHtml(b, { siteUrl: 'https://u.github.io/sec-brief', extraNews, assetUrl: 'https://asset.example:4800' }));
   assert.ok(size < 90 * 1024, `${Math.round(size / 1024)}KB`);
+});
+
+test('메일 폭: 최대 960px, 국내|해외는 칸 폭 기준 두 단(좁으면·calc 를 모르면 한 단), Outlook(Windows)은 680 한 단', () => {
+  const html = renderEmailHtml(sampleBrief(), { siteUrl: 'https://u.github.io/sec-brief' });
+  const cols = [...html.matchAll(/<div class="col" style="([^"]+)">/g)].map((m) => m[1]);
+  assert.equal(cols.length, 2, '국내·해외 두 칸');
+  // 화면이 아닌 칸 폭 기준(웹메일의 @media 는 브라우저 창 폭이라 좁은 읽기 창에서 깨짐), 곱셈·괄호 없는 calc, 앞에 width:100%
+  for (const s of cols) assert.match(s, /width:100%;min-width:49%;max-width:100%;width:calc\(\d+px - \d+%\);/);
+  // 화면 폭 @media 는 두 단을 정하지 않고, 언제나 한 단인 좁은 창에서 두 칸 사이 간격(왼쪽 칸 오른쪽 여백)만 지운다
+  const mq = [...html.matchAll(/@media \(max-width: (\d+)px\) \{([^}]*\})/g)];
+  assert.ok(mq.every((m) => !/\.col\b/.test(m[2])), '두 단 여부는 @media 로 정하지 않음');
+  const gapOff = mq.find((m) => /\.colgap \{ padding-right: 0 !important; \}/.test(m[2]));
+  assert.ok(gapOff && +gapOff[1] < 840 + 54, '창 폭이 이 값 이하면 칸 폭 < 840(바깥·카드 여백 54px) — 늘 한 단일 때만');
+  assert.equal(html.match(/<td class="colgap" style="padding:0 24px 0 0;">/g)?.length, 1, '간격은 왼쪽 칸에만');
+  assert.match(html, /<!--\[if mso\]><style>[^<]*\.colgap\{padding-right:0 !important;\}/, 'Outlook(Windows) 은 늘 한 단이라 간격 없음');
+  assert.match(html, /<\/table><\/div><div class="col"/, '두 칸 사이에 빈칸·줄바꿈 없음');
+  assert.ok(html.indexOf('국내 보안 뉴스') < html.indexOf('해외 보안 뉴스'), '쌓였을 때 국내 → 해외');
+  assert.match(html, /<!--\[if mso\]><table role="presentation" width="680"/, 'Outlook(Windows) 은 680 한 단');
+  // Word(Outlook Windows) 는 max-width 를 고정 폭처럼 써서 960 이면 좁은 읽기 창에서 가로로 밀린다 → Outlook 에서만 680 으로 덮어씀
+  assert.match(html, /width="100%" class="mailw" style="max-width:960px;/);
+  assert.match(html, /<!--\[if mso\]><style>[^<]*\.mailw\{max-width:680px !important;\}/);
 });

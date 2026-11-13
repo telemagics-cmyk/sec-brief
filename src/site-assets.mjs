@@ -3,7 +3,7 @@
 export const SITE_CSS = `:root {
   color-scheme: light dark;
   --bg: #f3f4f6; --surface: #ffffff; --surface-2: #f6f7f9; --ink: #111827; --ink-2: #1f2937;
-  --muted: #5b6573; --faint: #7b8593; --rule: #e1e5ea;
+  --muted: #5b6573; --faint: #667085; --rule: #e1e5ea;
   --accent: #0b6b88; --accent-soft: #e2f0f4;
   --hot: #b42318; --hot-soft: #fdecea; --warn: #8f5400; --warn-soft: #fff3db; --note: #3a55ad; --note-soft: #e8edfb;
   --sans: "Pretendard Variable", Pretendard, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, -apple-system, sans-serif;
@@ -64,7 +64,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .daynav .all { color: var(--muted); }
 .daynav span { min-width: 1px; }
 
-.kicker { margin: 0; font-size: 12px; letter-spacing: 0.14em; color: var(--accent); font-weight: 700; }
+.kicker { margin: 0; font-size: 13px; color: var(--accent); font-weight: 700; }
 .brief-head h1 { font-size: 23px; line-height: 1.35; margin: 4px 0 2px; letter-spacing: -0.015em; }
 .meta { margin: 0; color: var(--muted); font-size: 13.5px; }
 .counts { list-style: none; padding: 0; margin: 16px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(92px, 1fr)); gap: 8px; }
@@ -76,6 +76,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .counts li.hot b { color: var(--hot); }
 .counts li.warn b { color: var(--warn); }
 .sec { scroll-margin-top: 64px; }
+/* 휴대폰에서는 머리글이 두 줄(약 95px)이라 고정하면 카카오 카드·메일 건수 칸이 여는 섹션 제목·기사가 그 밑에 가린다 → 고정하지 않는다 */
+@media (max-width: 759px) { .top { position: static; } }
 
 .alert { margin: 16px 0 0; padding: 12px 14px; border-radius: 8px; background: var(--warn-soft); border: 1px solid var(--warn); }
 .alert b { color: var(--warn); margin-right: 6px; }
@@ -99,6 +101,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .badge { font-size: 11.5px; line-height: 1.6; padding: 1px 8px; border-radius: 999px; background: var(--surface-2); color: var(--muted); border: 1px solid var(--rule); white-space: nowrap; }
 .badge.hot { background: var(--hot-soft); color: var(--hot); border-color: transparent; }
 .badge.note { background: var(--note-soft); color: var(--note); border-color: transparent; }
+.badge.warn { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+.badge.acc { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
 .vuln h3 { margin: 6px 0 8px; font-size: 16.5px; line-height: 1.45; }
 .facts { margin: 0; display: grid; gap: 3px; }
 .facts div { display: grid; grid-template-columns: 2.6em minmax(0, 1fr); gap: 8px; }

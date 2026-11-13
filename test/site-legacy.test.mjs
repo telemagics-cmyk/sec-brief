@@ -4,7 +4,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
-import { ruleOverview } from '../src/brief.mjs';
+import { renderMarkdown, ruleOverview } from '../src/brief.mjs';
 import { importLegacy, stripArchiveFooter } from '../src/legacy.mjs';
 import { buildSite } from '../src/site.mjs';
 import { loadBrief, recentHistory, saveBrief } from '../src/store.mjs';
@@ -169,5 +169,33 @@ test('공개 웹: 요약 모델·사용량·오류 문구를 싣지 않고, 모�
     assert.ok(!/ on\w+="/i.test(html), `${f}: 인라인 이벤트 처리기는 CSP 에 막힘`);
     assert.ok(!/ style="/i.test(html), `${f}: style 속성은 CSP(style-src 'self')에 막힘`);
   }
+  rmSync(dir, { recursive: true, force: true });
+});
+
+test('웹·Markdown: 표시 색·순서, 원문 제목, KISA 표기는 메일과 같다 / 흐린 글자 대비·제목 자간·휴대폰 머리글', () => {
+  const { dir, cfg } = workspace();
+  const b = sampleBrief({ date: '2026-10-23' });
+  b.news.domestic[0] = { ...b.news.domestic[0], lang: 'ko', title: '원래 국내 제목', title_ko: '다듬은 국내 제목' };
+  b.news.international[0] = { ...b.news.international[0], lang: 'en', title: 'Original English Title', title_ko: '번역한 제목' };
+  saveBrief(cfg.dataDir, b);
+  buildSite(cfg, { log: () => {} });
+  const day = readFileSync(join(cfg.siteDir, 'b', '2026-10-23.html'), 'utf8');
+  assert.ok(day.includes('다듬은 국내 제목') && !day.includes('원래 국내 제목'), '국내 기사 제목은 한 번만');
+  assert.ok(day.includes('Original English Title'), '번역한 해외 기사는 원문 제목도');
+  const md = renderMarkdown(b);
+  assert.ok(!md.includes('원제: 원래 국내 제목') && md.includes('원제: Original English Title'), 'Markdown 도 같은 규칙');
+  // 악용 카드 표시: KEV 맨 앞·CVSS 7 이상 주황·EPSS 맨 뒤(메일과 같은 순서·색)
+  const g = /class="vuln exploited"[\s\S]*?<span class="badges">([\s\S]*?)<\/span><\/div>/.exec(day)[1];
+  const badges = [...g.matchAll(/<span class="badge(?: (\w+))?">([^<]+)<\/span>/g)].map((m) => [m[2], m[1] || '']);
+  assert.deepEqual(badges, [['KEV', 'hot'], ['CVSS 8.6', 'warn'], ['기한 2026-11-10', 'warn'], ['EPSS 0.8%', '']]);
+  assert.match(md, /- KEV · CVSS 8\.6 · 기한 2026-11-10 · EPSS 0\.8%/);
+  // KISA: 보안공지 출처는 되풀이하지 않고 날짜는 MM.DD, 경보단계 등만 작은 표시
+  assert.ok(!day.includes('KISA 보안공지 ·'));
+  assert.match(day, /<\/a> <span class="by">10\.23<\/span><\/li>/);
+  assert.match(day, /<span class="badge note">경보단계<\/span> <span class="by">10\.22<\/span>/);
+  const css = readFileSync(join(cfg.siteDir, 'assets', 'site.css'), 'utf8');
+  assert.match(css, /--faint: #667085;/, '흐린 글자도 흰 바탕 대비 4.5:1 이상');
+  assert.ok(!/\.kicker \{[^}]*letter-spacing/.test(css), '제목 자간 없음(영문 약어가 떨어져 보임)');
+  assert.match(css, /@media \(max-width: 759px\) \{ \.top \{ position: static; \} \}/, '휴대폰에서 머리글이 이동한 제목을 가리지 않게');
   rmSync(dir, { recursive: true, force: true });
 });

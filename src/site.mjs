@@ -10,7 +10,7 @@
 import { createHash } from 'node:crypto';
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { alertOf, allNews, emptyNote, sinceNote, vulnBadges } from './brief.mjs';
+import { alertOf, allNews, badgeKind, emptyNote, origTitleOf, sinceNote, sortedBadges } from './brief.mjs';
 import { feedOf } from './feed.mjs';
 import { SITE_CSS, SITE_JS } from './site-assets.mjs';
 import { loadAllBriefs } from './store.mjs';
@@ -104,8 +104,12 @@ ${body}
 // ------------------------------------------------------------------ 브리핑 본문
 
 function vulnCard(v, { cls }) {
-  const badges = vulnBadges(v)
-    .map((t) => `<span class="badge${/KEV|악용|랜섬/.test(t) ? ' hot' : /KISA|뉴스|관심/.test(t) ? ' note' : ''}">${h(t)}</span>`)
+  // 색·순서는 메일과 같게(brief.mjs badgeKind·sortedBadges)
+  const badges = sortedBadges(v)
+    .map((t) => {
+      const kind = badgeKind(t);
+      return `<span class="badge${kind === 'neu' ? '' : ` ${kind}`}">${h(t)}</span>`;
+    })
     .join('');
   const ids = v.ids && v.ids.length > 1 ? v.ids : null;
   const links = [...(v.links || []).map((u, i) => a(u, i === 0 ? '벤더 공지' : `참고 ${i}`)), a(v.nvd, 'NVD')].join('<span class="sep">·</span>');
@@ -131,7 +135,8 @@ function vulnCard(v, { cls }) {
 function newsItem(n) {
   const others = n.outlets.length > 1 ? ` 외 ${n.outlets.length - 1}곳` : '';
   const title = n.title_ko || n.title;
-  const orig = n.title_ko && n.title_ko !== n.title ? `<p class="orig-title" lang="${n.lang === 'en' ? 'en' : 'ko'}">${h(n.title)}</p>` : '';
+  const origTitle = origTitleOf(n);
+  const orig = origTitle ? `<p class="orig-title" lang="${n.lang === 'en' ? 'en' : 'ko'}">${h(origTitle)}</p>` : '';
   const summary = n.summary_ko ? `<p class="sum">${h(n.summary_ko)}</p>` : n.snippet ? `<p class="sum snip">${h(truncate(n.snippet, 120))}</p>` : '';
   const related = (n.related || []).length
     ? `<details class="rel"><summary>함께 보도 ${n.related.length}건${n.outlets.length - 1 > n.related.length ? ` (전체 ${n.outlets.length}개 매체)` : ''}</summary><ul>${n.related
@@ -193,9 +198,16 @@ function briefBody(b) {
 ${list.length ? `<ol class="news">${list.map(newsItem).join('\n')}</ol>` : `<p class="empty">${h(emptyNote(b, 'news'))}</p>`}
 </section>`;
 
+  // 출처가 보안공지면 표시를 생략하고(줄마다 되풀이되어 군더더기), 취약점 정보·경보단계만 작은 표시로. 날짜는 MM.DD(메일과 같음)
+  const kisaItem = (x) => {
+    const kind = String(x.source || '').replace(/^KISA\s*/, '');
+    const tag = kind && kind !== '보안공지' ? ` <span class="badge note">${h(kind)}</span>` : '';
+    const day = /^\d{4}-\d{2}-\d{2}$/.test(x.date || '') ? `${x.date.slice(5, 7)}.${x.date.slice(8, 10)}` : x.date || '';
+    return `<li class="${x.alert ? 'is-alert' : ''}">${a(x.url, h(x.title))}${tag} <span class="by">${h(day)}</span></li>`;
+  };
   const kisaSection = `<section id="kisa" class="sec"><h2>KISA 공지 <small>보호나라·KrCERT</small></h2>
 ${adv.length
-    ? `<ul class="adv">${adv.map((x) => `<li class="${x.alert ? 'is-alert' : ''}">${a(x.url, h(x.title))} <span class="by">${h(x.source)} · ${h(x.date)}</span></li>`).join('')}</ul>`
+    ? `<ul class="adv">${adv.map(kisaItem).join('')}</ul>`
     : `<p class="empty">${h(emptyNote(b, 'kisa'))}</p>`}
 </section>`;
 

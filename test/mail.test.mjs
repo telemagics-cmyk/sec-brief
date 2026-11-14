@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { after, before, test } from 'node:test';
 import { renderMarkdown, sinceNote } from '../src/brief.mjs';
-import { explainMailError, mailSettings, mailSubject, mailTitle, renderEmailHtml, sendBriefMail } from '../src/mail.mjs';
+import { explainMailError, mailSettings, mailSubject, mailTitle, renderEmailHtml, sendBriefMail, sentences } from '../src/mail.mjs';
 import { msUntilKst } from '../src/util.mjs';
 import { startFakeSmtp } from './fake-smtp.mjs';
 import { sampleBrief } from './fixtures.mjs';
@@ -220,23 +220,83 @@ test('메일 크기: 평소 분량이면 Gmail 이 뒷부분을 자르는 크기
   assert.ok(size < 90 * 1024, `${Math.round(size / 1024)}KB`);
 });
 
-test('메일 폭: 최대 960px, 국내|해외는 칸 폭 기준 두 단(좁으면·calc 를 모르면 한 단), Outlook(Windows)은 680 한 단', () => {
+test('메일 폭: 최대 960px, 두 단 묶음은 칸 폭 기준(좁으면·calc 를 모르면 한 단), Outlook(Windows)은 680 한 단', () => {
   const html = renderEmailHtml(sampleBrief(), { siteUrl: 'https://u.github.io/sec-brief' });
   const cols = [...html.matchAll(/<div class="col" style="([^"]+)">/g)].map((m) => m[1]);
-  assert.equal(cols.length, 2, '국내·해외 두 칸');
-  // 화면이 아닌 칸 폭 기준(웹메일의 @media 는 브라우저 창 폭이라 좁은 읽기 창에서 깨짐), 곱셈·괄호 없는 calc, 앞에 width:100%
-  for (const s of cols) assert.match(s, /width:100%;min-width:49%;max-width:100%;width:calc\(\d+px - \d+%\);/);
-  // 화면 폭 @media 는 두 단을 정하지 않고, 언제나 한 단인 좁은 창에서 두 칸 사이 간격(왼쪽 칸 오른쪽 여백)만 지운다
-  const mq = [...html.matchAll(/@media \(max-width: (\d+)px\) \{([^}]*\})/g)];
-  assert.ok(mq.every((m) => !/\.col\b/.test(m[2])), '두 단 여부는 @media 로 정하지 않음');
-  const gapOff = mq.find((m) => /\.colgap \{ padding-right: 0 !important; \}/.test(m[2]));
-  assert.ok(gapOff && +gapOff[1] < 840 + 54, '창 폭이 이 값 이하면 칸 폭 < 840(바깥·카드 여백 54px) — 늘 한 단일 때만');
-  assert.equal(html.match(/<td class="colgap" style="padding:0 24px 0 0;">/g)?.length, 1, '간격은 왼쪽 칸에만');
-  assert.match(html, /<!--\[if mso\]><style>[^<]*\.colgap\{padding-right:0 !important;\}/, 'Outlook(Windows) 은 늘 한 단이라 간격 없음');
-  assert.match(html, /<\/table><\/div><div class="col"/, '두 칸 사이에 빈칸·줄바꿈 없음');
+  assert.equal(cols.length, 2, '국내·해외 두 칸(카드 한 장·공지 3건은 묶지 않음)');
+  // 화면이 아닌 칸 폭 기준(웹메일의 @media 는 브라우저 창 폭이라 좁은 읽기 창에서 깨짐), 곱셈·괄호 없는 calc, 앞에 width:100%.
+  // 두 칸을 양 끝에 붙여(float) 남는 폭이 가운데 간격 — 칸 안에 간격용 여백이 없어 한 단으로 쌓였을 때 좁아지는 칸이 없다
+  assert.equal(cols[0], 'float:left;display:inline-block;vertical-align:top;width:100%;min-width:48.7%;max-width:100%;width:calc(840000px - 100000%);');
+  assert.equal(cols[1], cols[0].replace('float:left', 'float:right'), '두 칸의 폭 규칙은 같다');
+  assert.ok(!/@media \(max-width/.test(html), '화면 폭 @media 로 배치를 정하지 않음');
+  assert.ok(!/colgap|padding:0 24px 0 0/.test(html), '칸 안에 간격용 여백 없음');
+  assert.match(html, /<\/table><\/div><div class="col"/, '두 칸 사이에 빈칸·줄바꿈 없음(float 을 지우는 곳에서도 나란히)');
   assert.ok(html.indexOf('국내 보안 뉴스') < html.indexOf('해외 보안 뉴스'), '쌓였을 때 국내 → 해외');
   assert.match(html, /<!--\[if mso\]><table role="presentation" width="680"/, 'Outlook(Windows) 은 680 한 단');
   // Word(Outlook Windows) 는 max-width 를 고정 폭처럼 써서 960 이면 좁은 읽기 창에서 가로로 밀린다 → Outlook 에서만 680 으로 덮어씀
   assert.match(html, /width="100%" class="mailw" style="max-width:960px;/);
   assert.match(html, /<!--\[if mso\]><style>[^<]*\.mailw\{max-width:680px !important;\}/);
+});
+
+test('메일 첫 화면: 건수 띠는 머리 띠 아래 한 줄(악용·경보 있는 칸만 색), 요약은 문장마다 한 줄·첫 문장 굵게', () => {
+  const b = sampleBrief(); // 경보가 바뀐 날, 악용 1건 + 그 밖 2건
+  b.overview = 'A 장비를 가장 먼저 점검해야 합니다. CVSS 9.8 취약점(CVE-2026-1)도 패치하세요. 미국 U.S. 기관의 경고도 있었습니다.';
+  const html = renderEmailHtml(b, { siteUrl: 'https://u.github.io/sec-brief' });
+  const strip = /<td class="soft"[^>]*>\s*<table[^>]*><tr>([\s\S]*?)<\/tr><\/table>\s*<\/td><\/tr>\s*<tr><td class="card"/.exec(html)[1];
+  const cells = [...strip.matchAll(/<td class="line([^"]*)"[^>]*>[\s\S]*?<span class="(\w+)"[^>]*>([^<]+)<\/span><br><span class="tile-label muted"[^>]*>([^<]+)<\/span>/g)].map((m) => [m[4], m[3], m[1].trim(), m[2]]);
+  assert.deepEqual(cells, [
+    ['국내 뉴스', '1', '', 'ink'],
+    ['해외 뉴스', '1', '', 'ink'],
+    ['KISA 공지', '3', 'p-warn', 'warn'],
+    ['악용 확인', '3', 'p-hot', 'hot'],
+    ['고위험', '69', '', 'ink'],
+  ]);
+  // 요약: 가장 시급한 조치(첫 문장)만 굵게, 소수점·영문 약어에서는 나누지 않음
+  const box = /오늘의 요약<\/p>\s*<table[^>]*>([\s\S]*?)<\/table>/.exec(html)[1];
+  const lines = [...box.matchAll(/<td class="(ink2?)" valign="top" style="([^"]*)">([^<]+)<\/td>/g)].map((m) => [m[3], m[1], /font-weight:bold/.test(m[2])]);
+  assert.deepEqual(lines, [
+    ['A 장비를 가장 먼저 점검해야 합니다.', 'ink', true],
+    ['CVSS 9.8 취약점(CVE-2026-1)도 패치하세요.', 'ink2', false],
+    ['미국 U.S. 기관의 경고도 있었습니다.', 'ink2', false],
+  ]);
+  assert.ok(html.indexOf('사이버위기 경보') < html.indexOf('오늘의 요약') && html.indexOf('오늘의 요약') < html.indexOf('국내 보안 뉴스'), '경보 → 요약 → 뉴스');
+  // 조용한 날은 띠에 색이 없다
+  const calm = sampleBrief();
+  calm.exploited = [];
+  calm.exploited_more = [];
+  calm.advisories = calm.advisories.filter((x) => !x.alert);
+  assert.ok(!/<td class="line p-/.test(renderEmailHtml(calm, {})));
+});
+
+test('요약 문장 나누기: 마침표·물음표·느낌표 뒤 빈칸에서만 — 소수점·영문 약어·숫자 뒤는 그대로', () => {
+  assert.deepEqual(sentences('가 합니다. 나 CVSS 9.8 입니다! 다 U.S. 기관? 라 2026. 11. 13. 마'), ['가 합니다.', '나 CVSS 9.8 입니다!', '다 U.S. 기관?', '라 2026. 11. 13. 마']);
+  assert.deepEqual(sentences("주요 뉴스: 국내 '가', 해외 '나'. KISA 공지 5건. 새 취약점: 실제 악용 6건(A, B) · CVSS 9.0 이상 81건."), ["주요 뉴스: 국내 '가', 해외 '나'.", 'KISA 공지 5건.', '새 취약점: 실제 악용 6건(A, B) · CVSS 9.0 이상 81건.']);
+  assert.deepEqual(sentences('한 문장입니다.'), ['한 문장입니다.']);
+  assert.deepEqual(sentences(''), []);
+});
+
+test('메일 배치: 취약점 카드는 두 장씩(홀수면 첫 장은 한 줄 전체), KISA 는 6건부터 반씩 — 문서 순서는 그대로', () => {
+  const b = sampleBrief();
+  b.exploited = Array.from({ length: 5 }, (_, i) => ({ ...b.exploited[0], id: `CVE-2026-90${i}` }));
+  b.critical = Array.from({ length: 2 }, (_, i) => ({ ...b.critical[0], id: `CVE-2026-80${i}` }));
+  b.advisories = Array.from({ length: 7 }, (_, i) => ({ ...b.advisories[1], id: `a${i}`, title: `공지 ${i}`, url: `https://www.boho.or.kr/${i}` }));
+  const html = renderEmailHtml(b, {});
+  // 문서 순서 = 한 단으로 쌓였을 때(휴대폰·Outlook) 읽는 순서
+  assert.deepEqual([...html.matchAll(/>(CVE-2026-[98]0\d)</g)].map((m) => m[1]), ['CVE-2026-900', 'CVE-2026-901', 'CVE-2026-902', 'CVE-2026-903', 'CVE-2026-904', 'CVE-2026-800', 'CVE-2026-801']);
+  // 두 단 묶음: 뉴스 1 + KISA 1 + 악용 2(5장 = 1 + 2×2) + 고위험 1
+  assert.equal(html.match(/<div class="col" style="float:left/g).length, 5);
+  assert.equal(html.match(/<div class="col" style="float:right/g).length, 5);
+  const exHead = html.indexOf('>악용 확인 취약점 <span');
+  assert.ok(!html.slice(exHead, html.indexOf('>CVE-2026-900<')).includes('class="col"'), '홀수면 첫 장(가장 중요한 것)은 묶지 않음');
+  assert.ok(html.slice(exHead, html.indexOf('>CVE-2026-901<')).includes('float:left'), '둘째 장부터 두 장씩');
+  const kisa = html.slice(html.indexOf('>KISA 공지 <span'), exHead);
+  assert.deepEqual([...kisa.matchAll(/>(공지 \d)</g)].map((m) => m[1]), ['공지 0', '공지 1', '공지 2', '공지 3', '공지 4', '공지 5', '공지 6']);
+  const [left, right] = kisa.split('<div class="col" style="float:right');
+  assert.deepEqual([left.match(/>공지 \d</g).length, right.match(/>공지 \d</g).length], [4, 3]);
+  assert.equal(kisa.match(/border-top:1px solid/g).length, 7, '쌓였을 때 줄이 끊기지 않게 모든 줄 위에 선');
+  assert.match(html, /KEV: 미국 사이버보안청\(CISA\)[^<]*CVSS: [^<]*EPSS: /, '표시 풀이 한 줄');
+  const none = sampleBrief();
+  none.exploited = [];
+  none.critical = [];
+  assert.ok(!renderEmailHtml(none, {}).includes('KEV: 미국'), '카드가 없으면 풀이도 없음');
 });

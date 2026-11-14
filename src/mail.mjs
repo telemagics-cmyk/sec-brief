@@ -76,16 +76,15 @@ const TBL = 'role="presentation" width="100%" cellpadding="0" cellspacing="0" bo
 const MAIL_W = 960;
 const MSO_W = 680;
 // 두 단 전환은 화면이 아니라 '들어갈 칸의 폭' 기준: 웹메일의 @media 는 브라우저 창 폭으로 판정돼 좁은 읽기 창에서 깨진다.
-// width = (COL_BREAK − 칸 폭) × 1000 이 칸이 넓으면 음수(→ min-width 49%, 두 단), 좁으면 큰 값(→ max-width 100%, 한 단).
-// calc 의 곱셈·괄호를 지우는 메일 앱이 있어 미리 풀어 쓰고, calc 를 모르는 곳(Outlook.com 등)은 앞의 width:100% 로 한 단.
-// 49% 인 까닭: 보내는 서버가 두 칸 사이에 줄바꿈을 넣어 빈칸이 생겨도 합이 100% 를 넘지 않게(글자 크기 0 으로 지우는 방법은 숨김 글 신호라 쓰지 않음).
+// width = (COL_BREAK − 칸 폭) × 1000 이 칸이 넓으면 음수(→ min-width, 두 단), 좁으면 큰 값(→ max-width 100%, 한 단).
+// calc 의 곱셈·괄호를 지우는 메일 앱이 있어 미리 풀어 쓰고, calc 를 모르는 곳(Outlook 웹 등)은 앞의 width:100% 로 한 단.
+// 두 칸은 왼쪽·오른쪽 끝에 붙이고(float) 남는 폭(100 − 2×COL_PCT %)이 가운데 간격이 된다. 칸 안에 간격용 여백을 두지 않으므로
+// 한 단으로 쌓였을 때 어느 칸도 좁아지지 않고, 두 단일 때 양 끝이 다른 구역과 맞는다. float 을 모르는 Outlook(Windows) 은
+// div 를 그대로 쌓는다(한 단). float 만 지우는 곳이 있다면 inline-block 으로 나란히 붙는다(사이에 빈칸이 끼어도 합이 100% 를
+// 넘지 않음 — 글자 크기 0 으로 빈칸을 지우는 방법은 숨김 글 신호라 쓰지 않음).
 const COL_BREAK = 840; // 칸 폭(px)이 이보다 넓으면 두 단
-const COL_GAP = 24;
-const COL_STYLE = `display:inline-block;vertical-align:top;width:100%;min-width:49%;max-width:100%;width:calc(${COL_BREAK * 1000}px - 100000%);`;
-// 두 칸 사이 간격(COL_GAP)은 왼쪽 칸 안쪽 오른쪽 여백이라, 한 단으로 쌓이면 국내 목록만 오른쪽이 좁아진다.
-// 창 폭이 아래 값 이하이면 칸 폭(창 − 바깥 여백·테두리·카드 여백 54px)이 COL_BREAK 보다 좁아 언제나 한 단이므로 그때만 지운다
-// (두 단을 정하는 데는 쓰지 않음 — @media 를 모르는 곳은 여백이 남을 뿐). Outlook(Windows) 은 늘 한 단이라 MSO_CSS 에서 지운다.
-const LAYOUT_CSS = `@media (max-width: ${COL_BREAK + 40}px) { .colgap { padding-right: 0 !important; } }`;
+const COL_PCT = 48.7; // 한 칸의 폭(%) → 가운데 간격 2.6%(약 22~24px)
+const colStyle = (side) => `float:${side};display:inline-block;vertical-align:top;width:100%;min-width:${COL_PCT}%;max-width:100%;width:calc(${COL_BREAK * 1000}px - 100000%);`;
 
 // 어두운 화면을 지원하는 메일 앱(Apple Mail·Outlook iOS/Mac 등)에서만 쓰이는 덮어쓰기
 const DARK_CSS = `:root { color-scheme: light dark; supported-color-schemes: light dark; }
@@ -111,7 +110,7 @@ const DARK_CSS = `:root { color-scheme: light dark; supported-color-schemes: lig
 }`;
 // Outlook(Windows) 은 표 안 글자에 글꼴을 물려주지 않아 따로 정한다
 // 한글과 숫자·영문 사이에 Word 가 저절로 띄우는 간격('2026 년')도 끈다
-const MSO_CSS = `<!--[if mso]><style>table,td,p,a,span,h1,h2,div{font-family:'Malgun Gothic',Arial,sans-serif !important;text-autospace:none;}.colgap{padding-right:0 !important;}.mailw{max-width:${MSO_W}px !important;}</style><![endif]-->`;
+const MSO_CSS = `<!--[if mso]><style>table,td,p,a,span,h1,h2,div{font-family:'Malgun Gothic',Arial,sans-serif !important;text-autospace:none;}.mailw{max-width:${MSO_W}px !important;}</style><![endif]-->`;
 // Outlook(Windows) 은 글자 단위 요소의 안쪽 여백을 무시하므로, 표시·단추 안에 Outlook 에서만 보이는 빈칸을 둔다
 const MSO_PAD = '<!--[if mso]>&nbsp;<![endif]-->';
 
@@ -191,18 +190,37 @@ function newsRows(list, b) {
 
 /**
  * 두 단 묶음: 칸이 넓으면 나란히, 좁으면(좁은 읽기 창·휴대폰·calc 를 모르는 메일 앱) 위아래로 — 순서는 그대로.
- * Outlook(Windows) 은 div 를 블록으로 쌓아 지금과 같은 한 단이 된다. 두 div 사이에 빈칸·줄바꿈을 두지 않는다.
- * 틈은 왼쪽 단의 오른쪽에만 둬서 쌓였을 때 왼쪽 끝이 맞는다.
+ * Outlook(Windows) 은 div 를 블록으로 쌓아 한 단이 된다. 두 div 사이에 빈칸·줄바꿈을 두지 않는다.
  * @param {string} left  표 행(<tr>…)들
  * @param {string} right 표 행(<tr>…)들
  */
 function twoColumns(left, right) {
-  const col = (rows, pad) => `<div class="col" style="${COL_STYLE}"><table ${TBL}><tr><td${pad ? ' class="colgap"' : ''} style="padding:0 ${pad}px 0 0;"><table ${TBL}>${rows}</table></td></tr></table></div>`;
-  return `<tr><td style="padding:0;">${col(left, COL_GAP)}${col(right, 0)}</td></tr>`;
+  const col = (side, rows) => `<div class="col" style="${colStyle(side)}"><table ${TBL}>${rows}</table></div>`;
+  return `<tr><td style="padding:0;">${col('left', left)}${col('right', right)}</td></tr>`;
 }
 
-function kisaRows(adv, b) {
+/**
+ * 취약점 카드 배치: 넓으면 두 장씩 나란히(길이가 절반 가까이 줄어 훑어보기 쉽다), 좁으면 한 줄에 한 장 — 순서는 그대로.
+ * 홀수면 첫 장(가장 중요한 것)을 한 줄 전체에 놓고 나머지를 둘씩 묶는다.
+ * @param {string[]} cards vulnCard 가 만든 표 행들
+ */
+function cardGrid(cards) {
+  const out = [];
+  let i = 0;
+  if (cards.length % 2) out.push(cards[i++]);
+  for (; i < cards.length; i += 2) out.push(twoColumns(cards[i], cards[i + 1]));
+  return out.join('');
+}
+
+/** KISA 공지: 6건 이상이면 넓은 칸에서 두 단(반씩) — 쌓였을 때도 줄이 이어지게 그때는 첫 줄 위에도 선을 둔다 */
+function kisaList(adv, b) {
   if (!adv.length) return noteRow(emptyNote(b, 'kisa'));
+  if (adv.length < 6) return kisaRows(adv);
+  const half = Math.ceil(adv.length / 2);
+  return twoColumns(kisaRows(adv.slice(0, half), true), kisaRows(adv.slice(half), true));
+}
+
+function kisaRows(adv, topRule = false) {
   return adv
     .map((x, i) => {
       // 출처가 보안공지면 표시를 생략하고, 취약점 정보·경보단계만 작은 표시로
@@ -210,7 +228,7 @@ function kisaRows(adv, b) {
       const tag = kind && kind !== '보안공지' ? ` ${pill(kind, 'note')}` : '';
       const style = x.alert ? `color:${C.warn};font-weight:bold;text-decoration:none;` : `color:${C.ink2};text-decoration:none;`;
       const day = /^\d{4}-\d{2}-\d{2}$/.test(x.date || '') ? `${x.date.slice(5, 7)}.${x.date.slice(8, 10)}` : x.date || '';
-      return `<tr><td class="line" style="padding:8px 0;${i ? `border-top:1px solid ${C.rule};` : ''}">
+      return `<tr><td class="line" style="padding:8px 0;${i || topRule ? `border-top:1px solid ${C.rule};` : ''}">
 <table ${TBL}><tr>
 <td valign="top" style="font-size:14.5px;line-height:22px;">${a(x.url, h(x.title), style, x.alert ? 'warn' : 'ink2')}${tag}${day ? ` <span class="faint" style="font-size:12.5px;color:${C.faint};white-space:nowrap;">· ${h(day)}</span>` : ''}</td>
 </tr></table></td></tr>`;
@@ -277,6 +295,34 @@ function keywordNews(extra) {
   return rows.join('');
 }
 
+/**
+ * 요약을 문장으로 나눈다(마침표·물음표·느낌표 뒤 빈칸). 영문 약어('U.S. ')·숫자('2026. 11.') 뒤는 나누지 않는다 —
+ * 잘못 나누는 것보다 두 문장이 한 줄에 남는 편이 낫다.
+ */
+export function sentences(text) {
+  return String(text || '').split(/(?<=[^A-Za-z0-9\s.][.!?])\s+/).map((s) => s.trim()).filter(Boolean);
+}
+
+/**
+ * '오늘의 요약' 상자: 바쁜 사람이 첫 화면에서 결론을 읽게 문장마다 한 줄, 첫 문장(요약 규칙상 가장 시급한 조치)은 굵게.
+ * 문장이 하나면 그대로 한 문단.
+ */
+function overviewBox(text) {
+  const lines = sentences(text);
+  const size = 'font-size:15.5px;line-height:25px;';
+  const body = lines.length > 1
+    ? `<table ${TBL}>${lines
+        .map((s, i) => `<tr>
+<td class="acc" valign="top" width="16" style="width:16px;${size}color:${C.accent};">•</td>
+<td class="${i ? 'ink2' : 'ink'}" valign="top" style="padding:0 0 ${i === lines.length - 1 ? 0 : 3}px;${size}color:${i ? C.ink2 : C.ink};${i ? '' : 'font-weight:bold;'}">${h(s)}</td></tr>`)
+        .join('')}</table>`
+    : `<p class="ink" style="margin:0;${size}color:${C.ink};">${h(text)}</p>`;
+  return `<table ${TBL}><tr><td class="ov" bgcolor="${C.accentSoft}" style="background:${C.accentSoft};border-left:4px solid ${C.accent};border-radius:0 8px 8px 0;padding:13px 16px 14px;">
+<p class="acc" style="margin:0 0 5px;font-size:12.5px;line-height:18px;font-weight:bold;color:${C.accent};">오늘의 요약</p>
+${body}
+</td></tr></table>`;
+}
+
 /** 웹 페이지와 같은 순서: 국내 뉴스 → 해외 뉴스 → KISA 공지 → 악용 확인 → 신규 고위험 (→ 메일에만 관심 키워드 뉴스) */
 export function renderEmailHtml(b, { siteUrl = '', title = '일일 보안 브리핑', extraNews = null, assetUrl = '' } = {}) {
   const assetHref = (id) => assetLink(assetUrl, b.date, id);
@@ -297,49 +343,51 @@ export function renderEmailHtml(b, { siteUrl = '', title = '일일 보안 브리
 <h1 style="margin:6px 0 4px;font-size:24px;line-height:32px;color:${C.bandInk};">${date}</h1>
 <p style="margin:0;font-size:13px;line-height:20px;color:${C.bandSub};">${h(b.generated_at?.slice(11, 16) || '')} KST 생성${since ? ` · ${h(since)}` : ''}${dayUrl ? ` · <a href="${h(dayUrl)}" style="color:${C.bandInk};text-decoration:underline;">웹에서 보기</a>` : ''}</p>`;
 
-  // 건수 칸: 휴대폰에서도 한 줄에 들어가게 이름은 짧게, 줄바꿈 없이
-  const tiles = [
-    ['news-domestic', dom.length, '국내 뉴스', C.ink, 'ink'],
-    ['news-international', intl.length, '해외 뉴스', C.ink, 'ink'],
-    ['kisa', adv.length, 'KISA 공지', alert ? C.warn : C.ink, alert ? 'warn' : 'ink'],
-    ['exploited', b.failed?.kev ? '–' : exTotal, '악용 확인', exTotal ? C.hot : C.ink, exTotal ? 'hot' : 'ink'],
-    ['critical', b.critical_total ?? '–', '고위험', C.ink, 'ink'],
+  // 건수 띠: 머리 띠에 바로 붙는 한 줄(상자 다섯 개보다 가볍게 — 첫 화면은 요약에 내준다). 휴대폰에서도 한 줄에 들어가게
+  // 이름은 짧게. 대부분의 날 같은 숫자인 칸은 차분하게 두고, 새로 악용이 확인된 날·경보가 바뀐 날만 그 칸에 색을 넣는다.
+  const stats = [
+    ['news-domestic', dom.length, '국내 뉴스', ''],
+    ['news-international', intl.length, '해외 뉴스', ''],
+    ['kisa', adv.length, 'KISA 공지', alert ? 'warn' : ''],
+    ['exploited', b.failed?.kev ? '–' : exTotal, '악용 확인', exTotal ? 'hot' : ''],
+    ['critical', b.critical_total ?? '–', '고위험', ''],
   ];
-  const tileCells = tiles
-    .map(([id, n, label, color, cls]) => `<td width="20%" valign="top" style="width:20%;padding:0 3px;">
-<table ${TBL}><tr><td class="soft" align="center" bgcolor="${C.soft}" style="background:${C.soft};border:1px solid ${C.rule};border-radius:8px;padding:10px 2px 8px;">
-${a(anchor(id), `<span class="${cls}" style="font-size:22px;line-height:26px;font-weight:bold;color:${color};">${h(n)}</span><br><span class="tile-label muted" style="font-size:11.5px;line-height:16px;color:${C.muted};white-space:nowrap;">${h(label)}</span>`, 'text-decoration:none;', '')}
-</td></tr></table></td>`)
+  const statCells = stats
+    .map(([id, n, label, hi], i) => {
+      const bg = hi ? PILL[hi][1] : '';
+      return `<td class="line${hi ? ` p-${hi}` : ''}" width="20%" align="center" valign="top"${bg ? ` bgcolor="${bg}"` : ''} style="width:20%;padding:9px 2px 8px;text-align:center;${bg ? `background:${bg};` : ''}${i ? `border-left:1px solid ${C.rule};` : ''}">
+${a(anchor(id), `<span class="${hi || 'ink'}" style="font-size:21px;line-height:25px;font-weight:bold;color:${hi ? PILL[hi][0] : C.ink};">${h(n)}</span><br><span class="tile-label muted" style="font-size:12px;line-height:17px;color:${C.muted};white-space:nowrap;">${h(label)}</span>`, 'text-decoration:none;', '')}
+</td>`;
+    })
     .join('');
 
-  const rows = [`<tr><td style="padding:0;"><table ${TBL}><tr>${tileCells}</tr></table></td></tr>`];
+  // 첫 화면: 경보(있는 날) → 오늘의 요약
+  const rows = [];
+  const lead = (html) => rows.push(`<tr><td style="padding:${rows.length ? 12 : 0}px 0 0;">${html}</td></tr>`);
   if (alert) {
-    rows.push(`<tr><td style="padding:14px 0 0;">
-<table ${TBL}><tr><td class="warnbox" bgcolor="${C.warnSoft}" style="background:${C.warnSoft};border:1px solid ${C.warnLine};border-radius:8px;padding:10px 12px;font-size:14.5px;line-height:22px;">
+    lead(`<table ${TBL}><tr><td class="warnbox" bgcolor="${C.warnSoft}" style="background:${C.warnSoft};border:1px solid ${C.warnLine};border-radius:8px;padding:10px 12px;font-size:14.5px;line-height:22px;">
 ${pill('사이버위기 경보', 'warn')} ${a(alert.url, h(alert.title), `color:${C.ink};font-weight:bold;text-decoration:none;`, 'ink')}<span class="faint" style="font-size:12.5px;color:${C.faint};"> · ${h(alert.source)} · ${h(alert.date)}</span>
-</td></tr></table></td></tr>`);
+</td></tr></table>`);
   }
-  if (b.overview) {
-    rows.push(`<tr><td style="padding:14px 0 0;">
-<table ${TBL}><tr><td class="ov" bgcolor="${C.accentSoft}" style="background:${C.accentSoft};border-left:4px solid ${C.accent};border-radius:0 8px 8px 0;padding:12px 14px;">
-<p class="acc" style="margin:0 0 4px;font-size:12.5px;line-height:18px;font-weight:bold;color:${C.accent};">오늘의 요약</p>
-<p class="ink2" style="margin:0;font-size:15px;line-height:24px;color:${C.ink2};">${h(b.overview)}</p>
-</td></tr></table></td></tr>`);
-  }
+  if (b.overview) lead(overviewBox(b.overview));
 
   // 넓은 읽기 창에서는 국내|해외를 나란히(첫 화면에 두 목록의 1위가 함께 보이게), 좁으면 국내 → 해외
   rows.push(twoColumns(sectionHead('국내 보안 뉴스', { count: dom.length }) + newsRows(dom, b), sectionHead('해외 보안 뉴스', { count: intl.length }) + newsRows(intl, b)));
-  rows.push(sectionHead('KISA 공지', { color: C.note, count: adv.length, sub: '보호나라·KrCERT' }), kisaRows(adv, b));
+  rows.push(sectionHead('KISA 공지', { color: C.note, count: adv.length, sub: '보호나라·KrCERT' }), kisaList(adv, b));
 
   rows.push(sectionHead('악용 확인 취약점', { color: C.hot, count: b.failed?.kev ? null : exTotal, sub: b.failed?.kev ? 'CISA KEV — 수집 실패' : 'CISA KEV 신규 등재' }));
   if (assetUrl && (ex.length || cr.length)) rows.push(moreRow(`${a(assetHref(), '우리 자산 영향 한눈에 보기')} — 오늘 브리핑의 취약점을 자산 대장과 비교합니다(사내망에서 열림)`));
-  rows.push(ex.length ? ex.map((v) => vulnCard(v, C.hot, assetHref(v.id))).join('') : noteRow(emptyNote(b, 'exploited')));
+  rows.push(ex.length ? cardGrid(ex.map((v) => vulnCard(v, C.hot, assetHref(v.id)))) : noteRow(emptyNote(b, 'exploited')));
   if (b.exploited_more?.length) rows.push(moreRow(`그 밖의 신규 등재 ${b.exploited_more.length}건: ${h(b.exploited_more.map((v) => v.id).join(', '))}`));
 
   const crSub = b.critical_total === null || b.critical_total === undefined ? '— 수집 실패' : `CVSS ${Number(b.cvss_min ?? 9).toFixed(1)} 이상 ${b.critical_total}건 중 주요 ${cr.length}묶음`;
   rows.push(sectionHead('신규 고위험 취약점', { color: C.warn, sub: crSub }));
-  rows.push(cr.length ? cr.map((g) => vulnCard(g, C.warn, assetHref(g.id))).join('') : noteRow(emptyNote(b, 'critical')));
+  rows.push(cr.length ? cardGrid(cr.map((g) => vulnCard(g, C.warn, assetHref(g.id)))) : noteRow(emptyNote(b, 'critical')));
   if (b.critical_more?.length) rows.push(moreRow(`그 밖의 고위험 ${b.critical_more.length}묶음은 ${dayUrl ? a(anchor('critical'), '웹 페이지') : '웹 페이지'}에서 볼 수 있습니다.`));
+  // 카드의 표시(KEV·CVSS·EPSS)를 처음 보는 사람을 위한 한 줄 풀이
+  if (ex.length || cr.length) {
+    rows.push(`<tr><td class="faint" style="padding:8px 0 0;font-size:12.5px;line-height:19px;color:${C.faint};">KEV: 미국 사이버보안청(CISA)이 실제 공격에 쓰인 것을 확인한 취약점 · CVSS: 심각도 점수(10점 만점) · EPSS: 30일 안에 공격에 쓰일 확률(추정)</td></tr>`);
+  }
   if (extraNews) rows.push(keywordNews(extraNews));
 
   const ok = (b.sources || []).filter((s) => s.ok).length;
@@ -350,8 +398,7 @@ ${pill('사이버위기 경보', 'warn')} ${a(alert.url, h(alert.title), `color:
 <meta name="color-scheme" content="light dark"><meta name="supported-color-schemes" content="light dark">
 <meta name="x-apple-disable-message-reformatting">
 <title>${h(mailSubject(b, title))}</title>
-<style>${DARK_CSS}
-${LAYOUT_CSS}</style>
+<style>${DARK_CSS}</style>
 ${MSO_CSS}
 </head>
 <body class="bg" bgcolor="${C.page}" style="margin:0;padding:0;background:${C.page};">
@@ -361,7 +408,10 @@ ${MSO_CSS}
 <tr><td bgcolor="${C.band}" style="background:${C.band};border-radius:12px 12px 0 0;padding:20px 22px 18px;">
 ${header}
 </td></tr>
-<tr><td class="card" bgcolor="${C.card}" style="background:${C.card};border:1px solid ${C.rule};border-top:0;border-radius:0 0 12px 12px;padding:16px 18px 24px;">
+<tr><td class="soft" bgcolor="${C.soft}" style="background:${C.soft};border:1px solid ${C.rule};border-top:0;padding:0;">
+<table ${TBL}><tr>${statCells}</tr></table>
+</td></tr>
+<tr><td class="card" bgcolor="${C.card}" style="background:${C.card};border:1px solid ${C.rule};border-top:0;border-radius:0 0 12px 12px;padding:18px 18px 24px;">
 <table ${TBL}>
 ${rows.join('\n')}
 </table>

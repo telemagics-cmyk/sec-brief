@@ -1,0 +1,801 @@
+{
+  "version": 2,
+  "date": "2026-11-17",
+  "generated_at": "2026-11-17T06:00:52+09:00",
+  "window": {
+    "hours": 30,
+    "from": "2026-11-15T15:00:52.370Z",
+    "to": "2026-11-16T21:00:52.370Z",
+    "since_brief": "2026-11-16",
+    "since_at": "2026-11-15T21:01:02.083Z"
+  },
+  "engine": "claude-haiku-5-5",
+  "overview": "행정기관 이메일 SSO 악용 사고가 가장 시급하므로 SSO 및 계정 접속 로그를 우선 점검해야 합니다. 국내 대학 산학협력단 연쇄 해킹과 북한 김수키의 국회 사칭 공격도 확산 중입니다. 해외에서는 Barracuda 클라우드 침해와 Cursor 공급망 공격에 대비하고, 인증 우회 취약점 3건을 점검해야 합니다.",
+  "cvss_min": 9,
+  "critical_total": 11,
+  "failed": {
+    "kev": false,
+    "nvd": false,
+    "kisa": false,
+    "news": false
+  },
+  "exploited": [],
+  "exploited_more": [],
+  "critical": [
+    {
+      "id": "CVE-2026-93664",
+      "ids": [
+        "CVE-2026-93664"
+      ],
+      "section": "critical",
+      "label": "CVE-2026-93664",
+      "vendor": "",
+      "cna": "3DS.Information-Security@3ds.com",
+      "status": "Received",
+      "published": "2026-11-16T13:17:23.313",
+      "description": "A Deserialization of Untrusted Data vulnerability affecting Station Launcher App in 3DEXPERIENCE platform from Release 3DEXPERIENCE R2023x through Release 3DEXPERIENCE R2026x could lead to an unauthenticated remote code execution.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-93664",
+          "text": "A Deserialization of Untrusted Data vulnerability affecting Station Launcher App in 3DEXPERIENCE platform from Release 3DEXPERIENCE R2023x through Release 3DEXPERIENCE R2026x could lead to an unauthenticated remote code execution."
+        }
+      ],
+      "cwes": [
+        "CWE-502"
+      ],
+      "cvss": {
+        "score": 10,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://www.3ds.com/trust-center/security/security-advisories/cve-2026-93664"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-93664",
+      "affected": [
+        {
+          "vendor": "Dassault Systèmes",
+          "product": "Station Launcher App in 3DEXPERIENCE platform",
+          "ranges": [],
+          "truncated": true
+        }
+      ],
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 11,
+      "ko": {
+        "title": "3DEXPERIENCE Station Launcher 역직렬화 원격 코드 실행",
+        "target": "3DEXPERIENCE R2023x~R2026x Station Launcher App",
+        "impact": "인증 없이 신뢰되지 않은 데이터 역직렬화로 원격 코드 실행 가능, CVSS 10. 공격 악용 여부 미확인",
+        "action": "벤더 보안 공지 확인 후 패치 적용 필요. 외부 노출 여부 즉시 점검"
+      }
+    },
+    {
+      "id": "CVE-2026-129552",
+      "ids": [
+        "CVE-2026-129552",
+        "CVE-2026-129550"
+      ],
+      "section": "critical",
+      "label": "Tensei",
+      "vendor": "",
+      "cna": "disclosure@vulncheck.com",
+      "status": "Received",
+      "published": "2026-11-16T12:17:53.337",
+      "description": "Tensei through 0.11.5 contains an authentication bypass vulnerability in @tensei/auth that falls back to the hard-coded JWT signing key 'auth-secret-key' when JWT_SECRET is unset. Unauthenticated attackers can sign tokens with arbitrary user ids accepted by populateContextFromToken to impersonate any user, including administrators.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-129552",
+          "text": "Tensei through 0.11.5 contains an authentication bypass vulnerability in @tensei/auth that falls back to the hard-coded JWT signing key 'auth-secret-key' when JWT_SECRET is unset. Unauthenticated attackers can sign tokens with arbitrary user ids accepted by populateContextFromToken to impersonate a…"
+        },
+        {
+          "id": "CVE-2026-129550",
+          "text": "Tensei through 0.11.5 contains a privilege escalation vulnerability in @tensei/auth that allows unauthenticated or authenticated users to assign themselves arbitrary roles via the exposed User Roles field. Attackers can supply a roles array during registration, a POST to the users route, or a PATCH…"
+        }
+      ],
+      "cwes": [
+        "CWE-1394",
+        "CWE-915"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://github.com/tenseijs/tensei",
+        "https://github.com/tenseijs/tensei/blob/630f39038c7751178465f990fb358b0c2d5b1914/packages/auth/src/index.ts#L94-L98",
+        "https://github.com/tenseijs/tensei/issues/398"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-129552",
+      "affected": [
+        {
+          "vendor": "tenseijs",
+          "product": "@tensei/auth",
+          "ranges": [
+            {
+              "ei": "0.11.5"
+            }
+          ]
+        }
+      ],
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 11,
+      "ko": {
+        "title": "Tensei 인증 우회 및 권한 상승 (JWT 하드코딩 키)",
+        "target": "Tensei 0.11.5 이하 @tensei/auth",
+        "impact": "JWT_SECRET 미설정 시 하드코딩 키로 토큰 위조, 임의 사용자 가장 가능. 관련 CVE-2026-129550으로 역할 자가 할당 가능, CVSS 9.8",
+        "action": "JWT_SECRET 환경변수 즉시 설정, 벤더 패치 확인. User Roles 필드 접근 제한 필요"
+      }
+    },
+    {
+      "id": "CVE-2026-129941",
+      "ids": [
+        "CVE-2026-129941"
+      ],
+      "section": "critical",
+      "label": "Prime CMS",
+      "vendor": "",
+      "cna": "disclosure@vulncheck.com",
+      "status": "Received",
+      "published": "2026-11-16T15:17:28.800",
+      "description": "Prime CMS (@primecms/core) through 0.4.0-beta.0 contains an authentication bypass vulnerability that allows unauthenticated attackers to register accounts via the createUser mutation on /prime/graphql. Because the isAuthenticated() guard has its check commented out and createAbility() hard-codes every role to admin, attackers can log in with full administrative control over content, users, webhooks and settings.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-129941",
+          "text": "Prime CMS (@primecms/core) through 0.4.0-beta.0 contains an authentication bypass vulnerability that allows unauthenticated attackers to register accounts via the createUser mutation on /prime/graphql. Because the isAuthenticated() guard has its check commented out and createAbility() hard-codes ev…"
+        }
+      ],
+      "cwes": [
+        "CWE-306"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://github.com/birkir/prime/blob/v0.3.4-beta.3/packages/prime-core/src/modules/internal/index.ts#L67-L69",
+        "https://github.com/birkir/prime/blob/v0.3.4-beta.3/packages/prime-core/src/modules/internal/utils/createAbility.ts#L7-L15",
+        "https://github.com/birkir/prime/blob/v0.3.4-beta.3/packages/prime-core/src/modules/internal/utils/isAuthenticated.ts#L1-L6"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-129941",
+      "affected": [
+        {
+          "vendor": "birkir",
+          "product": "prime",
+          "ranges": [
+            {
+              "ei": "0.4.0-beta.0"
+            }
+          ]
+        }
+      ],
+      "flags": {
+        "watch": "",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 10.8,
+      "ko": {
+        "title": "Prime CMS 인증 우회로 무단 계정 생성",
+        "target": "Prime CMS (@primecms/core) 0.4.0-beta.0 이하",
+        "impact": "isAuthenticated 검사가 주석 처리되어 인증 없이 /prime/graphql의 createUser로 계정 생성 가능, CVSS 9.8",
+        "action": "벤더 패치 확인 필요. 해당 GraphQL 엔드포인트 외부 차단 및 비인가 계정 점검"
+      }
+    }
+  ],
+  "critical_more": [
+    {
+      "id": "CVE-2026-53998",
+      "ids": [
+        "CVE-2026-53998"
+      ],
+      "label": "Phoenix",
+      "vendor": "",
+      "cvss": 10,
+      "title": "Phoenix 형식 문자열",
+      "affected": [
+        {
+          "vendor": "Arize-ai",
+          "product": "phoenix",
+          "ranges": [
+            {
+              "si": "13.0.0",
+              "ee": "15.7.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-111559",
+      "ids": [
+        "CVE-2026-111559"
+      ],
+      "label": "CVE-2026-111559",
+      "vendor": "",
+      "cvss": 9.3,
+      "title": "CVE-2026-111559 템플릿 삽입",
+      "affected": [
+        {
+          "vendor": "sruupl",
+          "product": "Batflat",
+          "ranges": [
+            {
+              "si": "1.2.0",
+              "ei": "1.3.7"
+            }
+          ],
+          "all": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-129952",
+      "ids": [
+        "CVE-2026-129952",
+        "CVE-2026-129955"
+      ],
+      "label": "NodePress",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "NodePress 인증 우회 등 2건",
+      "affected": [
+        {
+          "vendor": "surmon-china",
+          "product": "NodePress",
+          "ranges": [
+            {
+              "ei": "8.5.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-19732",
+      "ids": [
+        "CVE-2026-19732"
+      ],
+      "label": "CVE-2026-19732",
+      "vendor": "",
+      "cvss": 9.9,
+      "title": "CVE-2026-19732 OS 명령 삽입",
+      "affected": [
+        {
+          "vendor": "Dassault Systèmes",
+          "product": "Station Launcher App in 3DEXPERIENCE platform",
+          "ranges": [],
+          "truncated": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-77033",
+      "ids": [
+        "CVE-2026-77033"
+      ],
+      "label": "CVE-2026-77033",
+      "vendor": "",
+      "cvss": 9.9,
+      "title": "CVE-2026-77033 OS 명령 삽입",
+      "affected": [
+        {
+          "vendor": "Dassault Systèmes",
+          "product": "Station Launcher App in 3DEXPERIENCE platform",
+          "ranges": [],
+          "truncated": true
+        }
+      ]
+    }
+  ],
+  "advisories": [
+    {
+      "id": "a-795a4746",
+      "source": "KISA 보안공지",
+      "title": "Fortinet 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72308",
+      "date": "2026-11-16"
+    },
+    {
+      "id": "a-f83b023f",
+      "source": "KISA 보안공지",
+      "title": "Git 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72307",
+      "date": "2026-11-16"
+    }
+  ],
+  "news": {
+    "domestic": [
+      {
+        "id": "n-815f2b95",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "행정기관 업무용 이메일 해킹…정부 SSO 취약점 악용, 300여 개 계정 비정상 접속",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209553",
+        "source": "데일리시큐",
+        "published": "2026-11-16T14:35:58.000Z",
+        "snippet": "정부 행정기관에서 사용하는 업무용 이메일시스템이 외부 해킹 공격을 받아 300여 개 계정에서 비정상적인 접속이 발생한 사실이 확인됐다. 공격자는 일부 지방정부의 취약한 네트워크를 침투 경로로 활용하고, 정부 업무시스템의 통합인증(SSO) 취약점을 악용한 것으로 파악됐다. 정부는 개인정보 유출 사실을 관계기관에 신고하고 피해 당사자에게 통지했으며, 국가정보원과 한국인터넷진흥원(KISA) 등이…",
+        "outlets": [
+          "데일리시큐",
+          "동아일보",
+          "서울경제",
+          "연합뉴스TV",
+          "뉴닉",
+          "Chosunbiz",
+          "아시아투데이",
+          "YTN 사이언스",
+          "대전일보",
+          "경향신문",
+          "KBS 뉴스",
+          "디지털데일리",
+          "간호사신문",
+          "YTN",
+          "지디넷코리아",
+          "MBC 뉴스",
+          "전자신문"
+        ],
+        "related": [
+          {
+            "title": "공무원 업무용 e메일 해킹, 300여개 계정서 비정상 접속",
+            "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5MRTF3em5JRmNyT2hlQ3ZVWjluSHZINmZsdWpHdkw1SURDdGRIUXdCaS1EX3o5QVM5RnRTa1YwcTVpM0w2ci1kbWdib1lvcUxvdjR5dm1nY3pDZHpTZVZvQkliNDIzT2VwMnh3YVhOSFlfZ1pwSGfSAWZBVV95cUxNaU5BX3U3c0VlOGprbjVrZTVvdmF2NHFJNDY0QzF5dmdXaElYcVFHMWxTSFVfeF9FenBWMkpjbUxMQ1dWY3JMWFZaR3Q2UlJwd3NPS2lyTDZJTGxWYldTM1E0MURMNnc?oc=5",
+            "source": "동아일보"
+          },
+          {
+            "title": "행정기관 업무용 이메일 해킹…300여 개 계정 비정상 접속",
+            "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE0tbHd1Ny16RWVfN3RtM0FKWE1WWTV3OTZ2MWE4NFlBVmFocTdQUnp4cWkzN2RfY010aUEwTEdzZ08tZFRKLUNhalpwUE5yYk55Z3fSAVNBVV95cUxNcHEzSkFha0t4SUlMUDdSSkpVTkJ5Q1F5aTVId0JpLXZVRmJmdWFVTHVaZHU2UF80NmJzRnByY1BmVHg3S3VNZENFYjVvdHo4aXBOVQ?oc=5",
+            "source": "서울경제"
+          },
+          {
+            "title": "행정기관 이메일 300여개 계정 해킹…합동점검 착수",
+            "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE9nU3Z1T0ZRZXFoOGNNeGNnaFhsS0wyMVc5RFlKM0pKak5MbW10RWZHLTJGN1VFVHZEbVdHbEd1enloX3paVEZ4dHkyaVBhM1RzQU1sUHpWRGh3ZGlsc05wQl9wdzhRRDA?oc=5",
+            "source": "연합뉴스TV"
+          },
+          {
+            "title": "행정기관 업무용 이메일 해킹, 300여 계정 비정상 접속…SSO 취약점 뚫린 경위는? 🔓",
+            "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE9MS2NnY3hWcXhweWtlYWw2SkNDdkY3WUxoUVpoV1NYNzdUcjhvTUZhUWhPcHpaR2xucVcycGJHdkxwbWp0bklTWW1WcU0yYmJ2VjVr?oc=5",
+            "source": "뉴닉"
+          },
+          {
+            "title": "정부 업무용 이메일 해킹 공격… 300여 계정 비정상 접속 발생",
+            "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxQS2NVcUxmQjk4Z0hleWFtQzZCbXBRN3c3b3dpY3VraTlBdy1XNkM5OHVRQThuMXhKbW9yQVI3UGVqVzYxa28tZG9vNUpGUC1yZVB0ZWJWVGhmWGZybTdFb2R1Z1pvZUhicEdzLWVrMFM0c1NGM2duNWU3eURTQTd1dlhHX0d3c1h4cGfSAZ4BQVVfeXFMTl9rRjFQUGZPRjByNEpyeklqVl9Mdl9rQ0Zsc3RFOUd6dmM4NEE4cy00b2VIZE4teVJlTG1EeXpmRnFoSWNHcXpBYmRCOHhGYWl5bDlVRGJtVTQ4YW14MFJkNmFyenV1NlRPMk1heG1SSjZCVVhsU2pyeFdLY2dpTlFMdnVaQVJxYm5wVmNPb2xybTVZT2l3WGRvOVR6TWc?oc=5",
+            "source": "Chosunbiz"
+          }
+        ],
+        "cves": [],
+        "score": 23,
+        "title_ko": "행정기관 업무용 이메일 해킹, 정부 SSO 취약점 악용",
+        "summary_ko": "행정기관 업무용 이메일 300여 개 계정에서 비정상 접속이 확인됨. 일부 지방정부 네트워크를 경유해 정부 SSO 취약점을 악용한 것으로 파악됨. 합동점검 중임."
+      },
+      {
+        "id": "n-bbe92531",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "[단독] 대학 산학협력단 연쇄 해킹 확산…한림대·숙명여대·한경국립대·한남대·한국외대 등 개인정보 유출과 연구행정시스템 해킹",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209552",
+        "source": "데일리시큐",
+        "published": "2026-11-16T14:26:37.000Z",
+        "snippet": "국내 대학 산학협력단의 연구행정시스템을 겨냥한 해킹 사고가 확산하고 있다. 한림대학교와 숙명여자대학교, 한경국립대학교에서 개인정보 총 3,078건이 유출된 사실이 확인됐으며, 한남대학교와 한국외국어대학교도 연구비관리시스템 침해사고와 정보 유출 정황을 이유로 긴급 서비스 중단에 나섰다. 특히 이번에 사고가 확인되거나 침해 정황을 공개한 5개 대학은 최근 해커 'KimJEN'이 국내 대학 데이…",
+        "outlets": [
+          "데일리시큐"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 11,
+        "title_ko": "대학 산학협력단 연쇄 해킹, 개인정보 유출 확산",
+        "summary_ko": "한림대·숙명여대·한경국립대 등에서 개인정보 3,078건 유출이 확인됨. 한남대·한국외대는 연구비관리시스템을 긴급 중단함. 대학 연구행정시스템 전반 점검 필요."
+      },
+      {
+        "id": "n-1e714226",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "NHN두레이 개인정보 유출 확인... API 키도 유출",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=147282",
+        "source": "보안뉴스",
+        "published": "2026-11-16T02:11:21.000Z",
+        "snippet": "제3자의 비정상적인 API 호출 등 API 관련 공격 동향을 확인하고 API 서비스를 중단했던 협업 도구 ‘두레이’(Dooray)에서 결국 개인정보가 유출된 것으로 나타났다. NHN두레이는 14일 민간 및 공공 보안 침해사고 및 개인정보 유출 관련 안내 공지를 업로드하며 “일부 고객사 계정에서 외부인에 의한 보안 침해사고가 발생한 사실이 확인됐다”며 “추가 피해 방지를 위한 긴급 보안 조치…",
+        "outlets": [
+          "보안뉴스",
+          "전자신문"
+        ],
+        "related": [
+          {
+            "title": "NHN두레이 해킹에 의료기기 임직원 개인정보 유출",
+            "url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTFBteU1CaVktd0xQblV5bHBJSGFGc0xJNXNVaUxmTjQ1dnByQm1PMjFzVERMOTd3TjBGT1M3Mzc3LWtsMFRZakZsUlZxdVRaZw?oc=5",
+            "source": "전자신문"
+          }
+        ],
+        "cves": [],
+        "score": 13.2,
+        "title_ko": "NHN두레이 해킹으로 개인정보 및 API 키 유출",
+        "summary_ko": "협업 도구 두레이에서 외부인에 의한 침해사고로 개인정보가 유출되고 API 키도 유출됨. 의료기기 임직원 정보 피해도 보고됨. API 키 재발급 필요."
+      },
+      {
+        "id": "n-613ef869",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "북한 연계 ‘김수키’, 한국 국회의원실 사칭 사이버 공격 시도",
+        "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFBIdTRxZkdlYnE0dUVpQktJMVMtcUxhdHl1djU5cVhXMnpxX2I0aTZjb1dNV2cyVmRzQW1tMXl5WEt2VmgxNEFDUHB4cnp4RGVsMEdJY0JVY2NsTGhBU3RXV1ZKdUFIbld4Vmh1SkFB0gFwQVVfeXFMTVh0bDBfMnFVRmVta1BPV01WYjg2OXFqN2ZWR1pIR1E1dlhSdmhlRWF2ZWU1eENTTWtxeVhtQXM2RjBNX3BJNndhaVdNdWswdkp3ZDJvOFlQYUdUZVMxZXVvVjNNMndXZzBfSzE3Nm1KTg?oc=5",
+        "source": "VOA 한국어 홈페이지",
+        "published": "2026-11-16T18:21:19.000Z",
+        "snippet": "",
+        "outlets": [
+          "VOA 한국어 홈페이지",
+          "KBS 뉴스",
+          "JTBC",
+          "연합뉴스",
+          "중앙일보",
+          "대전일보",
+          "SPN 서울평양뉴스"
+        ],
+        "related": [
+          {
+            "title": "의원 비서관 사칭 해킹…북한 연계 ‘김수키’ 의심",
+            "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE1WQ0RQajhpYXlpd1poRThUb1ltbUxvbFplRmJjLUF6c0ZfU1pzdzRpSFY0dkNCMDR4S3NwRDBSaXNkekhIcVN0RVV2eld6djluRnBaakp1ZHBqTHVFZ0laSnN0R2FTZw?oc=5",
+            "source": "KBS 뉴스"
+          },
+          {
+            "title": "\"세미나 사례비 드립니다\" 북한 김수키, 국회의원실 사칭 공격...신종 악성코드 포착",
+            "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE52OXV1N0FoQ3JfN2ttb2J6Z2F4TUlKNURVX1U2MGRVdXJmdkJhdW0xZGdSSGs4dmtXbmdKWDFadU1JWlBUT1EwUmdSUUh1Q0F3UG9XRQ?oc=5",
+            "source": "JTBC"
+          },
+          {
+            "title": "\"북한 김수키, 국회의원실 사칭 사이버공격\"",
+            "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE0zUFg2T0xrdUFWUmRuRzg1Sk1NQVdXNkpQYlA2QUlpOU5Cck5mSnEwZXAzcjNuWlJaeksxV3NCOGVUN0NpQlFrTmRveVUyR2JsVjFHVVB4TG5USFHSAWBBVV95cUxOVjlFN2YxRDFLWWhMLU9xOTRwcnh6UmVScVJ5YXRYZUoyVjQ5ZlAtcTh4RHhuSW9Da2VXMnBnOEdvRlJUckxDQnZQa180a0hlMlN2WGlXNXJzV3U3ZGFLZm0?oc=5",
+            "source": "연합뉴스"
+          },
+          {
+            "title": "북한 김수키, 국회의원 보좌진 사칭 사이버 공격 포착",
+            "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE43QTBXUmtEczRsU0I2SnlwN1gycFBqaGFVSFd2WUVwZ1hEZFFJalh1S1g3QW9hODU5WVJLVlBtM21BTTNkUWFQNmlPLW1wSmNObzdHMU9B?oc=5",
+            "source": "중앙일보"
+          },
+          {
+            "title": "의원실 사칭 메일로 해킹 공격… 北김수키 추정 악성코드 포착",
+            "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE5Ua0psUXRseTdzdmhWdVRHQU16WklzNDJoQ1NkNlBTWWhPOTdOOVM5OUNIY0tObmZrQlN3Sy1VNUJOdUdaYUxxSmpuRHZGV3NrNGFfbkFpbHNjRUxDUllsVW8xZXE4eUl1MzMzMDV4Ui1wX3PSAXNBVV95cUxOVGtKbFF0bHk3c3ZoVnVUR0FNelpJczQyaENTZDZQU1loTzk3TjlTOTlDSGNLTm5ma0JTd0stVTVCTnVHWmFMcUpqbkR2RldzazRhX25BaWxzY0VMQ1JZbFVvMWVxOHlJdTMzMzA1eFItcF9z?oc=5",
+            "source": "대전일보"
+          }
+        ],
+        "cves": [],
+        "score": 19,
+        "title_ko": "북한 연계 김수키, 국회의원실 사칭 사이버 공격 시도",
+        "summary_ko": "북한 연계 해킹조직 김수키가 국회의원 비서관을 사칭해 공격을 시도함. 세미나 사례비를 미끼로 한 신종 악성코드도 포착됨. 메일 첨부파일 주의 필요."
+      },
+      {
+        "id": "n-cda770f5",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "서울시립대 홈페이지 해킹으로 개인정보 유출...경찰에 수사 의뢰",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209554",
+        "source": "데일리시큐",
+        "published": "2026-11-16T14:45:58.000Z",
+        "snippet": "서울시립대학교 홈페이지가 외부 해킹 공격을 받아 대학 구성원 15명의 개인정보가 비인가 조회된 사실이 확인됐다. 유출된 정보에는 포털 아이디와 학번·교번뿐 아니라 로그인 관련 정보와 인증 토큰, 세션값 등이 포함됐다. 서울시립대학교는 11월 16일 공식 홈페이지에 '홈페이지 보안사고 관련 개인정보 유출 안내'를 게시하고 사고 경위와 대응 조치를 공개했다. 대학 측에 따르면 해킹은 지난 10…",
+        "outlets": [
+          "데일리시큐",
+          "폴리스TV",
+          "천지일보",
+          "서울경제",
+          "글로벌이코노믹",
+          "KBS 뉴스",
+          "뉴스1",
+          "연합뉴스",
+          "Chosunbiz"
+        ],
+        "related": [
+          {
+            "title": "서울시립대서 15명 개인정보 유출…경찰 수사 의뢰",
+            "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE0tbEtpZ0NlVDJqUVQ5RkNreHBTNnNFaE9DUDlVZk1xek9OZFZjMEpmTktYZThmV3JHaXhkRU1oNW9JT3p0V3ZkTk5IaDBSTmtZdmFfSjFaV1ZwRkFlU1FUNDNWUEV2amtiOWpn?oc=5",
+            "source": "폴리스TV"
+          },
+          {
+            "title": "서울시립대 구성원 15명 개인정보 유출… 경찰 수사 의뢰",
+            "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTFBvNk8wSmZzU2xaZllvS0NDcFN0a0lNUjF4RTJ1NGZjTDJOWlBUSTEtYnFMREdvblhSRFVRMHBVZTBTNkoydWdtUDFKd2FrNnhwSkROb1BpdlR3RWk1WmF6dUJfUWtnZWY2aFE?oc=5",
+            "source": "천지일보"
+          },
+          {
+            "title": "서울시립대 홈페이지서 개인정보 유출…15명 정보 무단 조회",
+            "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBRSk9OSVVMZEc3U0R4aW9HRDdlWU82SnR3WGhIRWRYcF9RV1VmQ3kzUG1EQ3ZRcFkzSnV4OGJyUktGaGZuMGNCc0M0R2VDUGkzUXfSAVNBVV95cUxOMF9SY1NRTnQ5OXFUSlhKQUFvVlRQY0RJMm8zY2NyVHcyZ1NRVHlIbklJamdnc1VZemNZcjJpNE42WWRXcGprWmtVNHNuTnNPMzB3OA?oc=5",
+            "source": "서울경제"
+          },
+          {
+            "title": "서울시립대, 지난달 구성원 15명 개인정보 유출 확인...\"피해자 특정 어려워 일괄 안내\"",
+            "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPeWF5T1hsSG55RGR5MmFxbmZ1WDdXZlRqSGJPTlhqbmc3V3ZfelBCMGN1aE1aa1BxMG9IeWthRkpheEI1a2pGUkxqLXNRT0xsR0RzcWZSb3NiWERya05nZy1rcUxDU1l0RWhCSVV2VUpYT1A4Y3RrcENwdUFaMF92c1ZfZHkzSDRqNlAw?oc=5",
+            "source": "글로벌이코노믹"
+          },
+          {
+            "title": "서울시립대 “15명 개인정보 유출”…경찰에 수사 의뢰",
+            "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE8wZFJVLTR0bHFEeFlPRDc3amlla2hYSno0U0lFc0xjVHlsLVNKNnRvOHRvN25LNUhvU3FBb2lLcFc5R292aVBFOWZydXZaYW8xdURpMHhXUFd0SEE?oc=5",
+            "source": "KBS 뉴스"
+          }
+        ],
+        "cves": [],
+        "score": 20.1,
+        "title_ko": "서울시립대 홈페이지 해킹, 구성원 15명 개인정보 유출",
+        "summary_ko": "홈페이지 외부 해킹으로 구성원 15명의 포털 아이디, 학번, 인증 토큰, 세션값이 비인가 조회됨. 경찰 수사 의뢰됨. 세션 무효화 등 점검 필요."
+      }
+    ],
+    "international": [
+      {
+        "id": "n-e848028b",
+        "region": "international",
+        "lang": "en",
+        "title": "Barracuda links cloud breach to ARTEX AI-powered cyberattack",
+        "url": "https://www.bleepingcomputer.com/news/security/barracuda-links-cloud-breach-to-artex-ai-powered-cyberattack/",
+        "source": "BleepingComputer",
+        "published": "2026-11-16T19:57:13.000Z",
+        "snippet": "Hackers who breached the cloud environment of network and email security company Barracuda earlier this month used a stolen cloud access key and the ARTEX AI penetration testing framework. [...]",
+        "outlets": [
+          "BleepingComputer"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 10,
+        "title_ko": "Barracuda, 클라우드 침해를 ARTEX AI 공격과 연결",
+        "summary_ko": "Barracuda 클라우드 환경이 탈취된 클라우드 접근 키와 ARTEX AI 침투 테스트 프레임워크를 이용해 침해됨. 클라우드 키 교체와 접근 로그 점검 필요."
+      },
+      {
+        "id": "n-48b1c906",
+        "region": "international",
+        "lang": "en",
+        "title": "Cursor Supply Chain Attack Started at Fireworks AI",
+        "url": "https://www.securityweek.com/cursor-supply-chain-attack-started-at-fireworks/",
+        "source": "SecurityWeek",
+        "published": "2026-11-16T15:45:43.000Z",
+        "snippet": "The attacker stole an access key from Fireworks and used it to exfiltrate credentials that enabled them to push malicious Claude Code extension copies. The post Cursor Supply Chain Attack Started at Fireworks AI appeare…",
+        "outlets": [
+          "SecurityWeek"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 9.5,
+        "title_ko": "Cursor 공급망 공격, Fireworks AI에서 시작",
+        "summary_ko": "공격자가 Fireworks의 접근 키를 훔쳐 자격증명을 빼낸 뒤 악성 Claude Code 확장 프로그램 사본을 배포함. 확장 프로그램 설치 이력 점검 필요."
+      },
+      {
+        "id": "n-130e819b",
+        "region": "international",
+        "lang": "en",
+        "title": "Recent UnrealIRCd Vulnerability Exploited in Attacks",
+        "url": "https://www.securityweek.com/recent-unrealircd-vulnerability-exploited-in-attacks/",
+        "source": "SecurityWeek",
+        "published": "2026-11-16T11:15:48.000Z",
+        "snippet": "Tracked as CVE-2026-114713, the high-severity flaw allows attackers to execute commands with server/IRCOp privileges. The post Recent UnrealIRCd Vulnerability Exploited in Attacks appeared first on SecurityWeek .",
+        "outlets": [
+          "SecurityWeek"
+        ],
+        "related": [],
+        "cves": [
+          "CVE-2026-114713"
+        ],
+        "score": 11,
+        "title_ko": "UnrealIRCd 취약점 CVE-2026-114713 공격에 악용",
+        "summary_ko": "고위험 취약점으로 서버 또는 IRCOp 권한으로 명령 실행이 가능함. 실제 공격에 악용되고 있음. 해당 IRC 서버 패치와 노출 여부 점검 필요."
+      },
+      {
+        "id": "n-762dd792",
+        "region": "international",
+        "lang": "en",
+        "title": "Uber Data Breach Impacts 150,000 People",
+        "url": "https://www.securityweek.com/uber-data-breach-impacts-150000-people/",
+        "source": "SecurityWeek",
+        "published": "2026-11-16T11:02:48.000Z",
+        "snippet": "Hackers compromised a third-party services provider and stole names, addresses, and driver’s license numbers. The post Uber Data Breach Impacts 150,000 People appeared first on SecurityWeek .",
+        "outlets": [
+          "SecurityWeek"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 9,
+        "title_ko": "Uber 제3자 서비스 업체 침해로 15만 명 정보 유출",
+        "summary_ko": "제3자 서비스 제공업체가 해킹되어 이름, 주소, 운전면허번호가 탈취됨. AI 서비스 업체 해킹이 원인으로 보도됨. 협력사 접근 권한 점검 필요."
+      },
+      {
+        "id": "n-a85cb661",
+        "region": "international",
+        "lang": "en",
+        "title": "Hackers Probe Newly Disclosed Flaws in Copeland Refrigeration Controllers",
+        "url": "https://www.securityweek.com/hackers-probe-newly-disclosed-flaws-in-copeland-refrigeration-controllers/",
+        "source": "SecurityWeek",
+        "published": "2026-11-16T11:05:42.000Z",
+        "snippet": "Vulncheck disclosed 14 vulnerabilities affecting Copeland XWEB EVO controllers, including two that threat actors quickly targeted. The post Hackers Probe Newly Disclosed Flaws in Copeland Refrigeration Controllers appea…",
+        "outlets": [
+          "SecurityWeek"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 9.5,
+        "title_ko": "Copeland 냉동 컨트롤러 신규 취약점 공격 탐지",
+        "summary_ko": "VulnCheck가 Copeland XWEB EVO 컨트롤러 취약점 14건을 공개함. 이 중 2건은 공개 직후 공격자가 표적으로 삼음. 산업 제어 장비의 외부 노출 점검 필요."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "kev",
+      "name": "CISA KEV",
+      "ok": true,
+      "count": 0,
+      "ms": 322
+    },
+    {
+      "id": "therecord",
+      "name": "The Record",
+      "ok": true,
+      "count": 5,
+      "ms": 411
+    },
+    {
+      "id": "bleepingcomputer",
+      "name": "BleepingComputer",
+      "ok": true,
+      "count": 15,
+      "ms": 442
+    },
+    {
+      "id": "securityweek",
+      "name": "SecurityWeek",
+      "ok": true,
+      "count": 10,
+      "ms": 475
+    },
+    {
+      "id": "krebs",
+      "name": "Krebs on Security",
+      "ok": true,
+      "count": 10,
+      "ms": 480
+    },
+    {
+      "id": "thehackernews",
+      "name": "The Hacker News",
+      "ok": true,
+      "count": 50,
+      "ms": 567
+    },
+    {
+      "id": "zdnetkr",
+      "name": "지디넷코리아",
+      "ok": true,
+      "count": 30,
+      "ms": 573
+    },
+    {
+      "id": "darkreading",
+      "name": "Dark Reading",
+      "ok": true,
+      "count": 50,
+      "ms": 760
+    },
+    {
+      "id": "dailysecu",
+      "name": "데일리시큐",
+      "ok": true,
+      "count": 50,
+      "ms": 1290
+    },
+    {
+      "id": "boannews",
+      "name": "보안뉴스",
+      "ok": true,
+      "count": 50,
+      "ms": 1320
+    },
+    {
+      "id": "kisa-notice",
+      "name": "KISA 보안공지",
+      "ok": true,
+      "count": 10,
+      "ms": 1400
+    },
+    {
+      "id": "kisa-vuln",
+      "name": "KISA 취약점 정보",
+      "ok": true,
+      "count": 10,
+      "ms": 1551
+    },
+    {
+      "id": "kisa-alert",
+      "name": "KISA 경보단계",
+      "ok": true,
+      "count": 10,
+      "ms": 1614
+    },
+    {
+      "id": "datanet",
+      "name": "데이터넷",
+      "ok": true,
+      "count": 50,
+      "ms": 1711
+    },
+    {
+      "id": "gnews-kr",
+      "name": "Google 뉴스",
+      "ok": true,
+      "count": 100,
+      "ms": 2933
+    },
+    {
+      "id": "nvd-kev",
+      "name": "NVD (KEV 상세)",
+      "ok": true,
+      "count": 0,
+      "ms": 3298
+    },
+    {
+      "id": "nvd",
+      "name": "NVD (신규 CVE)",
+      "ok": true,
+      "count": 337,
+      "ms": 2212
+    },
+    {
+      "id": "epss",
+      "name": "FIRST EPSS",
+      "ok": true,
+      "count": 1,
+      "ms": 110
+    }
+  ],
+  "summarizer": {
+    "engine": "claude-haiku-5-5",
+    "ok": true,
+    "ms": 17455,
+    "applied": {
+      "news": 10,
+      "vulns": 3,
+      "overview": true
+    },
+    "rejected": [],
+    "input_tokens": 10186,
+    "output_tokens": 3683
+  },
+  "stats": {
+    "news": {
+      "items": 420,
+      "fresh": 173,
+      "clusters": 109,
+      "eligible": 78
+    },
+    "nvd_published": 337,
+    "kev_catalog": "2026.11.13",
+    "kev_recent": 0
+  }
+}

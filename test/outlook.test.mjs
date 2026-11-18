@@ -119,7 +119,7 @@ test('Outlook 발송: 토큰 갱신 → 새 리프레시 토큰은 암호화 저
   assert.equal(m.saveToSentItems, false, '보낸 편지함에 쌓지 않음');
   assert.equal(m.message.subject, mailSubject(sampleBrief(), '일일 보안 브리핑'));
   assert.equal(m.message.body.contentType, 'HTML');
-  assert.match(m.message.body.content, /국내 보안 뉴스/);
+  assert.match(m.message.body.content, />주요 보안 뉴스</);
   assert.deepEqual(m.message.toRecipients, [{ emailAddress: { address: 'me@example.org' } }]);
   assert.equal(m.message.bccRecipients, undefined);
   const st = state();
@@ -296,8 +296,9 @@ test('메일 이름(MAIL_TITLE)은 브리핑 메일의 제목·본문과 연결 
   await sendBriefMail(s.cfg, sampleBrief(), { env: s.env, log: quiet });
   const m = sent[0].message;
   assert.match(m.subject, /\[OO팀 일일 보안 브리핑\] 10\.23\(금\)$/);
-  assert.ok(m.body.content.includes('>OO팀 일일 보안 브리핑</p>'), '본문 머리');
-  assert.ok(!m.body.content.includes('>일일 보안 브리핑</p>'));
+  // 본문 머리: 이름(팀) 굵게 + 큰 제목, 꼬리에도 이름(조직 Secret 이 없으면 팀 이름만)
+  assert.match(m.body.content, /<strong class="brand" [^>]*>OO팀<\/strong><\/p><h1 class="hero" [^>]*>일일 보안 브리핑<\/h1>/, '본문 머리');
+  assert.match(m.body.content, /<strong style="color:#46565D;">OO팀<\/strong><\/td>/, '꼬리');
   await sendBriefMail(s.cfg, null, { test: true, env: s.env, log: quiet });
   assert.equal(sent[1].message.subject, '[OO팀 일일 보안 브리핑] 메일 연결 확인');
   rmSync(s.dir, { recursive: true, force: true });

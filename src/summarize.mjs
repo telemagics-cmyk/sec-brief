@@ -3,7 +3,9 @@
 import { arrangeNews } from './news.mjs';
 import { findCveIds, truncate } from './util.mjs';
 
-const LIMITS = { title_ko: 48, summary_ko: 140, check: 40, target: 80, impact: 90, action: 90, overview: 320, action_title: 26, action_detail: 50 };
+// 자르는 길이는 지시문의 글자 수보다 넉넉히 — 모델이 조금 넘겨 쓴 문장이 '…'로 끊기지 않게
+// (action_detail: 지시 40자, 2026-11-19 첫 생성에서 50자 한도에 '외부 노출…'로 잘림 → 64)
+const LIMITS = { title_ko: 48, summary_ko: 140, check: 40, target: 80, impact: 90, action: 90, overview: 320, action_title: 26, action_detail: 64 };
 const ACTIONS_MAX = 3;
 
 // 구조화 출력은 배열 개수·글자 수 제한(minItems·maxLength)을 지원하지 않는다 → 개수·길이는 지시문에 쓰고 applySummary 가 자른다
@@ -210,7 +212,7 @@ export function applySummary(draft, out, { domesticLimit, internationalLimit, me
     rejected.push('overview');
   }
 
-  // 오늘 먼저 확인할 일(메일 첫 화면): 지어낸 CVE 가 든 항목·같은 제목은 버리고 앞에서부터 3개
+  // 오늘의 우선 점검(메일 첫 화면): 지어낸 CVE 가 든 항목·같은 제목은 버리고 앞에서부터 3개
   const actions = [];
   for (const x of Array.isArray(out.actions) ? out.actions : []) {
     if (actions.length >= ACTIONS_MAX) break;

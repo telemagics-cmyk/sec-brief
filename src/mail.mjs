@@ -54,132 +54,239 @@ export function mailSubject(b, title = '일일 보안 브리핑') {
 }
 
 // ------------------------------------------------------------------ HTML 본문 (메일 프로그램용)
-// 디자인(2026-11-18 사용자가 준 시안): 미색 바탕·남색 글자·금색 강조, 모서리 없는 흰 본문.
-// 구성: 머리(이름·날짜·한 줄 문구) → 건수 → 오늘 먼저 확인할 일 → 주요 보안 뉴스(국내|해외) → 보안 업데이트 권고(KISA)
-//       → 실제 악용 확인 취약점(있는 날) → 신규 고위험 취약점 → 관심 회사 소식(Secret 이 있을 때) → 꼬리(수집 상태·링크).
+// 디자인(2026-11-19 사용자가 준 두 번째 시안): 미색 바탕·흰 본문·남색 글자·금색 강조.
+// 구성: 머리(이름 | 조직, 큰 제목, 오른쪽 날짜) → (경보) → 건수 4칸 → 오늘의 우선 점검(남색 상자) → 웹에서 보기(구역 링크)
+//       → 주요 보안 뉴스(국내|해외, 국내 언론 기사가 많은 날은 통합) → KISA 보안 업데이트 권고 → 실제 악용 확인 취약점(있는 날)
+//       → 신규 고위험 취약점(제품·주요 영향·CVSS 표) → 관심 회사 소식(Secret 이 있을 때) → 꼬리(이름·링크·수집 상태).
 // Outlook(Windows) 은 Word 로 그려 div 의 폭·여백을 무시하므로 뼈대는 표로 짜고 배경색은 bgcolor 로도 준다.
 // 스타일은 인라인이 기본이고 <style> 에는 휴대폰 배치와 Outlook 보정만 둔다(모르는 메일 앱은 인라인 그대로 보인다).
-// 숨김 글·보이지 않는 문자·글자 크기 0 은 쓰지 않는다(스팸 메일의 흔한 특징 — 시험이 지킨다).
+// 시안과 다르게 한 것: 숨김 미리 보기 글·display:none·font-size:0 은 쓰지 않는다(스팸 메일의 흔한 특징 — 시험이 지킨다).
+// 메일 안 이동 링크(#)는 메일 앱마다 되고 안 되고가 달라(Outlook 웹 등) '웹에서 보기'로 웹 페이지의 같은 구역을 연다.
+// 인쇄용 규칙(@page, 인쇄 때 순서 바꾸기)은 메일 앱 대부분이 지우므로 넣지 않았다.
 
 const FONT = "'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo','Noto Sans KR',Arial,sans-serif";
 const SERIF = "Georgia,'Times New Roman',serif";
+const LATIN = "Arial,'Malgun Gothic','Apple SD Gothic Neo',sans-serif";
 const MONO = "Consolas,'Courier New',monospace";
-// 시안의 색. 작은 회색 글자만 바탕 대비 4.5:1 이상이 되게 조금 진하게 했다.
+// 시안의 색(작은 글자도 바탕 대비 4.5:1 이상 — 시안 값 그대로 넘는다). hot 은 경보·실제 악용·점수
 const C = {
-  page: '#EDEBE5', card: '#FFFFFF', head: '#FAF8F2', soft: '#F5F3ED', check: '#F8F6F0', corp: '#F7F5EF',
-  ink: '#243747', ink2: '#3D4F5D', body: '#637078', label: '#56687A', meta: '#6B716E', headSub: '#666B69', foot: '#5F6F7B',
-  gold: '#9A783C', goldText: '#8B6B35', rule: '#E5E2DA', ruleCheck: '#E4E0D6', box: '#DFDBD1',
-  hot: '#9C351C', hotSoft: '#FFF0E9', alertSoft: '#FBEEE9', corpInk: '#254338', corpSub: '#55695D',
+  page: '#EBE9E2', paper: '#FFFFFF', mast: '#F8F5ED', navy: '#223947', hero: '#1E3443', ink: '#203645',
+  identity: '#465862', gap: '#B9B3A7', dateRule: '#CFC8B8', month: '#64583F', clock: '#53616B',
+  label: '#344B58', value: '#203746', unit: '#58636A', detail: '#495C64', tileRule: '#D6D5CD',
+  panelHead: '#FAF8F2', num: '#E9C48A', key: '#FFFFFF', desc: '#EDF1F0', panelRule: '#50616A',
+  navRule: '#D4D7D3', navLabel: '#53616A', link: '#3B5260',
+  colTitle: '#263D4B', gold: '#A88442', count: '#74551D',
+  story: '#253B49', meta: '#53636B', summary: '#354952', check: '#384C56', checkLabel: '#79571F', rule: '#DADBD4',
+  mark: '#906C2F', kisa: '#2C434E', scope: '#4F5E64', th: '#F4F2EB', thRule: '#D3D5CE', thText: '#42535B',
+  product: '#253C49', impact: '#3C505A',
+  corp: '#F2F5EF', corpBar: '#55705F', corpLabel: '#415F51', corpHead: '#263F37', corpText: '#425A50',
+  foot: '#46565D', footRule: '#D2D2C7',
+  hot: '#803D2E', hotBar: '#9C351C', alertSoft: '#FBEEE9',
 };
 const TBL = 'role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"';
 
 // 폭: 받는 사람 대부분이 1920×1080 화면의 웹메일(읽기 창 약 1,000~1,500px)로 읽는다 → 시안대로 최대 MAIL_W.
 // Outlook(Windows) 은 MSO_W 한 단: 그 Word 그리기 방식은 max-width 를 고정 폭처럼 써서(창이 좁아도 줄지 않음 — Word 로
 // 그려 확인) 넓히면 좁은 읽기 창·125% 배율에서 가로로 밀린다 → MSO 표와 MSO_CSS 의 .mailw 로 Outlook 에서만 MSO_W.
-const MAIL_W = 880;
+const MAIL_W = 900;
 const MSO_W = 680;
-const PAD = 38; // 본문 좌우 여백(휴대폰은 20 — LAYOUT_CSS)
+const PAD = 40; // 본문 좌우 여백(창이 좁으면 25·20·15 — LAYOUT_CSS)
 
-// 밝은 화면 전용(시안). 휴대폰(창 640px 이하)은 여백·큰 문구를 줄이고 국내|해외를 위아래로, 취약점 표시는 제목 위로 — 데스크톱 웹메일 창은
-// 이보다 좁을 일이 없어 창 폭 기준이어도 된다. 감추는 규칙(display:none 등)은 쓰지 않는다.
-const LAYOUT_CSS = `:root { color-scheme: light; supported-color-schemes: light; }
-@media (max-width: 640px) {
+// 휴대폰·좁은 창(시안의 네 구간). 칸을 위아래로 쌓고 여백·큰 글자를 줄일 뿐 감추는 규칙(display:none 등)은 쓰지 않는다.
+// 창 폭 기준이라 넓은 화면의 좁은 읽기 창에서는 데스크톱 배치 그대로다(그래도 넘치지 않게 칸은 표 비율).
+const LAYOUT_CSS = `@media (max-width: 760px) {
   .outer { padding: 0 !important; }
-  .pad { padding-left: 20px !important; padding-right: 20px !important; }
-  .hero { font-size: 32px !important; line-height: 42px !important; }
+  .pad { padding-left: 25px !important; padding-right: 25px !important; }
+  .pkey { width: 202px !important; }
+}
+@media (max-width: 680px) {
   .ncol { display: block !important; width: 100% !important; padding: 0 !important; }
-  .ncol2 { padding-top: 28px !important; }
-  .vpill { display: block !important; width: auto !important; padding: 12px 0 0 !important; border-bottom: 0 !important; }
-  .vbody { display: block !important; padding-top: 6px !important; }
+  .ncol2 { padding-top: 24px !important; }
+  .pkey, .pdesc { display: block !important; width: auto !important; padding: 0 !important; }
+  .pdesc { padding-top: 2px !important; }
+}
+@media (max-width: 560px) {
+  .pad { padding-left: 20px !important; padding-right: 20px !important; }
+  .mast { padding-top: 21px !important; padding-bottom: 20px !important; }
+  .mast-copy, .date-cell { display: block !important; width: 100% !important; }
+  .brand { font-size: 18px !important; }
+  .brand-gap { margin-left: 5px !important; padding-left: 9px !important; }
+  .hero { font-size: 34px !important; line-height: 45px !important; letter-spacing: -1.6px !important; }
+  .date-cell { padding: 8px 0 0 !important; border-left: 0 !important; text-align: left !important; }
+  .date-line { display: inline !important; color: #4B5C63 !important; font-size: 13px !important; line-height: 21px !important; }
+  .date-day { font-family: 'Malgun Gothic','Apple SD Gothic Neo',Arial,sans-serif !important; font-size: 13px !important; line-height: 21px !important; letter-spacing: 0 !important; font-weight: bold !important; color: #4B5C63 !important; }
+  .date-clock { margin-left: 6px !important; padding-left: 8px !important; border-left: 1px solid #B7B2A4 !important; }
+  .metric-pair { display: block !important; width: 100% !important; }
+  .metric-third { padding-left: 0 !important; border-left: 0 !important; }
+  .metric-lower { padding-top: 11px !important; }
+  .metric-low { padding-top: 9px !important; border-top: 1px solid #DBDDD5 !important; }
+  .metric-num { font-size: 29px !important; }
+  .panel { padding: 16px 15px 10px !important; }
+  .panel-title { font-size: 21px !important; }
+  .sec-title { font-size: 23px !important; letter-spacing: -0.8px !important; }
+  .story-title { font-size: 17px !important; }
+  .rcell { padding: 9px 5px !important; }
+  .rcol-p { width: 44% !important; }
+  .rcol-i { width: 37% !important; }
+  .rcol-s { width: 19% !important; }
+  .foot-links { display: block !important; text-align: left !important; padding-top: 6px !important; }
+}
+@media (max-width: 345px) {
+  .pad { padding-left: 15px !important; padding-right: 15px !important; }
 }`;
-// Outlook(Windows): 표 안 글자에 글꼴을 물려주지 않아 따로 정하고(날짜 숫자만 세리프), 한글·숫자 사이 자동 띄움('2026 년')을 끈다.
-// 국내|해외는 Outlook 에서 위아래로(680px 본문에 두 칸이면 한 줄이 18자 남짓): newsColumns 가 두 칸 사이에서 행을 나누고
-// 여기서 칸 폭·여백을 덮어쓴다.
-const MSO_CSS = `<!--[if mso]><style>table,td,p,a,span,h1,h2,h3,div{font-family:'Malgun Gothic',Arial,sans-serif !important;text-autospace:none;}.serif{font-family:Georgia,serif !important;}.mailw{max-width:${MSO_W}px !important;}.ncol{width:100% !important;padding:0 !important;}.ncol2{padding-top:28px !important;}</style><![endif]-->`;
-// Outlook(Windows) 은 글자 단위 요소의 안쪽 여백을 무시하므로, 표시 안에 Outlook 에서만 보이는 빈칸을 둔다
+// Outlook(Windows): 표 안 글자에 글꼴을 물려주지 않아 따로 정하고(날짜·건수·번호 숫자만 세리프), 한글·숫자 사이 자동 띄움('2026 년')을 끈다.
+// 국내|해외는 Outlook 에서 위아래로(680px 본문에 두 칸이면 한 줄이 15자 남짓): 두 칸 사이에서 행을 나누고 여기서 칸 폭·여백을 덮어쓴다.
+// Word 는 class 속성의 첫 이름만 읽는다(2026-11-19 Word 로 그려 확인) → 여기 규칙이 걸릴 이름(serif·ncol·ncol2)은 class 맨 앞에.
+const MSO_CSS = `<!--[if mso]><style>table,td,th,p,a,span,strong,h1,h2,h3,h4{font-family:'Malgun Gothic',Arial,sans-serif !important;text-autospace:none;}.serif{font-family:Georgia,serif !important;}.mailw{max-width:${MSO_W}px !important;}.ncol{width:100% !important;padding:0 !important;}.ncol2{width:100% !important;padding:24px 0 0 !important;}</style><![endif]-->`;
+// Outlook(Windows) 은 글자 단위 요소의 안쪽 여백·테두리를 무시하므로, 띄울 자리에 Outlook 에서만 보이는 빈칸을 둔다
 const MSO_PAD = '<!--[if mso]>&nbsp;<![endif]-->';
-const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 const pad2 = (n) => String(n).padStart(2, '0');
 
-function a(url, text, style = '') {
+/** 링크(허용한 주소만). 글자색은 둘레 글과 같게, 밑줄은 extra 로 */
+function a(url, text, color = C.story, extra = '') {
   const href = safeUrl(url);
-  return href ? `<a href="${h(href)}" style="color:${C.ink};text-decoration:none;${style}">${text}</a>` : text;
+  return href ? `<a href="${h(href)}" style="color:${color};text-decoration:none;${extra}">${text}</a>` : text;
 }
+const underline = (color) => (url, text) => a(url, text, color, 'text-decoration:underline;');
 
 /** 'MM.DD HH:mm' (한국 시간) */
 function when(iso) {
   const t = Date.parse(iso || '');
   return Number.isNaN(t) ? '' : kstStamp(new Date(t)).slice(5).replace('-', '.');
 }
+/** 'YYYY-MM-DD' → 'MM.DD' */
+const mmdd = (d) => (/^\d{4}-\d{2}-\d{2}$/.test(d || '') ? `${d.slice(5, 7)}.${d.slice(8, 10)}` : '');
 
 /**
- * 머리 맨 위 영문 이름: 'OO팀 일일 보안 브리핑' → 'OO팀 / DAILY SECURITY BRIEF'(이름은 Secret MAIL_TITLE — 저장소에 두지 않는다).
- * 그 꼴이 아니면 이름 그대로. 글자 사이는 벌리지 않는다(영문 약어가 떨어져 보임).
+ * 머리·꼬리의 이름(Secret MAIL_TITLE·MAIL_ORG — 저장소에 두지 않는다).
+ * 'OO팀 일일 보안 브리핑' + '가나다 · OO센터' → 굵은 이름 '가나다 OO팀' | 'OO센터', 큰 제목 '일일 보안 브리핑'.
+ * 조직이 한 덩이면 칸막이 뒤에 두고, 회사 이름에 팀 이름이 이미 들었으면 되풀이하지 않는다. 이름 꼴이 아니면 큰 제목은 그대로.
  */
-export function brandLine(title) {
+export function mastNames(title, org = '') {
   const t = String(title || '').trim();
   const m = /^(.*?)\s*일일\s*보안\s*브리핑$/.exec(t);
-  if (!m) return t;
-  return m[1] ? `${m[1]} / DAILY SECURITY BRIEF` : 'DAILY SECURITY BRIEF';
+  const team = m ? m[1].trim() : '';
+  const heading = m ? '일일 보안 브리핑' : t || '일일 보안 브리핑';
+  const parts = String(org || '').split('·').map((s) => s.trim()).filter(Boolean);
+  const company = parts.length > 1 ? parts[0] : '';
+  const unit = parts.length > 1 ? parts.slice(1).join(' · ') : parts[0] || '';
+  const brand = company && team && !company.split(/\s+/).includes(team) ? `${company} ${team}` : company || team;
+  return brand ? { brand, unit, heading } : { brand: unit, unit: '', heading };
 }
 
-/** 구역 제목(19px 굵게), 오른쪽에 금색 작은 글씨(건수·출처) */
-function sectionTitle(title, note = '') {
-  return `<tr><td style="padding:30px 0 12px;"><h2 style="margin:0;font-size:19px;line-height:28px;font-weight:bold;color:${C.ink};">${h(title)}${note ? ` <span style="font-size:12px;color:${C.gold};">${h(note)}</span>` : ''}</h2></td></tr>`;
+/** 건수 칸의 KISA 공지 이름: 'Fortinet 제품 보안 업데이트 권고' → 'Fortinet'. 같은 이름은 한 번, 경보 단계 변경은 빼고 */
+export function kisaNames(adv) {
+  const names = [];
+  for (const x of adv || []) {
+    if (x.alert) continue;
+    const t = String(x.title || '').replace(/^CVE-\d{4}-\d+\s*\|\s*/, '').trim();
+    const m = /^(.+?)\s+(?:제품|보안|신규|대상|관련|패키지|플러그인)/.exec(t);
+    const name = (m ? m[1] : t.split(/\s+/)[0] || '').trim();
+    if (name && !names.includes(name)) names.push(name);
+  }
+  return names;
+}
+
+function kisaDetail(adv, b) {
+  if (b.failed?.kisa) return '수집 실패';
+  if (!adv.length) return '새 공지 없음';
+  const names = kisaNames(adv);
+  if (!names.length) return '경보 단계 변경';
+  const shown = names.slice(0, 2).join(' · ').length > 18 ? names.slice(0, 1) : names.slice(0, 2);
+  return `${shown.join(' · ')}${names.length > shown.length ? ` 외 ${names.length - shown.length}` : ''}`;
+}
+
+/** 구역 제목(27px 굵게), 오른쪽에 금색 작은 글씨(건수) */
+function sectionTitle(title, note = '', top = 30) {
+  return `<tr><td style="padding:${top}px 0 0;"><h2 class="sec-title" style="margin:0;font-size:27px;line-height:38px;font-weight:bold;letter-spacing:-1.05px;color:${C.ink};">${h(title)}${note ? ` <span style="margin-left:4px;font-size:14px;font-weight:bold;letter-spacing:0;color:${C.count};white-space:nowrap;">${h(note)}</span>` : ''}</h2></td></tr>`;
 }
 
 /** 작은 안내 줄(html: 이미 이스케이프한 글) */
 function noteRow(html, top = 8) {
-  return `<tr><td style="padding:${top}px 0 0;font-size:12.5px;line-height:19px;color:${C.label};">${html}</td></tr>`;
+  return `<tr><td style="padding:${top}px 0 0;font-size:14px;line-height:22px;color:${C.scope};">${html}</td></tr>`;
 }
 
-/** 건수(시안: 연한 칸 여러 개를 흰 세로 줄로 나눔). 누르면 웹 페이지의 해당 구역 */
-function statsTable(cells) {
-  const w = Math.floor(100 / cells.length);
-  return `<table ${TBL}><tr>${cells
-    .map(([href, n, label, hot], i) => `<td width="${w}%" align="center" valign="top" bgcolor="${C.soft}" style="width:${w}%;padding:14px 4px 12px;background:${C.soft};text-align:center;${i < cells.length - 1 ? 'border-right:2px solid #FFFFFF;' : ''}">
-${a(href, `<span style="font-size:25px;line-height:32px;font-weight:bold;color:${hot ? C.hot : C.ink};">${h(n)}</span><br><span class="tile-label" style="font-size:12px;line-height:18px;color:${C.label};">${h(label)}</span>`)}
-</td>`)
-    .join('')}</tr></table>`;
+/** 건수 한 칸: 이름(굵게)·숫자(세리프)·건·설명. rule: 왼쪽 세로 줄 */
+function metric([label, value, detail, hot], { cls = '', rule = true } = {}) {
+  const unit = typeof value === 'number' ? `${MSO_PAD}<span style="padding-left:4px;font-family:${FONT};font-size:13px;line-height:18px;letter-spacing:0;color:${C.unit};">건</span>` : '';
+  return `<td class="metric${cls}" width="50%" valign="top" style="width:50%;padding:1px 10px 1px ${rule ? 18 : 0}px;vertical-align:top;${rule ? `border-left:1px solid ${C.tileRule};` : ''}">
+<p class="metric-label" style="margin:0;font-size:14px;line-height:21px;font-weight:bold;color:${C.label};">${h(label)}</p>
+<p class="serif metric-num" style="margin:3px 0 0;font-family:${SERIF};font-size:36px;line-height:42px;letter-spacing:-1px;color:${hot ? C.hot : C.value};">${h(value)}${unit}</p>
+<p style="margin:2px 0 0;font-size:13px;line-height:21px;color:${C.detail};">${h(detail)}</p>
+</td>`;
 }
 
-/** 오늘 먼저 확인할 일: 금색 번호 01·02·03, 굵은 제목과 설명(요약 문장으로 대신할 때는 첫 문장만 굵게) */
-function checkTable(items) {
-  const last = items.length - 1;
-  return `<table ${TBL} bgcolor="${C.check}" style="background:${C.check};">${items
-    .map((x, i) => `<tr>
-<td width="46" valign="top" style="width:46px;padding:12px 0 12px 16px;"><p style="margin:0;font-size:19px;line-height:24px;font-weight:bold;color:${C.gold};">${pad2(i + 1)}</p></td>
-<td valign="top" style="padding:12px 16px 12px 4px;${i < last ? `border-bottom:1px solid ${C.ruleCheck};` : ''}"><p style="margin:0;font-size:15px;line-height:24px;${x.strong ? 'font-weight:bold;' : ''}color:${C.ink};">${h(x.title)}</p>${x.detail ? `<p style="margin:1px 0 0;font-size:13px;line-height:20px;color:${C.label};">${h(x.detail)}</p>` : ''}</td>
-</tr>`)
-    .join('')}</table>`;
+/** 건수 4칸(시안): 두 칸씩 묶어 넓으면 한 줄, 휴대폰은 두 줄 */
+function statsGrid([c1, c2, c3, c4]) {
+  const pair = (x, y, lower) => `<td class="metric-pair${lower ? ' metric-lower' : ''}" width="50%" valign="top" style="width:50%;padding:0;vertical-align:top;"><table ${TBL} style="table-layout:fixed;"><tr>
+${metric(x, { cls: lower ? ' metric-low metric-third' : '', rule: lower })}
+${metric(y, { cls: lower ? ' metric-low' : '' })}
+</tr></table></td>`;
+  return `<table ${TBL} style="table-layout:fixed;"><tr>${pair(c1, c2, false)}${pair(c3, c4, true)}</tr></table>`;
 }
 
 /**
- * 기사 한 건: 금색 번호, 굵은 제목(→ 원문), 매체·시각, 요약, 확인 포인트(금색). 원문 제목은 웹 페이지에만(메일은 간결하게).
- * line: 아래 줄(국내·해외 칸 목록) — 통합 목록은 줄을 바깥 칸에 긋는다. foreign: 통합 목록의 해외 언론 기사 표시
+ * 오늘의 우선 점검: Claude 가 고른 것(brief.actions — 제목·설명, 최대 3개). 없으면(규칙 기반 날·예전 브리핑)
+ * 요약 문장을 '오늘의 요약'으로 대신 보인다(첫 문장 = 요약 규칙상 가장 시급한 일만 굵게).
  */
-function newsItem(i, n, { line = true, foreign = false } = {}) {
+function todayChecks(b) {
+  const actions = (Array.isArray(b.actions) ? b.actions : []).filter((x) => x?.title).slice(0, 3);
+  if (actions.length) return { title: '오늘의 우선 점검', pairs: true, items: actions.map((x) => ({ title: x.title, detail: x.detail || '' })) };
+  const lines = sentences(b.overview).slice(0, 3);
+  return { title: '오늘의 요약', pairs: false, items: lines.map((s, i) => ({ title: s, strong: i === 0 })) };
+}
+
+/** 남색 상자: 금색 번호 01·02·03, 굵은 흰 제목 | 설명(좁으면 위아래) */
+function priorityPanel(checks) {
+  const rows = checks.items.map((x, i) => {
+    const rule = i ? `border-top:1px solid ${C.panelRule};` : '';
+    const body = checks.pairs
+      ? `<table ${TBL}><tr><td class="pkey" width="224" valign="top" style="width:224px;padding:0 12px 0 0;font-size:16px;line-height:25px;font-weight:bold;color:${C.key};">${h(x.title)}</td><td class="pdesc" valign="top" style="padding:0;font-size:15px;line-height:25px;color:${C.desc};">${h(x.detail)}</td></tr></table>`
+      : `<p style="margin:0;font-size:15px;line-height:25px;${x.strong ? `font-weight:bold;color:${C.key};` : `color:${C.desc};`}">${h(x.title)}</p>`;
+    return `<tr><td class="serif" width="41" valign="top" style="width:41px;padding:8px 4px 8px 0;font-family:${SERIF};font-size:20px;line-height:25px;color:${C.num};${rule}">${pad2(i + 1)}</td><td valign="top" style="padding:8px 0;${rule}">${body}</td></tr>`;
+  });
+  return `<table ${TBL} bgcolor="${C.navy}" style="background:${C.navy};"><tr><td class="panel" style="padding:20px 24px 14px;">
+<h2 class="panel-title" style="margin:0 0 6px;font-size:23px;line-height:33px;font-weight:bold;letter-spacing:-0.9px;color:${C.panelHead};">${h(checks.title)}</h2>
+<table ${TBL}>${rows.join('\n')}</table>
+</td></tr></table>`;
+}
+
+/** 웹에서 보기: 웹 페이지의 같은 구역으로(메일 안 이동 링크는 메일 앱마다 달라 쓰지 않는다) */
+function webNav(dayUrl, hasKev) {
+  const items = [['news-domestic', '국내 뉴스'], ['news-international', '해외 뉴스'], ['kisa', 'KISA 권고'], ...(hasKev ? [['exploited', '실제 악용']] : []), ['critical', '고위험 취약점']];
+  const links = items.map(([id, text]) => a(`${dayUrl}#${id}`, text, C.link, 'font-weight:bold;text-decoration:underline;white-space:nowrap;')).join(`&nbsp;&nbsp;&nbsp; `);
+  return `<table ${TBL}><tr><td style="padding:0;border-bottom:1px solid ${C.navRule};font-size:13px;line-height:38px;color:${C.navLabel};"><strong style="color:${C.navLabel};">웹에서 보기</strong>&nbsp;&nbsp;&nbsp; ${links}</td></tr></table>`;
+}
+
+/** 국내·해외 칸 제목: 금색 밑줄, 오른쪽에 건수 */
+function columnTitle(title, note) {
+  return `<table ${TBL}><tr><td style="padding:0 0 9px;border-bottom:2px solid ${C.gold};"><h3 style="margin:0;font-size:20px;line-height:29px;font-weight:bold;letter-spacing:-0.6px;color:${C.colTitle};">${h(title)} <span style="padding-left:4px;font-size:13px;font-weight:bold;letter-spacing:0;color:${C.count};white-space:nowrap;">${h(note)}</span></h3></td></tr></table>`;
+}
+
+/**
+ * 기사 한 건: 굵은 제목(→ 원문), 매체·시각, 요약, 점검(금색 표시). 원문 제목은 웹 페이지에만(메일은 간결하게).
+ * foreign: 통합 목록의 해외 언론 기사 표시
+ */
+function story(n, { foreign = false } = {}) {
   const others = n.outlets?.length > 1 ? ` 외 ${n.outlets.length - 1}곳` : '';
   const at = when(n.published);
   const meta = `${n.source || ''}${others}${at ? ` · ${at}` : ''}`;
   const summary = n.summary_ko || truncate(n.snippet || '', 120);
-  const rule = line ? `border-bottom:1px solid ${C.rule};` : '';
-  return `<tr>
-<td width="30" valign="top" style="width:30px;padding:15px 4px 16px 0;${rule}"><p style="margin:0;font-size:12px;line-height:24px;font-weight:bold;color:${C.gold};">${pad2(i + 1)}</p></td>
-<td valign="top" style="padding:15px 0 16px;${rule}">
-<p style="margin:0;font-size:15px;line-height:24px;font-weight:bold;">${a(n.url, h(n.title_ko || n.title))}</p>
-${meta ? `<p style="margin:4px 0 0;font-size:11.5px;line-height:17px;color:${C.meta};">${foreign ? `<span style="font-weight:bold;color:${C.gold};">해외</span> · ` : ''}${h(meta)}</p>` : ''}
-${summary ? `<p style="margin:7px 0 0;font-size:13px;line-height:21px;color:${C.body};">${h(summary)}</p>` : ''}
-${n.check_ko ? `<p style="margin:7px 0 0;font-size:13px;line-height:20px;font-weight:bold;color:${C.goldText};">확인 포인트 · ${h(n.check_ko)}</p>` : ''}
-</td></tr>`;
+  return `<h4 class="story-title" style="margin:0;font-size:18px;line-height:27px;font-weight:bold;letter-spacing:-0.5px;color:${C.story};">${a(n.url, h(n.title_ko || n.title))}</h4>
+${meta ? `<p style="margin:4px 0 0;font-size:13px;line-height:21px;color:${C.meta};">${foreign ? `<strong style="color:${C.count};">해외</strong> · ` : ''}${h(meta)}</p>` : ''}
+${summary ? `<p style="margin:8px 0 0;font-size:15px;line-height:25px;letter-spacing:-0.14px;color:${C.summary};">${h(summary)}</p>` : ''}
+${n.check_ko ? `<p style="margin:6px 0 0;font-size:14px;line-height:23px;color:${C.check};"><strong style="font-size:13px;color:${C.checkLabel};">점검</strong>&nbsp; ${h(n.check_ko)}</p>` : ''}`;
 }
 
-/** 국내·해외 한 칸: 제목(금색 밑줄)·건수 + 기사 목록 */
+const storyCell = (n, opts) => `<table ${TBL}><tr><td style="padding:16px 0 17px;">${story(n, opts)}</td></tr></table>`;
+const emptyNews = (b) => `<p style="margin:14px 0 0;font-size:14px;line-height:22px;color:${C.scope};">${h(emptyNote(b, 'news'))}</p>`;
+
+/** 국내·해외 한 칸: 제목·건수 + 기사(아래 줄) */
 function newsColumn(title, list, b) {
   const body = list.length
-    ? `<table ${TBL}>${list.map((n, i) => newsItem(i, n)).join('')}</table>`
-    : `<p style="margin:14px 0 0;font-size:13px;line-height:20px;color:${C.label};">${h(emptyNote(b, 'news'))}</p>`;
-  return `<table ${TBL}><tr><td style="padding:0 0 12px;border-bottom:2px solid ${C.gold};"><h3 style="margin:0;font-size:18px;line-height:26px;font-weight:bold;color:${C.ink};">${h(title)} <span style="font-size:12px;color:${C.gold};">${list.length}건</span></h3></td></tr></table>
+    ? `<table ${TBL}>${list.map((n) => `<tr><td style="padding:0;border-bottom:1px solid ${C.rule};">${storyCell(n)}</td></tr>`).join('')}</table>`
+    : emptyNews(b);
+  return `${columnTitle(title, `${list.length}건`)}
 ${body}`;
 }
 
@@ -189,9 +296,9 @@ ${body}`;
  */
 function newsColumns(dom, intl, b) {
   return `<table ${TBL}><tr>
-<td class="ncol" valign="top" style="width:50%;padding:0 16px 0 0;vertical-align:top;">${newsColumn('국내 보안 뉴스', dom, b)}</td>
+<td class="ncol" valign="top" style="width:50%;padding:0 16px 0 0;vertical-align:top;">${newsColumn('국내 뉴스', dom, b)}</td>
 <!--[if mso]></tr><tr><![endif]-->
-<td class="ncol ncol2" valign="top" style="width:50%;padding:0 0 0 16px;vertical-align:top;">${newsColumn('해외 보안 뉴스', intl, b)}</td>
+<td class="ncol2 ncol" valign="top" style="width:50%;padding:0 0 0 16px;vertical-align:top;">${newsColumn('해외 뉴스', intl, b)}</td>
 </tr></table>`;
 }
 
@@ -206,69 +313,75 @@ function mergedNews(b) {
 
 /**
  * 국내 언론 기사가 많은 날(brief.news.merged): 국내·해외를 중요한 순서 한 목록으로(국내 7 : 해외 3 정도 — src/news.mjs arrangeNews).
- * 넓으면 두 건씩 나란히(01 02 / 03 04 …) — 번호가 가로로 이어져 칸이 국내·해외로 읽히지 않게, 해외 언론 기사엔 '해외' 표시.
- * 줄은 바깥 칸에 그어 나란한 두 건의 줄이 맞는다. 휴대폰·Outlook(Windows)은 번호 순서대로 위아래(newsColumns 와 같은 방법).
+ * 넓으면 두 건씩 나란히(중요한 순서가 가로로 이어짐), 해외 언론 기사엔 '해외' 표시. 줄은 바깥 칸에 그어 나란한 두 건의 줄이 맞는다.
+ * 휴대폰·Outlook(Windows)은 순서대로 위아래(newsColumns 와 같은 방법).
  */
 function newsMerged(list, b) {
   const dom = list.filter((n) => n.region === 'domestic').length;
-  const head = `<table ${TBL}><tr><td style="padding:0 0 12px;border-bottom:2px solid ${C.gold};"><h3 style="margin:0;font-size:18px;line-height:26px;font-weight:bold;color:${C.ink};">국내·해외 통합 <span style="font-size:12px;color:${C.gold};">국내 ${dom} · 해외 ${list.length - dom}</span></h3></td></tr></table>`;
-  if (!list.length) return `${head}<p style="margin:14px 0 0;font-size:13px;line-height:20px;color:${C.label};">${h(emptyNote(b, 'news'))}</p>`;
-  const cell = (n, i, cls, pad) => (n
-    ? `<td class="${cls}" valign="top" style="width:50%;padding:${pad};vertical-align:top;border-bottom:1px solid ${C.rule};"><table ${TBL}>${newsItem(i, n, { line: false, foreign: n.region !== 'domestic' })}</table></td>`
-    : `<td class="${cls}" valign="top" style="width:50%;padding:${pad};"></td>`);
+  const head = columnTitle('국내·해외 통합', `국내 ${dom} · 해외 ${list.length - dom}`);
+  if (!list.length) return `${head}${emptyNews(b)}`;
+  const cell = (n, pad) => (n
+    ? `<td class="ncol" valign="top" style="width:50%;padding:${pad};vertical-align:top;border-bottom:1px solid ${C.rule};">${storyCell(n, { foreign: n.region !== 'domestic' })}</td>`
+    : `<td class="ncol" valign="top" style="width:50%;padding:${pad};"></td>`);
   const rows = [];
   for (let i = 0; i < list.length; i += 2) {
     rows.push(`<tr>
-${cell(list[i], i, 'ncol', '0 16px 0 0')}
+${cell(list[i], '0 16px 0 0')}
 <!--[if mso]></tr><tr><![endif]-->
-${cell(list[i + 1], i + 1, 'ncol', '0 0 0 16px')}
+${cell(list[i + 1], '0 0 0 16px')}
 </tr>`);
   }
   return `${head}
 <table ${TBL}>${rows.join('')}</table>`;
 }
 
-/** 보안 업데이트 권고(KISA 보호나라): 금색 왼쪽 막대 상자에 제목을 굵게. 보안공지가 아닌 것(취약점 정보·경보단계)만 작은 표시 */
-function kisaBox(adv, b) {
-  if (!adv.length) return noteRow(h(emptyNote(b, 'kisa')), 0);
-  const lines = adv.map((x, i) => {
-    const kind = String(x.source || '').replace(/^KISA\s*/, '');
-    const color = x.alert ? C.hot : C.ink2;
-    const tag = kind && kind !== '보안공지' ? ` <span style="font-size:12px;color:${x.alert ? C.hot : C.gold};">${h(kind)}</span>` : '';
-    const day = /^\d{4}-\d{2}-\d{2}$/.test(x.date || '') ? `${x.date.slice(5, 7)}.${x.date.slice(8, 10)}` : '';
-    return `<p style="margin:${i ? 8 : 0}px 0 0;font-size:14px;line-height:22px;font-weight:bold;color:${color};">${a(x.url, h(x.title), `color:${color};`)}${tag}${day ? ` <span style="font-size:12px;font-weight:normal;color:${C.meta};">· ${day}</span>` : ''}</p>`;
-  });
-  return `<tr><td><table ${TBL}><tr><td style="padding:15px 18px;border:1px solid ${C.box};border-left:4px solid ${C.gold};">
-${lines.join('\n')}
-</td></tr></table></td></tr>`;
-}
-
-/** 취약점 표시(시안: 붉은 작은 칸). 실제 악용(KEV)은 진하게 */
-function pill(text, strong = false) {
-  return `<span style="display:inline-block;white-space:nowrap;padding:3px 8px;font-size:11px;line-height:16px;font-weight:bold;color:${strong ? '#FFFFFF' : C.hot};background:${strong ? C.hot : C.hotSoft};">${MSO_PAD}${h(text)}${MSO_PAD}</span>`;
-}
-
-/** 취약점 한 줄: 왼쪽 표시, 제목(→ NVD)·영향·조치(금색), 맨 아래 번호·다른 표시(웹과 같은 순서)·링크 */
-function vulnRow(v, { kev = false, assetHref = '' } = {}) {
-  const score = v.cvss?.score;
-  const label = kev ? 'KEV' : Number.isFinite(score) ? `CVSS ${score.toFixed(1)}` : 'CVE';
-  const ids = v.ids?.length > 1 ? ` 외 ${v.ids.length - 1}건` : '';
-  const link = (u, t) => a(u, t, `color:${C.meta};text-decoration:underline;`);
-  const meta = [
-    `<span style="font-family:${MONO};">${h(v.id)}</span>${h(ids)}`,
-    ...sortedBadges(v).filter((t) => t !== label).map((t) => h(t)),
-    ...(v.links?.[0] ? [link(v.links[0], '벤더 공지')] : []),
-    ...(assetHref ? [link(assetHref, '우리 자산 영향')] : []),
-  ].join(' · ');
+/** KISA 보안 업데이트 권고(보호나라): 금색 윗줄, 금색 점과 굵은 제목. 보안공지가 아닌 것(취약점 정보·경보단계)만 작은 표시 */
+function kisaList(adv, b) {
+  if (!adv.length) return noteRow(h(emptyNote(b, 'kisa')), 12);
   const line = `border-bottom:1px solid ${C.rule};`;
-  return `<tr>
-<td class="vpill" width="88" valign="top" style="width:88px;padding:14px 8px 13px 0;${line}">${pill(label, kev)}</td>
-<td class="vbody" valign="top" style="padding:12px 0 13px;${line}">
-<p style="margin:0;font-size:14.5px;line-height:23px;font-weight:bold;">${a(v.nvd, h(v.ko?.title || v.id))}</p>
-${v.ko?.impact ? `<p style="margin:2px 0 0;font-size:13px;line-height:20px;color:${C.body};">${h(v.ko.impact)}</p>` : ''}
-${v.ko?.action ? `<p style="margin:5px 0 0;font-size:13px;line-height:20px;font-weight:bold;color:${C.goldText};">조치 · ${h(v.ko.action)}</p>` : ''}
-<p style="margin:5px 0 0;font-size:11.5px;line-height:18px;color:${C.meta};">${meta}</p>
-</td></tr>`;
+  const rows = adv.map((x) => {
+    const kind = String(x.source || '').replace(/^KISA\s*/, '');
+    const color = x.alert ? C.hot : C.kisa;
+    const tag = kind && kind !== '보안공지' ? ` <span style="font-size:13px;font-weight:bold;color:${x.alert ? C.hot : C.count};">${h(kind)}</span>` : '';
+    const day = mmdd(x.date);
+    return `<tr><td width="20" valign="top" style="width:20px;padding:10px 0;${line}font-family:Arial,sans-serif;font-size:17px;line-height:25px;color:${C.mark};">•</td><td valign="top" style="padding:10px 0;${line}"><p style="margin:0;font-size:16px;line-height:25px;font-weight:bold;color:${color};">${a(x.url, h(x.title), color)}${tag}${day ? ` <span style="font-size:13px;font-weight:normal;color:${C.meta};">· ${day}</span>` : ''}</p></td></tr>`;
+  });
+  return `<tr><td style="padding:12px 0 0;"><table ${TBL}><tr><td style="padding:0;border-top:2px solid ${C.gold};"><table ${TBL}>
+${rows.join('\n')}
+</table></td></tr></table></td></tr>`;
+}
+
+/**
+ * 취약점 표(시안: 제품 | 주요 영향 | CVSS). 제품 칸 = 제목(→ NVD) + 번호·다른 표시(웹과 같은 순서)·링크, 영향 칸 = 영향 + 조치.
+ * 표시는 점수 칸에 넣지 않는다(휴대폰에서 좁은 칸이 넘침). 실제 악용(kev) 표의 셋째 칸은 CISA 조치 기한
+ * (새 등재는 CVSS 가 아직 없는 일이 많아 '–' 만 늘어서므로 — 점수는 있으면 번호 줄에).
+ */
+function riskTable(list, assetHref, { kev = false } = {}) {
+  const th = (text, cls, w, align = 'left') => `<th class="rcell ${cls}" width="${w}%" align="${align}" bgcolor="${C.th}" style="width:${w}%;padding:9px 12px;background:${C.th};border-bottom:1px solid ${C.thRule};font-size:13px;line-height:20px;font-weight:bold;color:${C.thText};text-align:${align};">${text}</th>`;
+  const link = underline(C.meta);
+  const line = `border-bottom:1px solid ${C.rule};`;
+  const rows = list.map((v) => {
+    const score = v.cvss?.score;
+    const last = kev ? mmdd(v.due) || '–' : Number.isFinite(score) ? score.toFixed(1) : '–';
+    const ids = v.ids?.length > 1 ? ` 외 ${v.ids.length - 1}건` : '';
+    const meta = [
+      `<span style="font-family:${MONO};">${h(v.id)}</span>${h(ids)}`,
+      ...sortedBadges(v).filter((t) => t !== 'KEV' && !t.startsWith(kev ? '기한' : 'CVSS')).map((t) => h(t)),
+      ...(v.links?.[0] ? [link(v.links[0], '벤더 공지')] : []),
+      ...(assetHref(v.id) ? [link(assetHref(v.id), '우리 자산 영향')] : []),
+    ].join(' · ');
+    const impact = v.ko?.impact ? `<p style="margin:0;font-size:15px;line-height:22px;color:${C.impact};">${h(v.ko.impact)}</p>` : '';
+    const action = v.ko?.action ? `<p style="margin:${impact ? 6 : 0}px 0 0;font-size:14px;line-height:21px;color:${C.check};"><strong style="font-size:13px;color:${C.checkLabel};">조치</strong>&nbsp; ${h(v.ko.action)}</p>` : '';
+    return `<tr>
+<td class="rcell" valign="top" style="padding:11px 12px;${line}"><p style="margin:0;font-size:15px;line-height:22px;font-weight:bold;color:${C.product};">${a(v.nvd, h(v.ko?.title || v.id), C.product)}</p><p style="margin:4px 0 0;font-size:12.5px;line-height:19px;color:${C.meta};">${meta}</p></td>
+<td class="rcell" valign="top" style="padding:11px 12px;${line}">${impact}${action}</td>
+<td class="rcell" valign="top" align="right" style="padding:11px 12px;${line}text-align:right;"><p style="margin:0;font-family:${LATIN};font-size:16px;line-height:22px;font-weight:bold;color:${C.hot};">${last}</p></td>
+</tr>`;
+  });
+  return `<tr><td style="padding:12px 0 0;"><table ${TBL}><tr><td style="padding:0;border-top:2px solid ${C.gold};"><table ${TBL} style="table-layout:fixed;">
+<tr>${th('제품', 'rcol-p', 47)}${th('주요 영향', 'rcol-i', 35)}${th(kev ? '조치 기한' : 'CVSS', 'rcol-s', 18, 'right')}</tr>
+${rows.join('\n')}
+</table></td></tr></table></td></tr>`;
 }
 
 /** 글자 메일(SMTP 의 text 부분)에 붙는 같은 내용 */
@@ -278,23 +391,23 @@ function keywordNewsText(extra) {
   return `\n\n## ${extra.keyword} 소식\n\n${extra.error || (lines.length ? lines.join('\n') : '새 기사가 없습니다.')}\n`;
 }
 
-/** (선택) 메일에만 붙는 '○○ 소식' (src/mail-news.mjs, Secret MAIL_NEWS_KEYWORD): 연한 상자에 기사 제목·매체 */
+/** (선택) 메일에만 붙는 '○○ 소식' (src/mail-news.mjs, Secret MAIL_NEWS_KEYWORD): 연한 녹색 상자(왼쪽 막대)에 기사 제목·매체 */
 function corpNews(extra) {
-  const sub = (html, top = 0) => `<p style="margin:${top}px 0 0;font-size:12px;line-height:18px;color:${C.corpSub};">${html}</p>`;
+  const sub = (html, top) => `<p style="margin:${top}px 0 0;font-size:13px;line-height:20px;color:${C.corpText};">${html}</p>`;
   let inner;
-  if (extra.error) inner = sub(h(extra.error));
-  else if (!extra.items.length) inner = sub('새 기사가 없습니다.');
+  if (extra.error) inner = sub(h(extra.error), 6);
+  else if (!extra.items.length) inner = sub('새 기사가 없습니다.', 6);
   else {
     inner = extra.items
-      .map((n, i) => `<p style="margin:${i ? 12 : 0}px 0 0;font-size:14px;line-height:22px;font-weight:bold;">${a(n.url, h(n.title), `color:${C.corpInk};`)}</p>
+      .map((n, i) => `<p style="margin:${i ? 12 : 6}px 0 0;font-size:16px;line-height:24px;font-weight:bold;letter-spacing:-0.3px;">${a(n.url, h(n.title), C.corpHead)}</p>
 ${sub(h(`${n.outlet}${n.outlets > 1 ? ` 외 ${n.outlets - 1}곳` : ''} · ${when(n.published)}`), 2)}`)
       .join('\n');
     if (extra.total > extra.items.length) {
-      inner += sub(`그 밖의 ${extra.total - extra.items.length}건은 ${a(mailNewsSearchUrl(extra.keyword), 'Google 뉴스', `color:${C.corpSub};text-decoration:underline;`)}에서 볼 수 있습니다.`, 12);
+      inner += sub(`그 밖의 ${extra.total - extra.items.length}건은 ${underline(C.corpText)(mailNewsSearchUrl(extra.keyword), 'Google 뉴스')}에서 볼 수 있습니다.`, 12);
     }
   }
-  return `${sectionTitle(`${extra.keyword} 소식`, 'Google 뉴스 · 지난 브리핑 이후')}
-<tr><td><table ${TBL} bgcolor="${C.corp}" style="background:${C.corp};"><tr><td style="padding:16px 18px;">
+  return `<tr><td style="padding:26px 0 0;"><table ${TBL} bgcolor="${C.corp}" style="background:${C.corp};"><tr><td style="padding:14px 18px 15px;border-left:3px solid ${C.corpBar};">
+<h2 style="margin:0;font-size:14px;line-height:21px;font-weight:bold;color:${C.corpLabel};">${h(extra.keyword)} 소식 <span style="font-size:12.5px;font-weight:normal;">Google 뉴스 · 지난 브리핑 이후</span></h2>
 ${inner}
 </td></tr></table></td></tr>`;
 }
@@ -328,24 +441,10 @@ export function sentences(text) {
   return String(text || '').split(/(?<=[^A-Za-z0-9\s.][.!?])\s+/).map((s) => s.trim()).filter(Boolean);
 }
 
-/**
- * 오늘 먼저 확인할 일: Claude 가 고른 것(brief.actions — 제목·설명, 최대 3개). 없으면(규칙 기반 날·예전 브리핑)
- * 요약 문장을 '오늘의 요약'으로 대신 보인다(첫 문장 = 요약 규칙상 가장 시급한 일만 굵게).
- */
-function todayChecks(b) {
-  const actions = (Array.isArray(b.actions) ? b.actions : []).filter((x) => x?.title).slice(0, 3);
-  if (actions.length) {
-    return { title: actions.length > 1 ? `오늘 먼저 확인할 ${actions.length}가지` : '오늘 먼저 확인할 것', items: actions.map((x) => ({ title: x.title, detail: x.detail || '', strong: true })) };
-  }
-  const lines = sentences(b.overview).slice(0, 3);
-  return { title: '오늘의 요약', items: lines.map((s, i) => ({ title: s, detail: '', strong: i === 0 })) };
-}
-
-/** 웹 페이지와 같은 순서: 뉴스(국내|해외) → KISA → 악용 확인 → 신규 고위험 (그 앞에 건수·확인할 일, 메일에만 관심 회사 소식) */
+/** 웹 페이지와 같은 순서: 뉴스(국내|해외) → KISA → 악용 확인 → 신규 고위험 (그 앞에 건수·우선 점검, 메일에만 관심 회사 소식) */
 export function renderEmailHtml(b, { siteUrl = '', title = '일일 보안 브리핑', org = '', extraNews = null, assetUrl = '' } = {}) {
   const assetHref = (id) => assetLink(assetUrl, b.date, id);
   const dayUrl = briefUrl(siteUrl, b.date);
-  const anchor = (id) => (dayUrl ? `${dayUrl}#${id}` : '');
   const ex = b.exploited || [];
   const cr = b.critical || [];
   const adv = b.advisories || [];
@@ -357,74 +456,89 @@ export function renderEmailHtml(b, { siteUrl = '', title = '일일 보안 브리
   const [y, m, d] = [0, 5, 8].map((i) => Number(b.date.slice(i, i + (i ? 2 : 4))));
   const hhmm = b.generated_at?.slice(11, 16) || '';
   const cvssMin = Number(b.cvss_min ?? 9).toFixed(1);
-  const underline = `color:${C.ink};text-decoration:underline;`;
+  const crTotal = b.critical_total;
+  const crKnown = crTotal !== null && crTotal !== undefined;
+  const names = mastNames(title, org);
 
-  // 머리: 이름(왼쪽)·월/일(오른쪽) → 한 줄 문구 → 날짜·생성 시각
-  const head = `<table ${TBL}><tr>
-<td valign="top"><p style="margin:0;font-size:12px;line-height:18px;font-weight:bold;color:${C.ink};">${h(brandLine(title))}</p>${org ? `<p style="margin:4px 0 0;font-size:12px;line-height:18px;color:${C.headSub};">${h(org)}</p>` : ''}</td>
-<td width="90" align="right" valign="top" style="width:90px;text-align:right;"><p style="margin:0;font-size:11px;line-height:14px;font-weight:bold;color:${C.headSub};">${MONTHS[m - 1]}</p><p class="serif" style="margin:0;font-family:${SERIF};font-size:38px;line-height:44px;color:${C.ink};">${d}</p></td>
-</tr></table>
-<p class="hero" style="margin:24px 0 12px;font-size:42px;line-height:54px;font-weight:bold;letter-spacing:-1.5px;color:${C.ink};">안전한 하루를 위한<br>보안 인사이트.</p>
-<p style="margin:0;font-size:13px;line-height:20px;color:${C.headSub};">${y}년 ${m}월 ${d}일 ${weekdayKo(b.date)}요일 · ${h(hhmm)} KST${since ? ` · ${h(since)}` : ''}</p>`;
+  // 머리: 이름 | 조직 → 큰 제목, 오른쪽에 날짜(년월 / 일·요일 / 생성 시각 / 주말·연휴 뒤면 '지난 브리핑 이후')
+  const identity = names.brand
+    ? `<p style="margin:0 0 13px;font-size:14px;line-height:25px;color:${C.identity};"><strong class="brand" style="font-family:${LATIN};font-size:21px;line-height:25px;font-weight:bold;letter-spacing:-0.6px;color:${C.navy};white-space:nowrap;">${h(names.brand)}</strong>${names.unit ? ` ${MSO_PAD}${MSO_PAD}<span class="brand-gap" style="margin-left:9px;padding-left:13px;border-left:1px solid ${C.gap};font-size:13px;vertical-align:2px;white-space:nowrap;">${MSO_PAD}${h(names.unit)}</span>` : ''}</p>`
+    : '';
+  const dateLine = (text, color, extra = '') => `<p class="date-line${extra}" style="margin:0;font-size:13px;line-height:19px;color:${color};">${text}</p>`;
+  const mast = `<table ${TBL}><tr>
+<td class="mast-copy" valign="middle" style="vertical-align:middle;">${identity}<h1 class="hero" style="margin:0;font-size:45px;line-height:58px;font-weight:bold;letter-spacing:-2.3px;color:${C.hero};">${h(names.heading)}</h1></td>
+<td class="date-cell" width="149" align="right" valign="middle" style="width:149px;padding:0;vertical-align:middle;border-left:1px solid ${C.dateRule};text-align:right;">
+<p class="date-line" style="margin:0;font-size:13px;line-height:19px;font-weight:bold;color:${C.month};">${y}년 ${m}월</p>
+<p class="date-line" style="margin:0;font-size:13px;line-height:20px;font-weight:bold;color:${C.navy};"><span class="serif date-day" style="font-family:${SERIF};font-size:48px;line-height:52px;font-weight:normal;letter-spacing:-2px;color:${C.navy};">${d}</span>일 ${weekdayKo(b.date)}요일</p>
+${hhmm ? dateLine(`${h(hhmm)} KST 기준`, C.clock, ' date-clock') : ''}
+${since ? dateLine(h(since), C.clock, ' date-clock') : ''}
+</td>
+</tr></table>`;
 
   const rows = [];
   if (alert) {
-    rows.push(`<tr><td style="padding:0 0 16px;"><table ${TBL}><tr><td bgcolor="${C.alertSoft}" style="background:${C.alertSoft};border-left:4px solid ${C.hot};padding:12px 16px;">
-<p style="margin:0;font-size:12px;line-height:18px;font-weight:bold;color:${C.hot};">사이버위기 경보</p>
-<p style="margin:2px 0 0;font-size:15px;line-height:23px;font-weight:bold;">${a(alert.url, h(alert.title))}</p>
-<p style="margin:2px 0 0;font-size:12px;line-height:18px;color:${C.meta};">${h(alert.source)} · ${h(alert.date)}</p>
+    rows.push(`<tr><td style="padding:22px 0 0;"><table ${TBL}><tr><td bgcolor="${C.alertSoft}" style="background:${C.alertSoft};border-left:4px solid ${C.hotBar};padding:12px 16px;">
+<p style="margin:0;font-size:13px;line-height:19px;font-weight:bold;color:${C.hotBar};">사이버위기 경보</p>
+<p style="margin:2px 0 0;font-size:16px;line-height:24px;font-weight:bold;">${a(alert.url, h(alert.title))}</p>
+<p style="margin:2px 0 0;font-size:13px;line-height:19px;color:${C.meta};">${h(alert.source)} · ${h(alert.date)}</p>
 </td></tr></table></td></tr>`);
   }
 
-  // 건수: 실제 악용 칸은 새로 등재된 날(또는 수집 실패)만 — 없는 날은 꼬리에 '0건'
-  const cells = [
-    [anchor('news-domestic'), dom.length + intl.length, '국내·해외 뉴스', false],
-    [anchor('kisa'), adv.length, 'KISA 공지', Boolean(alert)],
-  ];
-  if (exTotal || b.failed?.kev) cells.push([anchor('exploited'), b.failed?.kev ? '–' : exTotal, '실제 악용', exTotal > 0]);
-  cells.push([anchor('critical'), b.critical_total ?? '–', `CVSS ${cvssMin} 이상`, false]);
-  rows.push(`<tr><td>${statsTable(cells)}</td></tr>`);
+  // 건수 4칸(시안 순서): 보안 뉴스 · KISA 보안 공지 · 고위험 취약점 · KEV 신규 등재. 새 경보·실제 악용이 있는 날만 숫자를 붉게
+  const domN = dom.length;
+  const intlN = intl.length;
+  rows.push(`<tr><td style="padding:23px 0;">${statsGrid([
+    ['보안 뉴스', domN + intlN, `국내 ${domN} · 해외 ${intlN}`, false],
+    ['KISA 보안 공지', b.failed?.kisa && !adv.length ? '–' : adv.length, kisaDetail(adv, b), Boolean(alert)],
+    ['고위험 취약점', crKnown ? crTotal : '–', crKnown ? `CVSS ${cvssMin} 이상` : '수집 실패', false],
+    ['KEV 신규 등재', b.failed?.kev ? '–' : exTotal, b.failed?.kev ? '수집 실패' : '이번 수집 기준', !b.failed?.kev && exTotal > 0],
+  ])}</td></tr>`);
 
   const checks = todayChecks(b);
-  if (checks.items.length) rows.push(sectionTitle(checks.title), `<tr><td>${checkTable(checks.items)}</td></tr>`);
+  if (checks.items.length) rows.push(`<tr><td>${priorityPanel(checks)}</td></tr>`);
+  if (dayUrl) rows.push(`<tr><td style="padding:10px 0 0;">${webNav(dayUrl, ex.length > 0)}</td></tr>`);
 
   // 국내 언론 기사가 많은 날은 국내·해외 통합 목록(국내 7 : 해외 3 정도), 아니면 국내 5 | 해외 5 (src/news.mjs arrangeNews)
-  rows.push(sectionTitle('주요 보안 뉴스'), `<tr><td>${b.news?.merged ? newsMerged(mergedNews(b), b) : newsColumns(dom, intl, b)}</td></tr>`);
-  rows.push(sectionTitle('보안 업데이트 권고', `KISA ${adv.length}건`), kisaBox(adv, b));
+  rows.push(sectionTitle('주요 보안 뉴스', '', 27), `<tr><td style="padding:16px 0 0;">${b.news?.merged ? newsMerged(mergedNews(b), b) : newsColumns(dom, intl, b)}</td></tr>`);
+  rows.push(sectionTitle('KISA 보안 업데이트 권고', `${adv.length}건`), kisaList(adv, b));
 
   // 오늘 브리핑의 취약점을 자산 대장과 한 번에 비교(첫 취약점 구역 위에 한 번)
   const assetAll = assetUrl && (ex.length || cr.length)
-    ? noteRow(`${a(assetHref(), '우리 자산 영향 한눈에 보기', `${underline}font-weight:bold;`)} — 오늘 브리핑의 취약점을 자산 대장과 비교합니다(사내망에서 열림)`, 0)
+    ? noteRow(`${a(assetHref(), '우리 자산 영향 한눈에 보기', C.link, 'font-weight:bold;text-decoration:underline;')} — 오늘 브리핑의 취약점을 자산 대장과 비교합니다(사내망에서 열림)`, 6)
     : '';
   if (ex.length) {
-    rows.push(sectionTitle('실제 악용 확인 취약점', `CISA KEV 신규 ${exTotal}건`));
+    rows.push(sectionTitle('실제 악용 확인 취약점', `CISA KEV 신규 ${exTotal}건`, 29));
     if (assetAll) rows.push(assetAll);
-    rows.push(`<tr><td><table ${TBL}>${ex.map((v) => vulnRow(v, { kev: true, assetHref: assetHref(v.id) })).join('')}</table></td></tr>`);
+    rows.push(riskTable(ex, assetHref, { kev: true }));
     if (b.exploited_more?.length) rows.push(noteRow(`그 밖의 신규 등재 ${b.exploited_more.length}건: ${h(b.exploited_more.map((v) => v.id).join(', '))}`));
   }
 
-  const crTotal = b.critical_total;
-  rows.push(sectionTitle('신규 고위험 취약점', crTotal === null || crTotal === undefined ? '수집 실패' : ''));
-  if (!ex.length && assetAll) rows.push(assetAll);
-  rows.push(cr.length ? `<tr><td><table ${TBL}>${cr.map((g) => vulnRow(g, { assetHref: assetHref(g.id) })).join('')}</table></td></tr>` : noteRow(h(emptyNote(b, 'critical')), 0));
-  if (cr.length && crTotal !== null && crTotal !== undefined) {
+  rows.push(sectionTitle('신규 고위험 취약점', crKnown ? '' : '수집 실패', 29));
+  if (cr.length && crKnown) {
     const more = b.critical_more?.length || 0;
-    rows.push(noteRow(`CVSS ${cvssMin} 이상 ${crTotal}건 중 주요 ${cr.length}묶음${more ? ` · 나머지 ${more}묶음은 ${dayUrl ? a(anchor('critical'), '웹 페이지', underline) : '웹 페이지'}에서 볼 수 있습니다.` : ''}`));
+    const web = dayUrl ? underline(C.link)(`${dayUrl}#critical`, '웹 페이지') : '웹 페이지';
+    rows.push(noteRow(`CVSS ${cvssMin} 이상 <strong style="color:${C.ink};">${h(crTotal)}건 중 주요 ${cr.length}묶음</strong>${more ? ` · 나머지 ${more}묶음은 ${web}에서 볼 수 있습니다.` : ''}`, 5));
   }
+  if (!ex.length && assetAll) rows.push(assetAll);
+  rows.push(cr.length ? riskTable(cr, assetHref) : noteRow(h(emptyNote(b, 'critical')), 6));
   if (extraNews) rows.push(corpNews(extraNews));
 
-  // 꼬리: 이름 → 생성·수집 상태 → KEV 0건(시안) → 표시 풀이 → 링크
+  // 꼬리: 이름 | 링크 → 생성·수집 상태 → (KEV 수집 실패) → 표시 풀이
   const ok = (b.sources || []).filter((s) => s.ok).length;
-  const small = (text, top = 4) => `<p style="margin:${top}px 0 0;font-size:11.5px;line-height:18px;color:${C.foot};">${text}</p>`;
-  const kevNote = b.failed?.kev ? 'CISA KEV 수집 실패 — 실제 악용 취약점은 웹 페이지에서 확인하세요' : exTotal ? '' : 'CISA KEV 신규 등재 0건 · 이번 수집 기준';
-  const footLink = `color:${C.foot};text-decoration:underline;`;
-  const links = [dayUrl ? a(dayUrl, '전체 브리핑 보기', footLink) : '', siteUrl ? a(`${siteUrl}/archive.html`, '지난 브리핑', footLink) : ''].filter(Boolean).join(' &nbsp;/&nbsp; ');
+  const small = (text, top = 4) => `<p style="margin:${top}px 0 0;font-size:12px;line-height:19px;color:${C.foot};">${text}</p>`;
+  const footLink = (url, text) => a(url, text, C.link, 'font-weight:bold;text-decoration:underline;');
+  const links = [dayUrl ? footLink(dayUrl, '전체 브리핑 보기') : '', siteUrl ? footLink(`${siteUrl}/archive.html`, '지난 브리핑') : ''].filter(Boolean).join(' &nbsp;·&nbsp; ');
+  const footName = names.brand
+    ? `<strong style="color:${C.foot};">${h(names.brand)}</strong>${names.unit ? ` <span style="padding-left:6px;">${MSO_PAD}${h(names.unit)}</span>` : ''}`
+    : `<strong style="color:${C.foot};">${h(title)}</strong>`;
   const foot = [
-    `<p style="margin:0;font-size:12px;line-height:18px;font-weight:bold;color:${C.foot};">${h(org || title)}</p>`,
-    small(`${b.date.replaceAll('-', '.')} ${h(hhmm)} KST 생성 · 수집 ${ok}/${(b.sources || []).length}곳 정상 · 자동 발송`),
-    kevNote ? small(h(kevNote)) : '',
+    `<table ${TBL}><tr>
+<td valign="top" style="font-size:13px;line-height:20px;color:${C.foot};">${footName}</td>
+${links ? `<td class="foot-links" align="right" valign="top" style="text-align:right;font-size:13px;line-height:20px;">${links}</td>` : ''}
+</tr></table>`,
+    small(`${b.date.replaceAll('-', '.')} ${h(hhmm)} KST 생성 · 수집 ${ok}/${(b.sources || []).length}곳 정상 · 자동 발송`, 8),
+    b.failed?.kev ? small('CISA KEV 수집 실패 — 실제 악용 취약점은 웹 페이지에서 확인하세요') : '',
     ex.length || cr.length ? small('KEV: 미국 사이버보안청(CISA)이 실제 공격에 쓰인 것을 확인한 취약점 · CVSS: 심각도 점수(10점 만점) · EPSS: 30일 안에 공격에 쓰일 확률(추정)') : '',
-    links ? `<p style="margin:10px 0 0;font-size:12px;line-height:18px;color:${C.foot};">${links}</p>` : '',
   ].filter(Boolean).join('\n');
 
   return `<!doctype html>
@@ -436,18 +550,18 @@ export function renderEmailHtml(b, { siteUrl = '', title = '일일 보안 브리
 ${MSO_CSS}
 </head>
 <body bgcolor="${C.page}" style="margin:0;padding:0;background:${C.page};">
-<table ${TBL} bgcolor="${C.page}" style="background:${C.page};"><tr><td class="outer" align="center" style="padding:28px 0;">
+<table ${TBL} bgcolor="${C.page}" style="background:${C.page};"><tr><td class="outer" align="center" style="padding:28px 12px;">
 <!--[if mso]><table role="presentation" width="${MSO_W}" align="center" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
-<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="mailw" bgcolor="${C.card}" style="max-width:${MAIL_W}px;width:100%;background:${C.card};font-family:${FONT};color:${C.ink};word-break:keep-all;overflow-wrap:anywhere;">
-<tr><td class="pad" bgcolor="${C.head}" style="background:${C.head};padding:30px ${PAD}px 26px;">
-${head}
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="mailw" bgcolor="${C.paper}" style="max-width:${MAIL_W}px;width:100%;background:${C.paper};font-family:${FONT};color:${C.navy};word-break:keep-all;overflow-wrap:anywhere;">
+<tr><td class="pad mast" bgcolor="${C.mast}" style="background:${C.mast};border-top:5px solid ${C.navy};padding:27px ${PAD}px 29px;">
+${mast}
 </td></tr>
-<tr><td class="pad" style="padding:24px ${PAD}px 34px;">
+<tr><td class="pad" style="padding:0 ${PAD}px 34px;">
 <table ${TBL}>
 ${rows.join('\n')}
 </table>
 </td></tr>
-<tr><td class="pad" bgcolor="${C.soft}" style="background:${C.soft};padding:22px ${PAD}px 24px;">
+<tr><td class="pad" bgcolor="${C.mast}" style="background:${C.mast};border-top:1px solid ${C.footRule};padding:16px ${PAD}px 18px;">
 ${foot}
 </td></tr>
 </table>
@@ -465,7 +579,10 @@ export function mailTitle(cfg, env = process.env) {
   return secret('MAIL_TITLE', env) || cfg.site.title;
 }
 
-/** (선택) Secret MAIL_ORG: 메일 머리 이름 아래·꼬리에 쓰는 조직 이름(예: '○○ · ○○센터'). 저장소·웹·카카오에는 남기지 않는다. */
+/**
+ * (선택) Secret MAIL_ORG: 메일 머리·꼬리에 쓰는 '회사 · 조직' 이름(예: '○○ · ○○센터' → '○○ ○○팀 | ○○센터', mastNames).
+ * 저장소·웹·카카오에는 남기지 않는다.
+ */
 export function mailOrg(env = process.env) {
   return secret('MAIL_ORG', env);
 }

@@ -292,7 +292,7 @@ export async function collectBrief(cfg, { now = new Date(), date = kstDate(now),
     window: { hours: win.hours, from: windowStart.toISOString(), to: now.toISOString(), since_brief: win.sinceBrief, since_at: win.sinceAt },
     engine: summarizer.ok ? summarizer.engine : 'rules',
     overview: '',
-    // 메일 첫 화면 '오늘 먼저 확인할 일'(Claude 요약이 있을 때만, 없으면 메일이 요약 문장을 대신 보인다)
+    // 메일 첫 화면 '오늘의 우선 점검'(Claude 요약이 있을 때만, 없으면 메일이 요약 문장을 대신 보인다)
     actions: draft.actions || [],
     cvss_min: cfg.vulns.cvss_min,
     critical_total: failed.nvd ? null : critical.total,

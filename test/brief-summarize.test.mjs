@@ -81,14 +81,22 @@ test('Claude 응답 반영: 모르는 ID·지어낸 CVE 는 버리고 나머지�
   const out = {
     overview: 'GitLab CE/EE 를 먼저 패치하세요.',
     news: [
-      { id: 'n-bbbb2222', region: 'international', title_ko: 'Arista VeloCloud 제로데이 악용', summary_ko: 'SQL 삽입 취약점이 실제 공격에 쓰임.' },
+      { id: 'n-bbbb2222', region: 'international', title_ko: 'Arista VeloCloud 제로데이 악용', summary_ko: 'SQL 삽입 취약점이 실제 공격에 쓰임.', check: '해당 장비 사용·외부 노출 여부 확인' },
       { id: 'n-zzzz', region: 'domestic', title_ko: '없는 기사', summary_ko: '-' },
-      { id: 'n-aaaa1111', region: 'domestic', title_ko: '놀유니버스 임직원 정보 유출', summary_ko: 'CVE-2099-0001 악용 확인' },
+      { id: 'n-aaaa1111', region: 'domestic', title_ko: '놀유니버스 임직원 정보 유출', summary_ko: 'CVE-2099-0001 악용 확인', check: 'CVE-2099-0002 패치 확인' },
     ],
     vulns: [
       { id: 'CVE-2026-110264', title_ko: 'GitLab 원격 코드 실행', target: 'GitLab CE/EE 18.11.13 미만', impact: '원격·비인증', action: '18.11.13 이상으로 업데이트' },
       { id: 'CVE-2026-96656', title_ko: 'Plex', target: 't', impact: 'CVE-2030-1111 연계', action: 'a' },
       { id: 'CVE-0000-0000', title_ko: 'x', target: 'x', impact: 'x', action: 'x' },
+    ],
+    actions: [
+      { title: 'GitLab 패치 확인', detail: '18.11.13 미만 사용 여부 검토' },
+      { title: '지어낸 항목', detail: 'CVE-2099-0003 확인' },
+      { title: 'GitLab 패치 확인', detail: '같은 일' },
+      { title: 'Plex Media Server 업데이트 확인', detail: 'CISA 기한 전 적용 여부 점검' },
+      { title: '원격 접속 장비 점검', detail: '경보 상향에 따른 외부 노출 확인' },
+      { title: '넷째는 버림', detail: '3개까지' },
     ],
   };
   const r = applySummary(d, out, { domesticLimit: 5, internationalLimit: 5 });
@@ -99,6 +107,14 @@ test('Claude 응답 반영: 모르는 ID·지어낸 CVE 는 버리고 나머지�
   assert.equal(d.critical[0].ko.title, 'GitLab 원격 코드 실행');
   assert.equal(d.exploited[0].ko.title, 'Plex Media Server 파일 이름·경로 외부 제어 취약점', '지어낸 CVE 가 든 항목은 규칙 문안 유지');
   assert.ok(r.rejected.includes('news:n-zzzz') && r.rejected.includes('vuln:CVE-0000-0000') && r.rejected.includes('vuln:CVE-2026-96656'));
+  // 확인 포인트: 지어낸 CVE 가 든 것은 버림
+  assert.equal(d.news.international[0].check_ko, '해당 장비 사용·외부 노출 여부 확인');
+  assert.equal(d.news.domestic[0].check_ko, undefined);
+  // 오늘 먼저 확인할 일: 지어낸 CVE·같은 제목은 버리고 앞에서부터 3개
+  assert.deepEqual(d.actions.map((x) => x.title), ['GitLab 패치 확인', 'Plex Media Server 업데이트 확인', '원격 접속 장비 점검']);
+  assert.equal(d.actions[0].detail, '18.11.13 미만 사용 여부 검토');
+  assert.equal(r.applied.actions, 3);
+  assert.ok(r.rejected.includes('action'));
 });
 
 test('Claude 입력 자료: 기사·취약점만 담고 길이를 줄인다', () => {

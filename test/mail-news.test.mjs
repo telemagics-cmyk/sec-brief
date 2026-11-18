@@ -77,11 +77,11 @@ test('메일 본문: 관심 뉴스는 신규 고위험 취약점 다음, 꼬리�
   const extraNews = await fetchMailNews(brief, { env: { MAIL_NEWS_KEYWORD: KW }, now: NOW, getFeed: feed().fn, limit: 2 });
   const html = renderEmailHtml(brief, { siteUrl: 'https://u.github.io/sec-brief', extraNews });
   const at = (s) => html.indexOf(s);
-  assert.ok(at('신규 고위험 취약점') > 0 && at(`${KW} 관련 뉴스`) > at('신규 고위험 취약점'), '고위험 다음');
-  assert.ok(at(`${KW} 관련 뉴스`) < at('자동 발송'), '꼬리말 앞');
+  assert.ok(at('신규 고위험 취약점') > 0 && at(`${KW} 소식`) > at('신규 고위험 취약점'), '고위험 다음');
+  assert.ok(at(`${KW} 소식`) < at('자동 발송'), '꼬리말 앞');
   assert.match(html, /다경제 외 2곳 · 10\.28 12:00/);
   assert.match(html, /그 밖의 1건은 <a href="https:\/\/news\.google\.com\/search\?q=/);
-  assert.ok(!renderEmailHtml(brief, {}).includes('관련 뉴스'), '검색어가 없으면 칸도 없음');
+  assert.ok(!renderEmailHtml(brief, {}).includes('소식'), '검색어가 없으면 칸도 없음');
   assert.match(renderEmailHtml(brief, { extraNews: { keyword: KW, items: [], total: 0 } }), /새 기사가 없습니다/);
   assert.match(renderEmailHtml(brief, { extraNews: { keyword: KW, items: [], total: 0, error: '기사를 가져오지 못했습니다' } }), /기사를 가져오지 못했습니다/);
 });
@@ -99,10 +99,10 @@ test('발송: 브리핑 메일에만 붙고(글자 본문 포함) 연결 확인 
   };
   const f = feed();
   await sendBriefMail(cfg, brief, { env, transportOverride, feedOverride: f.fn, log: () => {} });
-  assert.ok(sent[0].html.includes(`${KW} 관련 뉴스`));
-  assert.match(sent[0].text, new RegExp(`## ${KW} 관련 뉴스\\n\\n- 가나다전지, 유럽 배터리사 양극재 공급 계약 체결 \\(다경제 외 2곳\\) https://c\\.example/1`));
+  assert.ok(sent[0].html.includes(`${KW} 소식`));
+  assert.match(sent[0].text, new RegExp(`## ${KW} 소식\\n\\n- 가나다전지, 유럽 배터리사 양극재 공급 계약 체결 \\(다경제 외 2곳\\) https://c\\.example/1`));
   await sendBriefMail(cfg, null, { env, test: true, transportOverride, feedOverride: f.fn, log: () => {} });
-  assert.ok(!sent[1].html.includes('관련 뉴스'));
+  assert.ok(!sent[1].html.includes('소식'));
   assert.equal(f.urls.length, 1, '연결 확인 때는 찾지 않음');
   rmSync(dir, { recursive: true, force: true });
 });

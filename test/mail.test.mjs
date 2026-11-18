@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { after, before, test } from 'node:test';
 import { renderMarkdown, sinceNote } from '../src/brief.mjs';
-import { explainMailError, mailSettings, mailSubject, mailTitle, renderEmailHtml, sendBriefMail, sentences } from '../src/mail.mjs';
+import { brandLine, explainMailError, mailOrg, mailSettings, mailSubject, mailTitle, renderEmailHtml, sendBriefMail, sentences } from '../src/mail.mjs';
 import { msUntilKst } from '../src/util.mjs';
 import { startFakeSmtp } from './fake-smtp.mjs';
 import { sampleBrief } from './fixtures.mjs';
@@ -52,16 +52,16 @@ test('메일 본문: 웹과 같은 순서, 글 이스케이프, javascript: 주�
   b.news.domestic[0].title = '<img src=x onerror=alert(1)> 해킹';
   b.news.domestic[0].url = 'javascript:alert(1)';
   const html = renderEmailHtml(b, { siteUrl: 'https://u.github.io/sec-brief' });
-  const heads = [...html.matchAll(/<h2[^>]*>([^<]+)/g)].map((m) => m[1].trim());
-  assert.deepEqual(heads, ['국내 보안 뉴스', '해외 보안 뉴스', 'KISA 공지', '악용 확인 취약점', '신규 고위험 취약점']);
+  const heads = [...html.matchAll(/<h[23][^>]*>([^<]+)/g)].map((m) => m[1].trim());
+  assert.deepEqual(heads, ['주요 보안 뉴스', '국내 보안 뉴스', '해외 보안 뉴스', '보안 업데이트 권고', '실제 악용 확인 취약점', '신규 고위험 취약점']);
   const tiles = [...html.matchAll(/class="tile-label[^"]*"[^>]*>([^<]+)/g)].map((m) => m[1]);
-  assert.deepEqual(tiles, ['국내 뉴스', '해외 뉴스', 'KISA 공지', '악용 확인', '고위험'], '건수 칸도 같은 순서(휴대폰에서 한 줄)');
+  assert.deepEqual(tiles, ['국내·해외 뉴스', 'KISA 공지', '실제 악용', 'CVSS 9.0 이상'], '건수도 같은 순서');
   assert.ok(!html.includes('<img src=x'));
   assert.ok(html.includes('&lt;img src=x onerror=alert(1)&gt; 해킹'));
   assert.ok(!/href="javascript:/i.test(html));
   assert.ok(html.includes('href="https://u.github.io/sec-brief/b/2026-10-23.html#kisa"'), '건수 칸은 웹 페이지 섹션으로 연결');
   assert.ok(!/<script|<link |<img /i.test(html), '메일에는 스크립트·외부 스타일·이미지 없음');
-  // <style> 은 어두운 화면용 덮어쓰기·Outlook 글꼴뿐(외부 자원·사용자 글 없음)
+  // <style> 은 휴대폰 배치·Outlook 보정뿐(외부 자원·사용자 글 없음)
   const css = [...html.matchAll(/<style>([\s\S]*?)<\/style>/g)].map((m) => m[1]).join('\n');
   assert.ok(!/url\(|@import|expression|<|>/i.test(css), css);
   assert.equal(mailSubject(b), '[경보] [일일 보안 브리핑] 10.23(금)', '날짜까지만(건수 없음)');
@@ -132,16 +132,25 @@ test('발송 시각 기다리기 계산 (KST)', () => {
 test('주말·연휴 뒤 브리핑은 메일·Markdown 머리에 "지난 브리핑 이후"를 적는다', () => {
   const b = sampleBrief({ date: '2026-10-26', window: { hours: 73, since_brief: '2026-10-23' } });
   assert.equal(sinceNote(b), '10.23(금) 브리핑 이후');
-  assert.match(renderEmailHtml(b, {}), /KST 생성 · 10\.23\(금\) 브리핑 이후/);
+  assert.match(renderEmailHtml(b, {}), /KST · 10\.23\(금\) 브리핑 이후<\/p>/);
   assert.match(renderMarkdown(b), /KST · 10\.23\(금\) 브리핑 이후\n/);
   assert.equal(sinceNote(sampleBrief({ date: '2026-10-27', window: { since_brief: '2026-10-26' } })), '', '바로 전날 브리핑에 이어지면 적지 않음');
   assert.equal(sinceNote(sampleBrief()), '', '기간 정보가 없는 브리핑');
 });
 
-test('메일 본문 맨 위 이름은 글자 간격을 벌리지 않는다(영문 약어가 떨어져 보이지 않게)', () => {
+test('메일 머리 이름: MAIL_TITLE 로 영문 이름 줄, 글자 사이는 벌리지 않음, 조직 이름(MAIL_ORG)은 있을 때만', () => {
+  assert.equal(brandLine('ABC 일일 보안 브리핑'), 'ABC / DAILY SECURITY BRIEF');
+  assert.equal(brandLine('일일 보안 브리핑'), 'DAILY SECURITY BRIEF');
+  assert.equal(brandLine('주간 보안 소식'), '주간 보안 소식');
   const html = renderEmailHtml(sampleBrief(), { title: 'ABC 일일 보안 브리핑' });
-  assert.match(html, />ABC 일일 보안 브리핑<\/p>/);
-  assert.ok(!html.includes('letter-spacing'));
+  assert.match(html, /<p style="margin:0;font-size:12px;line-height:18px;font-weight:bold;color:#243747;">ABC \/ DAILY SECURITY BRIEF<\/p><\/td>/, '조직 이름이 없으면 이름 줄만');
+  // 영문 약어가 'G OC' 처럼 떨어져 보이지 않게 벌리지 않는다(큰 문구만 조금 좁힘)
+  assert.ok(!/letter-spacing:\s*(?!-)/.test(html));
+  assert.match(html, /font-weight:bold;color:#5F6F7B;">ABC 일일 보안 브리핑<\/p>/, '꼬리에는 메일 이름');
+  const withOrg = renderEmailHtml(sampleBrief(), { title: 'ABC 일일 보안 브리핑', org: 'ABC · 운영센터' });
+  assert.match(withOrg, /font-weight:bold;color:#5F6F7B;">ABC · 운영센터<\/p>/, '꼬리에는 조직 이름');
+  assert.equal(mailOrg({ MAIL_ORG: '  ABC · 운영센터 ' }), 'ABC · 운영센터');
+  assert.ok(!mailOrg({}));
 });
 
 test('메일 이름: Secret MAIL_TITLE 이 있으면 그것, 없으면 site.title (웹·카카오와 별개)', () => {
@@ -162,110 +171,112 @@ test('메일에 숨김 글·보이지 않는 문자를 넣지 않는다(스팸 �
   assert.equal(html.split('오늘의 요약 문장입니다.').length - 1, 1, '요약은 보이는 곳에 한 번만');
 });
 
-test('메일 디자인: Outlook 용 표 뼈대, 어두운 화면 선언', () => {
+test('메일 디자인: 시안의 표 뼈대 — 최대 880px(Outlook(Windows) 680 한 단), 밝은 화면 전용, 휴대폰은 위아래로', () => {
   const b = sampleBrief();
   b.overview = '오늘의 요약 문장입니다. 패치가 시급합니다.';
   const html = renderEmailHtml(b, { siteUrl: 'https://u.github.io/sec-brief', title: 'OO팀 일일 보안 브리핑' });
-  // Outlook(Windows) 은 div 의 최대 폭을 무시하므로 680px 표로 감싼다
   assert.match(html, /<!--\[if mso\]><table role="presentation" width="680"/);
-  assert.match(html, /max-width:960px/, '1920×1080 웹메일에 맞춘 최대 폭');
+  assert.match(html, /width="100%" class="mailw" bgcolor="#FFFFFF" style="max-width:880px;/);
+  // Word(Outlook Windows) 는 max-width 를 고정 폭처럼 써서 넓히면 좁은 읽기 창에서 가로로 밀린다 → Outlook 에서만 680
+  assert.match(html, /<!--\[if mso\]><style>[^<]*\.mailw\{max-width:680px !important;\}/);
   assert.ok(!/<div style="max-width/.test(html), '폭을 div 로 정하지 않음');
-  assert.match(html, /<meta name="color-scheme" content="light dark">/);
-  assert.match(html, /@media \(prefers-color-scheme: dark\)/);
-  assert.match(html, /<p [^>]*>오늘의 요약<\/p>/, '요약 상자에 이름표');
+  assert.match(html, /<meta name="color-scheme" content="light">/);
+  assert.ok(!/prefers-color-scheme/.test(html), '시안대로 밝은 화면 전용');
+  // 국내|해외: 표 두 칸(어느 웹메일이든 나란히), 휴대폰은 @media 로 위아래, Outlook(Windows)은 두 칸 사이에서 행을 나눠 위아래
+  assert.match(html, /<td class="ncol" valign="top" style="width:50%;[^"]*">[\s\S]*<!--\[if mso\]><\/tr><tr><!\[endif\]-->\s*<td class="ncol ncol2"/);
+  assert.match(html, /@media \(max-width: 640px\) \{[\s\S]*?\.ncol \{ display: block !important; width: 100% !important;/);
+  assert.match(html, /<!--\[if mso\]><style>[^<]*\.ncol\{width:100% !important;padding:0 !important;\}/);
+  assert.ok(html.indexOf('국내 보안 뉴스') < html.indexOf('해외 보안 뉴스'), '쌓였을 때 국내 → 해외');
+  assert.match(html, /<h2 [^>]*>오늘의 요약<\/h2>/, '확인할 일이 없는 날은 요약 문장');
 });
 
-test('메일 디자인: 국내 기사는 제목 한 번, 번역한 해외 기사만 원문 제목, KISA 는 짧은 날짜', () => {
+test('메일 첫 화면: 이름·월일·한 줄 문구, 건수(실제 악용 칸은 있는 날만), 오늘 먼저 확인할 일', () => {
+  const b = sampleBrief(); // 경보가 바뀐 날, 악용 1건 + 그 밖 2건
+  b.actions = [
+    { title: 'Plex Media Server 패치 확인', detail: 'CISA 기한 11.10 전 업데이트 여부 점검' },
+    { title: 'GitLab 버전 확인', detail: '18.11.13 미만 사용 여부 검토' },
+    { title: '원격 접속 장비 점검', detail: '사이버위기 경보 상향에 따른 외부 노출 확인' },
+  ];
+  const html = renderEmailHtml(b, { siteUrl: 'https://u.github.io/sec-brief', title: 'OO팀 일일 보안 브리핑', org: 'OO회사 · OO센터' });
+  assert.match(html, />OO팀 \/ DAILY SECURITY BRIEF<\/p><p [^>]*>OO회사 · OO센터<\/p>/);
+  assert.match(html, />OCT<\/p><p class="serif" [^>]*>23<\/p>/);
+  assert.match(html, /<p class="hero" [^>]*>안전한 하루를 위한<br>보안 인사이트\.<\/p>/);
+  assert.match(html, />2026년 10월 23일 금요일 · 06:41 KST<\/p>/);
+  // 경보 → 건수 → 확인할 일 → 뉴스
+  const at = (s) => html.indexOf(s);
+  assert.ok(at('사이버위기 경보</p>') > 0 && at('사이버위기 경보</p>') < at('class="tile-label"'));
+  assert.ok(at('class="tile-label"') < at('오늘 먼저 확인할 3가지') && at('오늘 먼저 확인할 3가지') < at('주요 보안 뉴스'));
+  const tiles = [...html.matchAll(/<span style="[^"]*color:(#[0-9A-F]{6});">([^<]+)<\/span><br><span class="tile-label"[^>]*>([^<]+)<\/span>/g)].map((m) => [m[3], m[2], m[1]]);
+  assert.deepEqual(tiles, [['국내·해외 뉴스', '2', '#243747'], ['KISA 공지', '3', '#9C351C'], ['실제 악용', '3', '#9C351C'], ['CVSS 9.0 이상', '69', '#243747']]);
+  assert.ok(html.includes('href="https://u.github.io/sec-brief/b/2026-10-23.html#exploited"'), '건수는 웹 페이지 구역으로');
+  const items = [...html.matchAll(/<p style="margin:0;font-size:15px;line-height:24px;font-weight:bold;color:#243747;">([^<]+)<\/p><p [^>]*>([^<]+)<\/p>/g)].map((m) => [m[1], m[2]]);
+  assert.deepEqual(items, b.actions.map((x) => [x.title, x.detail]));
+  assert.deepEqual([...html.matchAll(/color:#9A783C;">(0\d)<\/p>/g)].map((m) => m[1]).slice(0, 3), ['01', '02', '03']);
+  // 확인할 일이 없으면(규칙 기반 날·예전 브리핑) 요약 문장을 '오늘의 요약'으로, 첫 문장만 굵게
+  const old = sampleBrief();
+  old.overview = '가장 시급한 일입니다. 둘째 문장입니다.';
+  const h2 = renderEmailHtml(old, {});
+  assert.ok(h2.includes('>오늘의 요약<') && !h2.includes('오늘 먼저 확인할'));
+  assert.match(h2, /line-height:24px;font-weight:bold;color:#243747;">가장 시급한 일입니다\.<\/p>/);
+  assert.match(h2, /line-height:24px;color:#243747;">둘째 문장입니다\.<\/p>/);
+  // 악용이 없는 날: 건수 칸 3개, 꼬리에 'KEV 0건'
+  const calm = sampleBrief({ exploited: [], exploited_more: [] });
+  const h3 = renderEmailHtml(calm, {});
+  assert.deepEqual([...h3.matchAll(/class="tile-label"[^>]*>([^<]+)/g)].map((m) => m[1]), ['국내·해외 뉴스', 'KISA 공지', 'CVSS 9.0 이상']);
+  assert.ok(h3.includes('CISA KEV 신규 등재 0건 · 이번 수집 기준') && !h3.includes('실제 악용 확인 취약점'));
+});
+
+test('메일 뉴스·KISA: 금색 번호·제목 한 번·매체·시각·요약·확인 포인트, KISA 는 굵은 제목과 짧은 날짜', () => {
   const b = sampleBrief();
-  b.news.domestic[0] = { ...b.news.domestic[0], lang: 'ko', title: '원래 국내 제목', title_ko: '다듬은 국내 제목' };
+  b.news.domestic[0] = { ...b.news.domestic[0], lang: 'ko', title: '원래 국내 제목', title_ko: '다듬은 국내 제목', check_ko: 'SSO·계정 접속 로그 검토' };
   b.news.international[0] = { ...b.news.international[0], lang: 'en', title: 'Original English Title', title_ko: '번역한 제목' };
   const html = renderEmailHtml(b, {});
   assert.ok(html.includes('다듬은 국내 제목') && !html.includes('원래 국내 제목'), '국내 기사 제목은 한 번만');
-  assert.ok(html.includes('번역한 제목') && html.includes('Original English Title'), '해외 기사는 원문 제목도');
+  assert.ok(html.includes('번역한 제목') && !html.includes('Original English Title'), '메일은 번역 제목만(원문 제목은 웹 페이지에)');
   assert.match(html, /보안뉴스 외 2곳 · \d\d\.\d\d \d\d:\d\d/, '매체·시각');
-  assert.match(html, /· 10\.23<\/span><\/td>/, 'KISA 날짜는 제목 바로 옆 MM.DD(넓은 폭에서 멀리 떨어지지 않게)');
-  assert.ok(!/KISA 보안공지 ·/.test(html), '보안공지 출처는 되풀이하지 않음');
+  assert.match(html, /font-weight:bold;color:#8B6B35;">확인 포인트 · SSO·계정 접속 로그 검토<\/p>/);
+  assert.equal(html.split('확인 포인트 ·').length - 1, 1, '확인 포인트가 없는 기사는 줄도 없음');
+  assert.match(html, />국내 보안 뉴스 <span [^>]*>1건<\/span><\/h3>/);
+  // KISA: 보안공지 출처는 되풀이하지 않고 날짜는 MM.DD, 경보단계 등만 작은 표시
+  assert.ok(!/KISA 보안공지 ·/.test(html));
+  assert.match(html, />Laravel 제품 보안 업데이트 권고<\/a> <span [^>]*>· 10\.23<\/span><\/p>/);
+  assert.match(html, /상향 조정<\/a> <span [^>]*>경보단계<\/span> <span [^>]*>· 10\.22<\/span>/);
+  assert.match(html, />보안 업데이트 권고 <span [^>]*>KISA 3건<\/span><\/h2>/);
 });
 
-test('메일 디자인: 취약점 표시는 색 있는 칸(KEV·CVSS 9 이상 빨강), 조치는 굵게', () => {
-  const raw = renderEmailHtml(sampleBrief(), {});
-  // Outlook(Windows) 에서만 보이는 안쪽 빈칸: 표시·단추마다 앞뒤로
+test('메일 취약점: 왼쪽 표시(KEV 진하게·CVSS), 제목 → NVD, 영향·조치(금색), 번호·다른 표시·링크 한 줄', () => {
+  const raw = renderEmailHtml(sampleBrief(), { assetUrl: 'https://asset.example:4800' });
+  // Outlook(Windows) 에서만 보이는 안쪽 빈칸: 표시마다 앞뒤로
   const pad = '<!--[if mso]>&nbsp;<![endif]-->';
-  assert.ok(raw.includes(`>${pad}KEV${pad}</span>`));
-  assert.ok(raw.includes(`>${pad}NVD${pad}</a>`));
-  assert.match(raw, /<\/span> <span class="p-/, '표시 사이에 빈칸(Outlook 에서 붙지 않게)');
-  const html = raw.split(pad).join('').replace(/<\/span> <span/g, '</span><span');
-  assert.match(html, /class="p-hot"[^>]*>KEV<\/span>/);
-  assert.match(html, /class="p-hot"[^>]*>CVSS 10\.0<\/span>/);
-  assert.match(html, /class="p-warn"[^>]*>기한 2026-11-10<\/span>/);
-  assert.match(html, /class="p-note"[^>]*>KISA 권고<\/span>/);
-  assert.match(html, />조치<\/td>\n<td class="ink" [^>]*font-weight:bold;">즉시 패치<\/td>/);
-  // 악용 카드는 KEV 가 맨 앞, EPSS(참고)는 맨 뒤
-  const first = /<div>(<span class="p-\w+"[^>]*>[^<]+<\/span>)+<\/div>/.exec(html)[0];
-  const labels = [...first.matchAll(/>([^<]+)<\/span>/g)].map((m) => m[1]);
-  assert.deepEqual(labels, ['KEV', 'CVSS 8.6', '기한 2026-11-10', 'EPSS 0.8%']);
+  assert.ok(raw.includes(`background:#9C351C;">${pad}KEV${pad}</span>`), 'KEV 는 진한 칸');
+  assert.ok(raw.includes(`background:#FFF0E9;">${pad}CVSS 10.0${pad}</span>`));
+  const html = raw.split(pad).join('');
+  assert.match(html, /<a href="https:\/\/nvd\.nist\.gov\/vuln\/detail\/CVE-2026-96656"[^>]*>Plex Media Server 파일 이름·경로 외부 제어 취약점<\/a>/);
+  assert.match(html, /color:#8B6B35;">조치 · 즉시 패치<\/p>/);
+  // 웹과 같은 순서의 나머지 표시(왼쪽 칸과 같은 것은 빼고) · 벤더 공지 · 우리 자산 영향
+  assert.match(html, /CVE-2026-96656<\/span> · CVSS 8\.6 · 기한 2026-11-10 · EPSS 0\.8% · <a href="https:\/\/plex\.example\/adv"[^>]*>벤더 공지<\/a> · <a href="https:\/\/asset\.example:4800\/#\/vuln\?brief=2026-10-23&amp;cve=CVE-2026-96656"[^>]*>우리 자산 영향<\/a>/);
+  assert.match(html, /CVE-2026-110264<\/span> · KISA 권고 · 관심: GitLab · EPSS 0\.5%/);
+  assert.match(html, />실제 악용 확인 취약점 <span [^>]*>CISA KEV 신규 3건<\/span><\/h2>/);
+  assert.match(html, /그 밖의 신규 등재 2건: CVE-2026-1, CVE-2026-2/);
+  assert.match(html, /CVSS 9\.0 이상 69건 중 주요 1묶음 · 나머지 1묶음은 웹 페이지에서 볼 수 있습니다\./);
+  assert.match(html, /우리 자산 영향 한눈에 보기<\/a> — 오늘 브리핑의 취약점을 자산 대장과 비교합니다/);
+  assert.equal(html.split('우리 자산 영향 한눈에 보기').length - 1, 1, '한 번만');
+  assert.match(html, /KEV: 미국 사이버보안청\(CISA\)[^<]*CVSS: [^<]*EPSS: /, '표시 풀이는 꼬리에');
 });
 
 test('메일 크기: 평소 분량이면 Gmail 이 뒷부분을 자르는 크기(약 102KB)보다 넉넉히 작다', () => {
   const b = sampleBrief();
   const long = '가'.repeat(150);
-  b.news.domestic = Array.from({ length: 5 }, (_, i) => ({ ...b.news.domestic[0], id: `d${i}`, summary_ko: long, outlets: Array.from({ length: 20 }, (_, k) => `매체${k}`) }));
-  b.news.international = Array.from({ length: 5 }, (_, i) => ({ ...b.news.international[0], id: `i${i}`, summary_ko: long }));
+  b.news.domestic = Array.from({ length: 5 }, (_, i) => ({ ...b.news.domestic[0], id: `d${i}`, summary_ko: long, check_ko: '나'.repeat(36), outlets: Array.from({ length: 20 }, (_, k) => `매체${k}`) }));
+  b.news.international = Array.from({ length: 5 }, (_, i) => ({ ...b.news.international[0], id: `i${i}`, summary_ko: long, check_ko: '다'.repeat(36) }));
   b.advisories = Array.from({ length: 10 }, (_, i) => ({ ...b.advisories[1], id: `a${i}`, url: `https://www.boho.or.kr/${i}` }));
-  // 최악에 가까운 날: KEV 신규 10건 + 자산 단추
+  b.actions = Array.from({ length: 3 }, (_, i) => ({ title: `확인할 일 ${i}`.padEnd(24, '라'), detail: '마'.repeat(48) }));
+  // 최악에 가까운 날: KEV 신규 10건 + 자산 링크
   b.exploited = Array.from({ length: 10 }, (_, i) => ({ ...b.exploited[0], id: `CVE-2026-${i + 2}` }));
   b.critical = [b.critical[0], { ...b.critical[0], id: 'CVE-2026-3' }, { ...b.critical[0], id: 'CVE-2026-4' }];
   const extraNews = { keyword: '가나다전지', total: 9, items: Array.from({ length: 5 }, (_, i) => ({ title: `가나다전지 소식 ${i}`, url: `https://n.example/${i}`, outlet: '가신문', outlets: 3, published: '2026-10-28T01:00:00Z' })) };
-  const size = Buffer.byteLength(renderEmailHtml(b, { siteUrl: 'https://u.github.io/sec-brief', extraNews, assetUrl: 'https://asset.example:4800' }));
+  const size = Buffer.byteLength(renderEmailHtml(b, { siteUrl: 'https://u.github.io/sec-brief', extraNews, assetUrl: 'https://asset.example:4800', org: 'OO회사 · OO센터' }));
   assert.ok(size < 90 * 1024, `${Math.round(size / 1024)}KB`);
-});
-
-test('메일 폭: 최대 960px, 두 단 묶음은 칸 폭 기준(좁으면·calc 를 모르면 한 단), Outlook(Windows)은 680 한 단', () => {
-  const html = renderEmailHtml(sampleBrief(), { siteUrl: 'https://u.github.io/sec-brief' });
-  const cols = [...html.matchAll(/<div class="col" style="([^"]+)">/g)].map((m) => m[1]);
-  assert.equal(cols.length, 2, '국내·해외 두 칸(카드 한 장·공지 3건은 묶지 않음)');
-  // 화면이 아닌 칸 폭 기준(웹메일의 @media 는 브라우저 창 폭이라 좁은 읽기 창에서 깨짐), 곱셈·괄호 없는 calc, 앞에 width:100%.
-  // 두 칸을 양 끝에 붙여(float) 남는 폭이 가운데 간격 — 칸 안에 간격용 여백이 없어 한 단으로 쌓였을 때 좁아지는 칸이 없다
-  assert.equal(cols[0], 'float:left;display:inline-block;vertical-align:top;width:100%;min-width:48.7%;max-width:100%;width:calc(840000px - 100000%);');
-  assert.equal(cols[1], cols[0].replace('float:left', 'float:right'), '두 칸의 폭 규칙은 같다');
-  assert.ok(!/@media \(max-width/.test(html), '화면 폭 @media 로 배치를 정하지 않음');
-  assert.ok(!/colgap|padding:0 24px 0 0/.test(html), '칸 안에 간격용 여백 없음');
-  assert.match(html, /<\/table><\/div><div class="col"/, '두 칸 사이에 빈칸·줄바꿈 없음(float 을 지우는 곳에서도 나란히)');
-  assert.ok(html.indexOf('국내 보안 뉴스') < html.indexOf('해외 보안 뉴스'), '쌓였을 때 국내 → 해외');
-  assert.match(html, /<!--\[if mso\]><table role="presentation" width="680"/, 'Outlook(Windows) 은 680 한 단');
-  // Word(Outlook Windows) 는 max-width 를 고정 폭처럼 써서 960 이면 좁은 읽기 창에서 가로로 밀린다 → Outlook 에서만 680 으로 덮어씀
-  assert.match(html, /width="100%" class="mailw" style="max-width:960px;/);
-  assert.match(html, /<!--\[if mso\]><style>[^<]*\.mailw\{max-width:680px !important;\}/);
-});
-
-test('메일 첫 화면: 건수 띠는 머리 띠 아래 한 줄(악용·경보 있는 칸만 색), 요약은 문장마다 한 줄·첫 문장 굵게', () => {
-  const b = sampleBrief(); // 경보가 바뀐 날, 악용 1건 + 그 밖 2건
-  b.overview = 'A 장비를 가장 먼저 점검해야 합니다. CVSS 9.8 취약점(CVE-2026-1)도 패치하세요. 미국 U.S. 기관의 경고도 있었습니다.';
-  const html = renderEmailHtml(b, { siteUrl: 'https://u.github.io/sec-brief' });
-  const strip = /<td class="soft"[^>]*>\s*<table[^>]*><tr>([\s\S]*?)<\/tr><\/table>\s*<\/td><\/tr>\s*<tr><td class="card"/.exec(html)[1];
-  const cells = [...strip.matchAll(/<td class="line([^"]*)"[^>]*>[\s\S]*?<span class="(\w+)"[^>]*>([^<]+)<\/span><br><span class="tile-label muted"[^>]*>([^<]+)<\/span>/g)].map((m) => [m[4], m[3], m[1].trim(), m[2]]);
-  assert.deepEqual(cells, [
-    ['국내 뉴스', '1', '', 'ink'],
-    ['해외 뉴스', '1', '', 'ink'],
-    ['KISA 공지', '3', 'p-warn', 'warn'],
-    ['악용 확인', '3', 'p-hot', 'hot'],
-    ['고위험', '69', '', 'ink'],
-  ]);
-  // 요약: 가장 시급한 조치(첫 문장)만 굵게, 소수점·영문 약어에서는 나누지 않음
-  const box = /오늘의 요약<\/p>\s*<table[^>]*>([\s\S]*?)<\/table>/.exec(html)[1];
-  const lines = [...box.matchAll(/<td class="(ink2?)" valign="top" style="([^"]*)">([^<]+)<\/td>/g)].map((m) => [m[3], m[1], /font-weight:bold/.test(m[2])]);
-  assert.deepEqual(lines, [
-    ['A 장비를 가장 먼저 점검해야 합니다.', 'ink', true],
-    ['CVSS 9.8 취약점(CVE-2026-1)도 패치하세요.', 'ink2', false],
-    ['미국 U.S. 기관의 경고도 있었습니다.', 'ink2', false],
-  ]);
-  assert.ok(html.indexOf('사이버위기 경보') < html.indexOf('오늘의 요약') && html.indexOf('오늘의 요약') < html.indexOf('국내 보안 뉴스'), '경보 → 요약 → 뉴스');
-  // 조용한 날은 띠에 색이 없다
-  const calm = sampleBrief();
-  calm.exploited = [];
-  calm.exploited_more = [];
-  calm.advisories = calm.advisories.filter((x) => !x.alert);
-  assert.ok(!/<td class="line p-/.test(renderEmailHtml(calm, {})));
 });
 
 test('요약 문장 나누기: 마침표·물음표·느낌표 뒤 빈칸에서만 — 소수점·영문 약어·숫자 뒤는 그대로', () => {
@@ -273,30 +284,4 @@ test('요약 문장 나누기: 마침표·물음표·느낌표 뒤 빈칸에서�
   assert.deepEqual(sentences("주요 뉴스: 국내 '가', 해외 '나'. KISA 공지 5건. 새 취약점: 실제 악용 6건(A, B) · CVSS 9.0 이상 81건."), ["주요 뉴스: 국내 '가', 해외 '나'.", 'KISA 공지 5건.', '새 취약점: 실제 악용 6건(A, B) · CVSS 9.0 이상 81건.']);
   assert.deepEqual(sentences('한 문장입니다.'), ['한 문장입니다.']);
   assert.deepEqual(sentences(''), []);
-});
-
-test('메일 배치: 취약점 카드는 두 장씩(홀수면 첫 장은 한 줄 전체), KISA 는 6건부터 반씩 — 문서 순서는 그대로', () => {
-  const b = sampleBrief();
-  b.exploited = Array.from({ length: 5 }, (_, i) => ({ ...b.exploited[0], id: `CVE-2026-90${i}` }));
-  b.critical = Array.from({ length: 2 }, (_, i) => ({ ...b.critical[0], id: `CVE-2026-80${i}` }));
-  b.advisories = Array.from({ length: 7 }, (_, i) => ({ ...b.advisories[1], id: `a${i}`, title: `공지 ${i}`, url: `https://www.boho.or.kr/${i}` }));
-  const html = renderEmailHtml(b, {});
-  // 문서 순서 = 한 단으로 쌓였을 때(휴대폰·Outlook) 읽는 순서
-  assert.deepEqual([...html.matchAll(/>(CVE-2026-[98]0\d)</g)].map((m) => m[1]), ['CVE-2026-900', 'CVE-2026-901', 'CVE-2026-902', 'CVE-2026-903', 'CVE-2026-904', 'CVE-2026-800', 'CVE-2026-801']);
-  // 두 단 묶음: 뉴스 1 + KISA 1 + 악용 2(5장 = 1 + 2×2) + 고위험 1
-  assert.equal(html.match(/<div class="col" style="float:left/g).length, 5);
-  assert.equal(html.match(/<div class="col" style="float:right/g).length, 5);
-  const exHead = html.indexOf('>악용 확인 취약점 <span');
-  assert.ok(!html.slice(exHead, html.indexOf('>CVE-2026-900<')).includes('class="col"'), '홀수면 첫 장(가장 중요한 것)은 묶지 않음');
-  assert.ok(html.slice(exHead, html.indexOf('>CVE-2026-901<')).includes('float:left'), '둘째 장부터 두 장씩');
-  const kisa = html.slice(html.indexOf('>KISA 공지 <span'), exHead);
-  assert.deepEqual([...kisa.matchAll(/>(공지 \d)</g)].map((m) => m[1]), ['공지 0', '공지 1', '공지 2', '공지 3', '공지 4', '공지 5', '공지 6']);
-  const [left, right] = kisa.split('<div class="col" style="float:right');
-  assert.deepEqual([left.match(/>공지 \d</g).length, right.match(/>공지 \d</g).length], [4, 3]);
-  assert.equal(kisa.match(/border-top:1px solid/g).length, 7, '쌓였을 때 줄이 끊기지 않게 모든 줄 위에 선');
-  assert.match(html, /KEV: 미국 사이버보안청\(CISA\)[^<]*CVSS: [^<]*EPSS: /, '표시 풀이 한 줄');
-  const none = sampleBrief();
-  none.exploited = [];
-  none.critical = [];
-  assert.ok(!renderEmailHtml(none, {}).includes('KEV: 미국'), '카드가 없으면 풀이도 없음');
 });

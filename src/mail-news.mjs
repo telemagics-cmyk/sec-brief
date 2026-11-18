@@ -1,4 +1,4 @@
-// (선택) 메일 맨 아래 '○○ 관련 뉴스' — Secret MAIL_NEWS_KEYWORD(예: 회사 이름)로 Google 뉴스를 찾아 붙인다.
+// (선택) 메일 맨 아래 '○○ 소식' — Secret MAIL_NEWS_KEYWORD(예: 회사 이름)로 Google 뉴스를 찾아 붙인다.
 // 공개 저장소·웹에 남기지 않으려고 수집(이력 저장) 단계가 아니라 메일을 보낼 때 가져오고, 어디에도 저장하지 않는다.
 import { secret } from './config.mjs';
 import { clusterItems } from './news.mjs';

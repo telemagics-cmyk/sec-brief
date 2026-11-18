@@ -56,7 +56,7 @@ function send(dir, kstTime, event = 'workflow_dispatch') {
 }
 
 /** 가짜 날짜·시각에 CLI 명령을 실행한다 (기본: DATE, `send --scheduled`) */
-function cli(dir, { date = DATE, kstTime = '07:00:00', event = 'workflow_dispatch', args = ['send', '--scheduled'], extraEnv = {} } = {}) {
+function cli(dir, { date = DATE, kstTime = '07:30:00', event = 'workflow_dispatch', args = ['send', '--scheduled'], extraEnv = {} } = {}) {
   const env = {
     ...process.env,
     GITHUB_OUTPUT: '', // 이 시험이 GitHub Actions 에서 돌 때 바깥 작업의 출력 파일에 쓰지 않게
@@ -95,12 +95,12 @@ function cli(dir, { date = DATE, kstTime = '07:00:00', event = 'workflow_dispatc
   });
 }
 
-test('정시 실행(외부 호출): 06:30 전에 끝나면 발송 시각까지 기다렸다 보낸다', async () => {
+test('정시 실행(외부 호출): 07:20 전에 끝나면 발송 시각까지 기다렸다 보낸다', async () => {
   const dir = dataDir();
   const before = mails.length;
-  const r = await send(dir, '06:29:57');
+  const r = await send(dir, '07:19:57');
   assert.equal(r.code, 0, r.out);
-  assert.match(r.out, /발송 시각\(06:30 KST\)까지 1분 기다립니다/);
+  assert.match(r.out, /발송 시각\(07:20 KST\)까지 1분 기다립니다/);
   assert.ok(r.ms >= 2000, `기다리지 않음: ${r.ms}ms`);
   assert.match(r.out, /메일 발송 완료 \(Outlook, 받는 사람 1명\): 2026-10-29/);
   assert.equal(mails.length, before + 1);
@@ -113,7 +113,7 @@ test('정시 실행을 밤중에 부르면 기다리지 않고(작업 시간 제
   const before = mails.length;
   const r = await send(dir, '01:00:00');
   assert.equal(r.code, 0, r.out);
-  assert.match(r.out, /::notice::발송 시각\(06:30 KST\)까지 330분 남아 이번 실행에서는 보내지 않습니다/);
+  assert.match(r.out, /::notice::발송 시각\(07:20 KST\)까지 380분 남아 이번 실행에서는 보내지 않습니다/);
   assert.equal(mails.length, before);
   assert.ok(r.ms < 30000);
   rmSync(dir, { recursive: true, force: true });
@@ -190,7 +190,7 @@ test('Outlook 계정 정지: 예비가 없으면 실패로 끝난다(2026-11-02 
   graphError = SUSPENDED;
   const dir = dataDir();
   try {
-    const r = await send(dir, '07:00:00');
+    const r = await send(dir, '07:30:00');
     assert.equal(r.code, 1, r.out);
     assert.match(r.out, /메일 발송 실패: Outlook ErrorAccountSuspend: Account suspended/);
   } finally {

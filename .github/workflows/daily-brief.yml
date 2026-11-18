@@ -13,7 +13,7 @@
 #     ANTHROPIC_API_KEY   (선택) Claude 한국어 요약·번역
 #     NVD_API_KEY         (선택) NVD 요청 한도 완화
 #     NAVER_CLIENT_ID, NAVER_CLIENT_SECRET   (선택) 네이버 뉴스 검색
-#   정시 실행: 외부 예약 서비스(cron-job.org)가 06:00·06:15 KST 에 이 워크플로를 API 로 부른다(README '정시에 받기')
+#   정시 실행: 외부 예약 서비스(cron-job.org)가 07:00·07:05 KST 에 이 워크플로를 API 로 부르고 07:20 에 보낸다(README '정시에 받기')
 #
 # 액션은 공급망 위험을 줄이려고 커밋 해시로 고정했다(옆 주석이 버전).
 name: daily-brief
@@ -25,8 +25,9 @@ on:
   # 어느 실행이든 앞 실행이 이미 만들고 보냈으면 수집·발송을 건너뛰므로 같은 날 두 번 오지 않는다.
   # 주말·공휴일에는 매일 부르는 호출이 와도 첫 작업(day)에서 끝난다.
   schedule:
-    - cron: '5 20 * * *' # 05:05 KST
-    - cron: '35 21 * * *' # 06:35 KST
+    # 06:55: 제시간에 돌면 정시 호출(07:00)보다 5분만 이르게 수집(기사가 오래되지 않게), 07:25: 발송 시각 뒤 재시도
+    - cron: '55 21 * * *' # 06:55 KST
+    - cron: '25 22 * * *' # 07:25 KST
   workflow_dispatch:
     inputs:
       force:
@@ -39,7 +40,7 @@ on:
         options: ['보내기', '연결 확인 메시지만', '보내지 않기']
         default: '보내기'
       scheduled:
-        description: '정시 실행처럼 발송 시각(06:30)까지 기다렸다 보내기 (외부 예약 호출용)'
+        description: '정시 실행처럼 발송 시각(07:20)까지 기다렸다 보내기 (외부 예약 호출용)'
         type: boolean
         default: false
 
@@ -157,7 +158,7 @@ jobs:
     needs: [brief, deploy]
     if: ${{ always() && needs.brief.result == 'success' && (github.event_name == 'schedule' || inputs.send != '보내지 않기') }}
     runs-on: ubuntu-latest
-    # 정시·예약 실행은 발송 시각(06:30)까지 기다릴 수 있다(그보다 110분 넘게 이르면 보내지 않고 끝냄)
+    # 정시·예약 실행은 발송 시각(07:20)까지 기다릴 수 있다(그보다 110분 넘게 이르면 보내지 않고 끝냄)
     timeout-minutes: 120
     permissions:
       contents: write

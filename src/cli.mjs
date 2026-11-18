@@ -232,7 +232,7 @@ async function cmdSend(cfg, args, brief) {
   }
   // 정시 실행(외부 호출)이 보냈다면 GitHub 예약은 건너뛰었을 것이다 — 예비가 보냈다면 늦게 간 것
   if (delivered && !args.test && process.env.GITHUB_EVENT_NAME === 'schedule') {
-    warn('GitHub 예비 예약 실행이 보냈습니다(늦은 발송). 06:00 정시 호출이 오지 않았거나 그 실행이 보내지 못했습니다 — cron-job.org 실행 기록과 실행 토큰 만료일을 확인하세요(README 정시에 받기).');
+    warn('GitHub 예비 예약 실행이 보냈습니다(늦은 발송). 정시 호출(cron-job.org)이 오지 않았거나 그 실행이 보내지 못했습니다 — cron-job.org 실행 기록과 실행 토큰 만료일을 확인하세요(README 정시에 받기).');
   }
 }
 

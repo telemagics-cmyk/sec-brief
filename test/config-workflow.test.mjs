@@ -55,9 +55,9 @@ test('워크플로: 액션은 커밋 해시로 고정, run 안에 ${{ }} 직접 
     assert.match(yml, /^permissions:\n {2}contents: read/m, name);
   }
   const daily = readFileSync(join(ROOT, '.github', 'workflows', 'daily-brief.yml'), 'utf8');
-  // GitHub 예약은 예비: 05:05·06:35 KST (앞 실행이 끝냈으면 건너뜀)
-  assert.match(daily, /cron: '5 20 \* \* \*'/);
-  assert.match(daily, /cron: '35 21 \* \* \*'/);
+  // GitHub 예약은 예비: 06:55·07:25 KST (앞 실행이 끝냈으면 건너뜀)
+  assert.match(daily, /cron: '55 21 \* \* \*'/);
+  assert.match(daily, /cron: '25 22 \* \* \*'/);
   assert.match(daily, /--scheduled/);
   assert.match(daily, /concurrency:/);
   assert.match(readFileSync(join(ROOT, '.github', 'workflows', 'site.yml'), 'utf8'), /group: sec-brief/);
@@ -74,11 +74,11 @@ test('워크플로: 코드가 읽는 비밀값은 모두 daily-brief 에서 넘�
   for (const n of names) if (!testOnly.has(n)) assert.match(daily, new RegExp(`${n}: \\$\\{\\{ secrets\\.${n} \\}\\}`), n);
 });
 
-test('설정: 예약 실행의 발송 시각은 05:05 시작과 06:35 재시도 사이', () => {
+test('설정: 예약 실행의 발송 시각은 06:55 시작과 07:25 재시도 사이', () => {
   const cfg = JSON.parse(readFileSync(join(ROOT, 'config.json'), 'utf8'));
   const [h, m] = cfg.delivery.not_before.split(':').map(Number);
   const min = h * 60 + m;
-  assert.ok(min > 5 * 60 + 5 && min < 6 * 60 + 35, cfg.delivery.not_before);
+  assert.ok(min > 6 * 60 + 55 && min < 7 * 60 + 25, cfg.delivery.not_before);
 });
 
 test('워크플로: 외부 호출(scheduled)은 GitHub 예약처럼 발송 시각까지 기다리고, 실행 이름으로 구분된다', () => {
@@ -86,7 +86,7 @@ test('워크플로: 외부 호출(scheduled)은 GitHub 예약처럼 발송 시�
   assert.match(daily, /\n {6}scheduled:\n {8}description: .+\n {8}type: boolean\n {8}default: false\n/);
   const cond = "${{ (github.event_name == 'schedule' || inputs.scheduled) && '--scheduled' || '' }}";
   assert.ok(daily.includes(`SCHEDULED: ${cond}`), '수집: 건너뛸 때 안내');
-  assert.ok(daily.includes(`WAIT: ${cond}`), '발송: 06:30 까지 기다리기');
+  assert.ok(daily.includes(`WAIT: ${cond}`), '발송: 발송 시각까지 기다리기');
   assert.match(daily, /run: node src\/cli\.mjs collect \$FORCE \$SCHEDULED\n/);
   assert.match(daily, /run: node src\/cli\.mjs send \$MODE \$FORCE \$WAIT\n/);
   assert.match(daily, /^run-name: .*'GitHub 예약 실행 \(예비\)'.*'정시 실행 \(외부 호출\)'.*'직접 실행'/m);
@@ -110,7 +110,7 @@ test('README 의 외부 호출(cron-job.org) 설정이 워크플로·발송 시�
       assert.equal(typeof v, 'string', 'API 입력값은 문자열로');
     }
   }
-  // 호출 시각(06:00·06:15)은 발송 시각보다 15분 이상 앞서야 06:30 에 맞춰 보낸다
+  // 호출 시각(07:00·07:05)은 발송 시각보다 15분 이상 앞서야 07:20 에 맞춰 보낸다
   const cfg = JSON.parse(readFileSync(join(ROOT, 'config.json'), 'utf8'));
   const [h, m] = cfg.delivery.not_before.split(':').map(Number);
   const cron = /`(\d+(?:,\d+)*) (\d+) \* \* \*`\)/.exec(readme);

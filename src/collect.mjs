@@ -186,13 +186,14 @@ export async function collectBrief(cfg, { now = new Date(), date = kstDate(now),
     }
   }
   for (const it of naverItems || []) items.push({ ...it, outlet: hostOf(it.link) || '네이버 뉴스', lang: 'ko', kind: 'search', priority: 50 });
-  const newsSel = selectNews(items, {
-    now,
-    windowHours: win.hours,
-    history,
+  // 국내·해외는 언론사로 나누고, 국내 언론 기사가 많은 날은 국내·해외 통합 배치(src/news.mjs arrangeNews)
+  const newsLimits = {
     domesticLimit: cfg.news.domestic_limit,
     internationalLimit: cfg.news.international_limit,
-  });
+    mergedDomestic: cfg.news.merged_domestic_limit,
+    mergedInternational: cfg.news.merged_international_limit,
+  };
+  const newsSel = selectNews(items, { now, windowHours: win.hours, history, ...newsLimits });
 
   // KISA 공지
   const advisories = selectAdvisories(advResults, { date, days: win.advisoryDays, seen: history.advisoryUrls, limit: cfg.advisories.limit });
@@ -236,7 +237,7 @@ export async function collectBrief(cfg, { now = new Date(), date = kstDate(now),
     exploited: exploited.shown,
     critical: critical.shown,
     advisories,
-    news: { domestic: newsSel.domestic, international: newsSel.international },
+    news: { domestic: newsSel.domestic, international: newsSel.international, merged: newsSel.merged, order: newsSel.order },
     newsCandidates: newsSel.candidates,
     overview: '',
   };
@@ -255,11 +256,10 @@ export async function collectBrief(cfg, { now = new Date(), date = kstDate(now),
         const { out, usage, model } = await callClaude(draft, {
           model: cfg.summarizer.model,
           effort: cfg.summarizer.effort,
-          domesticLimit: cfg.news.domestic_limit,
-          internationalLimit: cfg.news.international_limit,
+          ...newsLimits,
           newsCandidates: cfg.summarizer.news_candidates,
         });
-        const result = applySummary(draft, out, { domesticLimit: cfg.news.domestic_limit, internationalLimit: cfg.news.international_limit });
+        const result = applySummary(draft, out, newsLimits);
         summarizer = {
           engine: model,
           ok: true,
@@ -302,7 +302,8 @@ export async function collectBrief(cfg, { now = new Date(), date = kstDate(now),
     critical: draft.critical,
     critical_more: critical.more.map((g) => ({ id: g.id, ids: g.ids, label: g.label, vendor: g.vendor, cvss: g.cvss.score, title: g.ko.title, affected: g.affected })),
     advisories,
-    news: { domestic: draft.news.domestic.map(newsForBrief), international: draft.news.international.map(newsForBrief) },
+    // merged: 국내 언론 기사가 많아 국내·해외를 한 목록으로 놓는 날(메일), order: 그 목록의 중요한 순서(기사 id)
+    news: { domestic: draft.news.domestic.map(newsForBrief), international: draft.news.international.map(newsForBrief), merged: Boolean(draft.news.merged), order: draft.news.order || [] },
     sources,
     summarizer,
     stats: {

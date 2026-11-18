@@ -38,6 +38,8 @@ export const DEFAULTS = {
   news: {
     domestic_limit: 5,
     international_limit: 5,
+    merged_domestic_limit: 7,
+    merged_international_limit: 3,
     feeds: [
       { id: 'boannews', name: '보안뉴스', url: 'https://www.boannews.com/rss/allArticle.xml', lang: 'ko', kind: 'security' },
       { id: 'dailysecu', name: '데일리시큐', url: 'https://www.dailysecu.com/rss/allArticle.xml', lang: 'ko', kind: 'security' },

@@ -154,18 +154,21 @@ function checkTable(items) {
     .join('')}</table>`;
 }
 
-/** 기사 한 건: 금색 번호, 굵은 제목(→ 원문), 매체·시각, 요약, 확인 포인트(금색). 원문 제목은 웹 페이지에만(메일은 간결하게) */
-function newsItem(i, n) {
+/**
+ * 기사 한 건: 금색 번호, 굵은 제목(→ 원문), 매체·시각, 요약, 확인 포인트(금색). 원문 제목은 웹 페이지에만(메일은 간결하게).
+ * line: 아래 줄(국내·해외 칸 목록) — 통합 목록은 줄을 바깥 칸에 긋는다. foreign: 통합 목록의 해외 언론 기사 표시
+ */
+function newsItem(i, n, { line = true, foreign = false } = {}) {
   const others = n.outlets?.length > 1 ? ` 외 ${n.outlets.length - 1}곳` : '';
   const at = when(n.published);
   const meta = `${n.source || ''}${others}${at ? ` · ${at}` : ''}`;
   const summary = n.summary_ko || truncate(n.snippet || '', 120);
-  const line = `border-bottom:1px solid ${C.rule};`;
+  const rule = line ? `border-bottom:1px solid ${C.rule};` : '';
   return `<tr>
-<td width="30" valign="top" style="width:30px;padding:15px 4px 16px 0;${line}"><p style="margin:0;font-size:12px;line-height:24px;font-weight:bold;color:${C.gold};">${pad2(i + 1)}</p></td>
-<td valign="top" style="padding:15px 0 16px;${line}">
+<td width="30" valign="top" style="width:30px;padding:15px 4px 16px 0;${rule}"><p style="margin:0;font-size:12px;line-height:24px;font-weight:bold;color:${C.gold};">${pad2(i + 1)}</p></td>
+<td valign="top" style="padding:15px 0 16px;${rule}">
 <p style="margin:0;font-size:15px;line-height:24px;font-weight:bold;">${a(n.url, h(n.title_ko || n.title))}</p>
-${meta ? `<p style="margin:4px 0 0;font-size:11.5px;line-height:17px;color:${C.meta};">${h(meta)}</p>` : ''}
+${meta ? `<p style="margin:4px 0 0;font-size:11.5px;line-height:17px;color:${C.meta};">${foreign ? `<span style="font-weight:bold;color:${C.gold};">해외</span> · ` : ''}${h(meta)}</p>` : ''}
 ${summary ? `<p style="margin:7px 0 0;font-size:13px;line-height:21px;color:${C.body};">${h(summary)}</p>` : ''}
 ${n.check_ko ? `<p style="margin:7px 0 0;font-size:13px;line-height:20px;font-weight:bold;color:${C.goldText};">확인 포인트 · ${h(n.check_ko)}</p>` : ''}
 </td></tr>`;
@@ -190,6 +193,39 @@ function newsColumns(dom, intl, b) {
 <!--[if mso]></tr><tr><![endif]-->
 <td class="ncol ncol2" valign="top" style="width:50%;padding:0 0 0 16px;vertical-align:top;">${newsColumn('해외 보안 뉴스', intl, b)}</td>
 </tr></table>`;
+}
+
+/** 통합 목록의 기사(중요한 순서 = brief.news.order, 빠진 것은 뒤에) */
+function mergedNews(b) {
+  const all = [...(b.news?.domestic || []), ...(b.news?.international || [])];
+  const byId = new Map(all.map((n) => [n.id, n]));
+  const list = (b.news?.order || []).map((id) => byId.get(id)).filter(Boolean);
+  for (const n of all) if (!list.includes(n)) list.push(n);
+  return list;
+}
+
+/**
+ * 국내 언론 기사가 많은 날(brief.news.merged): 국내·해외를 중요한 순서 한 목록으로(국내 7 : 해외 3 정도 — src/news.mjs arrangeNews).
+ * 넓으면 두 건씩 나란히(01 02 / 03 04 …) — 번호가 가로로 이어져 칸이 국내·해외로 읽히지 않게, 해외 언론 기사엔 '해외' 표시.
+ * 줄은 바깥 칸에 그어 나란한 두 건의 줄이 맞는다. 휴대폰·Outlook(Windows)은 번호 순서대로 위아래(newsColumns 와 같은 방법).
+ */
+function newsMerged(list, b) {
+  const dom = list.filter((n) => n.region === 'domestic').length;
+  const head = `<table ${TBL}><tr><td style="padding:0 0 12px;border-bottom:2px solid ${C.gold};"><h3 style="margin:0;font-size:18px;line-height:26px;font-weight:bold;color:${C.ink};">국내·해외 통합 <span style="font-size:12px;color:${C.gold};">국내 ${dom} · 해외 ${list.length - dom}</span></h3></td></tr></table>`;
+  if (!list.length) return `${head}<p style="margin:14px 0 0;font-size:13px;line-height:20px;color:${C.label};">${h(emptyNote(b, 'news'))}</p>`;
+  const cell = (n, i, cls, pad) => (n
+    ? `<td class="${cls}" valign="top" style="width:50%;padding:${pad};vertical-align:top;border-bottom:1px solid ${C.rule};"><table ${TBL}>${newsItem(i, n, { line: false, foreign: n.region !== 'domestic' })}</table></td>`
+    : `<td class="${cls}" valign="top" style="width:50%;padding:${pad};"></td>`);
+  const rows = [];
+  for (let i = 0; i < list.length; i += 2) {
+    rows.push(`<tr>
+${cell(list[i], i, 'ncol', '0 16px 0 0')}
+<!--[if mso]></tr><tr><![endif]-->
+${cell(list[i + 1], i + 1, 'ncol', '0 0 0 16px')}
+</tr>`);
+  }
+  return `${head}
+<table ${TBL}>${rows.join('')}</table>`;
 }
 
 /** 보안 업데이트 권고(KISA 보호나라): 금색 왼쪽 막대 상자에 제목을 굵게. 보안공지가 아닌 것(취약점 정보·경보단계)만 작은 표시 */
@@ -352,7 +388,8 @@ export function renderEmailHtml(b, { siteUrl = '', title = '일일 보안 브리
   const checks = todayChecks(b);
   if (checks.items.length) rows.push(sectionTitle(checks.title), `<tr><td>${checkTable(checks.items)}</td></tr>`);
 
-  rows.push(sectionTitle('주요 보안 뉴스'), `<tr><td>${newsColumns(dom, intl, b)}</td></tr>`);
+  // 국내 언론 기사가 많은 날은 국내·해외 통합 목록(국내 7 : 해외 3 정도), 아니면 국내 5 | 해외 5 (src/news.mjs arrangeNews)
+  rows.push(sectionTitle('주요 보안 뉴스'), `<tr><td>${b.news?.merged ? newsMerged(mergedNews(b), b) : newsColumns(dom, intl, b)}</td></tr>`);
   rows.push(sectionTitle('보안 업데이트 권고', `KISA ${adv.length}건`), kisaBox(adv, b));
 
   // 오늘 브리핑의 취약점을 자산 대장과 한 번에 비교(첫 취약점 구역 위에 한 번)

@@ -124,3 +124,27 @@ test('Claude 입력 자료: 기사·취약점만 담고 길이를 줄인다', ()
   assert.equal(input.vulns.length, 2);
   assert.deepEqual(Object.keys(input).sort(), ['date', 'kisa_advisories', 'news', 'vulns']);
 });
+
+test('Claude 응답의 뉴스 배치: 국내·해외는 언론사(언어)로 — 국내 언론이 쓴 해외 사건 기사도 국내, 위 10건 중 국내가 많으면 통합 7:3', () => {
+  const b = sampleBrief();
+  const ko = (i) => ({ ...b.news.domestic[0], id: `k${i}`, url: `https://k.example/${i}`, title: `국내 기사 ${i}` });
+  const en = (i) => ({ ...b.news.international[0], id: `e${i}`, url: `https://e.example/${i}`, title: `Foreign ${i}` });
+  const candidates = [...Array.from({ length: 9 }, (_, i) => ko(i)), ...Array.from({ length: 5 }, (_, i) => en(i))];
+  const outOf = (order) => ({ overview: '', actions: [], vulns: [], news: order.map((id) => ({ id, region: 'international', title_ko: `제목 ${id}`, summary_ko: '요약', check: '확인' })) });
+  // 모델이 모두 international 로 줘도(예전 스키마) 한국어 기사는 국내. 국내 언론은 7건까지만 받는다
+  const d = draftFrom(b);
+  d.newsCandidates = candidates;
+  const r = applySummary(d, outOf(['k0', 'e0', 'k1', 'k2', 'k3', 'e1', 'k4', 'k5', 'k6', 'k7', 'e2', 'e3', 'k8']), { domesticLimit: 5, internationalLimit: 5 });
+  assert.equal(d.news.merged, true);
+  assert.deepEqual(d.news.order, ['k0', 'e0', 'k1', 'k2', 'k3', 'e1', 'k4', 'k5', 'k6', 'e2']);
+  assert.deepEqual([d.news.domestic.length, d.news.international.length], [7, 3]);
+  assert.equal(d.news.domestic[0].region, 'domestic');
+  assert.equal(r.applied.news, 10);
+  // 국내 언론이 많지 않은 날: 국내 5 | 해외 5
+  const d2 = draftFrom(b);
+  d2.newsCandidates = candidates;
+  applySummary(d2, outOf(['e0', 'k0', 'e1', 'k1', 'e2', 'k2', 'e3', 'k3', 'e4', 'k4', 'k5']), { domesticLimit: 5, internationalLimit: 5 });
+  assert.equal(d2.news.merged, false);
+  assert.deepEqual(d2.news.domestic.map((n) => n.id), ['k0', 'k1', 'k2', 'k3', 'k4']);
+  assert.deepEqual(d2.news.international.map((n) => n.id), ['e0', 'e1', 'e2', 'e3', 'e4']);
+});

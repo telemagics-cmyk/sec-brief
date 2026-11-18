@@ -81,8 +81,11 @@
   },
   "news": {
     "_설명": "kind: security(보안 전문 매체) / general(일반 IT 매체: 보안 기사만 고름) / aggregator(Google 뉴스처럼 여러 언론사를 모은 것). enabled: false 로 끌 수 있습니다.",
+    "_배치": "국내·해외는 언론사로 나눕니다(한국어 기사 = 국내 — 국내 언론이 쓴 해외 사건 기사도 국내). 중요한 순서 위 10건 중 국내가 domestic_limit 보다 많은 날은 한 목록으로 합쳐 국내 merged_domestic_limit : 해외 merged_international_limit, 아니면 국내 domestic_limit | 해외 international_limit.",
     "domestic_limit": 5,
     "international_limit": 5,
+    "merged_domestic_limit": 7,
+    "merged_international_limit": 3,
     "feeds": [
       {
         "id": "boannews",

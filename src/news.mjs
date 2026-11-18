@@ -304,11 +304,41 @@ function recentSimilarity(title, recentTitles) {
 }
 
 /**
- * 수집한 기사 → {domestic, international, candidates}
+ * 중요한 순서로 놓인 기사 → 국내·해외 배치. 국내·해외는 사건이 아니라 언론사로 나눈다(region = 대표 기사의 언어 —
+ * 국내 언론이 쓴 해외 사건 기사도 국내). 위쪽(domesticLimit + internationalLimit 건)에 국내 언론 기사가 domesticLimit 보다 많은 날은
+ * 국내·해외를 한 목록으로 합쳐 국내 mergedDomestic : 해외 mergedInternational(모자라면 남은 기사로 채움, 순서 그대로),
+ * 아니면 국내 domesticLimit | 해외 internationalLimit(각자 중요한 순).
+ * @param {object[]} ranked 중요한 순서의 기사(region 이 있는 것)
+ * @returns {{domestic:object[], international:object[], merged:boolean, order:string[]}}
+ */
+export function arrangeNews(ranked, { domesticLimit = 5, internationalLimit = 5, mergedDomestic = 7, mergedInternational = 3 } = {}) {
+  const isDom = (c) => c.region === 'domestic';
+  const merged = ranked.slice(0, domesticLimit + internationalLimit).filter(isDom).length > domesticLimit;
+  let keep;
+  if (merged) {
+    keep = new Set();
+    const left = { d: mergedDomestic, i: mergedInternational };
+    for (const c of ranked) {
+      const k = isDom(c) ? 'd' : 'i';
+      if (left[k] > 0) {
+        keep.add(c);
+        left[k]--;
+      }
+    }
+    for (const c of ranked) if (keep.size < mergedDomestic + mergedInternational) keep.add(c);
+  } else {
+    keep = new Set([...ranked.filter(isDom).slice(0, domesticLimit), ...ranked.filter((c) => !isDom(c)).slice(0, internationalLimit)]);
+  }
+  const picked = ranked.filter((c) => keep.has(c));
+  return { domestic: picked.filter(isDom), international: picked.filter((c) => !isDom(c)), merged, order: picked.map((c) => c.id) };
+}
+
+/**
+ * 수집한 기사 → {domestic, international, merged, order, candidates}
  * @param {object[]} items  피드에서 읽은 기사(outlet·lang·kind 를 붙인 것)
  * @param {{seenUrls:Set<string>, recentNewsTitles:string[]}} history
  */
-export function selectNews(items, { now = new Date(), windowHours = 30, history, domesticLimit = 5, internationalLimit = 5, minScore = 4 } = {}) {
+export function selectNews(items, { now = new Date(), windowHours = 30, history, domesticLimit = 5, internationalLimit = 5, mergedDomestic = 7, mergedInternational = 3, minScore = 4 } = {}) {
   const from = now.getTime() - windowHours * 3600 * 1000;
   const seen = history?.seenUrls ?? new Set();
   const fresh = [];
@@ -327,8 +357,7 @@ export function selectNews(items, { now = new Date(), windowHours = 30, history,
   clusters.sort((a, b) => b.score - a.score || b.outlets.length - a.outlets.length);
   const eligible = clusters.filter((c) => c.score >= minScore);
   return {
-    domestic: eligible.filter((c) => c.region === 'domestic').slice(0, domesticLimit),
-    international: eligible.filter((c) => c.region === 'international').slice(0, internationalLimit),
+    ...arrangeNews(eligible, { domesticLimit, internationalLimit, mergedDomestic, mergedInternational }),
     candidates: eligible,
     stats: { items: items.length, fresh: fresh.length, clusters: clusters.length, eligible: eligible.length },
   };

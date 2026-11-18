@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { clusterItems, selectNews } from '../src/news.mjs';
+import { arrangeNews, clusterItems, selectNews } from '../src/news.mjs';
 import { impactText, kevTitleKo, productFromDescription, selectCritical, selectExploited } from '../src/vulns.mjs';
 
 const NOW = new Date('2026-10-23T06:30:00Z');
@@ -204,4 +204,26 @@ test('악용 확인: 이미 다룬 CVE 는 빼고, 최근 등재 순', () => {
   assert.equal(r.shown[1].ransomware, true);
   assert.equal(r.shown[0].ko.title, 'B Beta 경로 조작 취약점');
   assert.deepEqual(r.shown[0].links, ['https://b.example/adv']);
+});
+
+test('뉴스 배치: 국내·해외는 언론사(언어)로, 중요한 순서 위 10건 중 국내가 5건보다 많으면 통합 7:3, 아니면 5:5', () => {
+  const mk = (ids) => ids.map((id) => ({ id, region: id[0] === 'd' ? 'domestic' : 'international' }));
+  // 국내 언론이 많은 날: 위 10건 중 국내 8건 → 통합, 순서 그대로 국내 7 : 해외 3
+  const a = arrangeNews(mk(['d1', 'd2', 'i1', 'd3', 'd4', 'd5', 'i2', 'd6', 'd7', 'd8', 'i3', 'i4', 'd9']));
+  assert.equal(a.merged, true);
+  assert.deepEqual(a.order, ['d1', 'd2', 'i1', 'd3', 'd4', 'd5', 'i2', 'd6', 'd7', 'i3']);
+  assert.deepEqual([a.domestic.length, a.international.length], [7, 3]);
+  // 해외가 모자라면 남은 국내로 채워 10건
+  const b = arrangeNews(mk(['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'i1', 'd7', 'd8', 'd9']));
+  assert.equal(b.merged, true);
+  assert.deepEqual(b.order, ['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'i1', 'd7', 'd8', 'd9']);
+  // 국내가 많지 않은 날: 국내 5 | 해외 5, 각자 중요한 순서
+  const c = arrangeNews(mk(['i1', 'd1', 'i2', 'd2', 'i3', 'd3', 'i4', 'd4', 'i5', 'd5', 'd6', 'i6']));
+  assert.equal(c.merged, false);
+  assert.deepEqual(c.domestic.map((x) => x.id), ['d1', 'd2', 'd3', 'd4', 'd5']);
+  assert.deepEqual(c.international.map((x) => x.id), ['i1', 'i2', 'i3', 'i4', 'i5']);
+  // 비율은 설정으로
+  const d = arrangeNews(mk(['d1', 'd2', 'd3', 'i1', 'd4', 'i2']), { domesticLimit: 2, internationalLimit: 2, mergedDomestic: 3, mergedInternational: 1 });
+  assert.equal(d.merged, true);
+  assert.deepEqual(d.order, ['d1', 'd2', 'd3', 'i1']);
 });

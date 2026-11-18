@@ -285,3 +285,23 @@ test('요약 문장 나누기: 마침표·물음표·느낌표 뒤 빈칸에서�
   assert.deepEqual(sentences('한 문장입니다.'), ['한 문장입니다.']);
   assert.deepEqual(sentences(''), []);
 });
+
+test('메일 뉴스 통합 배치: 국내 언론이 많은 날은 국내·해외 한 목록(중요한 순, 두 건씩 나란히·해외 표시), 아니면 두 칸', () => {
+  const b = sampleBrief();
+  const ko = (i) => ({ ...b.news.domestic[0], id: `k${i}`, region: 'domestic', title_ko: `국내 기사 ${i}` });
+  const en = (i) => ({ ...b.news.international[0], id: `e${i}`, region: 'international', title_ko: `해외 기사 ${i}` });
+  b.news = { domestic: [0, 1, 2, 3, 4, 5, 6].map(ko), international: [0, 1, 2].map(en), merged: true, order: ['k0', 'e0', 'k1', 'k2', 'k3', 'e1', 'k4', 'k5', 'k6', 'e2'] };
+  const html = renderEmailHtml(b, {});
+  assert.ok(html.includes('>국내·해외 통합 <span') && !html.includes('>국내 보안 뉴스 <span'));
+  assert.match(html, />국내 7 · 해외 3<\/span><\/h3>/);
+  const titles = [...html.matchAll(/>((?:국내|해외) 기사 \d)<\/a>/g)].map((m) => m[1]);
+  assert.deepEqual(titles, ['국내 기사 0', '해외 기사 0', '국내 기사 1', '국내 기사 2', '국내 기사 3', '해외 기사 1', '국내 기사 4', '국내 기사 5', '국내 기사 6', '해외 기사 2']);
+  assert.equal(html.split('>해외</span> · ').length - 1, 3, '해외 언론 기사에만 표시');
+  // 두 건씩 한 줄(번호가 가로로 이어짐), Outlook(Windows)·휴대폰은 위아래 — 줄은 칸에 그어 나란한 두 건이 맞는다
+  assert.equal(html.match(/<!--\[if mso\]><\/tr><tr><!\[endif\]-->/g).length, 5);
+  assert.deepEqual([...html.matchAll(/color:#9A783C;">(\d\d)<\/p>/g)].map((m) => m[1]), ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10']);
+  assert.equal(html.match(/<td class="ncol[^"]*" valign="top" style="width:50%;[^"]*border-bottom:1px solid #E5E2DA;">/g).length, 10);
+  // 통합이 아닌 날은 국내 | 해외 두 칸
+  const normal = renderEmailHtml(sampleBrief(), {});
+  assert.ok(normal.includes('>국내 보안 뉴스 <span') && normal.includes('>해외 보안 뉴스 <span') && !normal.includes('국내·해외 통합'));
+});

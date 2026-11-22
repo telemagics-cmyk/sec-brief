@@ -1,13 +1,15 @@
 {
   "version": 1,
   "seed": "99b794ff0db04cb5",
-  "refreshed_at": "2026-11-20T07:20:01+09:00",
+  "refreshed_at": "2026-11-23T07:20:01+09:00",
   "token": {
     "alg": "A256GCM",
-    "iv": "ddmtQW5dwdzLSWO1",
-    "tag": "kz8mo75Dtat26cJ4jtCTqw==",
-    "data": "2tFwrIYeaVYL9cwjzkAy/cJOTXah/SnkmJWUi20DQrDFIK4WwJsGqA20EdIjK4ddALmnHcVevIDuU6z+54bPn6c3WwOaYe6Pk7kF94lM8dwQQyd3"
+    "iv": "lu+6FuXrdDpnDcdu",
+    "tag": "wpsAClUHHTvdOCBOLXZ4jw==",
+    "data": "1eWS51bBkfk/Wi7NG13flCklCR1R/6RHe7IT2m8XQhMnGqjbwdUqJQwv2hCkic9rHwgVIaCwMIVtqtT8tg4cjZPfIIvHLarHqZt4QfzbaKFcKB8H"
   },
-  "last_sent": "2026-11-20",
-  "last_sent_at": "2026-11-20T07:20:02+09:00"
+  "last_sent": "2026-11-23",
+  "last_sent_at": "2026-11-23T07:20:02+09:00",
+  "rotated_at": "2026-11-23T07:20:01+09:00",
+  "refresh_expires_at": "2027-01-21T22:20:00.179Z"
 }

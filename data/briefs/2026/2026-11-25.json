@@ -1,0 +1,1904 @@
+{
+  "version": 2,
+  "date": "2026-11-25",
+  "generated_at": "2026-11-25T07:00:57+09:00",
+  "window": {
+    "hours": 30,
+    "from": "2026-11-23T16:00:57.095Z",
+    "to": "2026-11-24T22:00:57.095Z",
+    "since_brief": "2026-11-24",
+    "since_at": "2026-11-23T22:00:53.607Z"
+  },
+  "engine": "claude-haiku-5-5",
+  "overview": "CISA KEV에 등재된 악용 취약점 3건이 11월 27일까지 조치 대상이므로 사용 여부를 가장 먼저 확인해야 합니다. 국내에서는 하나저축은행과 웰컴페이먼츠·KIS정보통신 등 개인정보 유출이 잇따랐고, 해외에서는 Check Point 서버 침해 캠페인이 보고됐습니다. 외부 노출 자산과 접근 로그 점검이 필요합니다.",
+  "actions": [
+    {
+      "title": "KEV 등재 취약점 점검",
+      "detail": "AntiCsrf·Optimizely·Drupal 사용 여부와 기한 11/27 확인"
+    },
+    {
+      "title": "개인정보 유출 사례 대조",
+      "detail": "하나저축은행·웰컴페이먼츠 등 유출 사례와 유사한 외부 접근 로그 검토"
+    },
+    {
+      "title": "Check Point·N-able 노출 확인",
+      "detail": "Check Point 관리서버·N-able MailAssure 사용 여부와 외부 노출 확인"
+    }
+  ],
+  "cvss_min": 9,
+  "critical_total": 125,
+  "failed": {
+    "kev": false,
+    "nvd": false,
+    "kisa": false,
+    "news": false
+  },
+  "exploited": [
+    {
+      "id": "CVE-2026-131914",
+      "section": "exploited",
+      "vendor": "Idunno",
+      "product": "AntiCsrf",
+      "name": "Idunno AntiCsrf Deserialization of Untrusted Data Vulnerability",
+      "dateAdded": "2026-11-24",
+      "due": "2026-11-27",
+      "ransomware": false,
+      "description": "Idunno AntiCsrf contains a deserialization of untrusted data vulnerability that allows an unauthenticated remote attacker to execute arbitrary code via object injection. The impacted product(s) could be end-of-life (EoL) and/or end-of-service (EoS). Users are advised to discontinue use and/or transition to a supported version.",
+      "cwes": [
+        "CWE-502"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "active",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": 0.00614,
+      "epssPct": 0.50152,
+      "published": "2026-11-19T02:17:20.360",
+      "links": [
+        "https://github.com/mandiant/Vulnerability-Disclosures/blob/master/2026/MNDT-2026-0048.md",
+        "https://codeplexarchive.org/project/AntiCSRF",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-131914"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-131914",
+      "affected": [
+        {
+          "vendor": "blowdart",
+          "product": "anticsrf",
+          "ranges": [
+            {
+              "exact": "0.9.0-beta"
+            },
+            {
+              "exact": "0.9.1-beta"
+            }
+          ]
+        }
+      ],
+      "ko": {
+        "title": "Idunno AntiCsrf 역직렬화 취약점(원격 코드 실행)",
+        "target": "Idunno AntiCsrf (버전 정보 자료 없음, EoL/EoS 가능)",
+        "impact": "인증 없이 원격 공격자가 객체 주입으로 임의 코드 실행 가능, CVSS 9.8, 악용 확인되어 KEV 등재",
+        "action": "사용 여부 확인 후 사용 중지 또는 지원 버전으로 전환"
+      }
+    },
+    {
+      "id": "CVE-2026-132224",
+      "section": "exploited",
+      "vendor": "Optimizely",
+      "product": "Web Experimentation",
+      "name": "Optimizely Web Experimentation External Control of Critical State Data Vulnerability",
+      "dateAdded": "2026-11-24",
+      "due": "2026-11-27",
+      "ransomware": false,
+      "description": "Optimizely Web Experimentation contains an external control of critical state data vulnerability in its account signup flow that could allow an attacker to impersonate existing customer users and modify Project JavaScript. Successful exploitation can result in attacker-controlled JavaScript being distributed through Optimizely-hosted assets and executed in browsers visiting affected customer websites.",
+      "cwes": [
+        "CWE-642"
+      ],
+      "cvss": {
+        "score": 8.7,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:C/C:H/I:H/A:N"
+      },
+      "ssvc": {
+        "exploitation": "active",
+        "automatable": "no",
+        "technicalImpact": "total"
+      },
+      "epss": 0.00411,
+      "epssPct": 0.35845,
+      "published": "2026-11-18T16:18:15.627",
+      "links": [
+        "https://pages.optimizely.com/rs/947-RKE-048/images/Security%20Incident%20Report%20-%20Optimizely%20Web%20Experimentation%20-%20Nov%2017%202026.pdf",
+        "https://status.optimizely.com/incidents/ftw0fh9wx43z",
+        "https://github.com/brave/adblock-resources/pull/355"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-132224",
+      "affected": [
+        {
+          "vendor": "optimizely",
+          "product": "web experimentation",
+          "ranges": [
+            {
+              "ee": "2026-11-17"
+            }
+          ]
+        }
+      ],
+      "ko": {
+        "title": "Optimizely Web Experimentation 가입 절차 취약점(스크립트 변…",
+        "target": "Optimizely Web Experimentation (버전 벤더 공지 확인 필요)",
+        "impact": "가입 절차에서 기존 고객 사칭 후 프로젝트 JavaScript 변조, 방문자 브라우저에서 악성 스크립트 실행, CVSS 8.7, KEV 등재",
+        "action": "벤더 패치 적용 여부 확인, 계정 가입과 스크립트 변경 이력 검토"
+      }
+    },
+    {
+      "id": "CVE-2026-132165",
+      "section": "exploited",
+      "vendor": "Drupal",
+      "product": "Core",
+      "name": "Drupal Core Remote Code Execution Vulnerability",
+      "dateAdded": "2026-11-24",
+      "due": "2026-11-27",
+      "ransomware": false,
+      "description": "Drupal Core contains a not failing securely vulnerability that could allow an unauthenticated attacker to take over an existing site or execute arbitrary code via the Drupal installer. Under specific conditions, the attacker can use install.php to attempt to reinstall Drupal on the site.",
+      "cwes": [
+        "CWE-636"
+      ],
+      "cvss": null,
+      "ssvc": null,
+      "epss": null,
+      "epssPct": null,
+      "published": "",
+      "links": [
+        "https://www.drupal.org/sa-core-2026-017"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-132165",
+      "affected": [],
+      "ko": {
+        "title": "Drupal Core 설치 프로그램 취약점(사이트 장악·코드 실행)",
+        "target": "Drupal Core (버전 자료 없음, 벤더 공지 확인 필요)",
+        "impact": "인증 없이 install.php로 재설치를 시도해 사이트 장악 또는 코드 실행 가능, KEV 등재, CVSS 미상",
+        "action": "install.php 접근 차단, 벤더 패치 적용, 재설치 흔적 점검"
+      }
+    }
+  ],
+  "exploited_more": [],
+  "critical": [
+    {
+      "id": "CVE-2026-123342",
+      "ids": [
+        "CVE-2026-123342",
+        "CVE-2026-123722",
+        "CVE-2026-123723",
+        "CVE-2026-123986",
+        "CVE-2026-123987",
+        "CVE-2026-125675",
+        "CVE-2026-125676",
+        "CVE-2026-123721",
+        "CVE-2026-125717",
+        "CVE-2026-125716",
+        "CVE-2026-125718",
+        "CVE-2026-125723"
+      ],
+      "section": "critical",
+      "label": "Adobe Campaign Classic",
+      "vendor": "Adobe",
+      "cna": "psirt@adobe.com",
+      "status": "Awaiting Analysis",
+      "published": "2026-11-24T18:18:53.000",
+      "description": "Adobe Campaign Classic (ACC) is affected by an Improper Control of Generation of Code ('Code Injection') vulnerability that could result in arbitrary code execution in the context of the current user. A low-privileged attacker could exploit this vulnerability to execute arbitrary code. Exploitation of this issue does not require user interaction. Scope is changed.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-123342",
+          "text": "Adobe Campaign Classic (ACC) is affected by an Improper Control of Generation of Code ('Code Injection') vulnerability that could result in arbitrary code execution in the context of the current user. A low-privileged attacker could exploit this vulnerability to execute arbitrary code. Exploitation…"
+        },
+        {
+          "id": "CVE-2026-123722",
+          "text": "Adobe Campaign Classic (ACC) is affected by an Improper Control of Generation of Code ('Code Injection') vulnerability that could result in arbitrary code execution in the context of the current user. A low-privileged attacker could exploit this vulnerability to execute arbitrary code. Exploitation…"
+        },
+        {
+          "id": "CVE-2026-123723",
+          "text": "Adobe Campaign Classic (ACC) is affected by an Improper Control of Generation of Code ('Code Injection') vulnerability that could result in arbitrary code execution in the context of the current user. A low-privileged attacker could exploit this vulnerability to execute arbitrary code. Exploitation…"
+        },
+        {
+          "id": "CVE-2026-123986",
+          "text": "Adobe Campaign Classic (ACC) is affected by an Improper Control of Generation of Code ('Code Injection') vulnerability that could result in arbitrary code execution in the context of the current user. A low-privileged attacker could exploit this vulnerability to execute arbitrary code. Exploitation…"
+        },
+        {
+          "id": "CVE-2026-123987",
+          "text": "Adobe Campaign Classic (ACC) is affected by an Improper Control of Generation of Code ('Code Injection') vulnerability that could result in arbitrary code execution in the context of the current user. A low-privileged attacker could exploit this vulnerability to execute arbitrary code. Exploitation…"
+        }
+      ],
+      "cwes": [
+        "CWE-94",
+        "CWE-863",
+        "CWE-89",
+        "CWE-79"
+      ],
+      "cvss": {
+        "score": 9.9,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H"
+      },
+      "ssvc": null,
+      "epss": null,
+      "links": [
+        "https://www.adobe.com/trust/security/products/campaign/apsb26-194.html"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-123342",
+      "affected": [
+        {
+          "vendor": "Adobe",
+          "product": "Adobe Campaign Classic",
+          "ranges": [],
+          "truncated": true
+        }
+      ],
+      "flags": {
+        "watch": "Adobe",
+        "kisa": "",
+        "news": true,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": false
+      },
+      "score": 14.5,
+      "ko": {
+        "title": "Adobe Campaign Classic 코드 인젝션 외 다수 취약점",
+        "target": "Adobe Campaign Classic (ACC), 관련 CVE 12건, 버전 벤더 공지 확인 필요",
+        "impact": "저권한 공격자가 현재 사용자 권한으로 임의 코드 실행 가능, CVSS 9.9, 관련 CVE에 SQL 삽입·XSS·권한 문제 포함",
+        "action": "벤더 보안 업데이트 적용, 외부 노출과 권한 설정 점검"
+      }
+    },
+    {
+      "id": "CVE-2026-109490",
+      "ids": [
+        "CVE-2026-109490"
+      ],
+      "section": "critical",
+      "label": "Microsoft Authentication Methods Portal Extension",
+      "vendor": "Microsoft",
+      "cna": "secure@microsoft.com",
+      "status": "Awaiting Analysis",
+      "published": "2026-11-23T22:18:30.130",
+      "description": "Improper neutralization of input during web page generation ('cross-site scripting') in Authentication Methods Portal Extension allows an unauthorized attacker to elevate privileges over a network.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-109490",
+          "text": "Improper neutralization of input during web page generation ('cross-site scripting') in Authentication Methods Portal Extension allows an unauthorized attacker to elevate privileges over a network."
+        }
+      ],
+      "cwes": [
+        "CWE-79"
+      ],
+      "cvss": {
+        "score": 9.3,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "no",
+        "technicalImpact": "total"
+      },
+      "epss": 0.00773,
+      "links": [
+        "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-109490"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-109490",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft Entra",
+          "ranges": [],
+          "all": true
+        }
+      ],
+      "flags": {
+        "watch": "Microsoft",
+        "kisa": "",
+        "news": true,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 13.84,
+      "ko": {
+        "title": "Microsoft Authentication Methods Portal Extensi…",
+        "target": "Microsoft Authentication Methods Portal Extension (버전 자료 없음)",
+        "impact": "미인증 공격자가 네트워크를 통해 권한 상승 가능, CVSS 9.3, 악용은 확인되지 않음",
+        "action": "MS 보안 업데이트 적용 여부 확인, 포털 접근 로그 검토"
+      }
+    },
+    {
+      "id": "CVE-2026-112732",
+      "ids": [
+        "CVE-2026-112732"
+      ],
+      "section": "critical",
+      "label": "Microsoft Office Visio",
+      "vendor": "Microsoft",
+      "cna": "secure@microsoft.com",
+      "status": "Awaiting Analysis",
+      "published": "2026-11-24T20:18:21.960",
+      "description": "Double free in Microsoft Office Visio allows an unauthorized attacker to execute code over a network.",
+      "descriptions": [
+        {
+          "id": "CVE-2026-112732",
+          "text": "Double free in Microsoft Office Visio allows an unauthorized attacker to execute code over a network."
+        }
+      ],
+      "cwes": [
+        "CWE-415"
+      ],
+      "cvss": {
+        "score": 9.8,
+        "version": "3.1",
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "ssvc": {
+        "exploitation": "none",
+        "automatable": "yes",
+        "technicalImpact": "total"
+      },
+      "epss": null,
+      "links": [
+        "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-112732"
+      ],
+      "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-112732",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft 365 Apps for Enterprise",
+          "ranges": [],
+          "truncated": true
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft Office LTSC 2021",
+          "ranges": [
+            {
+              "si": "16.0.1",
+              "ee": "16.0.14334.21048"
+            }
+          ]
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft Office LTSC 2024",
+          "ranges": [
+            {
+              "si": "16.0.0",
+              "ee": "16.0.17932.21140"
+            }
+          ]
+        }
+      ],
+      "flags": {
+        "watch": "Microsoft",
+        "kisa": "",
+        "news": false,
+        "oldId": false,
+        "wordpress": false,
+        "msCloud": false,
+        "remoteNoAuth": true
+      },
+      "score": 12.8,
+      "ko": {
+        "title": "Microsoft Office Visio 이중 해제 코드 실행 취약점",
+        "target": "Microsoft Office Visio (버전 자료 없음)",
+        "impact": "미인증 공격자가 네트워크를 통해 코드 실행 가능, CVSS 9.8, 자동화 가능으로 평가됨",
+        "action": "Office 보안 업데이트 적용, 악성 Visio 파일 열람 주의"
+      }
+    }
+  ],
+  "critical_more": [
+    {
+      "id": "CVE-2026-59415",
+      "ids": [
+        "CVE-2026-59415"
+      ],
+      "label": "VMware",
+      "vendor": "VMware",
+      "cvss": 10,
+      "title": "VMware 취약점",
+      "affected": [
+        {
+          "vendor": "Spring",
+          "product": "Spring AI",
+          "ranges": [
+            {
+              "si": "2.0.0",
+              "ee": "2.0.3"
+            },
+            {
+              "si": "1.1.0",
+              "ee": "1.1.10"
+            },
+            {
+              "si": "1.0.0",
+              "ee": "1.0.11"
+            },
+            {
+              "si": "2.0.0",
+              "ee": "2.0.2.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-86155",
+      "ids": [
+        "CVE-2026-86155"
+      ],
+      "label": "Apache",
+      "vendor": "Apache",
+      "cvss": 10,
+      "title": "Apache 서버 측 요청 위조(SSRF)",
+      "affected": [
+        {
+          "vendor": "Apache Software Foundation",
+          "product": "Apache Jena Fuseki",
+          "ranges": [
+            {
+              "ei": "6.2.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-130169",
+      "ids": [
+        "CVE-2026-130169",
+        "CVE-2026-133453"
+      ],
+      "label": "AutoGPT",
+      "vendor": "",
+      "cvss": 10,
+      "title": "AutoGPT 인증 부적절 등 2건",
+      "affected": [
+        {
+          "vendor": "Significant-Gravitas",
+          "product": "AutoGPT",
+          "ranges": [
+            {
+              "si": "0.6.26",
+              "ee": "0.8.0"
+            },
+            {
+              "si": "0.7.1",
+              "ee": "0.11.1"
+            }
+          ]
+        },
+        {
+          "vendor": "Significant-Gravitas",
+          "product": "autogpt-platform-beta",
+          "ranges": [
+            {
+              "si": "0.6.0",
+              "ee": "0.11.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-113824",
+      "ids": [
+        "CVE-2026-113824"
+      ],
+      "label": "Microsoft Clarity",
+      "vendor": "Microsoft",
+      "cvss": 9.1,
+      "title": "Microsoft Clarity 권한 우회(IDOR)",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft Clarity",
+          "ranges": [],
+          "all": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-134401",
+      "ids": [
+        "CVE-2026-134401"
+      ],
+      "label": "Google Chrome",
+      "vendor": "Google Chrome",
+      "cvss": 9.6,
+      "title": "Google Chrome 입력값 검증 부적절",
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Chrome",
+          "ranges": [
+            {
+              "si": "158.0.8127.88",
+              "ee": "158.0.8127.88"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-135792",
+      "ids": [
+        "CVE-2026-135792",
+        "CVE-2026-135797",
+        "CVE-2026-135788",
+        "CVE-2026-135790",
+        "CVE-2026-135791",
+        "CVE-2026-135793",
+        "CVE-2026-135794",
+        "CVE-2026-135796",
+        "CVE-2026-135789"
+      ],
+      "label": "Panabit Smart Application Gateway TANGr7p10",
+      "vendor": "",
+      "cvss": 10,
+      "title": "Panabit Smart Application Gateway TANGr7p10 명령 삽입 등 9건",
+      "affected": [
+        {
+          "vendor": "Panabit",
+          "product": "Smart Application Gateway",
+          "ranges": [
+            {
+              "exact": "TANGr7p10"
+            }
+          ]
+        },
+        {
+          "vendor": "Volans",
+          "product": "NGFW Next-Generation Firewall",
+          "ranges": [
+            {
+              "exact": "r5.1"
+            }
+          ]
+        },
+        {
+          "vendor": "D-Link",
+          "product": "DIR-X1860",
+          "ranges": [
+            {
+              "exact": "4.5.2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-123266",
+      "ids": [
+        "CVE-2026-123266",
+        "CVE-2026-132877"
+      ],
+      "label": "Adobe Experience Manager",
+      "vendor": "Adobe",
+      "cvss": 9.9,
+      "title": "Adobe Experience Manager 코드 삽입 등 2건",
+      "affected": [
+        {
+          "vendor": "Adobe",
+          "product": "Adobe Experience Manager as a Cloud Service",
+          "ranges": [
+            {
+              "ei": "2026.10.29251"
+            }
+          ]
+        },
+        {
+          "vendor": "Adobe",
+          "product": "Adobe Experience Manager 6.5",
+          "ranges": [
+            {
+              "ei": "6.5.26"
+            }
+          ]
+        },
+        {
+          "vendor": "Adobe",
+          "product": "Adobe Experience Manager 6.5 LTS",
+          "ranges": [],
+          "truncated": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-70193",
+      "ids": [
+        "CVE-2026-70193"
+      ],
+      "label": "Microsoft Office SharePoint",
+      "vendor": "Microsoft",
+      "cvss": 9.9,
+      "title": "Microsoft Office SharePoint 경로 조작",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft SharePoint Online",
+          "ranges": [],
+          "all": true
+        },
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft SharePoint Server Subscription Edition",
+          "ranges": [
+            {
+              "si": "16.0.0",
+              "ee": "16.0.20326.20190"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-109480",
+      "ids": [
+        "CVE-2026-109480"
+      ],
+      "label": "Microsoft Profile Data Roaming Service (PDRS)",
+      "vendor": "Microsoft",
+      "cvss": 9.6,
+      "title": "Microsoft Profile Data Roaming Service (PDRS) 서버 측 요청 위조(SS…",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Profile Data Roaming Service (PDRS)",
+          "ranges": [],
+          "all": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-62841",
+      "ids": [
+        "CVE-2026-62841"
+      ],
+      "label": "Microsoft Azure Event Grid",
+      "vendor": "Microsoft",
+      "cvss": 10,
+      "title": "Microsoft Azure Event Grid 인증 부적절",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Azure Event Grid System",
+          "ranges": [],
+          "all": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-109484",
+      "ids": [
+        "CVE-2026-109484"
+      ],
+      "label": "Microsoft Azure App Service",
+      "vendor": "Microsoft",
+      "cvss": 10,
+      "title": "Microsoft Azure App Service 취약점",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Azure App Service for Linux",
+          "ranges": [],
+          "truncated": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-95417",
+      "ids": [
+        "CVE-2026-95417",
+        "CVE-2026-95418",
+        "CVE-2026-95420",
+        "CVE-2026-95421",
+        "CVE-2026-95425",
+        "CVE-2026-95427",
+        "CVE-2026-95439",
+        "CVE-2026-95442"
+      ],
+      "label": "CVE-2026-95417",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "CVE-2026-95417 해제 후 사용(UAF) 등 8건",
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Android",
+          "ranges": [
+            {
+              "exact": "unknown"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-101864",
+      "ids": [
+        "CVE-2026-101864"
+      ],
+      "label": "EUSurvey",
+      "vendor": "",
+      "cvss": 9.2,
+      "title": "EUSurvey 비밀번호 복구 취약",
+      "affected": [
+        {
+          "vendor": "EUSurvey",
+          "product": "EUSURVEY",
+          "ranges": [
+            {
+              "ei": "1.6"
+            }
+          ],
+          "truncated": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-123215",
+      "ids": [
+        "CVE-2026-123215",
+        "CVE-2026-123216",
+        "CVE-2026-123340"
+      ],
+      "label": "Copeland XWEB Pro",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "Copeland XWEB Pro 중요 기능 인증 누락 등 3건",
+      "affected": [
+        {
+          "vendor": "Copeland",
+          "product": "XWEB PRO",
+          "ranges": [
+            {
+              "ee": "1.16.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-65320",
+      "ids": [
+        "CVE-2026-65320"
+      ],
+      "label": "fastcore",
+      "vendor": "",
+      "cvss": 9.2,
+      "title": "fastcore 경로 조작",
+      "affected": [
+        {
+          "vendor": "AnswerDotAI",
+          "product": "fastcore",
+          "ranges": [
+            {
+              "ei": "2.2.44"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-128791",
+      "ids": [
+        "CVE-2026-128791",
+        "CVE-2026-128797",
+        "CVE-2026-128798",
+        "CVE-2026-9790"
+      ],
+      "label": "CVE-2026-128791",
+      "vendor": "",
+      "cvss": 10,
+      "title": "CVE-2026-128791 중요 기능 인증 누락 등 4건",
+      "affected": [
+        {
+          "vendor": "Acer",
+          "product": "Connect M6E 5G Portable WiFi Router",
+          "ranges": [
+            {
+              "si": "M6E_AI_1.00.000019",
+              "ei": "M6E_GBL_1.00.000079"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-111546",
+      "ids": [
+        "CVE-2026-111546"
+      ],
+      "label": "Dell PowerStore",
+      "vendor": "Dell",
+      "cvss": 9.1,
+      "title": "Dell PowerStore OS 명령 삽입",
+      "affected": [
+        {
+          "vendor": "Dell",
+          "product": "PowerStore 500T",
+          "ranges": [],
+          "truncated": true
+        },
+        {
+          "vendor": "Dell",
+          "product": "PowerStore 1000T",
+          "ranges": [],
+          "truncated": true
+        },
+        {
+          "vendor": "Dell",
+          "product": "PowerStore 1200T",
+          "ranges": [],
+          "truncated": true
+        },
+        {
+          "vendor": "Dell",
+          "product": "PowerStore 3000T",
+          "ranges": [],
+          "truncated": true
+        },
+        {
+          "vendor": "Dell",
+          "product": "PowerStore 3200Q",
+          "ranges": [],
+          "truncated": true
+        },
+        {
+          "vendor": "Dell",
+          "product": "PowerStore 3200T",
+          "ranges": [],
+          "truncated": true
+        },
+        {
+          "vendor": "Dell",
+          "product": "PowerStore 5000T",
+          "ranges": [],
+          "truncated": true
+        },
+        {
+          "vendor": "Dell",
+          "product": "PowerStore 5200Q",
+          "ranges": [],
+          "truncated": true
+        },
+        {
+          "vendor": "Dell",
+          "product": "PowerStore 5200T",
+          "ranges": [],
+          "truncated": true
+        },
+        {
+          "vendor": "Dell",
+          "product": "PowerStore 7000T",
+          "ranges": [],
+          "truncated": true
+        },
+        {
+          "vendor": "Dell",
+          "product": "PowerStore 9000T",
+          "ranges": [],
+          "truncated": true
+        },
+        {
+          "vendor": "Dell",
+          "product": "PowerStore 9200T",
+          "ranges": [],
+          "truncated": true
+        },
+        {
+          "vendor": "Dell",
+          "product": "PowerStore 1500",
+          "ranges": [],
+          "truncated": true
+        },
+        {
+          "vendor": "Dell",
+          "product": "PowerStore 5500",
+          "ranges": [],
+          "truncated": true
+        },
+        {
+          "vendor": "Dell",
+          "product": "PowerStore 9500",
+          "ranges": [],
+          "truncated": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-65135",
+      "ids": [
+        "CVE-2026-65135",
+        "CVE-2026-65175"
+      ],
+      "label": "NVIDIA Video Codec SDK for Linux",
+      "vendor": "NVIDIA",
+      "cvss": 9.8,
+      "title": "NVIDIA Video Codec SDK for Linux 범위 밖 쓰기 등 2건",
+      "affected": [
+        {
+          "vendor": "NVIDIA",
+          "product": "IGX Thor",
+          "ranges": [],
+          "truncated": true
+        },
+        {
+          "vendor": "NVIDIA",
+          "product": "Jetson Thor Series",
+          "ranges": [],
+          "truncated": true
+        },
+        {
+          "vendor": "NVIDIA",
+          "product": "AIStore",
+          "ranges": [],
+          "truncated": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-50691",
+      "ids": [
+        "CVE-2026-50691"
+      ],
+      "label": "Microsoft M365 Copilot",
+      "vendor": "Microsoft",
+      "cvss": 9.9,
+      "title": "Microsoft M365 Copilot 권한 검사 부적절",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft 365 Copilot",
+          "ranges": [],
+          "all": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-70305",
+      "ids": [
+        "CVE-2026-70305"
+      ],
+      "label": "Microsoft Azure Portal",
+      "vendor": "Microsoft",
+      "cvss": 9.6,
+      "title": "Microsoft Azure Portal 크로스사이트 스크립팅(XSS)",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Azure Portal",
+          "ranges": [],
+          "all": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-118286",
+      "ids": [
+        "CVE-2026-118286"
+      ],
+      "label": "Microsoft Azure Site Recovery",
+      "vendor": "Microsoft",
+      "cvss": 9.1,
+      "title": "Microsoft Azure Site Recovery 접근 통제 부적절",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Azure Site Recovery",
+          "ranges": [],
+          "all": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-69899",
+      "ids": [
+        "CVE-2026-69899"
+      ],
+      "label": "Microsoft Azure DevTest Labs",
+      "vendor": "Microsoft",
+      "cvss": 9.1,
+      "title": "Microsoft Azure DevTest Labs 스푸핑 인증 우회",
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Azure DevTest Labs",
+          "ranges": [],
+          "all": true
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-136165",
+      "ids": [
+        "CVE-2026-136165"
+      ],
+      "label": "Fider",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "Fider 인증 부적절",
+      "affected": [
+        {
+          "vendor": "getfider",
+          "product": "fider",
+          "ranges": [
+            {
+              "ee": "0.40.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-135736",
+      "ids": [
+        "CVE-2026-135736",
+        "CVE-2026-135743"
+      ],
+      "label": "Ffmpeg",
+      "vendor": "Ffmpeg",
+      "cvss": 9.8,
+      "title": "Ffmpeg 범위 밖 쓰기 등 2건",
+      "affected": [
+        {
+          "vendor": "ffmpeg",
+          "product": "ffmpeg",
+          "ranges": [
+            {
+              "si": "4.4",
+              "ee": "9.1"
+            },
+            {
+              "si": "4.3",
+              "ee": "9.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2026-129514",
+      "ids": [
+        "CVE-2026-129514"
+      ],
+      "label": "CVE-2026-129514",
+      "vendor": "",
+      "cvss": 10,
+      "title": "CVE-2026-129514 신뢰할 수 없는 데이터 역직렬화",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-114203",
+      "ids": [
+        "CVE-2026-114203"
+      ],
+      "label": "ASUS GPU Tweak III",
+      "vendor": "",
+      "cvss": 9.3,
+      "title": "ASUS GPU Tweak III OS 명령 삽입",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-134019",
+      "ids": [
+        "CVE-2026-134019"
+      ],
+      "label": "PyTables",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "PyTables 신뢰할 수 없는 데이터 역직렬화",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-136404",
+      "ids": [
+        "CVE-2026-136404"
+      ],
+      "label": "CVE-2026-136404",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "CVE-2026-136404 스택 버퍼 오버플로",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-136411",
+      "ids": [
+        "CVE-2026-136411"
+      ],
+      "label": "BusyBox",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "BusyBox 경로 조작",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-136434",
+      "ids": [
+        "CVE-2026-136434"
+      ],
+      "label": "CVE-2026-136434",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "CVE-2026-136434 코드 삽입",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-135388",
+      "ids": [
+        "CVE-2026-135388",
+        "CVE-2026-135389"
+      ],
+      "label": "Pion DTLS",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "Pion DTLS 전자서명 검증 부적절 등 2건",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-135501",
+      "ids": [
+        "CVE-2026-135501",
+        "CVE-2026-135506",
+        "CVE-2026-135508",
+        "CVE-2026-135509",
+        "CVE-2026-135510",
+        "CVE-2026-135513",
+        "CVE-2026-135519",
+        "CVE-2026-135520",
+        "CVE-2026-135521",
+        "CVE-2026-135525",
+        "CVE-2026-135529",
+        "CVE-2026-135530",
+        "CVE-2026-135547",
+        "CVE-2026-135571",
+        "CVE-2026-135578",
+        "CVE-2026-135582",
+        "CVE-2026-135596",
+        "CVE-2026-135597"
+      ],
+      "label": "Mozilla",
+      "vendor": "Mozilla",
+      "cvss": 9.6,
+      "title": "Mozilla 해제 후 사용(UAF) 등 18건",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-118285",
+      "ids": [
+        "CVE-2026-118285"
+      ],
+      "label": "Microsoft Azure Machine Learning",
+      "vendor": "Microsoft",
+      "cvss": 9.6,
+      "title": "Microsoft Azure Machine Learning 서버 측 요청 위조(SSRF)",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-136184",
+      "ids": [
+        "CVE-2026-136184"
+      ],
+      "label": "compose-farm",
+      "vendor": "",
+      "cvss": 9.6,
+      "title": "compose-farm 사이트 간 요청 위조(CSRF)",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-136522",
+      "ids": [
+        "CVE-2026-136522"
+      ],
+      "label": "CubeWP Forms",
+      "vendor": "",
+      "cvss": 9.6,
+      "title": "CubeWP Forms 크로스사이트 스크립팅(XSS)",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-18530",
+      "ids": [
+        "CVE-2026-18530"
+      ],
+      "label": "Lantronix S2220 Series 2",
+      "vendor": "",
+      "cvss": 9.9,
+      "title": "Lantronix S2220 Series 2 OS 명령 삽입",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-119582",
+      "ids": [
+        "CVE-2026-119582",
+        "CVE-2026-117593"
+      ],
+      "label": "CVE-2026-119582",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "CVE-2026-119582 SQL 삽입 등 2건",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-136410",
+      "ids": [
+        "CVE-2026-136410"
+      ],
+      "label": "Thymeleaf",
+      "vendor": "",
+      "cvss": 9.5,
+      "title": "Thymeleaf 표현 언어 삽입",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-136441",
+      "ids": [
+        "CVE-2026-136441"
+      ],
+      "label": "CVE-2026-136441",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "CVE-2026-136441 권한 검사 오류",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-136126",
+      "ids": [
+        "CVE-2026-136126"
+      ],
+      "label": "c-icap-server",
+      "vendor": "",
+      "cvss": 9.2,
+      "title": "c-icap-server 이중 해제",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-130411",
+      "ids": [
+        "CVE-2026-130411"
+      ],
+      "label": "CVE-2026-130411",
+      "vendor": "",
+      "cvss": 9.2,
+      "title": "CVE-2026-130411 신뢰할 수 없는 데이터 역직렬화",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-136132",
+      "ids": [
+        "CVE-2026-136132"
+      ],
+      "label": "Pangolin",
+      "vendor": "",
+      "cvss": 9.2,
+      "title": "Pangolin 인증 우회",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-136412",
+      "ids": [
+        "CVE-2026-136412"
+      ],
+      "label": "CVE-2026-136412",
+      "vendor": "",
+      "cvss": 9.2,
+      "title": "CVE-2026-136412 해제 후 사용(UAF)",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-123167",
+      "ids": [
+        "CVE-2026-123167",
+        "CVE-2026-123168",
+        "CVE-2026-123172",
+        "CVE-2026-82315",
+        "CVE-2026-82316",
+        "CVE-2026-82319",
+        "CVE-2026-82320",
+        "CVE-2026-82321",
+        "CVE-2026-82322"
+      ],
+      "label": "SolarWinds Serv-U",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "SolarWinds Serv-U 경로 조작 등 9건",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-135686",
+      "ids": [
+        "CVE-2026-135686"
+      ],
+      "label": "Trilium",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "Trilium SQL 삽입",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-124286",
+      "ids": [
+        "CVE-2026-124286"
+      ],
+      "label": "CVE-2026-124286",
+      "vendor": "",
+      "cvss": 9.1,
+      "title": "CVE-2026-124286 전자서명 검증 부적절",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-129393",
+      "ids": [
+        "CVE-2026-129393",
+        "CVE-2026-123214",
+        "CVE-2026-126045",
+        "CVE-2026-127297"
+      ],
+      "label": "Joomla",
+      "vendor": "Joomla",
+      "cvss": 9.4,
+      "title": "Joomla XML 삽입 등 4건",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-135693",
+      "ids": [
+        "CVE-2026-135693"
+      ],
+      "label": "rConfig Core",
+      "vendor": "",
+      "cvss": 9.3,
+      "title": "rConfig Core 크로스사이트 스크립팅(XSS)",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-93700",
+      "ids": [
+        "CVE-2026-93700"
+      ],
+      "label": "CVE-2026-93700",
+      "vendor": "",
+      "cvss": 9,
+      "title": "CVE-2026-93700 템플릿 삽입",
+      "affected": []
+    },
+    {
+      "id": "CVE-2026-135202",
+      "ids": [
+        "CVE-2026-135202"
+      ],
+      "label": "CVE-2026-135202",
+      "vendor": "",
+      "cvss": 9.8,
+      "title": "CVE-2026-135202 악성코드 내장",
+      "affected": []
+    }
+  ],
+  "advisories": [
+    {
+      "id": "a-1eed6713",
+      "source": "KISA 보안공지",
+      "title": "Splunk 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72326",
+      "date": "2026-11-24"
+    },
+    {
+      "id": "a-dc531e89",
+      "source": "KISA 보안공지",
+      "title": "ConnectWise 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72325",
+      "date": "2026-11-24"
+    },
+    {
+      "id": "a-7ae29f56",
+      "source": "KISA 보안공지",
+      "title": "BeyondTrust 제품 보안 업데이트 권고",
+      "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=72324",
+      "date": "2026-11-24"
+    }
+  ],
+  "news": {
+    "domestic": [
+      {
+        "id": "n-1f1ed9af",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "하나저축은행 해킹…고객 552명 주민등록번호 등 개인신용정보 유출 확인",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209707",
+        "source": "데일리시큐",
+        "published": "2026-11-24T18:05:15.000Z",
+        "snippet": "하나저축은행이 해킹 공격을 받아 고객 552명의 개인신용정보가 유출된 정황이 확인됐다. 유출 항목에는 주민등록번호와 전화번호, 자택주소, 직장정보 등 개인을 식별할 수 있는 민감한 정보가 다수 포함돼 있어 2차 피해가 우려된다. 하나저축은행은 개인정보 유출 안내문을 통해 지난 11월 16일 모바일웹의 고객확인 재이행 시스템에 대한 외부의 불법적인 침입으로 고객 552명의 개인신용정보가 유출…",
+        "outlets": [
+          "데일리시큐",
+          "연합뉴스TV",
+          "뉴스웍스",
+          "코리아리포트",
+          "www.ebn.co.kr",
+          "이데일리",
+          "팍스경제TV",
+          "글로벌이코노믹",
+          "뉴시안",
+          "뉴데일리 경제",
+          "대전일보",
+          "데일리굿뉴스",
+          "주간한국",
+          "YTN",
+          "MBC 뉴스",
+          "천지일보",
+          "머니투데이",
+          "KBS 뉴스",
+          "세이프머니",
+          "매일경제",
+          "매일일보",
+          "경향신문",
+          "연합뉴스",
+          "Chosunbiz",
+          "뉴스1",
+          "뉴시스"
+        ],
+        "related": [
+          {
+            "title": "하나저축은행도 해킹…고객 552명 정보 유출",
+            "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5zTU1BTWx1N18yaU11cFh2b2xHcmN3clE3UTZuY2tEQW5leGJhZTM4ZU5XZVNJalZ1SXZnZ0Q1c3BwVDdNN0FEWmRnRWNPeEs5UW51NC1OdHBuTzJYdGhUN0RJeWNYWUU?oc=5",
+            "source": "연합뉴스TV"
+          },
+          {
+            "title": "하나저축은행 해킹에 고객 552명 개인정보 유출…추가 피해 조사 중",
+            "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE1BeS15dmZtb0cyTnNnbjlnN3Q3LU85d0NVSzAtZnBfSlN1T0Vub3hZOTQtdmJTSnFyekJPbXFZUmhhdk9KazFYZHpjZk9mNGRmTHJWRElnTTlRNnlKVUdrSUNJWUNyN0Q3VTB3Tkotc9IBc0FVX3lxTE9zbDVNLTZJRGNBRzlUclpWQlBNR3N0ekJSOFd6bjlHazdUM3hYYnBBcG53VFpBMmNoaXp2RjFPQm1qNFhMa3EtblFiR3JmLVRWT25LeUhCaFphZ25ESXVlaHdGWlo0YU1KRHl4ZjRYMHlvODQ?oc=5",
+            "source": "뉴스웍스"
+          },
+          {
+            "title": "하나저축은행도 해킹…고객 552명 개인정보 유출",
+            "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1TX2I2eEt3LTV1VHpIc2RtbnJCRHEycVVyVEJVa0ZjVm5zTUhkQ2VGaTZ3RDY4dmE3TGtxWnhSbFI2WWc3YldMSnVHak1JOVhSX3lvb012TTQxT1VhQzdnZ1g2bzhjcXhMTlc4dHpkQmo?oc=5",
+            "source": "코리아리포트"
+          },
+          {
+            "title": "하나저축은행도 해킹…고객 552명 개인정보 유출",
+            "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE1YQ3pGQ3dhVFJZLW4xanFTSzVyRDlwM0FUUVF3bnFKcFlLUVpQbDF1VkpaTVd1dndQSllTcnZIN05pZU1BNFdvd2w1VTZnRGtoME1KUXhKWExNMS04S2J6THllbldCSlF6?oc=5",
+            "source": "www.ebn.co.kr"
+          },
+          {
+            "title": "또 뚫린 금융권…하나저축은행서 552명 개인정보 유출",
+            "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxQQjk4MkNEUUFFV3dSc0x6ZEZPWXU3TDFqSlhFdHRyTVRKNzVSNGlhcl9Rc0FZMDFxRmJkNmZjeVJKRVdWRGVyWVpkN2JrQnBFUlNCVDlicW9ESWxXTmczX0NReUoxY0xJcVMyWENqTTFNUlplbklzbFRPZ0hOc2RFdg?oc=5",
+            "source": "이데일리"
+          }
+        ],
+        "cves": [],
+        "score": 22,
+        "title_ko": "하나저축은행 해킹…고객 552명 개인신용정보 유출",
+        "summary_ko": "모바일웹 고객확인 재이행 시스템에 외부 침입이 있었고 고객 552명의 주민등록번호·연락처·직장정보 등이 유출됨. 2차 피해가 우려됨.",
+        "check_ko": "고객확인 재이행 시스템 등 외부 접근 로그 확인"
+      },
+      {
+        "id": "n-c5005e85",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "[이슈] 한전 해킹 뒤 ‘취약점 방치’ 제보 확인해보니…신고 건은 패치, 정부 취약점 신고제에 ‘패치 데드라인’ 도입 시급",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209704",
+        "source": "데일리시큐",
+        "published": "2026-11-24T16:39:49.000Z",
+        "snippet": "한국전력공사 개인정보 유출 사고 이후 데일리시큐에 제보가 들어왔다. 지난 6월 정부의 보안 취약점 신고·조치·공개(CVD/VDP) 시범사업에서 한전ON의 고객정보를 탈취할 수 있는 취약점이 발견돼 한전에 통보됐지만, 조치가 이뤄지지 않은 사이 정보가 유출됐다는 내용이었다. 제보자는 당시 한전이 통보받은 취약점 목록과 이번 사고 경위를 대조해 보면 알 수 있을 것이라고 전해 왔다. 데일리시큐…",
+        "outlets": [
+          "데일리시큐",
+          "천안신문",
+          "경북도민일보",
+          "MBC 뉴스"
+        ],
+        "related": [
+          {
+            "title": "한전 전자조달시스템 87만명 개인정보 유출…입찰·계약업체 2차 피해 우려 > 뉴스",
+            "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTE1lYTZ3alVVUnB1Wlc5VHYxb0VGVlY2RTRTbWQ0M3dhNW1FWDgwRWRPMFR1dUg3LXdVSUg4aHdIbzVDVmM?oc=5",
+            "source": "천안신문"
+          },
+          {
+            "title": "한전, 개인정보 유출 해커와 협상 의혹 부인…\"사실무근\"",
+            "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1UZUR2S0cyQzU4Q1lqRWpQX0lVdWVNU3JxRElWUG5zdzJHR0ducTBBUlBZVG53ZFdLMnFtcU9XRHY5UG84WkQ5cUFTWUYxS2tEU0RWUDIyaWt1eEI5M3pKd3g3NXBSTjR1bHc?oc=5",
+            "source": "경북도민일보"
+          },
+          {
+            "title": "한전 \"'개인정보 유출 판매' 해커와 협상한 사실 없어\"",
+            "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTFB4ay1HQVEtY0VLUUZpMGQ0WEtncDVXNmxadmFVdFZaaHJYR2pIcG5wdmM3RFFLc1RsbFIzM2YxQS15b0VGb09LbXRjeGhOMlJWVWN1dW0wQXNETnV0a0p5eHRkQjFCQkYwZVd4ZFVHZ2EtS1dh0gF0QVVfeXFMT1BwRTBlcmdjcW1jSDVEcHgwM1pteUZIZl9ockxWZGk2aEhfS015SjcxcTZEZU9WWkVIZmpWaVlxWjJ5X0Q4WEZXU3VNbGVaZHpOb1d4SnZGWWFlY0h2OVpjQjFXM3REajBhT2liTkZqcW5TbnI?oc=5",
+            "source": "MBC 뉴스"
+          }
+        ],
+        "cves": [],
+        "score": 17.4,
+        "title_ko": "한전 해킹 전 취약점 제보 방치 의혹, 패치 기한 필요",
+        "summary_ko": "2026년 6월 정부 CVD 시범사업에서 한전ON 고객정보 탈취 취약점이 통보됐으나 조치 전 정보가 유출됐다는 제보가 제기됨. 취약점 신고제에 패치 기한 도입 필요.",
+        "check_ko": "취약점 신고 접수 후 조치 이력과 기한 관리 점검"
+      },
+      {
+        "id": "n-ca9ac012",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "美 CIA·국가정보국도 해킹 피해… 일부 非기밀 정보 노출",
+        "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPRzJOb0NXR2RBcEIxRC1xendHemZXZkR6S3hROUxmci1KY2RvajFybndNRFpPMGlkb3lhT0dhZjY1V1lNelhUelBoWEdZekVrQWhWZUlXVm5mbEJKdGZBbUU0NGJYX2dJMGpqME1UQklwamZtSGFEbm5oVW5tbFdkWUtzeWpNRktaRVFvTEdLOEFfdDE0S2wydFp5cnJGd9IBsgFBVV95cUxPMkZmM2NCM01wRnpXVU1WZTktWnk2VGdoTmNCbTBLME5rd09hd1pXSTAwaDJPeDlHNzFUSGlMeGJvYUVYY29rYWtMNnhudzFVdTZIeFdzMGpUYmN0QmtzcXBsdHoyLUxwX29Rbll4aVk5VlV4WFN4VjJwSE40d1BtTWxOc2h2Ui1QdG5XUlhRRVRVZkFoX2t4QUNvNnUtU3piYzZKbXhXWlBvTDNvUXVjLThR?oc=5",
+        "source": "Chosunbiz",
+        "published": "2026-11-24T21:51:00.000Z",
+        "snippet": "",
+        "outlets": [
+          "Chosunbiz",
+          "스페셜타임스",
+          "연합뉴스",
+          "디지털데일리",
+          "연합뉴스TV",
+          "블루밍비트"
+        ],
+        "related": [
+          {
+            "title": "미 CIA·국가정보국 해킹 피해…기밀 유출은 없어",
+            "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE1vSTJWcTBaYmM2YUJHc0xGbXZ3Y0NPcXhvUUtEcnRHX2kyT0tMd3lvS2s1eHRHU2k0VHNNS0lIR1lyZnduVlVPY3FicDktb1kwS0tGNWRHeGNyYlZHLVpjQk1SWDVrQVRRYWRRUmxiMF9lbHM?oc=5",
+            "source": "스페셜타임스"
+          },
+          {
+            "title": "美 CIA·국가정보국 해킹 피해…정보당국 보안우려 고조(종합)",
+            "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBLbmhDVmRMclRUampOSkZZN29HeUU4T3dLdlR2RDRVdlc4N2JMLWFLcUFKejlkdzF6cldqZmotZmhMSU1YM015c19yUzR2YmJMYkx3SWhEMjVmSlXSAWBBVV95cUxPLVBteDdvRHVfLUZfeVFDcER5ZTNRLXlfSGFxSjN6YXNYZnN2NFpZOVRZSHZSZzZDNWFqYnFVeURUMWRlcDkzZ1VKMFRyeFRVa0tpUFJxQl9jSy1lc0JmWFY?oc=5",
+            "source": "연합뉴스"
+          },
+          {
+            "title": "미 CIA·국가정보국 해킹 당해…비기밀 정보 일부 노출",
+            "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE1DaFhvb0hYUjVQLXVpRTZBVDE5ZHpORVFucWxuTmtZa1A1WFd6NUR1OVQtVGpYNVdOb0lqc2ZLQlZmZ3ItbEZ4WDY5SnJUSlp2RFR5b3VRVE15N2R2a2dYM2lDR0o?oc=5",
+            "source": "디지털데일리"
+          },
+          {
+            "title": "\"CIA·국가정보국도 해킹 피해\"…美정보당국 보안 우려 ↑",
+            "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE1QRXhrR1J2YTkwa0NQOFJpckJXSlM1MFM2cElwRllfanBkSTZYT3ExeU9Ya1dLbXVoWWRfVmlRN0RDNDRzcWJIUjVodUEyNDFYcm83eDlTUHBKRmVXSjJjUEFZYmdwOVU?oc=5",
+            "source": "연합뉴스TV"
+          },
+          {
+            "title": "미국 CIA·국가정보국 사이버 공격 피해…비기밀 정보 유출",
+            "url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTFB1RHVDZFJVTEU2RzRBSDBuNkZRaU9GY0txT09obklsT2dUNEc4YnNIX0Z4VWFDWi1Ibk5rVGlLSFkxS3BYVy1nVDhtdXR1ZWhj?oc=5",
+            "source": "블루밍비트"
+          }
+        ],
+        "cves": [],
+        "score": 18.3,
+        "title_ko": "미 CIA·국가정보국 해킹…비기밀 정보 일부 노출",
+        "summary_ko": "미 CIA와 국가정보국이 해킹 피해를 입어 비기밀 정보 일부가 노출됨. 기밀 유출은 없었다고 보도되어 정보당국의 보안 우려가 고조됨.",
+        "check_ko": "정부·기관 연계 원격 접근 계정 점검"
+      },
+      {
+        "id": "n-fc608fad",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "웰컴페이먼츠·KIS정보통신서도 개인정보 유출",
+        "url": "https://www.boannews.com/news/articleView.html?idxno=147490",
+        "source": "보안뉴스",
+        "published": "2026-11-24T03:12:34.000Z",
+        "snippet": "온라인 결제 전문 기업 웰컴페이먼츠와 KIS정보통신에서 개인정보 유출 사고가 발생했다. KIS정보통신은 21일 공지사항을 내고 “권한 없는 자가 당사 VAN 업무지원 웹서비스(UBMS) 서버에 비정상적으로 접근해 일부 고객 및 임직원의 개인정보가 유출된 사실을 19일 확인했다”고 밝혔다. 유출 규모는 총 862건으로 고객 208건, 임직원 654건이다. 유출 항목은 대리점 영업관리 서비스(…",
+        "outlets": [
+          "보안뉴스",
+          "데일리시큐"
+        ],
+        "related": [
+          {
+            "title": "국내 PG사 잇단 해킹 사고…웰컴페이먼츠와 NHN KCP·KIS정보통신 등 개인정보 유출",
+            "url": "https://www.dailysecu.com/news/articleView.html?idxno=209682",
+            "source": "데일리시큐"
+          }
+        ],
+        "cves": [],
+        "score": 12.2,
+        "title_ko": "웰컴페이먼츠·KIS정보통신 개인정보 유출",
+        "summary_ko": "KIS정보통신 VAN 업무지원 웹서비스 서버에 권한 없는 접근이 있어 고객 208건·임직원 654건 등 862건이 유출됨. 국내 PG사 잇단 해킹의 일부로 보도됨.",
+        "check_ko": "VAN 웹서비스 외부 접근 로그 확인"
+      },
+      {
+        "id": "n-c9a8c32f",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "국립순천대학교 해킹…구 향림통시스템 개인정보 유출 정황 확인",
+        "url": "https://www.dailysecu.com/news/articleView.html?idxno=209706",
+        "source": "데일리시큐",
+        "published": "2026-11-24T17:56:18.000Z",
+        "snippet": "국립순천대학교에서 외부 침입에 따른 개인정보 유출 정황이 확인됐다. 최근 국내 대학을 대상으로 한 연쇄 해킹 사고가 잇따르는 가운데 국립순천대에서도 침해사고가 발생하면서 대학 정보시스템 전반에 대한 보안 점검 필요성이 커지고 있다. 국립순천대학교 정보전산원은 24일 ‘개인정보 유출 사고에 대한 사과 및 안내 말씀’을 통해 구 향림통시스템에 대한 비정상적인 외부 접근 시도가 탐지됐으며, 보안…",
+        "outlets": [
+          "데일리시큐"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 10,
+        "title_ko": "국립순천대 해킹…구 향림통시스템 개인정보 유출 정황",
+        "summary_ko": "국립순천대 정보전산원이 구 향림통시스템에 대한 비정상 접근으로 개인정보 유출 정황을 확인함. 국내 대학 연쇄 해킹 흐름과 맞물려 점검 필요성이 커짐.",
+        "check_ko": "퇴역·구형 대학 정보시스템 계정과 데이터 점검"
+      },
+      {
+        "id": "n-c9e7bc11",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "일본 게이오그룹, 랜섬웨어에 당했다…개인정보 1100만명분 유출 우려",
+        "url": "https://zdnet.co.kr/view/?no=20261125000013",
+        "source": "지디넷코리아",
+        "published": "2026-11-24T15:15:38.000Z",
+        "snippet": "[지디넷코리아]일본 게이오전철(京王電鉄)을 운영하는 게이오(京王) 그룹이 랜섬웨어 사이버 공격을 받아 일부 시스템 운영에 곤란을 겪었다. 뿐만 아니라 고객, 채용 응모자, 종업원 등의 개인정보가 연인원 약 1100만명분 유출됐을 가능성도 제기됐다. 일부 유출 데이터에는 주민등록증 역할을 하는 마이넘버카드나 여권 이미지, 신용카드 정보가 포함됐다. 게이오는 9월에 확인된 랜섬웨어 공격으로 그…",
+        "outlets": [
+          "지디넷코리아"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 10,
+        "title_ko": "일본 게이오그룹 랜섬웨어 피해…개인정보 1100만명분 우려",
+        "summary_ko": "게이오 그룹이 랜섬웨어 공격으로 일부 시스템 운영에 차질을 빚었고, 고객·채용 응모자·종업원 정보 약 1100만명분 유출 가능성이 제기됨.",
+        "check_ko": "백업 무결성·복구 절차와 망 분리 상태 점검"
+      },
+      {
+        "id": "n-18acbe9e",
+        "region": "domestic",
+        "lang": "ko",
+        "title": "국정원, 국가배후 해킹조직 정보 수집 확대 추진",
+        "url": "https://zdnet.co.kr/view/?no=20261125002602",
+        "source": "지디넷코리아",
+        "published": "2026-11-24T15:28:49.000Z",
+        "snippet": "[지디넷코리아]국가정보원이 해킹수법이나 피해 양상 등에 비추어 국제·국가배후 해킹조직의 활동으로 의심할 상당한 이유가 있는 경우를 사이버안보 정보 수집 범위에 포함하도록 법령 개정에 나섰다. 국정원은 25일 이 같은 내용의 '사이버안보 업무규정 일부개정안' 개정안을 입법예고했다. 개정안의 주요 내용을 살펴보면, 국제·국가배후 해킹조직의 활동으로 의심할만한 상당한 이유가 있는 경우를 사이버안…",
+        "outlets": [
+          "지디넷코리아"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 11,
+        "title_ko": "국정원, 국가배후 해킹조직 정보 수집 범위 확대 추진",
+        "summary_ko": "국정원이 사이버안보 업무규정 개정안을 입법예고함. 해킹수법·피해 양상상 국가배후 활동이 의심되면 정보 수집 범위에 포함하는 내용임.",
+        "check_ko": "개정안 의견 제출 기한과 정보 제공 범위 검토"
+      }
+    ],
+    "international": [
+      {
+        "id": "n-8e2e8968",
+        "region": "international",
+        "lang": "en",
+        "title": "Check Point Security Management Servers Hacked in AI-Assisted Campaign",
+        "url": "https://www.securityweek.com/check-point-security-management-servers-hacked-in-ai-assisted-campaign/",
+        "source": "SecurityWeek",
+        "published": "2026-11-24T14:21:56.000Z",
+        "snippet": "The attacks were launched from 99 IP addresses and targeted organizations across multiple industries and countries. The post Check Point Security Management Servers Hacked in AI-Assisted Campaign appeared first on Secur…",
+        "outlets": [
+          "SecurityWeek",
+          "BleepingComputer",
+          "GeekNews"
+        ],
+        "related": [
+          {
+            "title": "Hackers compromise Check Point Servers in 22 organizations",
+            "url": "https://www.bleepingcomputer.com/news/security/hackers-compromise-check-point-servers-in-22-organizations/",
+            "source": "BleepingComputer"
+          },
+          {
+            "title": "22개 조직의 Check Point 서버를 침해한 사이버 공격 캠페인",
+            "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTFBzVEdyLTdhZzBlRkRfYkpIV19XckFjR0NLTjQ3UU9sSW00M2RXaUdyd0lqTDdFRGEwbmhPbktONElLeDBxRzR1Tmdwdw?oc=5",
+            "source": "GeekNews"
+          }
+        ],
+        "cves": [],
+        "score": 15.1,
+        "title_ko": "Check Point 보안관리 서버, AI 기반 캠페인에 침해",
+        "summary_ko": "99개 IP에서 시작된 공격으로 여러 산업·국가의 22개 조직 Check Point 서버가 침해됨. AI를 활용한 공격으로 보도됨.",
+        "check_ko": "Check Point 관리서버 사용 여부와 관리 IP 접근 로그 확인"
+      },
+      {
+        "id": "n-4040c365",
+        "region": "international",
+        "lang": "en",
+        "title": "CISA warns of exploited N-able bug as company restores email platform",
+        "url": "https://therecord.media/cisa-nable-cybersecurity-bug",
+        "source": "The Record",
+        "published": "2026-11-24T15:00:00.000Z",
+        "snippet": "The U. S. cyber agency is giving government departments until Thanksgiving to patch a vulnerability impacting a critical email security platform that blocks spam, malware and other threats.",
+        "outlets": [
+          "The Record"
+        ],
+        "related": [],
+        "cves": [],
+        "score": 10,
+        "title_ko": "CISA, N-able 이메일 보안 플랫폼 악용 취약점 경고",
+        "summary_ko": "CISA가 스팸·악성코드를 차단하는 N-able 이메일 보안 플랫폼의 악용 취약점에 대해 연방기관에 추수감사절까지 패치를 요구함. 벤더는 플랫폼을 복구 중임.",
+        "check_ko": "N-able 제품 사용 여부와 패치 적용 상태 확인"
+      },
+      {
+        "id": "n-cf709673",
+        "region": "international",
+        "lang": "en",
+        "title": "European Commission Uncovers Data Breach in Cyberattack Investigation",
+        "url": "https://www.securityweek.com/european-commission-uncovers-data-breach-in-cyberattack-investigation/",
+        "source": "SecurityWeek",
+        "published": "2026-11-24T14:49:59.000Z",
+        "snippet": "Names and email addresses of EU Academy users were exposed in the AI-assisted cyberattack the European Commission detected in October. The post European Commission Uncovers Data Breach in Cyberattack Investigation appea…",
+        "outlets": [
+          "SecurityWeek",
+          "BleepingComputer"
+        ],
+        "related": [
+          {
+            "title": "European Commission confirms data theft in EU Academy breach",
+            "url": "https://www.bleepingcomputer.com/news/security/european-commission-confirms-data-theft-in-eu-academy-breach/",
+            "source": "BleepingComputer"
+          }
+        ],
+        "cves": [],
+        "score": 11.7,
+        "title_ko": "유럽연합 집행위원회, EU Academy 데이터 유출 확인",
+        "summary_ko": "10월 탐지된 AI 활용 사이버 공격 조사 과정에서 EU Academy 사용자의 이름과 이메일 주소가 노출된 사실이 확인됨.",
+        "check_ko": "외부 교육 포털 가입 정보 노출 대응과 피싱 주의"
+      }
+    ],
+    "merged": true,
+    "order": [
+      "n-1f1ed9af",
+      "n-8e2e8968",
+      "n-4040c365",
+      "n-c5005e85",
+      "n-ca9ac012",
+      "n-fc608fad",
+      "n-c9a8c32f",
+      "n-c9e7bc11",
+      "n-cf709673",
+      "n-18acbe9e"
+    ]
+  },
+  "sources": [
+    {
+      "id": "kev",
+      "name": "CISA KEV",
+      "ok": true,
+      "count": 5,
+      "ms": 268
+    },
+    {
+      "id": "zdnetkr",
+      "name": "지디넷코리아",
+      "ok": true,
+      "count": 30,
+      "ms": 482
+    },
+    {
+      "id": "thehackernews",
+      "name": "The Hacker News",
+      "ok": true,
+      "count": 50,
+      "ms": 529
+    },
+    {
+      "id": "securityweek",
+      "name": "SecurityWeek",
+      "ok": true,
+      "count": 10,
+      "ms": 552
+    },
+    {
+      "id": "bleepingcomputer",
+      "name": "BleepingComputer",
+      "ok": true,
+      "count": 15,
+      "ms": 591
+    },
+    {
+      "id": "therecord",
+      "name": "The Record",
+      "ok": true,
+      "count": 5,
+      "ms": 626
+    },
+    {
+      "id": "krebs",
+      "name": "Krebs on Security",
+      "ok": true,
+      "count": 10,
+      "ms": 643
+    },
+    {
+      "id": "gnews-kr",
+      "name": "Google 뉴스",
+      "ok": true,
+      "count": 100,
+      "ms": 895
+    },
+    {
+      "id": "dailysecu",
+      "name": "데일리시큐",
+      "ok": true,
+      "count": 50,
+      "ms": 947
+    },
+    {
+      "id": "boannews",
+      "name": "보안뉴스",
+      "ok": true,
+      "count": 50,
+      "ms": 1160
+    },
+    {
+      "id": "datanet",
+      "name": "데이터넷",
+      "ok": true,
+      "count": 50,
+      "ms": 1354
+    },
+    {
+      "id": "nvd-kev",
+      "name": "NVD (KEV 상세)",
+      "ok": true,
+      "count": 4,
+      "ms": 1454
+    },
+    {
+      "id": "kisa-vuln",
+      "name": "KISA 취약점 정보",
+      "ok": true,
+      "count": 10,
+      "ms": 1465
+    },
+    {
+      "id": "kisa-notice",
+      "name": "KISA 보안공지",
+      "ok": true,
+      "count": 10,
+      "ms": 1618
+    },
+    {
+      "id": "kisa-alert",
+      "name": "KISA 경보단계",
+      "ok": true,
+      "count": 10,
+      "ms": 1791
+    },
+    {
+      "id": "darkreading",
+      "name": "Dark Reading",
+      "ok": true,
+      "count": 50,
+      "ms": 2798
+    },
+    {
+      "id": "nvd",
+      "name": "NVD (신규 CVE)",
+      "ok": true,
+      "count": 1061,
+      "ms": 7886
+    },
+    {
+      "id": "epss",
+      "name": "FIRST EPSS",
+      "ok": true,
+      "count": 44,
+      "ms": 649
+    }
+  ],
+  "summarizer": {
+    "engine": "claude-haiku-5-5",
+    "ok": true,
+    "ms": 42040,
+    "applied": {
+      "news": 10,
+      "vulns": 6,
+      "overview": true,
+      "actions": 3
+    },
+    "rejected": [],
+    "input_tokens": 12278,
+    "output_tokens": 10359
+  },
+  "stats": {
+    "news": {
+      "items": 420,
+      "fresh": 192,
+      "clusters": 121,
+      "eligible": 79
+    },
+    "nvd_published": 1061,
+    "kev_catalog": "2026.11.24",
+    "kev_recent": 5
+  }
+}

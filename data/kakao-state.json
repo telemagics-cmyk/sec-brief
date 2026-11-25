@@ -1,15 +1,15 @@
 {
   "version": 1,
   "seed": "99b794ff0db04cb5",
-  "refreshed_at": "2026-11-25T09:58:13+09:00",
+  "refreshed_at": "2026-11-26T07:20:01+09:00",
   "token": {
     "alg": "A256GCM",
     "iv": "lu+6FuXrdDpnDcdu",
     "tag": "wpsAClUHHTvdOCBOLXZ4jw==",
     "data": "1eWS51bBkfk/Wi7NG13flCklCR1R/6RHe7IT2m8XQhMnGqjbwdUqJQwv2hCkic9rHwgVIaCwMIVtqtT8tg4cjZPfIIvHLarHqZt4QfzbaKFcKB8H"
   },
-  "last_sent": "2026-11-25",
-  "last_sent_at": "2026-11-25T07:20:01+09:00",
+  "last_sent": "2026-11-26",
+  "last_sent_at": "2026-11-26T07:20:01+09:00",
   "rotated_at": "2026-11-23T07:20:01+09:00",
   "refresh_expires_at": "2027-01-21T22:20:00.179Z"
 }

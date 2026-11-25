@@ -161,15 +161,18 @@ cron-job.org 는 매일 부르게 두어도 됩니다 — 주말·공휴일이�
 
 | 보내는 계정 | 보내는 방식 | 준비 |
 |---|---|---|
-| **Outlook.com** (@outlook.kr·@outlook.com·@hotmail.com) | Microsoft Graph 메일 API | Microsoft 앱 등록 + 이 PC 에서 로그인 한 번 |
-| Gmail | SMTP | 2단계 인증 + 앱 비밀번호 |
+| **Gmail** (권장) | SMTP | 2단계 인증 + 앱 비밀번호 |
+| Outlook.com (@outlook.kr·@outlook.com·@hotmail.com) | Microsoft Graph 메일 API | Microsoft 앱 등록 + 이 PC 에서 로그인 한 번 |
 
 Outlook.com 은 비밀번호 방식 SMTP 를 막았고(OAuth 만 허용), 새 계정은 SMTP 자체가 꺼진 경우가 많아 메일 API 로 보냅니다.
-둘 다 설정하면 Outlook 으로 보내고, Outlook 이 실패한 날(계정 정지 등)은 SMTP 로 보냅니다(예비). 네이버 메일은 해외(GitHub 서버) 접속을 기본으로 막아 권하지 않습니다.
+둘 다 설정하면 **Gmail(SMTP)로 보내고**, Gmail 이 실패한 날(로그인 오류 등)만 Outlook 으로 보냅니다(예비, 실행에 경고가 붙음).
+네이버 메일은 해외(GitHub 서버) 접속을 기본으로 막아 권하지 않습니다.
 
 **자동 발송에는 Gmail 을 권합니다.** 무료 Outlook.com 계정은 신뢰가 쌓이기 전까지 발송 한도가 낮고 숫자도 공개되지 않으며
 ([Microsoft 발송 한도 안내](https://support.microsoft.com/office/sending-limits-in-outlook-com-279ee200-594c-40f0-9ec8-bb6af7735c2e)),
-이 도구에서도 2026-10-28·11-02 두 번 계정이 정지됐습니다. Outlook 으로 보내려면 Gmail 을 예비로 함께 설정하세요.
+이 도구에서도 2026-10-28·11-02 두 번 계정이 정지됐고, 2026-11-24 에는 발송을 접수(성공 응답)한 뒤 보낸 곳(GitHub 실행 서버)의
+IP 대역을 스팸으로 보고 받는 사람 전원에게 반송했습니다(`550 5.7.501 Spam abuse detected from IP range`).
+이 반송은 나중에 보내는 계정의 받은 편지함으로만 와서 실행은 성공으로 끝나고 예비로 넘길 수도 없습니다. 그래서 Outlook 은 예비로만 씁니다.
 
 #### Outlook.com 계정으로 보내기
 
@@ -212,8 +215,8 @@ Outlook.com 은 비밀번호 방식 SMTP 를 막았고(OAuth 만 허용), 새 �
 다음 실행은 `service abuse mode`). 그때는 account.microsoft.com 에 로그인해 안내대로(휴대폰 보안 코드 등) 계정을 풀고
 (그 선택지가 없으면 화면의 aka.ms/ 링크로 복구 요청 — Microsoft [잠긴 계정 안내](https://support.microsoft.com/help/13956)),
 `mail-login` 을 다시 해 `OUTLOOK_REFRESH_TOKEN` 을 바꾼 뒤
-**연결 확인 메시지만** 으로 확인합니다. SMTP 예비를 설정해 두면 묶인 날에도 메일은 예비로 나갑니다(그 실행에 경고가 붙습니다).
-풀고 나서도 되풀이되면 Outlook Secrets 를 지워 SMTP 로만 보내세요.
+**연결 확인 메시지만** 으로 확인합니다. Gmail 을 설정해 두면 Outlook 은 예비로만 쓰이므로 묶여도 평소 발송에는 영향이 없습니다.
+Outlook 예비가 필요 없으면 `OUTLOOK_CLIENT_ID`·`OUTLOOK_REFRESH_TOKEN` Secrets 를 지우면 됩니다.
 
 #### 메일 이름 바꾸기 (선택)
 
@@ -256,7 +259,7 @@ Secret `MAIL_NEWS_KEYWORD` 에 검색어(예: 회사 이름)를 넣으면, 메�
    | 이름 | 값 |
    |---|---|
    | `SMTP_HOST` | `smtp.gmail.com` |
-   | `SMTP_PORT` | `465` (SSL. 587 이면 STARTTLS 로 연결) |
+   | `SMTP_PORT` | (선택) 비우면 `465`(SSL). 587 이면 STARTTLS 로 연결 |
    | `SMTP_USER` | 보내는 Gmail 주소 |
    | `SMTP_PASS` | 2에서 만든 앱 비밀번호 (Google 계정 비밀번호가 아님) |
    | `MAIL_TO` | 받을 주소. 여러 개면 쉼표로 구분(서로 주소가 보이지 않게 숨은 참조로 보냄) |
@@ -264,6 +267,9 @@ Secret `MAIL_NEWS_KEYWORD` 에 검색어(예: 회사 이름)를 넣으면, 메�
 
 4. **Run workflow → 연결 확인 메시지만** 으로 확인 메일이 오는지 봅니다. 처음 며칠은 받은 편지함이 아니라
    **스팸(정크) 메일함**에 들어갈 수 있으니 '스팸 아님'으로 표시해 두세요.
+5. (선택) 오늘 브리핑을 바로 받아 보려면 **Run workflow → 메일만 다시 보내기**(기사를 다시 모으지 않고, 카카오톡은 다시 보내지 않음).
+
+Outlook 비밀값이 이미 있어도 지울 필요는 없습니다 — Gmail 이 먼저 쓰이고 Outlook 은 Gmail 이 실패한 날의 예비가 됩니다.
 
 받는 주소는 Secrets 에만 있고 저장소·웹 페이지에는 남지 않습니다(발송 기록 `data/mail-state.json` 에는 날짜와 받는 사람 수만).
 앱 비밀번호는 언제든 2의 화면에서 지워 무효로 만들 수 있습니다.
@@ -409,7 +415,8 @@ npm test                         # 자동 시험
   저장소만으로는 풀 수 없음). 매일 실행되는 한 다시 로그인할 일이 없습니다.
   다음 경우에는 `kakao-login` 을 다시 하고 `KAKAO_REFRESH_TOKEN` 을 바꾸세요: 한 달 넘게 실행이 멈췄을 때,
   카카오계정 비밀번호를 바꿨을 때, 앱 연결을 끊었을 때 (오류 메시지에 `KOE322` 가 보입니다).
-- **같은 날 다시 보내기**: Run workflow 에서 '오늘 브리핑이 이미 있어도 다시 만들기' 를 체크합니다(카카오톡·메일 모두 다시).
+- **같은 날 다시 보내기**: Run workflow 에서 '오늘 브리핑이 이미 있어도 다시 만들기' 를 체크합니다(기사를 다시 모으고 카카오톡·메일 모두 다시).
+  메일만 다시 보내려면(반송된 날 등) 발송 칸에서 **메일만 다시 보내기** 를 고릅니다(오늘 브리핑 그대로, 카카오톡은 다시 안 감).
   예약 실행은 같은 날짜를 두 번 보내지 않습니다.
 - **예약 실행 중지**: 공개 저장소에 60일 동안 활동이 없으면 GitHub 가 예약 실행을 멈춥니다.
   이 도구는 매일 이력을 커밋하므로 해당되지 않지만, 멈췄다면 Actions 화면에서 다시 켭니다.
@@ -492,7 +499,8 @@ sec-brief/
 | Outlook `AADSTS700016`·`unauthorized_client` | 애플리케이션 ID 값, 지원되는 계정 유형이 '개인 Microsoft 계정만'인지 |
 | Outlook `ErrorAccessDenied` | API 사용 권한에 `Mail.Send` 추가 후 `mail-login` 다시 |
 | Outlook `ErrorMessageSubmissionBlocked` | outlook.com 에 로그인해 계정 확인(휴대폰 등) 안내를 따름 |
-| Outlook `ErrorAccountSuspend`, `service abuse mode` | Microsoft 가 스팸 의심으로 계정을 묶음(토큰 문제 아님) → account.microsoft.com 로그인·휴대폰 보안 코드로 풀기 → `mail-login` 다시, `OUTLOOK_REFRESH_TOKEN` 교체. SMTP 예비가 있으면 묶인 날에도 메일은 나감. 되풀이되면 Gmail 로만 |
+| Outlook `ErrorAccountSuspend`, `service abuse mode` | Microsoft 가 스팸 의심으로 계정을 묶음(토큰 문제 아님) → account.microsoft.com 로그인·휴대폰 보안 코드로 풀기 → `mail-login` 다시, `OUTLOOK_REFRESH_TOKEN` 교체. Gmail(SMTP)을 설정하면 Outlook 은 예비로만 쓰임 |
+| 실행은 성공인데 Outlook 계정 받은 편지함에 반송 `550 5.7.501 Spam abuse detected from IP range` | Outlook.com 이 접수 뒤 보낸 곳(GitHub 실행 서버) IP 대역을 스팸으로 보고 거절(2026-11-24). 실행은 이를 알 수 없음 → Gmail(SMTP) Secrets 를 넣으면 Gmail 이 먼저 쓰임. 그날 것은 **메일만 다시 보내기** |
 | 메일 `SMTP 로그인 실패` | Gmail 은 계정 비밀번호가 아니라 **앱 비밀번호**를 `SMTP_PASS` 에. 2단계 인증을 끄면 앱 비밀번호도 무효 |
 | 메일 `연결하지 못했습니다` | `SMTP_HOST`·`SMTP_PORT` 값. 네이버는 해외 접속 차단 설정 |
 | 메일이 안 보임 | 받는 쪽 스팸(정크) 메일함. Actions 로그에 '메일 발송 완료'가 있으면 보낸 것입니다 |

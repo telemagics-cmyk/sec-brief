@@ -88,7 +88,13 @@ test('워크플로: 외부 호출(scheduled)은 GitHub 예약처럼 발송 시�
   assert.ok(daily.includes(`SCHEDULED: ${cond}`), '수집: 건너뛸 때 안내');
   assert.ok(daily.includes(`WAIT: ${cond}`), '발송: 발송 시각까지 기다리기');
   assert.match(daily, /run: node src\/cli\.mjs collect \$FORCE \$SCHEDULED\n/);
-  assert.match(daily, /run: node src\/cli\.mjs send \$MODE \$FORCE \$WAIT\n/);
+  assert.match(daily, /run: node src\/cli\.mjs send \$MODE \$FORCE \$ONLY \$WAIT\n/);
+  // 메일만 다시 보내기: 오늘 브리핑을 메일로만 한 번 더(카카오톡은 다시 안 감) — 수집은 다시 하지 않는다
+  assert.match(daily, /options: \['보내기', '연결 확인 메시지만', '메일만 다시 보내기', '보내지 않기'\]/);
+  assert.ok(daily.includes("ONLY: ${{ inputs.send == '메일만 다시 보내기' && '--only=mail' || '' }}"));
+  assert.ok(daily.includes("FORCE: ${{ (inputs.force || inputs.send == '메일만 다시 보내기') && '--force' || '' }}"));
+  assert.match(daily, /run: node src\/cli\.mjs collect \$FORCE \$SCHEDULED\n/);
+  assert.ok(/FORCE: \$\{\{ inputs\.force && '--force' \|\| '' \}\}\n\s+SCHEDULED:/.test(daily), '수집의 FORCE 는 force 입력만(메일만 다시 보내기로 다시 수집하지 않음)');
   assert.match(daily, /^run-name: .*'GitHub 예약 실행 \(예비\)'.*'정시 실행 \(외부 호출\)'.*'직접 실행'/m);
   // 기다리는 최대 시간(110분)이 발송 작업의 시간 제한 안에 있어야 한다
   const timeout = Number(/name: 발송 \(카카오톡·메일\)[\s\S]*?timeout-minutes: (\d+)/.exec(daily)[1]);

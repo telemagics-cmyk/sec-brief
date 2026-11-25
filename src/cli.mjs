@@ -179,7 +179,7 @@ async function cmdSend(cfg, args, brief) {
   if (only && !['kakao', 'mail'].includes(only)) throw new Error('--only 는 kakao 또는 mail 입니다.');
   const channels = [
     { key: 'kakao', name: '카카오톡', on: kakaoConfigured(), hint: 'KAKAO_REST_API_KEY·KAKAO_REFRESH_TOKEN' },
-    { key: 'mail', name: '메일', on: mailConfigured(), hint: 'OUTLOOK_CLIENT_ID·OUTLOOK_REFRESH_TOKEN 또는 SMTP_HOST·SMTP_USER·SMTP_PASS·MAIL_TO' },
+    { key: 'mail', name: '메일', on: mailConfigured(), hint: 'SMTP_HOST·SMTP_USER·SMTP_PASS·MAIL_TO 또는 OUTLOOK_CLIENT_ID·OUTLOOK_REFRESH_TOKEN' },
   ].filter((c) => !only || c.key === only);
   for (const c of channels.filter((x) => !x.on)) notice(`${c.name} 설정이 없어 건너뜁니다 (${c.hint}, README 참고).`);
   const active = channels.filter((c) => c.on);
@@ -222,7 +222,7 @@ async function cmdSend(cfg, args, brief) {
         if (r.skipped) notice(r.reason);
         else {
           delivered += 1;
-          if (r.fallback) warn(`메일을 Outlook 으로 보내지 못해 예비(SMTP)로 보냈습니다: ${publicError(r.fallback, 600)}`);
+          if (r.fallback) warn(`메일을 SMTP(Gmail)로 보내지 못해 예비(Outlook)로 보냈습니다 — Outlook 은 접수 뒤 반송할 수 있으니 받았는지 확인하세요: ${publicError(r.fallback, 600)}`);
           console.log(`메일 발송 완료 (${r.via}, 받는 사람 ${r.accepted}명${r.rejected ? `, 거부 ${r.rejected}명` : ''}): ${what}`);
         }
       }

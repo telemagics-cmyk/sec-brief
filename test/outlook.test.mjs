@@ -100,14 +100,48 @@ function setup(extra = {}) {
 
 const quiet = () => {};
 
-test('메일 설정: Outlook 비밀값이 있으면 Outlook(SMTP 보다 먼저), 받는 주소는 비워도 됨', () => {
-  assert.deepEqual(mailSettings({ OUTLOOK_CLIENT_ID: CLIENT, OUTLOOK_REFRESH_TOKEN: 'x' }), { kind: 'outlook', to: [], smtp: null });
+test('메일 설정: SMTP(Gmail)가 있으면 SMTP 먼저·Outlook 은 예비, Outlook 만 있으면 받는 주소를 비워도 됨', () => {
+  assert.deepEqual(mailSettings({ OUTLOOK_CLIENT_ID: CLIENT, OUTLOOK_REFRESH_TOKEN: 'x' }), { kind: 'outlook', to: [] });
+  // 2026-11-24: Outlook.com 이 접수(202) 뒤 IP 대역 스팸으로 전원 반송(5.7.501) — 실패를 알 수 없어 주 발송에서 뺀다
   const both = mailSettings({ OUTLOOK_CLIENT_ID: CLIENT, OUTLOOK_REFRESH_TOKEN: 'x', SMTP_HOST: 'smtp.gmail.com', MAIL_TO: 'a@x.com' });
-  assert.equal(both.kind, 'outlook');
-  assert.equal(both.smtp.kind, 'smtp', 'SMTP 는 Outlook 이 실패했을 때의 예비');
-  assert.equal(mailSettings({ OUTLOOK_CLIENT_ID: CLIENT, OUTLOOK_REFRESH_TOKEN: 'x', SMTP_HOST: 'smtp.gmail.com' }).smtp, null, '받는 주소가 없으면 예비도 없음');
-  assert.equal(mailSettings({ SMTP_HOST: 'smtp.gmail.com', MAIL_TO: 'a@x.com' }).kind, 'smtp');
+  assert.deepEqual([both.kind, both.host, both.outlook], ['smtp', 'smtp.gmail.com', true], 'Outlook 은 SMTP 가 실패했을 때의 예비');
+  assert.equal(mailSettings({ OUTLOOK_CLIENT_ID: CLIENT, OUTLOOK_REFRESH_TOKEN: 'x', SMTP_HOST: 'smtp.gmail.com' }).kind, 'outlook', '받는 주소가 없으면 SMTP 는 못 씀');
+  const smtpOnly = mailSettings({ SMTP_HOST: 'smtp.gmail.com', MAIL_TO: 'a@x.com' });
+  assert.deepEqual([smtpOnly.kind, smtpOnly.outlook], ['smtp', undefined]);
   assert.equal(mailSettings({ OUTLOOK_CLIENT_ID: CLIENT }), null, '리프레시 토큰이 없으면 끔');
+});
+
+test('Gmail(SMTP)과 Outlook 이 다 있으면 Gmail 로 보내고, Gmail 이 실패한 날만 Outlook 예비(실패 이유는 fallback)', async () => {
+  const smtpEnv = { SMTP_HOST: 'smtp.gmail.com', SMTP_USER: 'sender@gmail.com', SMTP_PASS: 'abcd efgh ijkl mnop', MAIL_TO: 'a@example.org,b@example.org' };
+  const mails = [];
+  const okTransport = { sendMail: async (m) => { mails.push(m); return { accepted: ['a@example.org', 'b@example.org', 'sender@gmail.com'], rejected: [] }; } };
+  let s = setup(smtpEnv);
+  const r = await sendBriefMail(s.cfg, sampleBrief(), { env: s.env, log: quiet, transportOverride: okTransport });
+  assert.deepEqual({ via: r.via, accepted: r.accepted, fallback: r.fallback }, { via: 'SMTP', accepted: 2, fallback: undefined });
+  assert.equal(mails.length, 1);
+  assert.equal(sent.length, 0, 'Outlook 으로는 보내지 않음');
+  assert.ok(!calls.some((c) => c.path === '/auth/token'), 'Outlook 토큰도 쓰지 않음');
+  rmSync(s.dir, { recursive: true, force: true });
+
+  // Gmail 로그인 실패(앱 비밀번호 바뀜 등) → Outlook 예비로 같은 받는 사람에게
+  s = setup(smtpEnv);
+  const badTransport = { sendMail: async () => { throw Object.assign(new Error('Invalid login: 535-5.7.8 Username and Password not accepted'), { code: 'EAUTH' }); } };
+  const logs = [];
+  const r2 = await sendBriefMail(s.cfg, sampleBrief(), { env: s.env, log: (m) => logs.push(m), transportOverride: badTransport });
+  assert.equal(r2.via, 'Outlook');
+  assert.match(r2.fallback, /SMTP 로그인 실패/);
+  assert.equal(sent.length, 1);
+  assert.equal(sent[0].message.bccRecipients.length, 2, '받는 사람은 MAIL_TO 그대로(숨은 참조)');
+  assert.ok(logs.some((m) => /SMTP 로 보내지 못해 예비\(Outlook\)로 보냅니다/.test(m)));
+  assert.equal(s.state().last_sent, '2026-10-23');
+  rmSync(s.dir, { recursive: true, force: true });
+
+  // 둘 다 실패하면 두 이유를 함께
+  s = setup(smtpEnv);
+  sendError = { status: 403, body: { error: { code: 'ErrorAccountSuspend', message: 'Account suspended.' } } };
+  await assert.rejects(sendBriefMail(s.cfg, sampleBrief(), { env: s.env, log: quiet, transportOverride: badTransport }), /SMTP 로그인 실패[\s\S]*예비\(Outlook\)도 실패/);
+  sendError = null;
+  rmSync(s.dir, { recursive: true, force: true });
 });
 
 test('Outlook 발송: 토큰 갱신 → 새 리프레시 토큰은 암호화 저장 → HTML 메일, 기록에 주소·토큰 원문 없음', async () => {

@@ -1,5 +1,5 @@
 // 메일 발송(선택): 브리핑을 HTML 메일로 보낸다. 보내는 길은 둘 중 하나.
-// 둘 다 있으면 Outlook 으로 보내고, Outlook 이 실패한 날(무료 계정 정지 등)은 SMTP 로 보낸다.
+// 둘 다 있으면 SMTP(Gmail)로 보내고, SMTP 가 실패한 날만 Outlook 으로 보낸다(Outlook.com 은 접수 뒤 반송할 수 있어 예비로만).
 //   Outlook.com(개인 Microsoft 계정): OUTLOOK_CLIENT_ID, OUTLOOK_REFRESH_TOKEN — Graph 메일 API (outlook.mjs)
 //   SMTP(Gmail 앱 비밀번호 등)     : SMTP_HOST, SMTP_PORT(기본 465), SMTP_USER, SMTP_PASS, MAIL_FROM(선택)
 //   받는 주소: MAIL_TO(쉼표로 여러 개). Outlook 은 비우면 보내는 계정 자신에게.
@@ -16,15 +16,18 @@ import { escapeHtml as h, kstIso, kstStamp, publicError, safeUrl, shortDay, trun
 const EMAIL_RE = /^[^\s@<>(),;:"]+@[^\s@<>(),;:"]+\.[^\s@<>(),;:"]+$/;
 
 /**
- * 비밀값에서 메일 설정을 읽는다. 보낼 길(Outlook, 또는 SMTP+받는 주소)이 없으면 null(메일 끔).
- * Outlook 과 SMTP 가 다 있으면 Outlook 으로 보내고 SMTP(smtp)는 예비로 둔다.
+ * 비밀값에서 메일 설정을 읽는다. 보낼 길(SMTP+받는 주소, 또는 Outlook)이 없으면 null(메일 끔).
+ * 둘 다 있으면 SMTP(Gmail 등)로 보내고 Outlook 은 예비로 둔다(outlook: true). Outlook.com 은 발송을 '접수'(202)한 뒤에
+ * 보낸 곳 IP 대역을 스팸으로 보고 받는 사람 전원에게 반송할 수 있어(2026-11-24, 5.7.501) 실패를 알 수도 예비로 넘길 수도 없다.
  */
 export function mailSettings(env = process.env) {
   const to = secret('MAIL_TO', env).split(/[,;\s]+/).filter(Boolean);
   const bad = to.filter((a) => !EMAIL_RE.test(a));
   if (bad.length) throw new Error(`MAIL_TO 에 메일 주소가 아닌 값이 있습니다(${bad.length}개). 쉼표로 구분해 넣으세요.`);
   const smtp = smtpSettings(to, env);
-  return outlookConfigured(env) ? { kind: 'outlook', to, smtp } : smtp;
+  const outlook = outlookConfigured(env);
+  if (smtp) return outlook ? { ...smtp, outlook: true } : smtp;
+  return outlook ? { kind: 'outlook', to } : null;
 }
 
 function smtpSettings(to, env) {
@@ -688,17 +691,17 @@ async function sendViaSmtp(s, msg, { transportOverride }) {
   return { via: 'SMTP', accepted, rejected };
 }
 
-/** Outlook 으로 보내고, 막히면(계정 정지 등) SMTP 예비로. 무료 계정이 묶여도 그날 메일이 끊기지 않게 한다. */
-async function sendOutlookOrBackup(path, s, msg, { env, log, transportOverride }) {
+/** SMTP(Gmail 등)로 보내고, 막히면(로그인·연결 오류 등) Outlook 예비로 — 그날 메일이 끊기지 않게 한다. */
+async function sendSmtpOrBackup(path, s, msg, { env, log, transportOverride }) {
   try {
-    return await sendViaOutlook(path, s, msg, { env, log });
+    return await sendViaSmtp(s, msg, { transportOverride });
   } catch (err) {
-    if (!s.smtp) throw err;
-    log(`Outlook 으로 보내지 못해 예비(SMTP)로 보냅니다: ${publicError(err)}`);
+    if (!s.outlook) throw err;
+    log(`SMTP 로 보내지 못해 예비(Outlook)로 보냅니다: ${publicError(err)}`);
     try {
-      return { ...(await sendViaSmtp(s.smtp, msg, { transportOverride })), fallback: err.message };
+      return { ...(await sendViaOutlook(path, { kind: 'outlook', to: s.to }, msg, { env, log })), fallback: err.message };
     } catch (backupErr) {
-      throw new Error(`${err.message} / 예비(SMTP)도 실패: ${backupErr.message}`);
+      throw new Error(`${err.message} / 예비(Outlook)도 실패: ${backupErr.message}`);
     }
   }
 }
@@ -706,12 +709,12 @@ async function sendOutlookOrBackup(path, s, msg, { env, log, transportOverride }
 /**
  * 브리핑 메일 발송. 같은 날짜는 한 번만 보낸다(--force 로 다시).
  * 받는 사람이 여럿이면 서로의 주소가 보이지 않게 숨은 참조로 보낸다.
- * Outlook 이 실패하면 SMTP 예비로 보낸다(fallback 에 Outlook 실패 이유). 예비가 없거나 예비도 실패하면 오류.
+ * SMTP 가 실패하면 Outlook 예비로 보낸다(fallback 에 SMTP 실패 이유). 예비가 없거나 예비도 실패하면 오류.
  * @returns {Promise<{sent:boolean, skipped?:boolean, reason?:string, via?:string, accepted?:number, rejected?:number, fallback?:string}>}
  */
 export async function sendBriefMail(cfg, brief, { test = false, force = false, env = process.env, transportOverride, feedOverride, log = console.log } = {}) {
   const s = mailSettings(env);
-  if (!s) return { sent: false, skipped: true, reason: '메일 설정이 없어 건너뜁니다 (OUTLOOK_CLIENT_ID·OUTLOOK_REFRESH_TOKEN 또는 SMTP_HOST·MAIL_TO).' };
+  if (!s) return { sent: false, skipped: true, reason: '메일 설정이 없어 건너뜁니다 (SMTP_HOST·MAIL_TO 또는 OUTLOOK_CLIENT_ID·OUTLOOK_REFRESH_TOKEN).' };
   const path = mailStatePath(cfg);
   if (!test && !force && brief && loadMailState(path).last_sent === brief.date) {
     return { sent: false, skipped: true, reason: `${brief.date} 브리핑 메일은 이미 보냈습니다 (다시 보내려면 --force).` };
@@ -728,7 +731,7 @@ export async function sendBriefMail(cfg, brief, { test = false, force = false, e
         html: renderEmailHtml(brief, { siteUrl: cfg.site.url, title, org: mailOrg(env), extraNews, assetUrl: assetUrlOf(env) }),
         text: `${title}\n\n${renderMarkdown(brief, { siteUrl: cfg.site.url })}${assetUrlOf(env) ? `\n\n우리 자산 영향 확인(사내망): ${assetLink(assetUrlOf(env), brief.date)}\n` : ''}${keywordNewsText(extraNews)}`,
       };
-  const r = s.kind === 'outlook' ? await sendOutlookOrBackup(path, s, msg, { env, log, transportOverride }) : await sendViaSmtp(s, msg, { transportOverride });
+  const r = s.kind === 'outlook' ? await sendViaOutlook(path, s, msg, { env, log }) : await sendSmtpOrBackup(path, s, msg, { env, log, transportOverride });
   if (!test && brief) {
     // 공개 저장소에 남으므로 주소는 적지 않는다(건수만). Outlook 토큰 상태는 그대로 둔다.
     const next = { ...loadMailState(path), version: 1, last_sent: brief.date, last_sent_at: kstIso(), recipients: r.accepted };

@@ -199,16 +199,18 @@ test('Outlook 계정 정지: 예비가 없으면 실패로 끝난다(2026-11-02 
   }
 });
 
-test('Outlook 계정 정지: SMTP 가 설정돼 있으면 예비로 보내 메일이 끊기지 않고, 같은 날 다시 보내지 않는다', async () => {
+test('Gmail(SMTP)과 Outlook 이 다 있으면 Gmail 로 보낸다 — Outlook 이 정지돼도 상관없고, 같은 날 다시 보내지 않는다', async () => {
   const got = [];
   const smtp = await startFakeSmtp({ mails: got });
   graphError = SUSPENDED;
+  const before = mails.length;
   const dir = dataDir();
   try {
     const r = await cli(dir, { extraEnv: smtpEnv(smtp.port) });
     assert.equal(r.code, 0, r.out);
-    assert.match(r.out, /::warning::메일을 Outlook 으로 보내지 못해 예비\(SMTP\)로 보냈습니다: Outlook ErrorAccountSuspend/);
+    assert.ok(!/::warning::메일/.test(r.out), r.out);
     assert.match(r.out, /메일 발송 완료 \(SMTP, 받는 사람 2명\): 2026-10-29/);
+    assert.equal(mails.length, before, 'Outlook 으로는 보내지 않음');
     assert.equal(got.length, 1, '메일이 한 통 나감');
     assert.ok(got[0].to.includes('<a@example.org>') && got[0].to.includes('<b@example.net>'), got[0].to.join());
     assert.equal(JSON.parse(readFileSync(join(dir, 'mail-state.json'), 'utf8')).last_sent, DATE, '발송 기록');
@@ -224,26 +226,29 @@ test('Outlook 계정 정지: SMTP 가 설정돼 있으면 예비로 보내 메�
   }
 });
 
-test('Outlook 토큰 갱신이 막혀도(서비스 남용 모드) 예비로 보내고, 예비까지 실패하면 두 이유를 모두 알린다', async () => {
+test('Gmail(SMTP)이 실패하면 Outlook 예비로 보내고(경고), 예비까지 실패하면 두 이유를 모두 알린다', async () => {
   const got = [];
-  const smtp = await startFakeSmtp({ mails: got });
-  authError = ABUSE_MODE;
+  const smtp = await startFakeSmtp({ mails: got, failAuth: () => true }); // 앱 비밀번호가 바뀐 날처럼 로그인 실패
+  const before = mails.length;
   const dir = dataDir();
+  const dir2 = dataDir();
   try {
     const r = await cli(dir, { extraEnv: smtpEnv(smtp.port) });
     assert.equal(r.code, 0, r.out);
-    assert.match(r.out, /예비\(SMTP\)로 보냈습니다: Outlook invalid_grant AADSTS70000/);
-    assert.equal(got.length, 1);
-    smtp.close();
+    assert.match(r.out, /::warning::메일을 SMTP\(Gmail\)로 보내지 못해 예비\(Outlook\)로 보냈습니다 — Outlook 은 접수 뒤 반송할 수 있으니 받았는지 확인하세요: SMTP 로그인 실패/);
+    assert.match(r.out, /메일 발송 완료 \(Outlook, 받는 사람 2명\): 2026-10-29/);
+    assert.equal(mails.length, before + 1);
+    assert.equal(got.length, 0);
 
-    const dir2 = dataDir();
-    // 닫힌 포트: 예비도 실패
+    // 예비도 막힘(Outlook 토큰 갱신이 서비스 남용 모드)
+    authError = ABUSE_MODE;
     const bad = await cli(dir2, { extraEnv: smtpEnv(smtp.port) });
     assert.equal(bad.code, 1, bad.out);
-    assert.match(bad.out, /메일 발송 실패: Outlook invalid_grant AADSTS70000.*예비\(SMTP\)도 실패/);
-    rmSync(dir2, { recursive: true, force: true });
+    assert.match(bad.out, /메일 발송 실패: SMTP 로그인 실패.*예비\(Outlook\)도 실패: Outlook invalid_grant AADSTS70000/);
   } finally {
     authError = null;
+    smtp.close();
     rmSync(dir, { recursive: true, force: true });
+    rmSync(dir2, { recursive: true, force: true });
   }
 });

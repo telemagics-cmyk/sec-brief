@@ -90,7 +90,8 @@ const TBL = 'role="presentation" width="100%" cellpadding="0" cellspacing="0" bo
 
 // 폭: 받는 사람 대부분이 1920×1080 화면의 웹메일(읽기 창 약 1,000~1,500px)로 읽는다 → 시안대로 최대 MAIL_W.
 // Outlook(Windows) 은 MSO_W 한 단: 그 Word 그리기 방식은 max-width 를 고정 폭처럼 써서(창이 좁아도 줄지 않음 — Word 로
-// 그려 확인) 넓히면 좁은 읽기 창·125% 배율에서 가로로 밀린다 → MSO 표와 MSO_CSS 의 .mailw 로 Outlook 에서만 MSO_W.
+// 그려 확인) 넓히면 좁은 읽기 창·125% 배율에서 가로로 밀린다 → 최대 폭은 Word 가 보지 않는 div(<!--[if !mso]>)에 두고,
+// Word 에는 MSO_W 폭 표만 보인다.
 const MAIL_W = 900;
 const MSO_W = 680;
 const PAD = 40; // 본문 좌우 여백(창이 좁으면 25·20·15 — LAYOUT_CSS)
@@ -138,9 +139,17 @@ const LAYOUT_CSS = `@media (max-width: 760px) {
   .pad { padding-left: 15px !important; padding-right: 15px !important; }
 }`;
 // Outlook(Windows): 표 안 글자에 글꼴을 물려주지 않아 따로 정하고(날짜·건수·번호 숫자만 세리프), 한글·숫자 사이 자동 띄움('2026 년')을 끈다.
-// 국내|해외는 Outlook 에서 위아래로(680px 본문에 두 칸이면 한 줄이 15자 남짓): 두 칸 사이에서 행을 나누고 여기서 칸 폭·여백을 덮어쓴다.
-// Word 는 class 속성의 첫 이름만 읽는다(2026-11-19 Word 로 그려 확인) → 여기 규칙이 걸릴 이름(serif·ncol·ncol2)은 class 맨 앞에.
-const MSO_CSS = `<!--[if mso]><style>table,td,th,p,a,span,strong,h1,h2,h3,h4{font-family:'Malgun Gothic',Arial,sans-serif !important;text-autospace:none;}.serif{font-family:Georgia,serif !important;}.mailw{max-width:${MSO_W}px !important;}.ncol{width:100% !important;padding:0 !important;}.ncol2{width:100% !important;padding:24px 0 0 !important;}</style><![endif]-->`;
+// Word 는 class 속성의 첫 이름만 읽는다(2026-11-19 Word 로 그려 확인) → 여기 규칙이 걸릴 이름(serif)은 class 맨 앞에.
+// **글꼴 말고는 넣지 않는다**: Outlook.com 웹은 이 <!--[if mso]> 안의 <style> 도 적용한다(2026-11-26 Gmail 로 보낸 메일에서
+// 폭 규칙 .mailw·.ncol 이 걸려 본문 680px·국내|해외 9:1 — 그 규칙만 풀어 브라우저로 그려 같은 모양 재현). 배치는 MSO 전용 태그로.
+const MSO_CSS = `<!--[if mso]><style>table,td,th,p,a,span,strong,h1,h2,h3,h4{font-family:'Malgun Gothic',Arial,sans-serif !important;text-autospace:none;}.serif{font-family:Georgia,serif !important;}</style><![endif]-->`;
+/**
+ * 표 칸 여는 태그를 Outlook(Windows)과 그 밖의 메일 앱에 따로 준다(조건 주석 — Word 만 앞의 것, 나머지는 뒤의 것을 본다).
+ * 국내|해외 칸을 Outlook 에서 위아래로 쌓을 때 폭·여백을 Word 쪽 태그에만 준다(위 MSO_CSS 로 덮어쓰면 Outlook.com 도 따름).
+ */
+function td(webAttrs, msoAttrs) {
+  return `<!--[if mso]><td ${msoAttrs}><![endif]--><!--[if !mso]><!--><td ${webAttrs}><!--<![endif]-->`;
+}
 // Outlook(Windows) 은 글자 단위 요소의 안쪽 여백·테두리를 무시하므로, 띄울 자리에 Outlook 에서만 보이는 빈칸을 둔다
 const MSO_PAD = '<!--[if mso]>&nbsp;<![endif]-->';
 const pad2 = (n) => String(n).padStart(2, '0');
@@ -295,13 +304,13 @@ ${body}`;
 
 /**
  * 국내|해외 두 칸(시안대로 표 두 칸 — Outlook 웹·Gmail·국내 웹메일 모두 나란히, 휴대폰은 LAYOUT_CSS 로 위아래).
- * Outlook(Windows) 은 두 칸 사이에서 행을 나눠(<!--[if mso]>) 위아래로 놓고 MSO_CSS 가 폭·여백을 덮어쓴다.
+ * Outlook(Windows) 은 두 칸 사이에서 행을 나눠(<!--[if mso]>) 위아래로 놓고, 칸 폭·여백은 Word 만 보는 태그(td())로 준다.
  */
 function newsColumns(dom, intl, b) {
   return `<table ${TBL}><tr>
-<td class="ncol" valign="top" style="width:50%;padding:0 16px 0 0;vertical-align:top;">${newsColumn('국내 뉴스', dom, b)}</td>
+${td('class="ncol" valign="top" style="width:50%;padding:0 16px 0 0;vertical-align:top;"', 'valign="top" width="100%" style="width:100%;padding:0;vertical-align:top;"')}${newsColumn('국내 뉴스', dom, b)}</td>
 <!--[if mso]></tr><tr><![endif]-->
-<td class="ncol2 ncol" valign="top" style="width:50%;padding:0 0 0 16px;vertical-align:top;">${newsColumn('해외 뉴스', intl, b)}</td>
+${td('class="ncol2 ncol" valign="top" style="width:50%;padding:0 0 0 16px;vertical-align:top;"', 'valign="top" width="100%" style="width:100%;padding:24px 0 0;vertical-align:top;"')}${newsColumn('해외 뉴스', intl, b)}</td>
 </tr></table>`;
 }
 
@@ -323,9 +332,10 @@ function newsMerged(list, b) {
   const dom = list.filter((n) => n.region === 'domestic').length;
   const head = columnTitle('국내·해외 통합', `국내 ${dom} · 해외 ${list.length - dom}`);
   if (!list.length) return `${head}${emptyNews(b)}`;
+  const line = `border-bottom:1px solid ${C.rule};`;
   const cell = (n, pad) => (n
-    ? `<td class="ncol" valign="top" style="width:50%;padding:${pad};vertical-align:top;border-bottom:1px solid ${C.rule};">${storyCell(n, { foreign: n.region !== 'domestic' })}</td>`
-    : `<td class="ncol" valign="top" style="width:50%;padding:${pad};"></td>`);
+    ? `${td(`class="ncol" valign="top" style="width:50%;padding:${pad};vertical-align:top;${line}"`, `valign="top" width="100%" style="width:100%;padding:0;vertical-align:top;${line}"`)}${storyCell(n, { foreign: n.region !== 'domestic' })}</td>`
+    : `${td(`class="ncol" valign="top" style="width:50%;padding:${pad};"`, 'width="100%" style="width:100%;padding:0;"')}</td>`);
   const rows = [];
   for (let i = 0; i < list.length; i += 2) {
     rows.push(`<tr>
@@ -555,7 +565,8 @@ ${MSO_CSS}
 <body bgcolor="${C.page}" style="margin:0;padding:0;background:${C.page};">
 <table ${TBL} bgcolor="${C.page}" style="background:${C.page};"><tr><td class="outer" align="center" style="padding:28px 12px;">
 <!--[if mso]><table role="presentation" width="${MSO_W}" align="center" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
-<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="mailw" bgcolor="${C.paper}" style="max-width:${MAIL_W}px;width:100%;background:${C.paper};font-family:${FONT};color:${C.navy};word-break:keep-all;overflow-wrap:anywhere;">
+<!--[if !mso]><!--><div style="max-width:${MAIL_W}px;margin:0 auto;"><!--<![endif]-->
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${C.paper}" style="width:100%;background:${C.paper};font-family:${FONT};color:${C.navy};word-break:keep-all;overflow-wrap:anywhere;">
 <tr><td class="pad mast" bgcolor="${C.mast}" style="background:${C.mast};border-top:5px solid ${C.navy};padding:27px ${PAD}px 29px;">
 ${mast}
 </td></tr>
@@ -568,6 +579,7 @@ ${rows.join('\n')}
 ${foot}
 </td></tr>
 </table>
+<!--[if !mso]><!--></div><!--<![endif]-->
 <!--[if mso]></td></tr></table><![endif]-->
 </td></tr></table>
 </body></html>

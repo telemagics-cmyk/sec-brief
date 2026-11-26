@@ -184,21 +184,27 @@ test('메일 디자인: 시안의 표 뼈대 — 최대 900px(Outlook(Windows) 6
   const b = sampleBrief();
   b.overview = '오늘의 요약 문장입니다. 패치가 시급합니다.';
   const html = renderEmailHtml(b, { siteUrl: 'https://u.github.io/sec-brief', title: 'OO팀 일일 보안 브리핑' });
-  assert.match(html, /<!--\[if mso\]><table role="presentation" width="680"/);
-  assert.match(html, /width="100%" class="mailw" bgcolor="#FFFFFF" style="max-width:900px;/);
-  // Word(Outlook Windows) 는 max-width 를 고정 폭처럼 써서 넓히면 좁은 읽기 창에서 가로로 밀린다 → Outlook 에서만 680
-  assert.match(html, /<!--\[if mso\]><style>[^<]*\.mailw\{max-width:680px !important;\}/);
-  assert.ok(!/<div style="max-width/.test(html), '폭을 div 로 정하지 않음');
+  // Word(Outlook Windows) 는 max-width 를 고정 폭처럼 써서 넓히면 좁은 읽기 창에서 가로로 밀린다 → Word 에는 680 표만,
+  // 최대 900 은 Word 가 보지 않는 div 에(본문 표에는 max-width 를 두지 않음)
+  assert.match(html, /<!--\[if mso\]><table role="presentation" width="680" align="center"[^>]*><tr><td><!\[endif\]-->\n<!--\[if !mso\]><!--><div style="max-width:900px;margin:0 auto;"><!--<!\[endif\]-->\n<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#FFFFFF" style="width:100%;/);
+  assert.match(html, /<\/table>\n<!--\[if !mso\]><!--><\/div><!--<!\[endif\]-->\n<!--\[if mso\]><\/td><\/tr><\/table><!\[endif\]-->/);
+  assert.ok(!/<table[^>]*max-width/.test(html), '표에는 max-width 없음(Word 가 고정 폭으로 씀)');
+  // Outlook.com 웹은 <!--[if mso]> 안의 <style> 도 적용한다(2026-11-26 본문 680px·국내|해외 9:1) → 거기에는 글꼴만, 배치 규칙 없음
+  const msoCss = /<!--\[if mso\]><style>([^<]*)<\/style><!\[endif\]-->/.exec(html)[1];
+  assert.ok(!/width|padding|margin|display|height|float|position/.test(msoCss), msoCss);
+  assert.match(msoCss, /font-family:'Malgun Gothic'[^}]*text-autospace:none;\}\.serif\{font-family:Georgia,serif !important;\}$/);
   assert.match(html, /<meta name="color-scheme" content="light">/);
   assert.ok(!/prefers-color-scheme/.test(html), '시안대로 밝은 화면 전용');
   // 시안의 머리: 위 남색 굵은 줄, 미색 바탕
   assert.match(html, /<td class="pad mast" bgcolor="#F8F5ED" style="background:#F8F5ED;border-top:5px solid #223947;/);
-  // 국내|해외: 표 두 칸, 680px 이하 창은 위아래, Outlook(Windows)은 두 칸 사이에서 행을 나눠 위아래
-  assert.match(html, /<td class="ncol" valign="top" style="width:50%;[^"]*">[\s\S]*<!--\[if mso\]><\/tr><tr><!\[endif\]-->\s*<td class="ncol2 ncol"/);
+  // 국내|해외: 표 두 칸, 680px 이하 창은 위아래. Outlook(Windows)은 두 칸 사이에서 행을 나누고 Word 만 보는 칸 태그(폭 100%)로 위아래
+  const web = (attrs) => `<!--\\[if !mso\\]><!--><td ${attrs}><!--<!\\[endif\\]-->`;
+  const mso = (attrs) => `<!--\\[if mso\\]><td ${attrs}><!\\[endif\\]-->`;
+  assert.match(html, new RegExp(`${mso('valign="top" width="100%" style="width:100%;padding:0;vertical-align:top;"')}${web('class="ncol" valign="top" style="width:50%;padding:0 16px 0 0;vertical-align:top;"')}`));
+  assert.match(html, new RegExp(`<!--\\[if mso\\]></tr><tr><!\\[endif\\]-->\\n${mso('valign="top" width="100%" style="width:100%;padding:24px 0 0;vertical-align:top;"')}${web('class="ncol2 ncol" valign="top" style="width:50%;padding:0 0 0 16px;vertical-align:top;"')}`));
   assert.match(html, /@media \(max-width: 680px\) \{[\s\S]*?\.ncol \{ display: block !important; width: 100% !important;/);
-  assert.match(html, /<!--\[if mso\]><style>[^<]*\.ncol\{width:100% !important;padding:0 !important;\}\.ncol2\{width:100% !important;padding:24px 0 0 !important;\}/);
   // Word 는 class 의 첫 이름만 읽는다(2026-11-19 Word 로 그려 확인) → Outlook 규칙이 걸린 이름은 맨 앞에
-  const msoNames = ['serif', 'ncol', 'ncol2', 'mailw'];
+  const msoNames = ['serif'];
   for (const m of html.matchAll(/class="([^"]+)"/g)) {
     const names = m[1].split(' ');
     if (names.some((n) => msoNames.includes(n))) assert.ok(msoNames.includes(names[0]), `class="${m[1]}"`);

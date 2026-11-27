@@ -90,8 +90,8 @@ const TBL = 'role="presentation" width="100%" cellpadding="0" cellspacing="0" bo
 
 // 폭: 받는 사람 대부분이 1920×1080 화면의 웹메일(읽기 창 약 1,000~1,500px)로 읽는다 → 시안대로 최대 MAIL_W.
 // Outlook(Windows) 은 MSO_W 한 단: 그 Word 그리기 방식은 max-width 를 고정 폭처럼 써서(창이 좁아도 줄지 않음 — Word 로
-// 그려 확인) 넓히면 좁은 읽기 창·125% 배율에서 가로로 밀린다 → 최대 폭은 Word 가 보지 않는 div(<!--[if !mso]>)에 두고,
-// Word 에는 MSO_W 폭 표만 보인다.
+// 그려 확인) 넓히면 좁은 읽기 창·125% 배율에서 가로로 밀린다 → 최대 폭은 div 에 둔다(Word 는 div 폭을 무시 — 2026-11-27
+// Word 렌더로 확인), Word 에는 MSO_W 폭 표(<!--[if mso]>)만 폭으로 쓰인다.
 const MAIL_W = 900;
 const MSO_W = 680;
 const PAD = 40; // 본문 좌우 여백(창이 좁으면 25·20·15 — LAYOUT_CSS)
@@ -105,6 +105,9 @@ const LAYOUT_CSS = `@media (max-width: 760px) {
 }
 @media (max-width: 680px) {
   .ncol { display: block !important; width: 100% !important; padding: 0 !important; }
+  .ngap { padding: 0 !important; }
+  .ntab { table-layout: auto !important; }
+  .ncolw { width: auto !important; }
   .ncol2 { padding-top: 24px !important; }
   .pkey, .pdesc { display: block !important; width: auto !important; padding: 0 !important; }
   .pdesc { padding-top: 2px !important; }
@@ -141,15 +144,17 @@ const LAYOUT_CSS = `@media (max-width: 760px) {
 // Outlook(Windows): 표 안 글자에 글꼴을 물려주지 않아 따로 정하고(날짜·건수·번호 숫자만 세리프), 한글·숫자 사이 자동 띄움('2026 년')을 끈다.
 // Word 는 class 속성의 첫 이름만 읽는다(2026-11-19 Word 로 그려 확인) → 여기 규칙이 걸릴 이름(serif)은 class 맨 앞에.
 // **글꼴 말고는 넣지 않는다**: Outlook.com 웹은 이 <!--[if mso]> 안의 <style> 도 적용한다(2026-11-26 Gmail 로 보낸 메일에서
-// 폭 규칙 .mailw·.ncol 이 걸려 본문 680px·국내|해외 9:1 — 그 규칙만 풀어 브라우저로 그려 같은 모양 재현). 배치는 MSO 전용 태그로.
+// 폭 규칙 .mailw·.ncol 이 걸려 본문 680px·국내|해외 9:1 — 그 규칙만 풀어 브라우저로 그려 같은 모양 재현).
+// 또 Outlook.com 웹은 '그 밖의 앱에만' 보이게 감싼 <!--[if !mso]><!--> … <!--<![endif]--> 안의 태그를 지우는 것으로 보인다
+// (2026-11-27 칸 태그를 거기 넣었더니 뉴스 칸이 무너짐) → 그 꼴은 쓰지 않는다. 모든 앱이 같은 태그를 보고,
+// Outlook(Windows) 만 다른 것은 Word 가 무시하는 성질로 맞춘다(div 의 폭·여백, <col> 폭 — Word 렌더로 확인).
 const MSO_CSS = `<!--[if mso]><style>table,td,th,p,a,span,strong,h1,h2,h3,h4{font-family:'Malgun Gothic',Arial,sans-serif !important;text-autospace:none;}.serif{font-family:Georgia,serif !important;}</style><![endif]-->`;
-/**
- * 표 칸 여는 태그를 Outlook(Windows)과 그 밖의 메일 앱에 따로 준다(조건 주석 — Word 만 앞의 것, 나머지는 뒤의 것을 본다).
- * 국내|해외 칸을 Outlook 에서 위아래로 쌓을 때 폭·여백을 Word 쪽 태그에만 준다(위 MSO_CSS 로 덮어쓰면 Outlook.com 도 따름).
- */
-function td(webAttrs, msoAttrs) {
-  return `<!--[if mso]><td ${msoAttrs}><![endif]--><!--[if !mso]><!--><td ${webAttrs}><!--<![endif]-->`;
-}
+// 국내|해외 두 칸 표: 칸 폭은 <col>(Word 는 무시 → 행을 나누면 한 칸이 전체 폭), 칸 사이 간격은 칸 안 div 여백(Word 는 무시)
+// (휴대폰에서 칸을 쌓을 때는 LAYOUT_CSS 가 .ntab·.ncolw 를 풀어 쌓인 칸이 첫 열 폭(반)에 갇히지 않게 한다)
+const COLS = `<table ${TBL} class="ntab" style="table-layout:fixed;width:100%;"><col class="ncolw" width="50%" style="width:50%;"><col class="ncolw" width="50%" style="width:50%;">`;
+const gap = (side, html) => `<div class="ngap" style="padding:${side === 'left' ? '0 16px 0 0' : '0 0 0 16px'};">${html}</div>`;
+// Outlook(Windows) 에서 위아래로 쌓을 때 국내 목록과 해외 제목 사이 빈 줄(Word 만 보는 주석 안 — 다른 앱은 주석이라 지움)
+const MSO_SPLIT_GAP = '<!--[if mso]></tr><tr><td style="height:24px;line-height:24px;padding:0;">&nbsp;</td></tr><tr><![endif]-->';
 // Outlook(Windows) 은 글자 단위 요소의 안쪽 여백·테두리를 무시하므로, 띄울 자리에 Outlook 에서만 보이는 빈칸을 둔다
 const MSO_PAD = '<!--[if mso]>&nbsp;<![endif]-->';
 const pad2 = (n) => String(n).padStart(2, '0');
@@ -304,13 +309,13 @@ ${body}`;
 
 /**
  * 국내|해외 두 칸(시안대로 표 두 칸 — Outlook 웹·Gmail·국내 웹메일 모두 나란히, 휴대폰은 LAYOUT_CSS 로 위아래).
- * Outlook(Windows) 은 두 칸 사이에서 행을 나눠(<!--[if mso]>) 위아래로 놓고, 칸 폭·여백은 Word 만 보는 태그(td())로 준다.
+ * Outlook(Windows) 은 두 칸 사이에서 행을 나눠(<!--[if mso]>) 위아래로 놓는다 — 칸에 폭을 주지 않아(폭은 <col>) Word 에서 전체 폭.
  */
 function newsColumns(dom, intl, b) {
-  return `<table ${TBL}><tr>
-${td('class="ncol" valign="top" style="width:50%;padding:0 16px 0 0;vertical-align:top;"', 'valign="top" width="100%" style="width:100%;padding:0;vertical-align:top;"')}${newsColumn('국내 뉴스', dom, b)}</td>
-<!--[if mso]></tr><tr><![endif]-->
-${td('class="ncol2 ncol" valign="top" style="width:50%;padding:0 0 0 16px;vertical-align:top;"', 'valign="top" width="100%" style="width:100%;padding:24px 0 0;vertical-align:top;"')}${newsColumn('해외 뉴스', intl, b)}</td>
+  return `${COLS}<tr>
+<td class="ncol" valign="top" style="padding:0;vertical-align:top;">${gap('left', newsColumn('국내 뉴스', dom, b))}</td>
+${MSO_SPLIT_GAP}
+<td class="ncol2 ncol" valign="top" style="padding:0;vertical-align:top;">${gap('right', newsColumn('해외 뉴스', intl, b))}</td>
 </tr></table>`;
 }
 
@@ -333,19 +338,19 @@ function newsMerged(list, b) {
   const head = columnTitle('국내·해외 통합', `국내 ${dom} · 해외 ${list.length - dom}`);
   if (!list.length) return `${head}${emptyNews(b)}`;
   const line = `border-bottom:1px solid ${C.rule};`;
-  const cell = (n, pad) => (n
-    ? `${td(`class="ncol" valign="top" style="width:50%;padding:${pad};vertical-align:top;${line}"`, `valign="top" width="100%" style="width:100%;padding:0;vertical-align:top;${line}"`)}${storyCell(n, { foreign: n.region !== 'domestic' })}</td>`
-    : `${td(`class="ncol" valign="top" style="width:50%;padding:${pad};"`, 'width="100%" style="width:100%;padding:0;"')}</td>`);
+  const cell = (n, side) => (n
+    ? `<td class="ncol" valign="top" style="padding:0;vertical-align:top;${line}">${gap(side, storyCell(n, { foreign: n.region !== 'domestic' }))}</td>`
+    : '<td class="ncol" valign="top" style="padding:0;"></td>');
   const rows = [];
   for (let i = 0; i < list.length; i += 2) {
     rows.push(`<tr>
-${cell(list[i], '0 16px 0 0')}
+${cell(list[i], 'left')}
 <!--[if mso]></tr><tr><![endif]-->
-${cell(list[i + 1], '0 0 0 16px')}
+${cell(list[i + 1], 'right')}
 </tr>`);
   }
   return `${head}
-<table ${TBL}>${rows.join('')}</table>`;
+${COLS}${rows.join('')}</table>`;
 }
 
 /** KISA 보안 업데이트 권고(보호나라): 금색 윗줄, 금색 점과 굵은 제목. 보안공지가 아닌 것(취약점 정보·경보단계)만 작은 표시 */
@@ -565,7 +570,7 @@ ${MSO_CSS}
 <body bgcolor="${C.page}" style="margin:0;padding:0;background:${C.page};">
 <table ${TBL} bgcolor="${C.page}" style="background:${C.page};"><tr><td class="outer" align="center" style="padding:28px 12px;">
 <!--[if mso]><table role="presentation" width="${MSO_W}" align="center" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
-<!--[if !mso]><!--><div style="max-width:${MAIL_W}px;margin:0 auto;"><!--<![endif]-->
+<div style="max-width:${MAIL_W}px;margin:0 auto;">
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${C.paper}" style="width:100%;background:${C.paper};font-family:${FONT};color:${C.navy};word-break:keep-all;overflow-wrap:anywhere;">
 <tr><td class="pad mast" bgcolor="${C.mast}" style="background:${C.mast};border-top:5px solid ${C.navy};padding:27px ${PAD}px 29px;">
 ${mast}
@@ -579,7 +584,7 @@ ${rows.join('\n')}
 ${foot}
 </td></tr>
 </table>
-<!--[if !mso]><!--></div><!--<![endif]-->
+</div>
 <!--[if mso]></td></tr></table><![endif]-->
 </td></tr></table>
 </body></html>
